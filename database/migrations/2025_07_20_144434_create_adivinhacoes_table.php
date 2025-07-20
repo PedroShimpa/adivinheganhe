@@ -25,7 +25,7 @@ return new class extends Migration
         Schema::create('adivinhacoes_respostas', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->index();
-            $table->unsignedBigInteger('adivinhacao_ad')->index();
+            $table->unsignedBigInteger('adivinhacao_id')->index();
             $table->string('resposta');
             $table->timestamps();
         });
@@ -33,7 +33,7 @@ return new class extends Migration
         Schema::create('adivinhacoes_premiacoes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->index();
-            $table->unsignedBigInteger('adivinhacao_ad')->index();
+            $table->unsignedBigInteger('adivinhacao_id')->index();
             $table->string('premio_enviado')->default('N');
             $table->timestamps();
         });

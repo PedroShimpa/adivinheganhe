@@ -10,7 +10,7 @@ class AdivinhacoesPremiacoes extends Model
 
     protected $fillable = [
         'user_id',
-        'adivinhacao_ad',
+        'adivinhacao_id',
         'premio_enviado',
     ];
 }
