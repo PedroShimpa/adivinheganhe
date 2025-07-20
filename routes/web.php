@@ -45,13 +45,13 @@ Route::middleware('auth')->group(function () {
 });
 
 
-// Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function () {
 Route::get('/adivinhacoes/create', [AdivinhacoesController::class, 'create'])->name('adivinhacoes.store');
 Route::post('/adivinhacoes/create', [AdivinhacoesController::class, 'store'])->name('adivinhacoes.store');
+Route::post('/responder', [RespostaController::class, 'enviar'])->name('resposta.enviar');
+});
+
 Route::get('/adivinhacoes/respostas/{adivinhacao_id}', [AdivinhacoesController::class, 'respostas'])->name('adivinhacoes.respostas')->whereNumber('adivinhacao_id');
 
-Route::post('/responder', [RespostaController::class, 'enviar'])->name('resposta.enviar');
-
-// });
 
 require __DIR__ . '/auth.php';

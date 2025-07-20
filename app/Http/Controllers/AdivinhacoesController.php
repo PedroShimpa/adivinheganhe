@@ -22,12 +22,19 @@ class AdivinhacoesController extends Controller
      */
     public function create()
     {
-        return view('adivinhacoes.create');
+        if(auth()->user()->id == 1) {
+
+            return view('adivinhacoes.create');
+        }
+        return redirect()->route('home');
+
     }
 
 
     public function store(StoreAdivinhacoesRequest $request)
     {
+        if(auth()->user()->id == 1) {
+
         // Obtém o arquivo da imagem
         $imagem = $request->file('imagem');
 
@@ -45,6 +52,9 @@ class AdivinhacoesController extends Controller
 
 
         return redirect()->route('home');
+        }
+        return redirect()->route('home');
+
     }
 
     public function respostas(Request $request, $adivinhacao_id)
