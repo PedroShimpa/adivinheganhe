@@ -15,7 +15,7 @@
             <button class="btn btn-outline-primary" id="btnCopiarLink" type="button">Copiar link</button>
         </div>
         <p><strong id="tentativas-restantes">Restam {{ $trys }}</strong> tentativas para você. Se quiser você pode <a href="{{ route('tentativas.comprar') }}" class="btn btn-primary" >comprar mais</a></p>
-        <p>Você recebe 10 tentivas gratuitamente todos os dias!</p>
+        <p>Você recebe 10 tentativas gratuitamente todos os dias!</p>
     </div>
     @endif
 
@@ -229,7 +229,7 @@ document.querySelectorAll('.btn-success').forEach(btn => {
         msg.className = 'mt-2 text-success resposta-enviada';
         msg.textContent = json.status === 'acertou'
           ? 'Você acertou! Em breve notificaremos o envio do prêmio.'
-          : 'Eroooooou! Tente novamente!';
+          : 'Que pena! Tente novamente (se ainda tiver tentativas)!';
       }
       input.insertAdjacentElement('afterend', msg);
 
