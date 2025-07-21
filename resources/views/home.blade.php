@@ -14,7 +14,7 @@
                 value="{{ route('register', ['ib' => auth()->user()->uuid]) }}" readonly>
             <button class="btn btn-outline-primary" id="btnCopiarLink" type="button">Copiar link</button>
         </div>
-        <p><strong id="tentativas-restantes">Restam {{ $trys }}</strong> tentativas para você.</p>
+        <p><strong id="tentativas-restantes">Restam {{ $trys }}</strong> tentativas para você. Se quiser você pode <a href="{{ route('tentativas.comprar') }}">comprar mais aqui</a></p>
     </div>
     @endif
 
