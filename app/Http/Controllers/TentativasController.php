@@ -56,9 +56,9 @@ class TentativasController extends Controller
                     ]
                 ]
             ], $request_options);
-
-            $pag->payment_status = $pag->status;
-            $pag->payment_id = $pag->id;
+            Log::info('new mercado pago payment', $payment);
+            $pag->payment_status = $payment->status;
+            $pag->payment_id = $payment->id;
             $pag->save();
 
             $indicated = AdicionaisIndicacao::where('user_uuid',  auth()->user()->uuid)->first();
@@ -68,6 +68,7 @@ class TentativasController extends Controller
             } else {
                 AdicionaisIndicacao::create(['user_uuid' => auth()->user()->uuid, 'value' => $request->input('quantidade')]);
             }
+
 
             return response()->json(['success' => true]);
         } catch (MPApiException $e) {
