@@ -29,8 +29,8 @@ class TentativasController extends Controller
 
         try {
 
-     // Salva no banco a compra
-           $pag =  Pagamentos::create([
+            // Salva no banco a compra
+            $pag =  Pagamentos::create([
                 'user_id' => auth()->id(),
                 'value' => $valor,
                 'desc' => $desc,
@@ -56,9 +56,9 @@ class TentativasController extends Controller
                     ]
                 ]
             ], $request_options);
-       
+
             $pag->payment_status = $pag->status;
-            $pag->payment_id= $pag->id;
+            $pag->payment_id = $pag->id;
             $pag->save();
 
             $indicated = AdicionaisIndicacao::where('user_uuid',  auth()->user()->uuid)->first();
@@ -66,14 +66,17 @@ class TentativasController extends Controller
                 $indicated->value = $indicated->value + $request->input('quantidade');
                 $indicated->save();
             } else {
-                AdicionaisIndicacao::create(['user_uuid' =>auth()->user()->uuid, 'value' => $request->input('quantidade')]);
+                AdicionaisIndicacao::create(['user_uuid' => auth()->user()->uuid, 'value' => $request->input('quantidade')]);
             }
 
             return response()->json(['success' => true]);
         } catch (MPApiException $e) {
-               return response()->json(['success' => false], 400);
+            Log::error($e->getMessage());
+            return response()->json(['success' => false], 400);
         } catch (\Exception $e) {
-     return response()->json(['success' => false], 400);
+            Log::error($e->getMessage());
+
+            return response()->json(['success' => false], 400);
         }
     }
 
