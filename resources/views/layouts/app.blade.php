@@ -25,6 +25,8 @@
   gtag('config', "{{ env('GOOGLE_ANALYTICS_TAG')}}");
 </script>
 @endif
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ env('GOOGLE_ADSENSE_TAG')}}"
+     crossorigin="anonymous"></script>
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
