@@ -37,7 +37,7 @@
                         @else
                         <div class="mb-3">
                             <input type="text" id="resposta-{{ $adivinhacao->id }}" class="form-control"
-                                name="resposta" placeholder="Digite sua resposta...">
+                                name="resposta" placeholder="O que você acha que é?">
                         </div>
                         <input type="hidden" name="adivinhacao_id" value="{{ $adivinhacao->id }}">
                         <button class="btn btn-success w-100">Enviar resposta</button>
