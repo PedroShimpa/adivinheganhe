@@ -209,7 +209,7 @@
 
 document.querySelectorAll('.btn-success').forEach(btn => {
   btn.addEventListener('click', async () => {
-    const body = btn.closest('.card-body');
+    const body = btn.closest('.col-md-7');
     const id = body.querySelector('[name="adivinhacao_id"]').value;
     const input = body.querySelector(`#resposta-${id}`);
     const resposta = input.value;
