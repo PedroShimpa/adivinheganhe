@@ -15,6 +15,7 @@
             <button class="btn btn-outline-primary" id="btnCopiarLink" type="button">Copiar link</button>
         </div>
         <p><strong id="tentativas-restantes">Restam {{ $trys }}</strong> tentativas para você. Se quiser você pode <a href="{{ route('tentativas.comprar') }}" class="btn btn-primary" >comprar mais</a></p>
+        <p>Você recebe 10 tentivas gratuitamente todos os dias!</p>
     </div>
     @endif
 
