@@ -13,7 +13,7 @@
             </div>
             <div class="col-md-7 d-flex flex-column justify-content-between">
                 <div class="card-body">
-                    <h5 class="card-title">{{ $adivinhacao->titulo }}</h5>
+                    <h2 class="card-title">{{ $adivinhacao->titulo }}</h2>
                     <p class="">{!! $adivinhacao->descricao !!}</p>
                     <p class="text-muted">Quantidade de respostas até agora: {{ $adivinhacao->count_respostas }}</p>
                     @auth
