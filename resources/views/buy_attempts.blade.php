@@ -3,68 +3,92 @@
 @section('content')
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white text-center">
                     <h4 class="mb-0">🛒 Comprar Tentativas</h4>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4">
                     @if(session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
+                        <div class="alert alert-success">{{ session('success') }}</div>
                     @endif
 
                     @if($errors->any())
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                            @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
                     @endif
-                    <style>
-                        #form-checkout {
-                            display: flex;
-                            flex-direction: column;
-                            max-width: 600px;
-                        }
 
-                        .container {
-                            height: 18px;
-                            display: inline-block;
-                            border: 1px solid rgb(118, 118, 118);
-                            border-radius: 2px;
-                            padding: 1px 2px;
-                        }
-                    </style>
-                    <form id="form-checkout">
+                    <form id="form-checkout" class="needs-validation" novalidate>
                         @csrf
 
                         <div class="mb-3">
-                            <label for="quantidade" class="form-label">Quantidade de tentativas</label>
+                            <label for="quantidade" class="form-label fw-semibold">Quantidade de tentativas</label>
                             <input type="number" name="quantidade" id="quantidade" class="form-control" min="10" step="1" value="10" required>
                             <div class="form-text">Mínimo de 10 tentativas. Cada uma custa R$ 0,10.</div>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Valor total</label>
-                            <input type="text" class="form-control" id="valorTotal" value="R$ 1,00" readonly>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Valor total</label>
+                            <input type="text" class="form-control bg-light" id="valorTotal" value="R$ 1,00" readonly>
                         </div>
 
-                        <div id="form-checkout__cardNumber" class="container"></div>
-                        <div id="form-checkout__expirationDate" class="container"></div>
-                        <div id="form-checkout__securityCode" class="container"></div>
-                        <input type="text" id="form-checkout__cardholderName" />
-                        <select id="form-checkout__issuer"></select>
-                        <select id="form-checkout__installments"></select>
-                        <select id="form-checkout__identificationType"></select>
-                        <input type="text" id="form-checkout__identificationNumber" />
-                        <input type="email" id="form-checkout__cardholderEmail" />
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Número do Cartão</label>
+                            <div id="form-checkout__cardNumber" class="form-control p-2"></div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Validade</label>
+                                <div id="form-checkout__expirationDate" class="form-control p-2"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Código de Segurança</label>
+                                <div id="form-checkout__securityCode" class="form-control p-2"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Nome no Cartão</label>
+                            <input type="text" id="form-checkout__cardholderName" class="form-control" required>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label class="form-label fw-semibold">Bandeira</label>
+                                <select id="form-checkout__issuer" class="form-select"></select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Parcelas</label>
+                                <select id="form-checkout__installments" class="form-select"></select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label class="form-label fw-semibold">Tipo de Documento</label>
+                                <select id="form-checkout__identificationType" class="form-select"></select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Número do Documento</label>
+                                <input type="text" id="form-checkout__identificationNumber" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Email</label>
+                            <input type="email" id="form-checkout__cardholderEmail" class="form-control">
+                        </div>
+
                         <button type="submit" id="form-checkout__submit" class="btn btn-success w-100 py-2 fs-5">
                             💳 Confirmar Compra
                         </button>
-                        <button type="submit" id="form-checkout__submit">Pagar</button>
-                        <progress value="0" class="progress-bar">Carregando...</progress>
+
                     </form>
                 </div>
             </div>
@@ -72,6 +96,7 @@
     </div>
 </div>
 @endsection
+
 
 @push('scripts')
 <script src="https://sdk.mercadopago.com/js/v2"></script>
