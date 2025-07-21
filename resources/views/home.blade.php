@@ -6,13 +6,23 @@
 
 @if(Auth::check())
 <div class="mb-4 p-4 bg-light rounded shadow-sm text-center">
-    <h4>Indique e ganhe <strong>5 novas tentativas a cada novo Adivinhador registrado em seu link!</strong>!</h4>
-    <p>
-        Seu link de indicação:
-        <a href="{{ route('register', ['ib' => auth()->user()->uuid]) }}">
-            {{ route('register', ['ib' => auth()->user()->uuid]) }}
-        </a>
-    </p>
+        <h4 class="mb-3 text-primary fw-semibold">
+            Indique e ganhe <strong>5 novas tentativas a cada novo Adivinhador registrado em seu link!</strong>
+        </h4>
+        <div class="d-flex justify-content-center align-items-center gap-2 flex-wrap">
+            <input type="text" 
+                  id="linkIndicacao" 
+                  class="form-control w-auto text-truncate" 
+                  style="max-width: 400px;" 
+                  value="{{ route('register', ['ib' => auth()->user()->uuid]) }}" 
+                  readonly
+                  aria-label="Link de indicação">
+            <button class="btn btn-outline-primary" id="btnCopiarLink" type="button" title="Copiar link">
+                Copiar link
+            </button>
+        </div>
+
+
 <p><strong id="tentativas-restantes">Restam {{ $trys }}</strong> tentativas para você.</p>
 
 </div>
@@ -248,6 +258,26 @@ document.querySelectorAll('.btn-success').forEach(btn => {
     }
   });
 });
+
+  document.getElementById('btnCopiarLink').addEventListener('click', function() {
+        const input = document.getElementById('linkIndicacao');
+        input.select();
+        input.setSelectionRange(0, 99999); // Para dispositivos móveis
+
+        navigator.clipboard.writeText(input.value).then(() => {
+            // Feedback com Bootstrap Toast ou alert simples
+            this.textContent = 'Copiado!';
+            this.classList.remove('btn-outline-primary');
+            this.classList.add('btn-success');
+            setTimeout(() => {
+                this.textContent = 'Copiar link';
+                this.classList.remove('btn-success');
+                this.classList.add('btn-outline-primary');
+            }, 2000);
+        }).catch(() => {
+            alert('Não foi possível copiar o link. Por favor, copie manualmente.');
+        });
+    });
 
   </script>
 @endpush
