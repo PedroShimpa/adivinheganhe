@@ -18,53 +18,81 @@
         <p>Você recebe 10 tentativas gratuitamente todos os dias!</p>
     </div>
     @endif
+@forelse($adivinhacoes as $adivinhacao)
+<div class="card mb-5 shadow-sm">
+    <div class="row g-0 flex-column flex-md-row">
+        <div class="col-md-5 d-flex align-items-center justify-content-center bg-light p-3">
+            <img src="{{ asset('storage/' . $adivinhacao->imagem) }}" class="img-fluid rounded" alt="Imagem da adivinhação">
+        </div>
+        <div class="col-md-7 p-4 d-flex flex-column justify-content-between">
+            <div>
+                <h2 class="text-primary fw-bold mb-3">{{ $adivinhacao->titulo }}</h2>
 
-    @forelse($adivinhacoes as $adivinhacao)
-    <div class="card mb-5 shadow-sm">
-        <div class="row g-0 flex-column flex-md-row">
-            <div class="col-md-5 text-center bg-light p-2">
-                <img src="{{ asset('storage/' . $adivinhacao->imagem) }}" class="img-fluid rounded" alt="Imagem da adivinhação">
-            </div>
-            <div class="col-md-7 p-4 d-flex flex-column justify-content-between">
-                <div>
-                    <h2 class="text-primary fw-bold mb-3">{{ $adivinhacao->titulo }}</h2>
-                    <p>{!! $adivinhacao->descricao !!}</p>
-                    <p class="text-muted small">👥 {{ $adivinhacao->count_respostas }} respostas até agora</p>
+                <!-- Botão que abre o modal com a descrição -->
+                <button class="btn btn-outline-info mb-2" data-bs-toggle="modal" data-bs-target="#modalDescricao-{{ $adivinhacao->id }}">
+                    ➕ Informações
+                </button>
 
-                    @auth
-                        @if($limitExceded)
-                        <div class="alert alert-warning">Você atingiu seu limite de resposta de hoje!</div>
-                        @else
-                        <div class="mb-3">
-                            <input type="text" id="resposta-{{ $adivinhacao->id }}" class="form-control"
-                                name="resposta" placeholder="O que você acha que é?">
-                        </div>
-                        <input type="hidden" name="adivinhacao_id" value="{{ $adivinhacao->id }}">
-                        <button class="btn btn-success w-100">Enviar resposta</button>
-                        @endif
-                    @else
-                    <div class="alert alert-warning">
-                        Você precisa <a href="{{ route('login') }}">entrar</a> para responder.
+                <!-- Modal de descrição -->
+                <div class="modal fade" id="modalDescricao-{{ $adivinhacao->id }}" tabindex="-1" aria-labelledby="modalLabel-{{ $adivinhacao->id }}" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel-{{ $adivinhacao->id }}">{{ $adivinhacao->titulo }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                      </div>
+                      <div class="modal-body">
+                        {!! $adivinhacao->descricao !!}
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                      </div>
                     </div>
-                    @endauth
+                  </div>
                 </div>
 
-                @php
-                    $isLink = filter_var($adivinhacao->premio, FILTER_VALIDATE_URL);
-                @endphp
-                @if($isLink)
-                <div class="mt-3 text-end">
-                    <a href="{{ $adivinhacao->premio }}" class="btn btn-outline-primary" target="_blank">🎁 Ver prêmio</a>
-                </div>
+                @if($adivinhacao->count_respostas != 0)
+                <p class="text-muted small mt-2 mb-2">👥 {{ $adivinhacao->count_respostas }} respostas até agora</p>
+                @else
+                <p class="text-muted small mt-2 mb-2">👥 Nínguem tentou responder essa Adivinhação ainda!</p>
+
                 @endif
+
+                @auth
+                    @if($limitExceded)
+                    <div class="alert alert-warning">Você atingiu seu limite de resposta de hoje!</div>
+                    @else
+                    <div class="mb-3">
+                        <input type="text" id="resposta-{{ $adivinhacao->id }}" class="form-control"
+                            name="resposta" placeholder="O que você acha que é?">
+                    </div>
+                    <input type="hidden" name="adivinhacao_id" value="{{ $adivinhacao->id }}">
+                    <button class="btn btn-success w-100">Enviar resposta</button>
+                    @endif
+                @else
+                <div class="alert alert-warning">
+                    Você precisa <a href="{{ route('login') }}">entrar</a> para responder.
+                </div>
+                @endauth
             </div>
+
+            @php
+                $isLink = filter_var($adivinhacao->premio, FILTER_VALIDATE_URL);
+            @endphp
+            @if($isLink)
+            <div class="mt-3 text-end">
+                <a href="{{ $adivinhacao->premio }}" class="btn btn-outline-primary" target="_blank">🎁 Ver prêmio</a>
+            </div>
+            @endif
         </div>
     </div>
-    @empty
-    <div class="text-center">
-        <h4 class="text-muted">Nenhuma adivinhação disponível no momento.</h4>
-    </div>
-    @endforelse
+</div>
+@empty
+<div class="text-center">
+    <h4 class="text-muted">Nenhuma adivinhação disponível no momento.</h4>
+</div>
+@endforelse
+
 
     @if($premios->isNotEmpty())
     <hr class="my-5">
