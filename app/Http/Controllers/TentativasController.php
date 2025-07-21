@@ -27,7 +27,7 @@ class TentativasController extends Controller
         $desc = "Compra de {$quantidade} tentativas ";
 
 
-        // try {
+        try {
 
             $pag =  Pagamentos::create([
                 'user_id' => auth()->id(),
@@ -38,7 +38,7 @@ class TentativasController extends Controller
 
             $client = new PaymentClient();
             $request_options = new RequestOptions();
-            $uniqueKey = now()->timestamp.$pag->id.md5(now()->timestamp);
+            $uniqueKey = now()->timestamp . $pag->id . md5(now()->timestamp);
             $request_options->setCustomHeaders(["X-Idempotency-Key: {$uniqueKey}"]);
 
             $payment = $client->create([
@@ -56,6 +56,7 @@ class TentativasController extends Controller
                     ]
                 ]
             ], $request_options);
+
             Log::info('new mercado pago payment', $payment);
             $pag->payment_status = $payment->status;
             $pag->payment_id = $payment->id;
@@ -70,11 +71,12 @@ class TentativasController extends Controller
             }
 
             return response()->json(['success' => true]);
-        // } catch (\Exception $e) {
-        //     Log::error($e->getMessage());
-
-        //     return response()->json(['success' => false], 400);
-        // }
+        } catch (MPApiException $e) {
+            Log::error("Status code: " . $e->getApiResponse()->getStatusCode() . "\n");
+            Log::error($e->getApiResponse()->getContent());
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
     }
 
 
