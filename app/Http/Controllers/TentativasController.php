@@ -71,10 +71,7 @@ class TentativasController extends Controller
 
 
             return response()->json(['success' => true]);
-        } catch (MPApiException $e) {
-            Log::error($e->getMessage());
-            return response()->json(['success' => false], 400);
-        } catch (\Exception $e) {
+        }  catch (\Exception $e) {
             Log::error($e->getMessage());
 
             return response()->json(['success' => false], 400);
