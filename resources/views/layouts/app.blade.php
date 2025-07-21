@@ -42,8 +42,24 @@
         @yield('content')
     </main>
 </div>
-<!-- Scripts adicionais -->
 @stack('scripts')
+
+<footer class="bg-dark text-white mt-5 py-4">
+    <div class="container text-center">
+        <h5 class="fw-bold mb-2">Adivinhe e Ganhe</h5>
+        <p class="mb-1">
+            Um projeto de código aberto criado por 
+            <span class="fw-bold text-info">Pedro "Shimpa" Falconi</span>
+        </p>
+        <p>
+            Acesse no GitHub: 
+            <a href="https://github.com/PedroShimpa/adivinheganhe" class="text-decoration-none text-warning" target="_blank">
+                github.com/PedroShimpa/adivinheganhe
+            </a>
+        </p>
+    </div>
+</footer>
+
 
 
 
