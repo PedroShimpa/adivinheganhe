@@ -52,15 +52,15 @@
                 </div>
 
                 @if($adivinhacao->count_respostas != 0)
-                <p class="text-muted small mt-2 mb-2">👥 {{ $adivinhacao->count_respostas }} respostas até agora</p>
+                <p class="text-muted small mt-2 mb-2">👥 {{ $adivinhacao->count_respostas }} tentativas até agora</p>
                 @else
-                <p class="text-muted small mt-2 mb-2">👥 Nínguem tentou responder essa Adivinhação ainda!</p>
+                <p class="text-muted small mt-2 mb-2">👥 Nínguem tentou adivinhar ainda!</p>
 
                 @endif
 
                 @auth
                     @if($limitExceded)
-                    <div class="alert alert-warning">Você atingiu seu limite de resposta de hoje!</div>
+                    <div class="alert alert-warning">Você atingiu seu limite de tentativas de hoje!</div>
                     @else
                     <div class="mb-3">
                         <input type="text" id="resposta-{{ $adivinhacao->id }}" class="form-control"
@@ -124,7 +124,7 @@
                         @endif
                         <a href="{{ route('adivinhacoes.respostas', $premio->uuid) }}" target="_blank"
                             class="btn btn-sm btn-outline-primary">
-                            Ver respostas
+                            Ver tentivas
                         </a>
                     </td>
                     <td>{{ $premio->username }}</td>
