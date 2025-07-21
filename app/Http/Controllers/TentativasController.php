@@ -42,7 +42,7 @@ class TentativasController extends Controller
             $request_options->setCustomHeaders(["X-Idempotency-Key: {$pag->id}"]);
 
             $payment = $client->create([
-                "transaction_amount" => $valor,
+                "transaction_amount" => $request->input('transaction_amount'),
                 "token" => $request->input('token'),
                 "description" => $desc,
                 "installments" => 1,
