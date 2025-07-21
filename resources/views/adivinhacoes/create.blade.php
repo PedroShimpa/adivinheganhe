@@ -23,7 +23,9 @@
                         <!-- Descrição -->
                         <div class="mb-3">
                             <label for="descricao" class="form-label">{{ __('Descrição') }}</label>
-                            <textarea class="form-control @error('descricao') is-invalid @enderror" id="descricao" name="descricao" rows="3" required>{{ old('descricao') }}</textarea>
+                           <textarea class="form-control @error('descricao') is-invalid @enderror" id="descricao" name="descricao" rows="3">{!! old('descricao') !!}</textarea>
+
+
                             @error('descricao')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -64,3 +66,18 @@
     </div>
 </div>
 @endsection
+@push('scripts')
+<script src="https://cdn.tiny.cloud/1/ai1aa4q1itml9cxyksgdamr2r0v61fis91gwfmb5bdt9n6df/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    tinymce.init({
+        selector: '#descricao',
+        menubar: false,
+        height: 300,
+        plugins: 'link lists code',
+        toolbar: 'undo redo | bold italic underline | bullist numlist | link | code',
+        language: 'pt_BR'
+    });
+});
+</script>
+@endpush

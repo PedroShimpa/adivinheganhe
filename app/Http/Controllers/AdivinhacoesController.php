@@ -22,51 +22,63 @@ class AdivinhacoesController extends Controller
      */
     public function create()
     {
-        if(auth()->user()->id == 1) {
+        if (auth()->user()->id == 1) {
 
             return view('adivinhacoes.create');
         }
         return redirect()->route('home');
-
     }
 
 
     public function store(StoreAdivinhacoesRequest $request)
     {
-        if(auth()->user()->id == 1) {
+        if (auth()->user()->id == 1) {
 
-        // Obtém o arquivo da imagem
-        $imagem = $request->file('imagem');
+            // Obtém o arquivo da imagem
+            $imagem = $request->file('imagem');
 
-        // Gera um nome único para a imagem com hash (usando uniqid, Str::random, ou qualquer outro método)
-        $hash = Str::random(10); // Gera uma string aleatória de 10 caracteres
-        $fileName = $hash . '_' . time() . '.' . $imagem->getClientOriginalExtension(); // Combina o hash com o timestamp para garantir unicidade
+            // Gera um nome único para a imagem com hash (usando uniqid, Str::random, ou qualquer outro método)
+            $hash = Str::random(10); // Gera uma string aleatória de 10 caracteres
+            $fileName = $hash . '_' . time() . '.' . $imagem->getClientOriginalExtension(); // Combina o hash com o timestamp para garantir unicidade
 
-        // Salva a imagem no diretório desejado, com o novo nome
-        $path = $imagem->storeAs('imagens_adivinhacoes', $fileName, 'public');
+            // Salva a imagem no diretório desejado, com o novo nome
+            $path = $imagem->storeAs('imagens_adivinhacoes', $fileName, 'public');
 
-        // Cria a entrada no banco de dados
-        $data = $request->validated();
-        $data['imagem'] = $path;
-        Adivinhacoes::create($data);
+            // Cria a entrada no banco de dados
+            $data = $request->validated();
+            $data['imagem'] = $path;
+            $data['descricao'] = $request->input('descricao');
+            Adivinhacoes::create($data);
 
 
-        return redirect()->route('home');
+            return redirect()->route('home');
         }
         return redirect()->route('home');
-
     }
 
-    public function respostas(Request $request, $adivinhacao_id)
+    public function respostas(Request $request, Adivinhacoes $adivinhacao)
     {
+        if ($adivinhacao->resolvida == 'S') {
 
-        $respostas = AdivinhacoesRespostas::where('adivinhacao_id', $adivinhacao_id)->get();
+            $respostas = AdivinhacoesRespostas::select('adivinhacoes_respostas.uuid', 'users.name', 'adivinhacoes_respostas.created_at', 'resposta')
+                ->join('users', 'users.id', '=', 'adivinhacoes_respostas.user_id')
+                ->where('adivinhacao_id', $adivinhacao->id)
+                ->orderBy('adivinhacoes_respostas.created_at', 'desc') // Ordenar mais recentes primeiro
+                ->paginate(10);
 
-        $respostas->filter(function ($r) {
-            $r->created_at_br = (new DateTime($r->created_at))->format('d/m/Y H:i:s');
-        });
+            // Formatar as datas para exibir no Blade
+            $respostas->getCollection()->transform(function ($r) {
+                $r->created_at_br = (new DateTime($r->created_at))->format('d/m/Y H:i:s');
+                return $r;
+            });
 
-        return view('respostas')->with(compact('respostas'));
+            if ($request->ajax()) {
+                return view('partials.respostas_table_rows', compact('respostas'))->render();
+            }
+
+            return view('respostas', compact('respostas', 'adivinhacao'));
+        }
+        return redirect()->route('home');
     }
 
     /**

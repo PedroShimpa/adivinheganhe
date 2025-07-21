@@ -14,7 +14,7 @@
             <div class="col-md-7 d-flex flex-column justify-content-between">
                 <div class="card-body">
                     <h5 class="card-title">{{ $adivinhacao->titulo }}</h5>
-                    <p class="text-muted">{{ $adivinhacao->descricao }}</p>
+                    <p class="">{!! $adivinhacao->descricao !!}</p>
                     <p class="text-muted">Quantidade de respostas até agora: {{ $adivinhacao->count_respostas }}</p>
                     @auth
                     @if($limitExceded)
@@ -41,11 +41,17 @@
                         </div>
                     @endauth
                 </div>
+                  @php
+                        $isLink = filter_var($adivinhacao->premio, FILTER_VALIDATE_URL);
+                    @endphp
+
+                @if($isLink)
                 <div class="card-footer bg-transparent border-0">
                     <a href="{{ $adivinhacao->premio }}"
                        class="btn btn-outline-primary"
                        target="_blank">Ver prêmio</a>
                 </div>
+                @endif
             </div>
         </div>
     </div>
@@ -75,10 +81,17 @@
                 <tr>
                     <td>{{ $premio->titulo }}</td>
                     <td>
+                    @php
+                        $isLink = filter_var($premio->premio, FILTER_VALIDATE_URL);
+                    @endphp
+
+                    @if($isLink)
                         <a href="{{ $premio->premio }}" target="_blank" class="btn btn-sm btn-outline-primary">
                             Ver prêmio
                         </a>
-                        <a href="{{ route('adivinhacoes.respostas', $premio->adivinhacao_id)}}" target="_blank" class="btn btn-sm btn-outline-primary">
+                    @endif
+
+                        <a href="{{ route('adivinhacoes.respostas', $premio->uuid)}}" target="_blank" class="btn btn-sm btn-outline-primary">
                             Ver respostas
                         </a>
                     </td>
@@ -207,7 +220,7 @@
               msg.className = 'mt-2 text-success resposta-enviada';
           msg.textContent = json.status === 'acertou'
             ? 'Você acertou! Em breve notificaremos o envio do prêmio.'
-            : 'Resposta enviada!';
+            : 'Eroooooou! Tente novamente!';
           }
         
           input.insertAdjacentElement('afterend', msg);

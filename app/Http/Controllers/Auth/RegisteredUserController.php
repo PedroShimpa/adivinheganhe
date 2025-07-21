@@ -33,13 +33,8 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email:rfc,dns', 'max:255', 'unique:users,email'],
             'username' => ['required', 'string', 'max:255', 'unique:users,username'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', Rules\Password::defaults()],
             'cpf' => ['required', 'string', 'max:20', 'unique:users,cpf'],
-            'cep' => ['required', 'string', 'regex:/^\d{5}-?\d{3}$/'],
-            'endereco' => ['required', 'string'],
-            'numero' => ['nullable', 'string', 'max:20'],
-            'bairro' => ['nullable', 'string', 'max:100'],
-            'complemento' => ['nullable', 'string', 'max:255'],
             'whatsapp' => ['nullable', 'string', 'max:15', 'unique:users,whatsapp', 'regex:/^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/'],
         ]);
 
@@ -49,11 +44,6 @@ class RegisteredUserController extends Controller
             'username' => $request->username,
             'password' => Hash::make($request->password),
             'cpf' => $request->cpf,
-            'cep' => $request->cep,
-            'endereco' => $request->endereco,
-            'numero' => $request->numero,
-            'bairro' => $request->bairro,
-            'complemento' => $request->complemento,
             'whatsapp' => $request->whatsapp,
         ]);
 

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('adivinhacoes', function (Blueprint $table) {
             $table->id();
+            $table->uuid();
             $table->string('titulo');
             $table->string('imagem');
             $table->string('descricao');
@@ -20,10 +21,11 @@ return new class extends Migration
             $table->string('resposta');
             $table->string('resolvida')->default('N')->index();
             $table->timestamps();
-    });
+        });
 
         Schema::create('adivinhacoes_respostas', function (Blueprint $table) {
             $table->id();
+            $table->uuid();
             $table->unsignedBigInteger('user_id')->index();
             $table->unsignedBigInteger('adivinhacao_id')->index();
             $table->string('resposta');

@@ -14,9 +14,10 @@ class RespostaController extends Controller
 {
     public function enviar(Request $request)
     {
-        $limitExceded = AdivinhacoesRespostas::where('user_id', auth()->user()->id)->whereDate('created_at', today())->count() >= env('MAX_ADIVINHATIONS', 10);
+        $limit = env('MAX_ADIVINHATIONS', 10);
+        $limitExceded = AdivinhacoesRespostas::where('user_id', auth()->user()->id)->whereDate('created_at', today())->count() >= $limit;
         if ($limitExceded) {
-            return response()->json(['error' => 'Você atingiu seu limite de resposta para hoje!']);
+            return response()->json(['error' => "Você atingiu seu limite de $limit respostas de hoje!"]);
         }
         $data = $request->validate([
             'resposta'       => 'required|string',
@@ -26,7 +27,7 @@ class RespostaController extends Controller
         $respostaCliente = strtolower(trim($data['resposta']));
         $adivinhacao     = Adivinhacoes::findOrFail($data['adivinhacao_id']);
 
-        AdivinhacoesRespostas::create([
+        $resposta = AdivinhacoesRespostas::create([
             'user_id'        => Auth::id(),
             'adivinhacao_id' => $adivinhacao->id,
             'resposta'       => $respostaCliente,
@@ -39,7 +40,7 @@ class RespostaController extends Controller
                 ->toOthers();
 
             broadcast(new RespostaPrivada(
-                "Você acertou!!!\n Em breve será notificado do envio do prêmio.",
+                "Você acertou, seu código de resposta: {$resposta->uuid}!!!\n Em breve será notificado do envio do prêmio.",
                 $adivinhacao->id
             ));
 
