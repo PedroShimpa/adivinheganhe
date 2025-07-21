@@ -27,9 +27,8 @@ class TentativasController extends Controller
         $desc = "Compra de {$quantidade} tentativas ";
 
 
-        try {
+        // try {
 
-            // Salva no banco a compra
             $pag =  Pagamentos::create([
                 'user_id' => auth()->id(),
                 'value' => $valor,
@@ -70,13 +69,12 @@ class TentativasController extends Controller
                 AdicionaisIndicacao::create(['user_uuid' => auth()->user()->uuid, 'value' => $request->input('quantidade')]);
             }
 
-
             return response()->json(['success' => true]);
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
+        // } catch (\Exception $e) {
+        //     Log::error($e->getMessage());
 
-            return response()->json(['success' => false], 400);
-        }
+        //     return response()->json(['success' => false], 400);
+        // }
     }
 
 
