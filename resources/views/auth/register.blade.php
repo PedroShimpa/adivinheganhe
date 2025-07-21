@@ -12,6 +12,8 @@
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
 
+                        <input name="indicated_by" hidden>
+
                         <!-- Nome -->
                         <div class="mb-3">
                             <label for="name" class="form-label">Nome</label>
@@ -97,9 +99,23 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.9/jquery.inputmask.min.js" integrity="sha512-F5Ul1uuyFlGnIT1dk2c4kB4DBdi5wnBJjVhL7gQlGh46Xn0VhvD8kgxLtjdZ5YN83gybk/aASUAlpdoWUjRR3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     $(document).ready(function() {
+        // Máscaras existentes
         $('#cpf').inputmask('999.999.999-99');
         $('#whatsapp').inputmask('(99) 99999-9999');
         $('#cep').inputmask('99999-999');
+
+        // Preencher campo indicado_by da query string
+        const urlParams = new URLSearchParams(window.location.search);
+        const ib = urlParams.get('ib');
+        if (ib) {
+            $('input[name="indicated_by"]').val(ib);
+        }
+
+        // Bloquear botão submit ao enviar o formulário
+        $('form').on('submit', function() {
+            // Desabilita o botão dentro deste form para evitar múltiplos cliques
+            $(this).find('button[type="submit"]').attr('disabled', true).text('Registrando...');
+        });
     });
 </script>
 @endpush

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\RespostaAprovada;
 use App\Events\RespostaPrivada;
+use App\Models\AdicionaisIndicacao;
 use App\Models\Adivinhacoes;
 use App\Models\AdivinhacoesPremiacoes;
 use App\Models\AdivinhacoesRespostas;
@@ -14,10 +15,12 @@ class RespostaController extends Controller
 {
     public function enviar(Request $request)
     {
-        $limit = env('MAX_ADIVINHATIONS', 10);
-        $limitExceded = AdivinhacoesRespostas::where('user_id', auth()->user()->id)->whereDate('created_at', today())->count() >= $limit;
+        
+        $countTrysToday = AdivinhacoesRespostas::where('user_id', auth()->user()->id)->whereDate('created_at', today())->count();
+        $countFromIndications = AdicionaisIndicacao::where('user_uuid', auth()->user()->uuid)->value('value') ?? 0;
+        $limitExceded = $countTrysToday >= (env('MAX_ADIVINHATIONS', 10) + $countFromIndications);
         if ($limitExceded) {
-            return response()->json(['error' => "Você atingiu seu limite de $limit respostas de hoje!"]);
+            return response()->json(['error' => "Você atingiu seu limite respostas de hoje!"]);
         }
         $data = $request->validate([
             'resposta'       => 'required|string',
@@ -32,6 +35,12 @@ class RespostaController extends Controller
             'adivinhacao_id' => $adivinhacao->id,
             'resposta'       => $respostaCliente,
         ]);
+
+        if(($countTrysToday + 1) >= env('MAX_ADIVINHATIONS', 10) && $countFromIndications > 0) {
+           $adicionaisIndicacao =  AdicionaisIndicacao::where('user_uuid', auth()->user()->uuid)->first();
+           $adicionaisIndicacao->value = $adicionaisIndicacao->value - 1;
+           $adicionaisIndicacao->save();
+        }
 
         if (strtolower(trim($adivinhacao->resposta)) === $respostaCliente) {
             $username = Auth::user()->username;

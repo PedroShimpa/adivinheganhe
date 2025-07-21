@@ -3,6 +3,21 @@
 
 @section('content')
 <div class="container py-5">
+
+@if(Auth::check())
+<div class="mb-4 p-4 bg-light rounded shadow-sm text-center">
+    <h4>Indique e ganhe <strong>5 novas tentativas a cada novo Adivinhador registrado em seu link!</strong>!</h4>
+    <p>
+        Seu link de indicação:
+        <a href="{{ route('register', ['ib' => auth()->user()->uuid]) }}">
+            {{ route('register', ['ib' => auth()->user()->uuid]) }}
+        </a>
+    </p>
+<p><strong id="tentativas-restantes">Restam {{ $trys }}</strong> tentativas para você.</p>
+
+</div>
+@endif
+
     @forelse($adivinhacoes as $adivinhacao)
     <div class="card mb-4 shadow-sm">
         <div class="row g-0">
@@ -118,13 +133,14 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script>
+    let tentativas = parseInt(document.getElementById('tentativas-restantes').textContent.replace(/\D/g, ''));
+
     // Habilita log detalhado
     Pusher.logToConsole = true;
 
     const csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
     const EchoCtor = window.Echo;
 
-    console.log('[Echo] Inicializando com chave:', '{{ env("REVERB_APP_KEY") }}');
 
     window.Echo = new EchoCtor({
       broadcaster: 'pusher',
@@ -141,13 +157,10 @@
       }
     });
 
-    console.log('[Echo] Echo instanciado:', window.Echo);
 
     // Canal público: adivinhacoes
-    console.log('[Echo] Tentando se inscrever no canal público: adivinhacoes');
     window.Echo.channel('adivinhacoes')
       .listen('.resposta.aprovada', e => {
-        console.log('[Broadcast] Evento recebido: resposta.aprovada', e);
 
         document.querySelectorAll('input[name="resposta"], .btn-success')
                 .forEach(el => el.disabled = true);
@@ -157,10 +170,8 @@
 
     // Canal privado do usuário
     @auth
-    console.log('[Echo] Tentando se inscrever no canal privado: user.{{ Auth::id() }}');
     window.Echo.private(`user.{{ Auth::id() }}`)
       .listen('.resposta.sucesso', e => {
-        console.log('[Broadcast] Evento privado recebido: resposta.sucesso', e);
 
         Swal.fire('Parabéns!', e.mensagem, 'success')
           .then(() => {
@@ -175,59 +186,68 @@
     @endauth
 
     // Envio da resposta
-    document.querySelectorAll('.btn-success').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const body = btn.closest('.card-body');
-        const id = body.querySelector('[name="adivinhacao_id"]').value;
-        const input = body.querySelector(`#resposta-${id}`);
-        const resposta = input.value;
+  const tentativasEl = document.getElementById('tentativas-restantes');
+ tentativas = tentativasEl ? parseInt(tentativasEl.textContent.replace(/\D/g, '')) : 0;
 
+document.querySelectorAll('.btn-success').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const body = btn.closest('.card-body');
+    const id = body.querySelector('[name="adivinhacao_id"]').value;
+    const input = body.querySelector(`#resposta-${id}`);
+    const resposta = input.value;
 
-        if(!resposta) {
-                const msg = document.createElement('div');
-                msg.className = 'mt-2 text-danger';
-          msg.textContent =  'Preencha a resposta primeiro!'
+    if (!resposta) {
+      const msg = document.createElement('div');
+      msg.className = 'mt-2 text-danger';
+      msg.textContent = 'Preencha a resposta primeiro!';
+      input.insertAdjacentElement('afterend', msg);
+      return;
+    }
 
-        
-          input.insertAdjacentElement('afterend', msg);
-          return;
-        }
-        try {
-          const res = await fetch("{{ route('resposta.enviar') }}", {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-CSRF-TOKEN': csrfToken,
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-              resposta: resposta,
-              adivinhacao_id: id
-            })
-          });
+    // Atualiza o número de tentativas antes do fetch
+    if (tentativas > 0) {
+      tentativas--;
+      if (tentativasEl) {
+        tentativasEl.textContent = 'Restam ' + tentativas;
+      }
+    }
 
-          const json = await res.json();
-          console.log('[Resposta] Resposta da API:', json);
-
-          input.value = '';
-
-          body.querySelectorAll('.resposta-enviada').forEach(el => el.remove());
-          const msg = document.createElement('div');
-          if(json.error) {
-                msg.className = 'mt-2 text-danger';
-          msg.textContent = json.error
-          } else {
-              msg.className = 'mt-2 text-success resposta-enviada';
-          msg.textContent = json.status === 'acertou'
-            ? 'Você acertou! Em breve notificaremos o envio do prêmio.'
-            : 'Eroooooou! Tente novamente!';
-          }
-        
-          input.insertAdjacentElement('afterend', msg);
-        } catch (error) {
-          console.error('[Resposta] Erro ao enviar:', error);
-        }
+    try {
+      const res = await fetch("{{ route('resposta.enviar') }}", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': csrfToken,
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          resposta: resposta,
+          adivinhacao_id: id
+        })
       });
-    });
+
+      const json = await res.json();
+
+      input.value = '';
+
+      body.querySelectorAll('.resposta-enviada').forEach(el => el.remove());
+      const msg = document.createElement('div');
+      if(json.error) {
+        msg.className = 'mt-2 text-danger';
+        msg.textContent = json.error;
+      } else {
+        msg.className = 'mt-2 text-success resposta-enviada';
+        msg.textContent = json.status === 'acertou'
+          ? 'Você acertou! Em breve notificaremos o envio do prêmio.'
+          : 'Eroooooou! Tente novamente!';
+      }
+      input.insertAdjacentElement('afterend', msg);
+
+    } catch (error) {
+      // Se quiser pode aqui reverter a decrementação em caso de erro na requisição.
+    }
+  });
+});
+
   </script>
 @endpush

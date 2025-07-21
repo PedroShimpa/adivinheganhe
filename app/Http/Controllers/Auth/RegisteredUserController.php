@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\AdicionaisIndicacao;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,6 +37,7 @@ class RegisteredUserController extends Controller
             'password' => ['required', Rules\Password::defaults()],
             'cpf' => ['required', 'string', 'max:20', 'unique:users,cpf'],
             'whatsapp' => ['nullable', 'string', 'max:15', 'unique:users,whatsapp', 'regex:/^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/'],
+            'indicated_by' => ['nullable', 'string']
         ]);
 
         $user = User::create([
@@ -48,6 +50,16 @@ class RegisteredUserController extends Controller
         ]);
 
         event(new Registered($user));
+
+        if (!empty($request->input('indicated_by'))) {
+            $indicated = AdicionaisIndicacao::where('user_uuid',  $request->input('indicated_by'))->first();
+            if (!empty($indicated)) {
+                $indicated->value = $indicated->value + env('INDICATION_ADICIONAL', 5);
+                $indicated->save();
+            } else {
+                AdicionaisIndicacao::create(['user_uuid' => $request->input('indicated_by'), 'value' => env('INDICATION_ADICIONAL', 5)]);
+            }
+        }
 
         Auth::login($user);
 

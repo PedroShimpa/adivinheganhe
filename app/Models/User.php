@@ -25,12 +25,8 @@ class User extends Authenticatable
         'password',
         'username',
         'cpf',
-        'cep',
-        'endereco',
-        'numero',
-        'bairro',
-        'complemento',
-        'whatsapp'
+        'whatsapp',
+        'indicated_by'
     ];
 
     /**

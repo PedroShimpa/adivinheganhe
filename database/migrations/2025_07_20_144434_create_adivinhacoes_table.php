@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('adivinhacoes', function (Blueprint $table) {
             $table->id();
-            $table->uuid();
+            $table->uuid()->index();
             $table->string('titulo');
             $table->text('imagem');
             $table->text('descricao');

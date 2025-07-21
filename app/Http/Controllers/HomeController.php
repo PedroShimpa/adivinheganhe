@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AdicionaisIndicacao;
 use App\Models\Adivinhacoes;
 use App\Models\AdivinhacoesPremiacoes;
 use App\Models\AdivinhacoesRespostas;
@@ -12,9 +13,13 @@ class HomeController extends Controller
 {
     public function index(Request $request)
     {
+        $trys = 0;
         $limitExceded = true;
         if (Auth::check()) {
-            $limitExceded = AdivinhacoesRespostas::where('user_id', auth()->user()->id)->whereDate('created_at', today())->count() >= env('MAX_ADIVINHATIONS', 10);
+            $countTrysToday = AdivinhacoesRespostas::where('user_id', auth()->user()->id)->whereDate('created_at', today())->count();
+            $countFromIndications = AdicionaisIndicacao::where('user_uuid', auth()->user()->uuid)->value('value') ?? 0;
+            $limitExceded = $countTrysToday >= (env('MAX_ADIVINHATIONS', 10) + $countFromIndications);
+            $trys = (env('MAX_ADIVINHATIONS', 10) + $countFromIndications) - $countTrysToday;
         }
         $adivinhacoes = Adivinhacoes::where('resolvida', 'N')
         ->orderBy('id', 'desc')
@@ -36,6 +41,6 @@ class HomeController extends Controller
             ->orderby('adivinhacoes_premiacoes.id', 'desc')
             ->get();
 
-        return view('home')->with(compact('adivinhacoes', 'limitExceded', 'premios'));
+        return view('home')->with(compact('adivinhacoes', 'limitExceded', 'premios', 'trys'));
     }
 }
