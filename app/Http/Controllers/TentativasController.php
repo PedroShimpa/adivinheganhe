@@ -39,7 +39,8 @@ class TentativasController extends Controller
 
             $client = new PaymentClient();
             $request_options = new RequestOptions();
-            $request_options->setCustomHeaders(["X-Idempotency-Key: {$pag->id}"]);
+            $uniqueKey = now()->timestamp.$pag->id.md5();
+            $request_options->setCustomHeaders(["X-Idempotency-Key: {$uniqueKey}"]);
 
             $payment = $client->create([
                 "transaction_amount" => $request->input('transaction_amount'),
