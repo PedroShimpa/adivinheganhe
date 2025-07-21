@@ -34,7 +34,7 @@ class TentativasController extends Controller
                 'value' => $valor,
                 'desc' => $desc,
             ]);
-            MercadoPagoConfig::setAccessToken("MERCADO_PAGO_ACCESS_TOKEN");
+            MercadoPagoConfig::setAccessToken(env("MERCADO_PAGO_ACCESS_TOKEN"));
 
             $client = new PaymentClient();
             $request_options = new RequestOptions();
