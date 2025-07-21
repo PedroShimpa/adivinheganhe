@@ -52,6 +52,9 @@
                             @error('cpf')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
+                             <div class="form-text">
+                                Só pedimos seu CPF para controle maior de contas, ele não será exibido em nenhum lugar do site e nenhum dos nossos colaboradores tem acesso a ele!
+                            </div>
                         </div>
 
                         <!-- WhatsApp -->
