@@ -4,77 +4,56 @@
 @section('content')
 <div class="container py-5">
 
-@if(Auth::check())
-<div class="mb-4 p-4 bg-light rounded shadow-sm text-center">
+    @if(Auth::check())
+    <div class="mb-5 p-4 bg-light rounded shadow-sm text-center">
         <h4 class="mb-3 text-primary fw-semibold">
-            Indique e ganhe <strong>5 novas tentativas a cada novo Adivinhador registrado em seu link!</strong>
+            Indique e ganhe <strong>5 novas tentativas a cada novo Adivinhador registrado!</strong>
         </h4>
-        <div class="d-flex justify-content-center align-items-center gap-2 flex-wrap">
-            <input type="text" 
-                  id="linkIndicacao" 
-                  class="form-control w-auto text-truncate" 
-                  style="max-width: 400px;" 
-                  value="{{ route('register', ['ib' => auth()->user()->uuid]) }}" 
-                  readonly
-                  aria-label="Link de indicação">
-            <button class="btn btn-outline-primary" id="btnCopiarLink" type="button" title="Copiar link">
-                Copiar link
-            </button>
+        <div class="input-group justify-content-center mb-3">
+            <input type="text" id="linkIndicacao" class="form-control w-auto text-truncate" style="max-width: 400px;"
+                value="{{ route('register', ['ib' => auth()->user()->uuid]) }}" readonly>
+            <button class="btn btn-outline-primary" id="btnCopiarLink" type="button">Copiar link</button>
         </div>
-
-
-<p><strong id="tentativas-restantes">Restam {{ $trys }}</strong> tentativas para você.</p>
-
-</div>
-@endif
+        <p><strong id="tentativas-restantes">Restam {{ $trys }}</strong> tentativas para você.</p>
+    </div>
+    @endif
 
     @forelse($adivinhacoes as $adivinhacao)
-    <div class="card mb-4 shadow-sm">
-        <div class="row g-0">
-            <div class="col-md-5">
-                <img src="{{ asset('storage/' . $adivinhacao->imagem) }}"
-                     class="img-fluid"
-                     alt="Imagem da adivinhação">
+    <div class="card mb-5 shadow-sm">
+        <div class="row g-0 flex-column flex-md-row">
+            <div class="col-md-5 text-center bg-light p-2">
+                <img src="{{ asset('storage/' . $adivinhacao->imagem) }}" class="img-fluid rounded" alt="Imagem da adivinhação">
             </div>
-            <div class="col-md-7 d-flex flex-column justify-content-between">
-                <div class="card-body">
-                  <h1 class="card-title display-5 fw-bold text-primary">{{ $adivinhacao->titulo }}</h1>
-                    <p class="">{!! $adivinhacao->descricao !!}</p>
-                    <p class="text-muted">Quantidade de respostas até agora: {{ $adivinhacao->count_respostas }}</p>
+            <div class="col-md-7 p-4 d-flex flex-column justify-content-between">
+                <div>
+                    <h2 class="text-primary fw-bold mb-3">{{ $adivinhacao->titulo }}</h2>
+                    <p>{!! $adivinhacao->descricao !!}</p>
+                    <p class="text-muted small">👥 {{ $adivinhacao->count_respostas }} respostas até agora</p>
+
                     @auth
-                    @if($limitExceded)
-                     <div class="alert alert-warning">
-                            Você atingiu seu limite de resposta de hoje!
+                        @if($limitExceded)
+                        <div class="alert alert-warning">Você atingiu seu limite de resposta de hoje!</div>
+                        @else
+                        <div class="mb-3">
+                            <input type="text" id="resposta-{{ $adivinhacao->id }}" class="form-control"
+                                name="resposta" placeholder="Digite sua resposta...">
                         </div>
-                    @else
-                        <div class="mb-2">
-                            <input
-                                type="text"
-                                id="resposta-{{ $adivinhacao->id }}"
-                                class="form-control"
-                                name="resposta"
-                                placeholder="Digite sua resposta">
-                        </div>
-                        <input type="hidden"
-                               name="adivinhacao_id"
-                               value="{{ $adivinhacao->id }}">
-                        <button class="btn btn-success">Enviar resposta</button>
+                        <input type="hidden" name="adivinhacao_id" value="{{ $adivinhacao->id }}">
+                        <button class="btn btn-success w-100">Enviar resposta</button>
                         @endif
                     @else
-                        <div class="alert alert-warning">
-                            Você precisa <a href="{{ route('login') }}">entrar</a> para responder.
-                        </div>
+                    <div class="alert alert-warning">
+                        Você precisa <a href="{{ route('login') }}">entrar</a> para responder.
+                    </div>
                     @endauth
                 </div>
-                  @php
-                        $isLink = filter_var($adivinhacao->premio, FILTER_VALIDATE_URL);
-                    @endphp
 
+                @php
+                    $isLink = filter_var($adivinhacao->premio, FILTER_VALIDATE_URL);
+                @endphp
                 @if($isLink)
-                <div class="card-footer bg-transparent border-0">
-                    <a href="{{ $adivinhacao->premio }}"
-                       class="btn btn-outline-primary"
-                       target="_blank">Ver prêmio</a>
+                <div class="mt-3 text-end">
+                    <a href="{{ $adivinhacao->premio }}" class="btn btn-outline-primary" target="_blank">🎁 Ver prêmio</a>
                 </div>
                 @endif
             </div>
@@ -82,61 +61,61 @@
     </div>
     @empty
     <div class="text-center">
-      <h1>Não há adivinhações disponíveis por enquanto, em breve novas serão adicionadas!</h1>
+        <h4 class="text-muted">Nenhuma adivinhação disponível no momento.</h4>
     </div>
     @endforelse
 
-@if($premios->isNotEmpty())
-<hr class="my-5">
+    @if($premios->isNotEmpty())
+    <hr class="my-5">
 
-<h2 class="mb-3">🎁 Prêmios já conquistados</h2>
+    <h2 class="mb-3">🎉 Prêmios conquistados</h2>
 
-<div class="table-responsive">
-    <table class="table table-bordered table-striped align-middle">
-        <thead class="table-dark">
-            <tr>
-                <th>Título</th>
-                <th>Ações</th>
-                <th>Usuário</th>
-                <th>Prêmio Enviado?</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($premios as $premio)
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Título</th>
+                    <th>Ações</th>
+                    <th>Usuário</th>
+                    <th>Prêmio Enviado?</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($premios as $premio)
                 <tr>
                     <td>{{ $premio->titulo }}</td>
-                    <td>
-                    @php
-                        $isLink = filter_var($premio->premio, FILTER_VALIDATE_URL);
-                    @endphp
-
-                    @if($isLink)
+                    <td class="d-flex gap-2 flex-wrap">
+                        @php
+                            $isLink = filter_var($premio->premio, FILTER_VALIDATE_URL);
+                        @endphp
+                        @if($isLink)
                         <a href="{{ $premio->premio }}" target="_blank" class="btn btn-sm btn-outline-primary">
                             Ver prêmio
                         </a>
-                    @endif
-
-                        <a href="{{ route('adivinhacoes.respostas', $premio->uuid)}}" target="_blank" class="btn btn-sm btn-outline-primary">
+                        @endif
+                        <a href="{{ route('adivinhacoes.respostas', $premio->uuid) }}" target="_blank"
+                            class="btn btn-sm btn-outline-primary">
                             Ver respostas
                         </a>
                     </td>
                     <td>{{ $premio->username }}</td>
                     <td>
                         @if($premio->premio_enviado === 'S')
-                            <span class="badge bg-success">Sim</span>
+                        <span class="badge bg-success">Sim</span>
                         @else
-                            <span class="badge bg-warning text-dark">Não</span>
+                        <span class="badge bg-warning text-dark">Não</span>
                         @endif
                     </td>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
-@endif
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    @endif
 
 </div>
 @endsection
+
 @push('scripts')
   <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.11.1/dist/echo.iife.js"></script>
