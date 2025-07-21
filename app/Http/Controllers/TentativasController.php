@@ -23,7 +23,7 @@ class TentativasController extends Controller
     {
 
         $quantidade = $request->input('quantidade');
-        $valor = number_format($quantidade * 0.10, 2, '.', '');
+        $valor = $quantidade * 0.10;
         $desc = "Compra de {$quantidade} tentativas ";
 
 
@@ -43,7 +43,7 @@ class TentativasController extends Controller
 
             $payment = $client->create([
                 "transaction_amount" => $valor,
-                "token" => $request->input('card_token'),
+                "token" => $request->input('token'),
                 "description" => $desc,
                 "installments" => 1,
                 "payment_method_id" =>  $request->input('payment_method_id'),
@@ -71,7 +71,7 @@ class TentativasController extends Controller
 
 
             return response()->json(['success' => true]);
-        }  catch (\Exception $e) {
+        } catch (\Exception $e) {
             Log::error($e->getMessage());
 
             return response()->json(['success' => false], 400);
