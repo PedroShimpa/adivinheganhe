@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->uuid();
             $table->string('titulo');
-            $table->string('imagem');
-            $table->string('descricao');
+            $table->text('imagem');
+            $table->text('descricao');
             $table->longText('premio');
             $table->string('resposta');
             $table->string('resolvida')->default('N')->index();
