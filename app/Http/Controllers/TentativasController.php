@@ -57,7 +57,6 @@ class TentativasController extends Controller
                 ]
             ], $request_options);
 
-            Log::info('new mercado pago payment', $payment);
             $pag->payment_status = $payment->status;
             $pag->payment_id = $payment->id;
             $pag->save();
