@@ -124,7 +124,7 @@
                         @endif
                         <a href="{{ route('adivinhacoes.respostas', $premio->uuid) }}" target="_blank"
                             class="btn btn-sm btn-outline-primary">
-                            Ver tentivas
+                            Ver Tentativas
                         </a>
                     </td>
                     <td>{{ $premio->username }}</td>
