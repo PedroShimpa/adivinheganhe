@@ -17,7 +17,7 @@
         <p class="mb-1"><strong id="tentativas-restantes">Restam {{ $trys }}</strong> tentativas. 
             <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-primary ms-2">Comprar mais</a>
         </p>
-        <p class="small">Você recebe 10 tentativas gratuitas todos os dias!</p>
+        <p class="small">Você tem 10 tentativas (não acumlativas) gratuitas todos os dias!</p>
     </div>
     @endif
 
@@ -157,8 +157,6 @@
 
   <script>
     let tentativas = parseInt(document.getElementById('tentativas-restantes').textContent.replace(/\D/g, ''));
-
-    // Habilita log detalhado
     Pusher.logToConsole = true;
 
     const csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
@@ -181,7 +179,6 @@
     });
 
 
-    // Canal público: adivinhacoes
     window.Echo.channel('adivinhacoes')
       .listen('.resposta.aprovada', e => {
 
@@ -191,7 +188,6 @@
         Swal.fire('Adivinhação encerrada', e.mensagem, 'info');
       });
 
-    // Canal privado do usuário
     @auth
     window.Echo.private(`user.{{ Auth::id() }}`)
       .listen('.resposta.sucesso', e => {
