@@ -17,7 +17,7 @@ class RespostaController extends Controller
     {
 
         $msg = null;
-        
+
         $countTrysToday = AdivinhacoesRespostas::where('user_id', auth()->user()->id)->whereDate('created_at', today())->count();
         $countFromIndications = AdicionaisIndicacao::where('user_uuid', auth()->user()->uuid)->value('value') ?? 0;
         $limitExceded = $countTrysToday >= (env('MAX_ADIVINHATIONS', 10) + $countFromIndications);
@@ -28,8 +28,12 @@ class RespostaController extends Controller
             'resposta'       => 'required|string',
             'adivinhacao_id' => 'required|exists:adivinhacoes,id',
         ]);
-
         $respostaCliente = strtolower(trim($data['resposta']));
+
+        if (AdivinhacoesRespostas::where('adivinhacao_id', $data['adivinhacao_id'])->where('user_id', Auth::id())->where('resposta', $respostaCliente)->exists()) {
+            return response()->json(['error' => "Você ja tentou isso!"]);
+        }
+
         $adivinhacao     = Adivinhacoes::findOrFail($data['adivinhacao_id']);
 
         $resposta = AdivinhacoesRespostas::create([
@@ -38,10 +42,10 @@ class RespostaController extends Controller
             'resposta'       => $respostaCliente,
         ]);
 
-        if(($countTrysToday + 1) >= env('MAX_ADIVINHATIONS', 10) && $countFromIndications > 0) {
-           $adicionaisIndicacao =  AdicionaisIndicacao::where('user_uuid', auth()->user()->uuid)->first();
-           $adicionaisIndicacao->value = $adicionaisIndicacao->value - 1;
-           $adicionaisIndicacao->save();
+        if (($countTrysToday + 1) >= env('MAX_ADIVINHATIONS', 10) && $countFromIndications > 0) {
+            $adicionaisIndicacao =  AdicionaisIndicacao::where('user_uuid', auth()->user()->uuid)->first();
+            $adicionaisIndicacao->value = $adicionaisIndicacao->value - 1;
+            $adicionaisIndicacao->save();
         }
 
         if (strtolower(trim($adivinhacao->resposta)) === $respostaCliente) {
