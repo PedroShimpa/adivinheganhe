@@ -26,27 +26,37 @@
         </div>
     </div>
 </div>
-<script>document.addEventListener('DOMContentLoaded', function() {
+<script>
+document.addEventListener('DOMContentLoaded', function () {
     let page = 1;
     let loading = false;
-    const container = document.getElementById('respostas-container');
 
-    // Função nomeada para poder remover depois
-    function handleScroll() {
-        if (loading) return;
+    function setupScrollInfinite(modalBody, uuid) {
+        const container = modalBody.querySelector('#respostas-container');
+        if (!container) return;
 
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100) {
-            page++;
-            loadMore(page);
-        }
+        const scrollable = modalBody;
+        if (!scrollable) return;
+
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting && !loading) {
+                page++;
+                loadMore(page, container, uuid);
+            }
+        }, {
+            root: scrollable,
+            threshold: 1.0
+        });
+
+        const sentinel = document.createElement('div');
+        sentinel.id = 'sentinel-scroll';
+        container.after(sentinel);
+        observer.observe(sentinel);
     }
 
-    window.addEventListener('scroll', handleScroll);
-
-    function loadMore(page) {
+    function loadMore(page, container, uuid) {
         loading = true;
-
-        const url = `{{ route('adivinhacoes.respostas', $adivinhacao->uuid) }}?page=${page}`;
+        const url = `/adivinhacoes/${uuid}/respostas?page=${page}`;
 
         fetch(url, {
             headers: {
@@ -59,9 +69,7 @@
         })
         .then(data => {
             if (data.trim().length === 0) {
-                // Nenhum dado novo, para de escutar scroll
-                window.removeEventListener('scroll', handleScroll);
-                return;
+                return; // Sem mais dados
             }
             container.insertAdjacentHTML('beforeend', data);
             loading = false;
@@ -71,6 +79,40 @@
             loading = false;
         });
     }
-});
 
+    // Trigger AJAX load + scroll setup ao abrir modal
+    document.querySelectorAll('.btn-ver-tentativas').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const uuid = btn.dataset.uuid;
+            const modalBody = document.getElementById('modalRespostasBody');
+            page = 1;
+            loading = false;
+
+            modalBody.innerHTML = `
+                <div class="text-center p-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-3 text-muted">Carregando respostas...</p>
+                </div>
+            `;
+
+            fetch(`/adivinhacoes/${uuid}/respostas`)
+                .then(res => {
+                    if (!res.ok) throw new Error("Erro ao carregar respostas");
+                    return res.text();
+                })
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const content = doc.querySelector('.container');
+                    if (!content) throw new Error("Conteúdo inválido");
+
+                    modalBody.innerHTML = content.innerHTML;
+                    setupScrollInfinite(modalBody, uuid);
+                })
+                .catch(() => {
+                    modalBody.innerHTML = '<div class="p-4 text-danger">Erro ao carregar respostas. Tente novamente mais tarde.</div>';
+                });
+        });
+    });
+});
 </script>
