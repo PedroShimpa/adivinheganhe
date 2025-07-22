@@ -71,11 +71,6 @@ class AdivinhacoesController extends Controller
                 $r->created_at_br = (new DateTime($r->created_at))->format('d/m/Y H:i:s');
                 return $r;
             });
-
-            if ($request->ajax()) {
-                return view('partials.respostas_table_rows', compact('respostas'))->render();
-            }
-
             return view('respostas', compact('respostas', 'adivinhacao'));
         }
     }

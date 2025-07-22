@@ -132,23 +132,21 @@
     @endif
 </div>
 
-<!-- Modal para visualizar tentativas -->
+<!-- Modal para visualizar tentativas via iframe -->
 <div class="modal fade" id="modalRespostas" tabindex="-1" aria-labelledby="modalRespostasLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-scrollable">
-    <div class="modal-content">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 90vw; max-height: 90vh;">
+    <div class="modal-content" style="height: 90vh;">
       <div class="modal-header">
         <h5 class="modal-title" id="modalRespostasLabel">Respostas da Adivinhação</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body p-0" id="modalRespostasBody">
-        <div class="text-center p-5">
-          <div class="spinner-border text-primary" role="status"></div>
-          <p class="mt-3 text-muted">Carregando respostas...</p>
-        </div>
+      <div class="modal-body p-0" style="height: calc(100% - 56px);">
+        <iframe id="iframeRespostas" src="" style="border:none; width:100%; height:100%;"></iframe>
       </div>
     </div>
   </div>
 </div>
+
 @endsection
 
 @push('scripts')
@@ -300,34 +298,18 @@ document.querySelectorAll('.btn-success').forEach(btn => {
     });
 
       document.querySelectorAll('.btn-ver-tentativas').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const uuid = btn.dataset.uuid;
-      const modalBody = document.getElementById('modalRespostasBody');
+        btn.addEventListener('click', () => {
+          const uuid = btn.dataset.uuid;
+          const iframe = document.getElementById('iframeRespostas');
 
-      modalBody.innerHTML = `
-        <div class="text-center p-5">
-          <div class="spinner-border text-primary" role="status"></div>
-          <p class="mt-3 text-muted">Carregando respostas...</p>
-        </div>
-      `;
+          // Ajuste a URL da rota que mostra as respostas da adivinhação (ajuste se necessário)
+          iframe.src = `/adivinhacoes/${uuid}/respostas-iframe`; 
 
-      fetch(`/adivinhacoes/${uuid}/respostas`)
-        .then(res => {
-          if (!res.ok) throw new Error("Erro ao carregar respostas");
-          return res.text();
-        })
-        .then(html => {
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(html, 'text/html');
-          const content = doc.querySelector('.container');
-          if (content) modalBody.innerHTML = content.innerHTML;
-          else throw new Error('Conteúdo inválido');
-        })
-        .catch(() => {
-          modalBody.innerHTML = '<div class="p-4 text-danger">Erro ao carregar respostas. Tente novamente mais tarde.</div>';
+          // Abre o modal - se não usar data-bs-toggle no botão, pode usar JS:
+          const modal = new bootstrap.Modal(document.getElementById('modalRespostas'));
+          modal.show();
         });
-    });
-  })
+      });
 
   </script>
 @endpush

@@ -23,96 +23,10 @@
 
                 </table>
             </div>
+            <div class="mt-3">
+                {{ $respostas->links() }}
+            </div>
         </div>
+
     </div>
 </div>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    let page = 1;
-    let loading = false;
-
-    function setupScrollInfinite(modalBody, uuid) {
-        const container = modalBody.querySelector('#respostas-container');
-        if (!container) return;
-
-        const scrollable = modalBody;
-        if (!scrollable) return;
-
-        const observer = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting && !loading) {
-                page++;
-                loadMore(page, container, uuid);
-            }
-        }, {
-            root: scrollable,
-            threshold: 1.0
-        });
-
-        const sentinel = document.createElement('div');
-        sentinel.id = 'sentinel-scroll';
-        container.after(sentinel);
-        observer.observe(sentinel);
-    }
-
-    function loadMore(page, container, uuid) {
-        loading = true;
-        const url = `/adivinhacoes/${uuid}/respostas?page=${page}`;
-
-        fetch(url, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(response => {
-            if (!response.ok) throw new Error('Erro ao carregar página');
-            return response.text();
-        })
-        .then(data => {
-            if (data.trim().length === 0) {
-                return; // Sem mais dados
-            }
-            container.insertAdjacentHTML('beforeend', data);
-            loading = false;
-        })
-        .catch(error => {
-            console.error(error);
-            loading = false;
-        });
-    }
-
-    // Trigger AJAX load + scroll setup ao abrir modal
-    document.querySelectorAll('.btn-ver-tentativas').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const uuid = btn.dataset.uuid;
-            const modalBody = document.getElementById('modalRespostasBody');
-            page = 1;
-            loading = false;
-
-            modalBody.innerHTML = `
-                <div class="text-center p-5">
-                    <div class="spinner-border text-primary" role="status"></div>
-                    <p class="mt-3 text-muted">Carregando respostas...</p>
-                </div>
-            `;
-
-            fetch(`/adivinhacoes/${uuid}/respostas`)
-                .then(res => {
-                    if (!res.ok) throw new Error("Erro ao carregar respostas");
-                    return res.text();
-                })
-                .then(html => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    const content = doc.querySelector('.container');
-                    if (!content) throw new Error("Conteúdo inválido");
-
-                    modalBody.innerHTML = content.innerHTML;
-                    setupScrollInfinite(modalBody, uuid);
-                })
-                .catch(() => {
-                    modalBody.innerHTML = '<div class="p-4 text-danger">Erro ao carregar respostas. Tente novamente mais tarde.</div>';
-                });
-        });
-    });
-});
-</script>

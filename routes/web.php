@@ -38,7 +38,7 @@ Route::get('/tentativas/pending', [TentativasController::class, 'pending'])->nam
 Route::post('/webhook/mercadopago', [TentativasController::class, 'webhook']);
 
 
-Route::get('/adivinhacoes/{adivinhacao}/respostas', [AdivinhacoesController::class, 'respostas'])->name('adivinhacoes.respostas');
+Route::get('/adivinhacoes/{adivinhacao}/respostas-iframe', [AdivinhacoesController::class, 'respostas'])->name('adivinhacoes.respostas');
 
 
 require __DIR__ . '/auth.php';
