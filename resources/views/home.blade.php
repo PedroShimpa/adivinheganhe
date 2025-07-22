@@ -261,7 +261,7 @@ document.querySelectorAll('.btn-success').forEach(btn => {
       if(json.error) {
         msg.classList.add('text-danger');
       } else {
-        if(json.acertou) {
+        if(json.status == 'acertou') {
           msg.classList.add('text-success');
           msg.textContent = '🎉 Você acertou! Em breve notificaremos o envio do prêmio.';
           input.disabled = true;
