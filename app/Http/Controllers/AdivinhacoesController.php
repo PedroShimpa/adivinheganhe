@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class AdivinhacoesController extends Controller
-{/
+{
     public function create()
     {
         if (auth()->user()->id == 1) {
