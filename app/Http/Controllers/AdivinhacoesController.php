@@ -4,14 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Adivinhacoes;
 use App\Http\Requests\StoreAdivinhacoesRequest;
-use App\Http\Requests\UpdateAdivinhacoesRequest;
 use App\Models\AdivinhacoesRespostas;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class AdivinhacoesController extends Controller
-{/
+{
     public function create()
     {
         if (auth()->user()->id == 1) {

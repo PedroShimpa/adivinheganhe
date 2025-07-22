@@ -30,6 +30,9 @@
                             <label for="quantidade" class="form-label fw-semibold">Quantidade de tentativas</label>
                             <input type="number" name="quantidade" id="quantidade" class="form-control" min="{{ env('MIN_ATTEMPT_BUY', 10) }}" step="1" value="{{ env('MIN_ATTEMPT_BUY', 10)}}" required>
                             <div class="form-text">Mínimo de 10 tentativas. Cada uma custa R$ {{ env('PRICE_PER_ATTEMPT', 0.25)}}.</div>
+                             <div class="form-text">
+                                Tentivas compradas são cumulativas e nunca expiram.
+                            </div>
                         </div>
 
                         <div class="mb-4">

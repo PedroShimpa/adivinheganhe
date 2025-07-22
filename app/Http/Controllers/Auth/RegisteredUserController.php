@@ -47,6 +47,7 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
             'cpf' => $request->cpf,
             'whatsapp' => $request->whatsapp,
+            'indicated_by' => $request->input('indicated_by')
         ]);
 
         event(new Registered($user));

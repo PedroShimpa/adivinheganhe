@@ -17,7 +17,7 @@
         <p class="mb-1"><strong id="tentativas-restantes">Restam {{ $trys }}</strong> tentativas. 
             <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-primary ms-2">Comprar mais</a>
         </p>
-        <p class="small">Você recebe 10 tentativas gratuitas todos os dias!</p>
+        <p class="small">Você tem 10 tentativas (não acumlativas) gratuitas todos os dias!</p>
     </div>
     @endif
 
@@ -132,9 +132,11 @@
                         @if($isLink)
                         <a href="{{ $premio->premio }}" target="_blank" class="btn btn-sm btn-outline-primary">Ver prêmio</a>
                         @endif
-                        <button class="btn btn-sm btn-outline-primary btn-ver-tentativas" data-uuid="{{ $premio->uuid }}" data-bs-toggle="modal" data-bs-target="#modalRespostas">
-                            Ver Tentativas
-                        </button>
+                      <button class="btn btn-sm btn-outline-primary btn-ver-tentativas"
+                            data-uuid="{{ $premio->uuid }}">
+                        Ver Tentativas
+                    </button>
+
                     </td>
                     <td>{{ $premio->username }}</td>
                     <td>
@@ -152,7 +154,6 @@
     @endif
 </div>
 
-<!-- Modal para visualizar tentativas via iframe -->
 <div class="modal fade" id="modalRespostas" tabindex="-1" aria-labelledby="modalRespostasLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 90vw; max-height: 90vh;">
     <div class="modal-content" style="height: 90vh;">
@@ -176,8 +177,6 @@
 
   <script>
     let tentativas = parseInt(document.getElementById('tentativas-restantes').textContent.replace(/\D/g, ''));
-
-    // Habilita log detalhado
     Pusher.logToConsole = true;
 
     const csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
@@ -200,7 +199,6 @@
     });
 
 
-    // Canal público: adivinhacoes
     window.Echo.channel('adivinhacoes')
       .listen('.resposta.aprovada', e => {
 
@@ -210,7 +208,6 @@
         Swal.fire('Adivinhação encerrada', e.mensagem, 'info');
       });
 
-    // Canal privado do usuário
     @auth
     window.Echo.private(`user.{{ Auth::id() }}`)
       .listen('.resposta.sucesso', e => {
