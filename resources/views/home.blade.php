@@ -260,12 +260,17 @@ document.querySelectorAll('.btn-success').forEach(btn => {
 
       if(json.error) {
         msg.classList.add('text-danger');
-        msg.textContent = `Que pena, você errou! ${tentativas > 0 ? 'Mas ainda possui ' + tentativas + ' tentativa' + (tentativas === 1 ? '' : 's') : 'Você não possui mais tentativas 😞'}`;
       } else {
-        msg.classList.add('text-success');
-        msg.textContent = '🎉 Você acertou! Em breve notificaremos o envio do prêmio.';
-        input.disabled = true;
-        btn.disabled = true;
+        if(json.acertou) {
+          msg.classList.add('text-success');
+          msg.textContent = '🎉 Você acertou! Em breve notificaremos o envio do prêmio.';
+          input.disabled = true;
+          btn.disabled = true;
+
+        } else {
+          msg.textContent = `Que pena, você errou! ${tentativas > 0 ? 'Mas ainda possui ' + tentativas + ' tentativa' + (tentativas === 1 ? '' : 's') : 'Você não possui mais tentativas 😞'}`;
+
+        }
       }
 
       input.insertAdjacentElement('afterend', msg);
