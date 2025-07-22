@@ -62,7 +62,7 @@
                             <input type="text" id="resposta-{{ $adivinhacao->id }}" class="form-control border-primary fs-6 fw-semibold" name="resposta" placeholder="💬 Digite sua resposta">
                         </div>
                         <input type="hidden" name="adivinhacao_id" value="{{ $adivinhacao->id }}">
-                        <button class="btn btn-success w-100">Enviar resposta</button>
+                        <button class="btn btn-success w-100" id="btn-resposta-{{ $adivinhacao->id }}">Enviar resposta</button>
                         @endif
                     @else
                     <div class="alert alert-warning small">
@@ -185,118 +185,125 @@
         document.querySelectorAll('input[name="resposta"], .btn-success')
                 .forEach(el => el.disabled = true);
 
+
         Swal.fire('Adivinhação encerrada', e.mensagem, 'info');
+
+        const id = e.adivinhacaoId
+                  document.querySelector(`#resposta-${id}`).disabled = true
+                    
+                  document.querySelector(`#btn-resposta-${id}`).disabled true;
       });
 
     @auth
     window.Echo.private(`user.{{ Auth::id() }}`)
       .listen('.resposta.sucesso', e => {
 
-        Swal.fire('Parabéns!', e.mensagem, 'success')
+        Swal.fire(e.title ?? 'Parabéns!', e.mensagem, 'success')
           .then(() => {
             const container = document
               .querySelector(`input[name="adivinhacao_id"][value="${e.adivinhacaoId}"]`)
               .closest('.card-body');
 
-            container.querySelector(`#resposta-${e.adivinhacaoId}`).disabled = true;
-            container.querySelector('.btn-success').disabled = true;
+                 const id = e.adivinhacaoId
+                  document.querySelector(`#resposta-${id}`).disabled = true
+                    
+                  document.querySelector(`#btn-resposta-${id}`).disabled true;
           });
       });
     @endauth
 
-    // Envio da resposta
   const tentativasEl = document.getElementById('tentativas-restantes');
- tentativas = tentativasEl ? parseInt(tentativasEl.textContent.replace(/\D/g, '')) : 0;
+  tentativas = tentativasEl ? parseInt(tentativasEl.textContent.replace(/\D/g, '')) : 0;
 
-document.querySelectorAll('.btn-success').forEach(btn => {
-  btn.addEventListener('click', async () => {
-    const body = btn.closest('.col-md-7');
-    const id = body.querySelector('[name="adivinhacao_id"]').value;
-    const input = body.querySelector(`#resposta-${id}`);
-    const resposta = input.value;
+  document.querySelectorAll('.btn-success').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const body = btn.closest('.col-md-7');
+      const id = body.querySelector('[name="adivinhacao_id"]').value;
+      const input = body.querySelector(`#resposta-${id}`);
+      const resposta = input.value;
 
-    body.querySelectorAll('.resposta-enviada, .text-danger').forEach(el => el.remove());
+      body.querySelectorAll('.resposta-enviada, .text-danger').forEach(el => el.remove());
 
-    if (!resposta.trim()) {
-      const msg = document.createElement('div');
-      msg.className = 'mt-2 text-danger fw-bold';
-      msg.textContent = 'Preencha a resposta primeiro!';
-      input.insertAdjacentElement('afterend', msg);
-      return;
-    }
-
-    if (tentativas <= 0) {
-      Swal.fire('Sem tentativas!', 'Você não possui mais tentativas 😞', 'warning');
-      return;
-    }
-
-    tentativas--;
-    if (tentativasEl) {
-      tentativasEl.textContent = 'Restam ' + tentativas + ' tentativa' + (tentativas === 1 ? '' : 's');
-    }
-
-    try {
-      const res = await fetch("{{ route('resposta.enviar') }}", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': csrfToken,
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          resposta: resposta,
-          adivinhacao_id: id
-        })
-      });
-
-      const json = await res.json();
-      input.value = '';
-
-      const msg = document.createElement('div');
-      msg.className = 'mt-2 fw-semibold resposta-enviada';
-
-      if(json.error) {
-        msg.classList.add('text-danger');
-      } else {
-        if(json.status == 'acertou') {
-          msg.classList.add('text-success');
-          msg.textContent = '🎉 Você acertou! Em breve notificaremos o envio do prêmio.';
-          input.disabled = true;
-          btn.disabled = true;
-
-        } else {
-          msg.textContent = `Que pena, você errou! ${tentativas > 0 ? 'Mas ainda possui ' + tentativas + ' tentativa' + (tentativas === 1 ? '' : 's') : 'Você não possui mais tentativas 😞'}`;
-
-        }
+      if (!resposta.trim()) {
+        const msg = document.createElement('div');
+        msg.className = 'mt-2 text-danger fw-bold';
+        msg.textContent = 'Preencha a resposta primeiro!';
+        input.insertAdjacentElement('afterend', msg);
+        return;
       }
 
-      input.insertAdjacentElement('afterend', msg);
+      if (tentativas <= 0) {
+        Swal.fire('Sem tentativas!', 'Você não possui mais tentativas 😞', 'warning');
+        return;
+      }
 
-    } catch (error) {
-      Swal.fire('Erro', 'Erro ao enviar a resposta. Tente novamente!', 'error');
-    }
-  });
-});
+      tentativas--;
+      if (tentativasEl) {
+        tentativasEl.textContent = 'Restam ' + tentativas + ' tentativa' + (tentativas === 1 ? '' : 's');
+      }
 
+        try {
+          const res = await fetch("{{ route('resposta.enviar') }}", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': csrfToken,
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+              resposta: resposta,
+              adivinhacao_id: id
+            })
+          });
 
-  document.getElementById('btnCopiarLink').addEventListener('click', function() {
-        const input = document.getElementById('linkIndicacao');
-        input.select();
-        input.setSelectionRange(0, 99999); 
+          const json = await res.json();
+          input.value = '';
 
-        navigator.clipboard.writeText(input.value).then(() => {
-            this.textContent = 'Copiado!';
-            this.classList.remove('btn-outline-primary');
-            this.classList.add('btn-success');
-            setTimeout(() => {
-                this.textContent = 'Copiar link';
-                this.classList.remove('btn-success');
-                this.classList.add('btn-outline-primary');
-            }, 2000);
-        }).catch(() => {
-            alert('Não foi possível copiar o link. Por favor, copie manualmente.');
-        });
+          const msg = document.createElement('div');
+          msg.className = 'mt-2 fw-semibold resposta-enviada';
+
+          if(json.error) {
+            msg.classList.add('text-danger');
+          } else {
+            if(json.status == 'acertou') {
+              msg.classList.add('text-success');
+              msg.textContent = '🎉 Você acertou! Em breve notificaremos o envio do prêmio.';
+              input.disabled = true;
+              btn.disabled = true;
+
+            } else {
+              msg.textContent = `Que pena, você errou! ${tentativas > 0 ? 'Mas ainda possui ' + tentativas + ' tentativa' + (tentativas === 1 ? '' : 's') : 'Você não possui mais tentativas 😞'}`;
+
+            }
+          }
+
+          input.insertAdjacentElement('afterend', msg);
+
+        } catch (error) {
+          Swal.fire('Erro', 'Erro ao enviar a resposta. Tente novamente!', 'error');
+        }
+      });
     });
+
+
+      document.getElementById('btnCopiarLink').addEventListener('click', function() {
+            const input = document.getElementById('linkIndicacao');
+            input.select();
+            input.setSelectionRange(0, 99999); 
+
+            navigator.clipboard.writeText(input.value).then(() => {
+                this.textContent = 'Copiado!';
+                this.classList.remove('btn-outline-primary');
+                this.classList.add('btn-success');
+                setTimeout(() => {
+                    this.textContent = 'Copiar link';
+                    this.classList.remove('btn-success');
+                    this.classList.add('btn-outline-primary');
+                }, 2000);
+            }).catch(() => {
+               Swal.fire('Erro', 'Não foi possível copiar o link. Por favor, tente manualmente.', 'error');
+            });
+        });
 
       document.querySelectorAll('.btn-ver-tentativas').forEach(btn => {
         btn.addEventListener('click', () => {

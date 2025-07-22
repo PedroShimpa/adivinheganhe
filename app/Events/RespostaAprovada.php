@@ -34,7 +34,8 @@ class RespostaAprovada implements ShouldBroadcastNow
         return [
             'username'        => $this->username,
             'respostaCorreta' => $this->adivinhacao->resposta,
-            'mensagem'        => "O usuário {$this->username} acertou a adivinhação: {$this->adivinhacao->titulo}! Resposta: {$this->adivinhacao->resposta}"
+            'mensagem'        => "O usuário {$this->username} acertou a adivinhação: {$this->adivinhacao->titulo}! Resposta: {$this->adivinhacao->resposta}",
+            "adivinhacaoId"   => $this->adivinhacao->id
         ];
     }
 }

@@ -56,7 +56,9 @@ class RespostaController extends Controller
 
             broadcast(new RespostaPrivada(
                 "Você acertou! Seu código de resposta: {$resposta->uuid}!!!\n Em breve será notificado do envio do prêmio.",
-                $adivinhacao->id
+                $adivinhacao->id,
+                auth()->id(),
+                "Acertou"
             ));
 
             $adivinhacao->resolvida = 'S';
