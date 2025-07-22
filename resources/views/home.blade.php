@@ -166,7 +166,7 @@
       broadcaster: 'pusher',
       key: '{{ env("REVERB_APP_KEY") }}',
       wsHost: '{{ env("REVERB_HOST", "localhost") }}',
-      wsPort: {{ env("REVERB_PORT", 8080) }},
+      wsPort: '{{ env("REVERB_PORT", 8080) }}',
       forceTLS: false,
       disableStats: true,
       authEndpoint: '/broadcasting/auth',
@@ -190,7 +190,7 @@
         const id = e.adivinhacaoId
                   document.querySelector(`#resposta-${id}`).disabled = true
                     
-                  document.querySelector(`#btn-resposta-${id}`).disabled true;
+                  document.querySelector(`#btn-resposta-${id}`).disabled  = true;
       });
 
     @auth
