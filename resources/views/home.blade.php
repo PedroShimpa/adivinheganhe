@@ -157,7 +157,6 @@
 
   <script>
     let tentativas = parseInt(document.getElementById('tentativas-restantes').textContent.replace(/\D/g, ''));
-    Pusher.logToConsole = true;
 
     const csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
     const EchoCtor = window.Echo;
@@ -207,7 +206,7 @@
                  const id = e.adivinhacaoId
                   document.querySelector(`#resposta-${id}`).disabled = true
                     
-                  document.querySelector(`#btn-resposta-${id}`).disabled true;
+                  document.querySelector(`#btn-resposta-${id}`).disabled  = true;
           });
       });
     @endauth
