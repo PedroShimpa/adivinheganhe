@@ -71,7 +71,7 @@
                     @endif
                 @else
                 <div class="alert alert-warning">
-                    Você precisa <a href="{{ route('login') }}">entrar</a> para responder.
+                    Você precisa <a href="{{ route('login') }}">entrar</a> para responder. Pode vir é <span class="text-success">grátis</span>
                 </div>
                 @endauth
             </div>
