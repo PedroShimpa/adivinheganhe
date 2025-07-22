@@ -285,10 +285,9 @@ document.querySelectorAll('.btn-success').forEach(btn => {
   document.getElementById('btnCopiarLink').addEventListener('click', function() {
         const input = document.getElementById('linkIndicacao');
         input.select();
-        input.setSelectionRange(0, 99999); // Para dispositivos móveis
+        input.setSelectionRange(0, 99999); 
 
         navigator.clipboard.writeText(input.value).then(() => {
-            // Feedback com Bootstrap Toast ou alert simples
             this.textContent = 'Copiado!';
             this.classList.remove('btn-outline-primary');
             this.classList.add('btn-success');
@@ -307,10 +306,10 @@ document.querySelectorAll('.btn-success').forEach(btn => {
           const uuid = btn.dataset.uuid;
           const iframe = document.getElementById('iframeRespostas');
 
-          // Ajuste a URL da rota que mostra as respostas da adivinhação (ajuste se necessário)
+    
           iframe.src = `/adivinhacoes/${uuid}/respostas-iframe`; 
 
-          // Abre o modal - se não usar data-bs-toggle no botão, pode usar JS:
+
           const modal = new bootstrap.Modal(document.getElementById('modalRespostas'));
           modal.show();
         });
