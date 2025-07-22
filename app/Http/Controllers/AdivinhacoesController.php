@@ -11,19 +11,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class AdivinhacoesController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
-    public function index() {}
-
-    /**
-     * Show the form for creating a new resource.
-     */
+{/
     public function create()
     {
         if (auth()->user()->id == 1) {
-
             return view('adivinhacoes.create');
         }
         return redirect()->route('home');
@@ -34,23 +25,15 @@ class AdivinhacoesController extends Controller
     {
         if (auth()->user()->id == 1) {
 
-            // Obtém o arquivo da imagem
             $imagem = $request->file('imagem');
 
-            // Gera um nome único para a imagem com hash (usando uniqid, Str::random, ou qualquer outro método)
-            $hash = Str::random(10); // Gera uma string aleatória de 10 caracteres
-            $fileName = $hash . '_' . time() . '.' . $imagem->getClientOriginalExtension(); // Combina o hash com o timestamp para garantir unicidade
-
-            // Salva a imagem no diretório desejado, com o novo nome
+            $hash = Str::random(10); 
+            $fileName = $hash . '_' . time() . '.' . $imagem->getClientOriginalExtension(); 
             $path = $imagem->storeAs('imagens_adivinhacoes', $fileName, 'public');
-
-            // Cria a entrada no banco de dados
             $data = $request->validated();
             $data['imagem'] = $path;
             $data['descricao'] = $request->input('descricao');
             Adivinhacoes::create($data);
-
-
             return redirect()->route('home');
         }
         return redirect()->route('home');
@@ -63,47 +46,14 @@ class AdivinhacoesController extends Controller
             $respostas = AdivinhacoesRespostas::select('adivinhacoes_respostas.uuid', 'users.username', 'adivinhacoes_respostas.created_at', 'resposta')
                 ->join('users', 'users.id', '=', 'adivinhacoes_respostas.user_id')
                 ->where('adivinhacao_id', $adivinhacao->id)
-                ->orderBy('adivinhacoes_respostas.created_at', 'desc') // Ordenar mais recentes primeiro
+                ->orderBy('adivinhacoes_respostas.created_at', 'desc') 
                 ->paginate(10);
 
-            // Formatar as datas para exibir no Blade
             $respostas->getCollection()->transform(function ($r) {
                 $r->created_at_br = (new DateTime($r->created_at))->format('d/m/Y H:i:s');
                 return $r;
             });
             return view('respostas', compact('respostas', 'adivinhacao'));
         }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Adivinhacoes $adivinhacoes)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Adivinhacoes $adivinhacoes)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateAdivinhacoesRequest $request, Adivinhacoes $adivinhacoes)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Adivinhacoes $adivinhacoes)
-    {
-        //
     }
 }
