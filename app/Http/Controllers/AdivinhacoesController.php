@@ -58,12 +58,12 @@ class AdivinhacoesController extends Controller
 
     public function respostas(Request $request, Adivinhacoes $adivinhacao)
     {
-        if ($adivinhacao->resolvida == 'S' && $request->ajax()) {
+        if ($adivinhacao->resolvida == 'S') {
 
             $respostas = AdivinhacoesRespostas::select('adivinhacoes_respostas.uuid', 'users.username', 'adivinhacoes_respostas.created_at', 'resposta')
                 ->join('users', 'users.id', '=', 'adivinhacoes_respostas.user_id')
                 ->where('adivinhacao_id', $adivinhacao->id)
-                ->orderBy('adivinhacoes_respostas.created_at', 'desc')
+                ->orderBy('adivinhacoes_respostas.created_at', 'desc') // Ordenar mais recentes primeiro
                 ->paginate(10);
 
             // Formatar as datas para exibir no Blade
@@ -72,7 +72,11 @@ class AdivinhacoesController extends Controller
                 return $r;
             });
 
+            if ($request->ajax()) {
                 return view('partials.respostas_table_rows', compact('respostas'))->render();
+            }
+
+            return view('respostas', compact('respostas', 'adivinhacao'));
         }
     }
 
