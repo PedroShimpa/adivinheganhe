@@ -2,112 +2,104 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-5">
+<div class="container py-4">
 
     @if(Auth::check())
-    <div class="mb-5 p-4 bg-light rounded shadow-sm text-center">
-        <h4 class="mb-3 text-primary fw-semibold">
-            Indique e ganhe <strong>5 novas tentativas a cada novo Adivinhador registrado!</strong>
-        </h4>
-        <div class="input-group justify-content-center mb-3">
-            <input type="text" id="linkIndicacao" class="form-control w-auto text-truncate" style="max-width: 400px;"
+    <div class="mb-4 p-3 bg-light rounded shadow-sm text-center">
+        <h5 class="mb-2 text-primary fw-semibold">
+            Indique e ganhe <strong>5 tentativas por novo Adivinhador!</strong>
+        </h5>
+        <div class="input-group mb-3 mx-auto" style="max-width: 100%;">
+            <input type="text" id="linkIndicacao" class="form-control text-truncate" style="max-width: 400px;"
                 value="{{ route('register', ['ib' => auth()->user()->uuid]) }}" readonly>
-            <button class="btn btn-outline-primary" id="btnCopiarLink" type="button">Copiar link</button>
+            <button class="btn btn-outline-primary" id="btnCopiarLink">Copiar link</button>
         </div>
-        <p><strong id="tentativas-restantes">Restam {{ $trys }}</strong> tentativas para você. Se quiser você pode <a href="{{ route('tentativas.comprar') }}" class="btn btn-primary" >comprar mais</a></p>
-        <p>Você recebe 10 tentativas gratuitamente todos os dias!</p>
+        <p class="mb-1"><strong id="tentativas-restantes">Restam {{ $trys }}</strong> tentativas. 
+            <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-primary ms-2">Comprar mais</a>
+        </p>
+        <p class="small">Você recebe 10 tentativas gratuitas todos os dias!</p>
     </div>
     @endif
-@forelse($adivinhacoes as $adivinhacao)
-<div class="card mb-5 shadow-sm">
-    <div class="row g-0 flex-column flex-md-row">
-        <div class="col-md-5 d-flex align-items-center justify-content-center bg-light p-3">
-            <img src="{{ asset('storage/' . $adivinhacao->imagem) }}" class="img-fluid rounded" alt="Imagem da adivinhação">
-        </div>
-        <div class="col-md-7 p-4 d-flex flex-column justify-content-between">
-            <div>
-                <h2 class="text-primary fw-bold mb-3">{{ $adivinhacao->titulo }}</h2>
 
-                <!-- Botão que abre o modal com a descrição -->
-                <button class="btn btn-outline-info mb-2" data-bs-toggle="modal" data-bs-target="#modalDescricao-{{ $adivinhacao->id }}">
-                    ➕ Informações
-                </button>
+    @forelse($adivinhacoes as $adivinhacao)
+    <div class="card mb-4 shadow-sm">
+        <div class="row g-0 flex-wrap">
+            <div class="col-12 col-md-5 d-flex align-items-center justify-content-center bg-light p-2">
+                <img src="{{ asset('storage/' . $adivinhacao->imagem) }}" class="img-fluid w-100 rounded" alt="Imagem da adivinhação">
+            </div>
+            <div class="col-12 col-md-7 p-3 d-flex flex-column justify-content-between">
+                <div>
+                    <h5 class="text-primary fw-bold mb-2">{{ $adivinhacao->titulo }}</h5>
 
-                <!-- Modal de descrição -->
-                <div class="modal fade" id="modalDescricao-{{ $adivinhacao->id }}" tabindex="-1" aria-labelledby="modalLabel-{{ $adivinhacao->id }}" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="modalLabel-{{ $adivinhacao->id }}">{{ $adivinhacao->titulo }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                      </div>
-                      <div class="modal-body">
-                        {!! $adivinhacao->descricao !!}
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                      </div>
+                    <button class="btn btn-outline-info btn-sm mb-2" data-bs-toggle="modal" data-bs-target="#modalDescricao-{{ $adivinhacao->id }}">
+                        ➕ Informações
+                    </button>
+
+                    <div class="modal fade" id="modalDescricao-{{ $adivinhacao->id }}" tabindex="-1" aria-labelledby="modalLabel-{{ $adivinhacao->id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalLabel-{{ $adivinhacao->id }}">{{ $adivinhacao->titulo }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">{!! $adivinhacao->descricao !!}</div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
-                </div>
 
-                @if($adivinhacao->count_respostas != 0)
-                <p class="text-muted small mt-2 mb-2">👥 {{ $adivinhacao->count_respostas }} tentativas até agora</p>
-                @else
-                <p class="text-muted small mt-2 mb-2">👥 Nínguem tentou adivinhar ainda!</p>
+                    <p class="text-muted small mt-2">
+                        👥 {{ $adivinhacao->count_respostas ?: 'Ninguém tentou adivinhar ainda!' }}
+                    </p>
 
-                @endif
-
-                @auth
-                    @if($limitExceded)
-                    <div class="alert alert-warning">Você atingiu seu limite de tentativas de hoje!</div>
+                    @auth
+                        @if($limitExceded)
+                        <div class="alert alert-warning p-2 small">Você atingiu o limite de tentativas hoje!</div>
+                        @else
+                        <div class="mb-2">
+                            <input type="text" id="resposta-{{ $adivinhacao->id }}" class="form-control border-primary fs-6 fw-semibold" name="resposta" placeholder="💬 Digite sua resposta">
+                        </div>
+                        <input type="hidden" name="adivinhacao_id" value="{{ $adivinhacao->id }}">
+                        <button class="btn btn-success w-100">Enviar resposta</button>
+                        @endif
                     @else
-                    <div class="mb-3">
-<input type="text" id="resposta-{{ $adivinhacao->id }}" class="form-control border-2 border-primary fs-5 fw-semibold" name="resposta" placeholder="💬 Digite sua resposta aqui">
-
+                    <div class="alert alert-warning small">
+                        Você precisa <a href="{{ route('login') }}">entrar</a> para responder. É <span class="text-success">grátis</span>!
                     </div>
-                    <input type="hidden" name="adivinhacao_id" value="{{ $adivinhacao->id }}">
-                    <button class="btn btn-success w-100">Enviar resposta</button>
-                    @endif
-                @else
-                <div class="alert alert-warning">
-                    Você precisa <a href="{{ route('login') }}">entrar</a> para responder. Pode vir é <span class="text-success">grátis</span>
+                    @endauth
                 </div>
-                @endauth
-            </div>
 
-            @php
-                $isLink = filter_var($adivinhacao->premio, FILTER_VALIDATE_URL);
-            @endphp
-            @if($isLink)
-            <div class="mt-3 text-end">
-                <a href="{{ $adivinhacao->premio }}" class="btn btn-outline-primary" target="_blank">🎁 Ver prêmio</a>
+                @php $isLink = filter_var($adivinhacao->premio, FILTER_VALIDATE_URL); @endphp
+                @if($isLink)
+                <div class="mt-3 text-end">
+                    <a href="{{ $adivinhacao->premio }}" class="btn btn-outline-primary btn-sm" target="_blank">🎁 Ver prêmio</a>
+                </div>
+                @endif
             </div>
-            @endif
         </div>
     </div>
-</div>
-@empty
-<div class="text-center">
-    <h4 class="text-muted">Nenhuma adivinhação disponível no momento.</h4>
-</div>
-@endforelse
-
+    @empty
+    <div class="text-center">
+        <h5 class="text-muted">Nenhuma adivinhação disponível no momento.</h5>
+    </div>
+    @endforelse
 
     @if($premios->isNotEmpty())
-    <hr class="my-5">
+    <hr class="my-4">
 
-    <h2 class="mb-3">🎉 Prêmios conquistados</h2>
+    <h5 class="mb-3">🎉 Prêmios conquistados</h5>
 
     <div class="table-responsive">
         <table class="table table-bordered table-striped align-middle">
-            <thead class="table-dark">
+            <thead class="table-dark small">
                 <tr>
                     <th>Título</th>
                     <th>Resposta</th>
                     <th>Ações</th>
                     <th>Usuário</th>
-                    <th>Prêmio Enviado?</th>
+                    <th>Enviado?</th>
                 </tr>
             </thead>
             <tbody>
@@ -115,21 +107,14 @@
                 <tr>
                     <td>{{ $premio->titulo }}</td>
                     <td>{{ $premio->resposta }}</td>
-                    <td class="d-flex gap-2 flex-wrap">
-                        @php
-                            $isLink = filter_var($premio->premio, FILTER_VALIDATE_URL);
-                        @endphp
+                    <td class="d-flex flex-wrap gap-2">
+                        @php $isLink = filter_var($premio->premio, FILTER_VALIDATE_URL); @endphp
                         @if($isLink)
-                        <a href="{{ $premio->premio }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                            Ver prêmio
-                        </a>
+                        <a href="{{ $premio->premio }}" target="_blank" class="btn btn-sm btn-outline-primary">Ver prêmio</a>
                         @endif
-                        <button type="button" class="btn btn-sm btn-outline-primary btn-ver-tentativas"
-        data-uuid="{{ $premio->uuid }}"
-        data-bs-toggle="modal" data-bs-target="#modalRespostas">
-    Ver Tentativas
-</button>
-
+                        <button class="btn btn-sm btn-outline-primary btn-ver-tentativas" data-uuid="{{ $premio->uuid }}" data-bs-toggle="modal" data-bs-target="#modalRespostas">
+                            Ver Tentativas
+                        </button>
                     </td>
                     <td>{{ $premio->username }}</td>
                     <td>
@@ -145,15 +130,15 @@
         </table>
     </div>
     @endif
-
 </div>
 
+<!-- Modal para visualizar tentativas -->
 <div class="modal fade" id="modalRespostas" tabindex="-1" aria-labelledby="modalRespostasLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalRespostasLabel">Respostas da Adivinhação</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body p-0" id="modalRespostasBody">
         <div class="text-center p-5">
@@ -164,7 +149,6 @@
     </div>
   </div>
 </div>
-
 @endsection
 
 @push('scripts')
