@@ -124,10 +124,12 @@
                             Ver prêmio
                         </a>
                         @endif
-                        <a href="{{ route('adivinhacoes.respostas', $premio->uuid) }}" target="_blank"
-                            class="btn btn-sm btn-outline-primary">
-                            Ver Tentativas
-                        </a>
+                        <button type="button" class="btn btn-sm btn-outline-primary btn-ver-tentativas"
+        data-uuid="{{ $premio->uuid }}"
+        data-bs-toggle="modal" data-bs-target="#modalRespostas">
+    Ver Tentativas
+</button>
+
                     </td>
                     <td>{{ $premio->username }}</td>
                     <td>
@@ -145,6 +147,24 @@
     @endif
 
 </div>
+
+<div class="modal fade" id="modalRespostas" tabindex="-1" aria-labelledby="modalRespostasLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalRespostasLabel">Respostas da Adivinhação</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body p-0" id="modalRespostasBody">
+        <div class="text-center p-5">
+          <div class="spinner-border text-primary" role="status"></div>
+          <p class="mt-3 text-muted">Carregando respostas...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 @endsection
 
 @push('scripts')
@@ -294,6 +314,36 @@ document.querySelectorAll('.btn-success').forEach(btn => {
             alert('Não foi possível copiar o link. Por favor, copie manualmente.');
         });
     });
+
+      document.querySelectorAll('.btn-ver-tentativas').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const uuid = btn.dataset.uuid;
+      const modalBody = document.getElementById('modalRespostasBody');
+
+      modalBody.innerHTML = `
+        <div class="text-center p-5">
+          <div class="spinner-border text-primary" role="status"></div>
+          <p class="mt-3 text-muted">Carregando respostas...</p>
+        </div>
+      `;
+
+      fetch(`/adivinhacoes/${uuid}/respostas`)
+        .then(res => {
+          if (!res.ok) throw new Error("Erro ao carregar respostas");
+          return res.text();
+        })
+        .then(html => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const content = doc.querySelector('.container');
+          if (content) modalBody.innerHTML = content.innerHTML;
+          else throw new Error('Conteúdo inválido');
+        })
+        .catch(() => {
+          modalBody.innerHTML = '<div class="p-4 text-danger">Erro ao carregar respostas. Tente novamente mais tarde.</div>';
+        });
+    });
+  })
 
   </script>
 @endpush

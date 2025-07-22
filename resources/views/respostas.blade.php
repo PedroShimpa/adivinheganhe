@@ -1,6 +1,3 @@
-@extends('layouts.app')
-
-@section('content')
 <div class="container py-5">
     <div class="text-center mb-4">
         <h1 class="fw-bold text-primary">Respostas da Adivinhação: {{ $adivinhacao->titulo }}</h1>
@@ -29,8 +26,6 @@
         </div>
     </div>
 </div>
-@endsection
-@push('scripts')
 <script>document.addEventListener('DOMContentLoaded', function() {
     let page = 1;
     let loading = false;
@@ -79,4 +74,3 @@
 });
 
 </script>
-@endpush
