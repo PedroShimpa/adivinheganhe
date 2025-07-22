@@ -7,7 +7,7 @@
     @if(Auth::check())
     <div class="mb-4 p-3 bg-light rounded shadow-sm text-center">
         <h5 class="mb-2 text-primary fw-semibold">
-            Indique e ganhe <strong>5 tentativas por novo Adivinhador!</strong>
+            Indique e ganhe <strong>5 tentativas por novo Adivinhador registrado no seu link!</strong>
         </h5>
         <div class="input-group mb-3 mx-auto" style="max-width: 100%;">
             <input type="text" id="linkIndicacao" class="form-control text-truncate" style="max-width: 400px;"
