@@ -107,7 +107,7 @@
                 <tr>
                     <td>{{ $premio->titulo }}</td>
                     <td>{{ $premio->resposta }}</td>
-                    <td class="d-flex flex-wrap gap-2">
+                    <td>
                         @php $isLink = filter_var($premio->premio, FILTER_VALIDATE_URL); @endphp
                         @if($isLink)
                         <a href="{{ $premio->premio }}" target="_blank" class="btn btn-sm btn-outline-primary">Ver prêmio</a>
