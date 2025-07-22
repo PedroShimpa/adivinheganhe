@@ -112,9 +112,11 @@
                         @if($isLink)
                         <a href="{{ $premio->premio }}" target="_blank" class="btn btn-sm btn-outline-primary">Ver prêmio</a>
                         @endif
-                        <button class="btn btn-sm btn-outline-primary btn-ver-tentativas" data-uuid="{{ $premio->uuid }}" data-bs-toggle="modal" data-bs-target="#modalRespostas">
-                            Ver Tentativas
-                        </button>
+                      <button class="btn btn-sm btn-outline-primary btn-ver-tentativas"
+                            data-uuid="{{ $premio->uuid }}">
+                        Ver Tentativas
+                    </button>
+
                     </td>
                     <td>{{ $premio->username }}</td>
                     <td>

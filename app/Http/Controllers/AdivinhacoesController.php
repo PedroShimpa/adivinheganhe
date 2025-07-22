@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Adivinhacoes;
 use App\Http\Requests\StoreAdivinhacoesRequest;
-use App\Http\Requests\UpdateAdivinhacoesRequest;
 use App\Models\AdivinhacoesRespostas;
 use DateTime;
 use Illuminate\Http\Request;
