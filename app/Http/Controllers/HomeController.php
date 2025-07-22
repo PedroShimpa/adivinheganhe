@@ -21,15 +21,14 @@ class HomeController extends Controller
             $limitExceded = $countTrysToday >= (env('MAX_ADIVINHATIONS', 10) + $countFromIndications);
             $trys = (env('MAX_ADIVINHATIONS', 10) + $countFromIndications) - $countTrysToday;
         }
-        $adivinhacoes = Adivinhacoes::where('resolvida', 'N')
-        ->orderBy('id', 'desc')
-        ->get([
-            'id',
+        $adivinhacoes = Adivinhacoes::select('id',
             'titulo',
             'imagem',
             'descricao',
-            'premio'
-        ]);
+            'premio')
+        ->where('resolvida', 'N')
+        ->orderBy('id', 'desc')
+        ->get();
 
         $adivinhacoes->filter(function ($a) {
             $a->count_respostas = AdivinhacoesRespostas::where('adivinhacao_id', $a->id)->count();
