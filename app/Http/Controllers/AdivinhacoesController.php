@@ -60,7 +60,7 @@ class AdivinhacoesController extends Controller
     {
         if ($adivinhacao->resolvida == 'S') {
 
-            $respostas = AdivinhacoesRespostas::select('adivinhacoes_respostas.uuid', 'users.name', 'adivinhacoes_respostas.created_at', 'resposta')
+            $respostas = AdivinhacoesRespostas::select('adivinhacoes_respostas.uuid', 'users.username', 'adivinhacoes_respostas.created_at', 'resposta')
                 ->join('users', 'users.id', '=', 'adivinhacoes_respostas.user_id')
                 ->where('adivinhacao_id', $adivinhacao->id)
                 ->orderBy('adivinhacoes_respostas.created_at', 'desc') // Ordenar mais recentes primeiro

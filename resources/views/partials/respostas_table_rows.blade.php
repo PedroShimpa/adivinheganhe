@@ -1,7 +1,7 @@
 @forelse($respostas as $resposta)
     <tr>
         <td class="fw-semibold text-center">{{ $resposta->uuid }}</td>
-        <td class="fw-semibold">{{ $resposta->name }}</td>
+        <td class="fw-semibold">{{ $resposta->username }}</td>
         <td>{{ $resposta->resposta }}</td>
         <td class="text-muted text-center">{{ $resposta->created_at_br }}</td>
     </tr>
