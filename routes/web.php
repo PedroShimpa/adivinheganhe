@@ -4,11 +4,7 @@ use App\Http\Controllers\AdivinhacoesController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RespostaController;
-use App\Http\Controllers\TentativasController;
-use App\Models\Adivinhacoes;
-use App\Models\AdivinhacoesPremiacoes;
-use App\Models\AdivinhacoesRespostas;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\PagamentosController;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
@@ -22,21 +18,20 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
 Route::middleware('auth')->group(function () {
-Route::get('/adivinhacoes/create', [AdivinhacoesController::class, 'create'])->name('adivinhacoes.create');
-Route::post('/adivinhacoes/create', [AdivinhacoesController::class, 'store'])->name('adivinhacoes.store');
-Route::post('/responder', [RespostaController::class, 'enviar'])->name('resposta.enviar');
-Route::get('/tentativas/comprar', [TentativasController::class, 'index'])->name('tentativas.shop');
-Route::post('/tentativas/comprar', [TentativasController::class, 'buy'])->name('tentativas.comprar');
-Route::get('/tentativas/success', [TentativasController::class, 'success'])->name('tentativas.success');
-Route::get('/tentativas/fail', [TentativasController::class, 'fail'])->name('tentativas.fail');
-Route::get('/tentativas/pending', [TentativasController::class, 'pending'])->name('tentativas.pending');
+    Route::get('/adivinhacoes/create', [AdivinhacoesController::class, 'create'])->name('adivinhacoes.create');
+    Route::post('/adivinhacoes/create', [AdivinhacoesController::class, 'store'])->name('adivinhacoes.store');
+    
+    Route::post('/responder', [RespostaController::class, 'enviar'])->name('resposta.enviar');
 
+    Route::get('/tentativas/comprar', [PagamentosController::class, 'index_buy_attempts'])->name('tentativas.shop');
+    Route::post('/tentativas/comprar', [PagamentosController::class, 'buy_attempts'])->name('tentativas.comprar');
+
+    Route::get('/dicas/{adivinhacao}/comprar', [PagamentosController::class, 'index_buy_dica'])->name('dicas.index_buy');
+    Route::post('/dicas/{adivinhacao}/comprar', [PagamentosController::class, 'buy_dica'])->name('dicas.buy');
 });
 
-Route::post('/webhook/mercadopago', [TentativasController::class, 'webhook']);
-
+Route::post('/webhook/mercadopago', [PagamentosController::class, 'webhook']);
 
 Route::get('/adivinhacoes/{adivinhacao}/respostas-iframe', [AdivinhacoesController::class, 'respostas'])->name('adivinhacoes.respostas');
 

@@ -18,7 +18,10 @@ class Adivinhacoes extends Model
         'descricao',
         'premio',
         'resposta',
-        'resolvida'
+        'resolvida',
+        'dica',
+        'dica_paga',
+        'dica_valor'
     ];
 
     // No model

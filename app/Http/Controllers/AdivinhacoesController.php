@@ -20,13 +20,10 @@ class AdivinhacoesController extends Controller
         return redirect()->route('home');
     }
 
-
     public function store(StoreAdivinhacoesRequest $request)
     {
         if (auth()->user()->id == 1) {
-
             $imagem = $request->file('imagem');
-
             $hash = Str::random(10); 
             $fileName = $hash . '_' . time() . '.' . $imagem->getClientOriginalExtension(); 
             $path = $imagem->storeAs('imagens_adivinhacoes', $fileName, 'public');
@@ -42,7 +39,6 @@ class AdivinhacoesController extends Controller
     public function respostas(Request $request, Adivinhacoes $adivinhacao)
     {
         if ($adivinhacao->resolvida == 'S') {
-
             $respostas = AdivinhacoesRespostas::select('adivinhacoes_respostas.uuid', 'users.username', 'adivinhacoes_respostas.created_at', 'resposta')
                 ->join('users', 'users.id', '=', 'adivinhacoes_respostas.user_id')
                 ->where('adivinhacao_id', $adivinhacao->id)
