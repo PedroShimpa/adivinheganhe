@@ -63,8 +63,8 @@
                     <div class="alert alert-warning">Você atingiu seu limite de tentativas de hoje!</div>
                     @else
                     <div class="mb-3">
-                        <input type="text" id="resposta-{{ $adivinhacao->id }}" class="form-control"
-                            name="resposta" placeholder="O que você acha que é?">
+<input type="text" id="resposta-{{ $adivinhacao->id }}" class="form-control border-2 border-primary fs-5 fw-semibold" name="resposta" placeholder="💬 Digite sua resposta aqui">
+
                     </div>
                     <input type="hidden" name="adivinhacao_id" value="{{ $adivinhacao->id }}">
                     <button class="btn btn-success w-100">Enviar resposta</button>
@@ -216,20 +216,24 @@ document.querySelectorAll('.btn-success').forEach(btn => {
     const input = body.querySelector(`#resposta-${id}`);
     const resposta = input.value;
 
-    if (!resposta) {
+    body.querySelectorAll('.resposta-enviada, .text-danger').forEach(el => el.remove());
+
+    if (!resposta.trim()) {
       const msg = document.createElement('div');
-      msg.className = 'mt-2 text-danger';
+      msg.className = 'mt-2 text-danger fw-bold';
       msg.textContent = 'Preencha a resposta primeiro!';
       input.insertAdjacentElement('afterend', msg);
       return;
     }
 
-    // Atualiza o número de tentativas antes do fetch
-    if (tentativas > 0) {
-      tentativas--;
-      if (tentativasEl) {
-        tentativasEl.textContent = 'Restam ' + tentativas;
-      }
+    if (tentativas <= 0) {
+      Swal.fire('Sem tentativas!', 'Você não possui mais tentativas 😞', 'warning');
+      return;
+    }
+
+    tentativas--;
+    if (tentativasEl) {
+      tentativasEl.textContent = 'Restam ' + tentativas + ' tentativa' + (tentativas === 1 ? '' : 's');
     }
 
     try {
@@ -247,27 +251,29 @@ document.querySelectorAll('.btn-success').forEach(btn => {
       });
 
       const json = await res.json();
-
       input.value = '';
 
-      body.querySelectorAll('.resposta-enviada').forEach(el => el.remove());
       const msg = document.createElement('div');
+      msg.className = 'mt-2 fw-semibold resposta-enviada';
+
       if(json.error) {
-        msg.className = 'mt-2 text-danger';
-        msg.textContent = json.error;
+        msg.classList.add('text-danger');
+        msg.textContent = `Que pena, você errou! ${tentativas > 0 ? 'Mas ainda possui ' + tentativas + ' tentativa' + (tentativas === 1 ? '' : 's') : 'Você não possui mais tentativas 😞'}`;
       } else {
-        msg.className = 'mt-2 text-success resposta-enviada';
-        msg.textContent = json.status === 'acertou'
-          ? 'Você acertou! Em breve notificaremos o envio do prêmio.'
-          : 'Que pena! Tente novamente (se ainda tiver tentativas)!';
+        msg.classList.add('text-success');
+        msg.textContent = '🎉 Você acertou! Em breve notificaremos o envio do prêmio.';
+        input.disabled = true;
+        btn.disabled = true;
       }
+
       input.insertAdjacentElement('afterend', msg);
 
     } catch (error) {
-      // Se quiser pode aqui reverter a decrementação em caso de erro na requisição.
+      Swal.fire('Erro', 'Erro ao enviar a resposta. Tente novamente!', 'error');
     }
   });
 });
+
 
   document.getElementById('btnCopiarLink').addEventListener('click', function() {
         const input = document.getElementById('linkIndicacao');
