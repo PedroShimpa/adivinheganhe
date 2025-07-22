@@ -134,7 +134,6 @@
     @endif
 </div>
 
-<!-- Modal para visualizar tentativas via iframe -->
 <div class="modal fade" id="modalRespostas" tabindex="-1" aria-labelledby="modalRespostasLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 90vw; max-height: 90vh;">
     <div class="modal-content" style="height: 90vh;">

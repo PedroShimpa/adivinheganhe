@@ -15,6 +15,8 @@ class RespostaController extends Controller
 {
     public function enviar(Request $request)
     {
+
+        $msg = null;
         
         $countTrysToday = AdivinhacoesRespostas::where('user_id', auth()->user()->id)->whereDate('created_at', today())->count();
         $countFromIndications = AdicionaisIndicacao::where('user_uuid', auth()->user()->uuid)->value('value') ?? 0;
@@ -49,7 +51,7 @@ class RespostaController extends Controller
                 ->toOthers();
 
             broadcast(new RespostaPrivada(
-                "Você acertou, seu código de resposta: {$resposta->uuid}!!!\n Em breve será notificado do envio do prêmio.",
+                "Você acertou! Seu código de resposta: {$resposta->uuid}!!!\n Em breve será notificado do envio do prêmio.",
                 $adivinhacao->id
             ));
 
@@ -64,6 +66,6 @@ class RespostaController extends Controller
             return response()->json(['status' => 'acertou']);
         }
 
-        return response()->json(['status' => 'ok']);
+        return response()->json(['status' => 'ok', 'msg' => $msg]);
     }
 }
