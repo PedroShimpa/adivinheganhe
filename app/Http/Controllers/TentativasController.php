@@ -21,9 +21,8 @@ class TentativasController extends Controller
 
     public function buy(Request $request)
     {
-
         $quantidade = $request->input('quantidade');
-        $valor = $quantidade * 0.10;
+        $valor = $quantidade * env('PRICE_PER_ATTEMPT', 0.25);
         $desc = "Compra de {$quantidade} tentativas ";
 
 

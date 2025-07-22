@@ -28,13 +28,13 @@
 
                         <div class="mb-3">
                             <label for="quantidade" class="form-label fw-semibold">Quantidade de tentativas</label>
-                            <input type="number" name="quantidade" id="quantidade" class="form-control" min="10" step="1" value="10" required>
-                            <div class="form-text">Mínimo de 10 tentativas. Cada uma custa R$ 0,10.</div>
+                            <input type="number" name="quantidade" id="quantidade" class="form-control" min="{{ env('MIN_ATTEMPT_BUY', 10) }}" step="1" value="{{ env('MIN_ATTEMPT_BUY', 10)}}" required>
+                            <div class="form-text">Mínimo de 10 tentativas. Cada uma custa R$ {{ env('PRICE_PER_ATTEMPT', 0.25)}}.</div>
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label fw-semibold">Valor total</label>
-                            <input type="text" class="form-control bg-light" id="valorTotal" value="R$ 1,00" readonly>
+                            <input type="text" class="form-control bg-light" id="valorTotal" value="R$ {{ env('PRICE_PER_ATTEMPT', 0.25) * env('MIN_ATTEMPT_BUY', 10)}}" readonly>
                         </div>
 
                         <div class="mb-3">
@@ -103,158 +103,156 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    const quantidadeInput = document.getElementById('quantidade');
-    const valorTotalInput = document.getElementById('valorTotal');
+ const quantidadeInput = document.getElementById('quantidade');
+const valorTotalInput = document.getElementById('valorTotal');
 
-    function calcularValorTotal() {
-        const qtd = parseInt(quantidadeInput.value) || 10;
-        const valor = (qtd * 0.10).toFixed(2);
-        valorTotalInput.value = `R$ ${valor.replace('.', ',')}`;
-        return valor;
+function calcularValorTotal() {
+    const qtd = parseInt(quantidadeInput.value) || {{ env('MIN_ATTEMPT_BUY', 10) }};
+    const valor = (qtd * {{ env('PRICE_PER_ATTEMPT', 0.25) }}).toFixed(2);
+    valorTotalInput.value = `R$ ${valor.replace('.', ',')}`;
+    return parseFloat(valor);
+}
+
+let valorAtual = calcularValorTotal();
+
+quantidadeInput.addEventListener('input', () => {
+    valorAtual = calcularValorTotal();
+    if (cardFormInstance) {
+        cardFormInstance.update({
+            amount: valorAtual
+        });
     }
+});
 
-    let valorAtual = calcularValorTotal();
+const mp = new MercadoPago('{{ env("MERCADO_PAGO_PUBLIC_KEY") }}');
 
-    quantidadeInput.addEventListener('input', () => {
-        valorAtual = calcularValorTotal();
-        if (cardFormInstance) {
-            cardFormInstance.update({
-                amount: valorAtual
-            });
-        }
-    });
-
-    const mp = new MercadoPago('{{ env("MERCADO_PAGO_PUBLIC_KEY") }}');
-
-    const cardForm = mp.cardForm({
-        amount: valorAtual,
-        iframe: true,
-        form: {
-            id: "form-checkout",
-            cardNumber: {
-                id: "form-checkout__cardNumber",
-                placeholder: "Número do cartão",
-            },
-            expirationDate: {
-                id: "form-checkout__expirationDate",
-                placeholder: "MM/YY",
-            },
-            securityCode: {
-                id: "form-checkout__securityCode",
-                placeholder: "Código de segurança",
-            },
-            cardholderName: {
-                id: "form-checkout__cardholderName",
-                placeholder: "Titular do cartão",
-            },
-            issuer: {
-                id: "form-checkout__issuer",
-                placeholder: "Banco emissor",
-            },
-            installments: {
-                id: "form-checkout__installments",
-                placeholder: "Parcelas",
-            },
-            identificationType: {
-                id: "form-checkout__identificationType",
-                placeholder: "Tipo de documento",
-            },
-            identificationNumber: {
-                id: "form-checkout__identificationNumber",
-                placeholder: "Número do documento",
-            },
-            cardholderEmail: {
-                id: "form-checkout__cardholderEmail",
-                placeholder: "E-mail",
-            },
+const cardFormInstance = mp.cardForm({
+    amount: valorAtual,
+    iframe: true,
+    form: {
+        id: "form-checkout",
+        cardNumber: {
+            id: "form-checkout__cardNumber",
+            placeholder: "Número do cartão",
         },
-        callbacks: {
-            onFormMounted: error => {
-                if (error) return console.warn("Form Mounted handling error: ", error);
-                console.log("Form mounted");
-            },
-            onSubmit: event => {
-                event.preventDefault();
+        expirationDate: {
+            id: "form-checkout__expirationDate",
+            placeholder: "MM/YY",
+        },
+        securityCode: {
+            id: "form-checkout__securityCode",
+            placeholder: "Código de segurança",
+        },
+        cardholderName: {
+            id: "form-checkout__cardholderName",
+            placeholder: "Titular do cartão",
+        },
+        issuer: {
+            id: "form-checkout__issuer",
+            placeholder: "Banco emissor",
+        },
+        installments: {
+            id: "form-checkout__installments",
+            placeholder: "Parcelas",
+        },
+        identificationType: {
+            id: "form-checkout__identificationType",
+            placeholder: "Tipo de documento",
+        },
+        identificationNumber: {
+            id: "form-checkout__identificationNumber",
+            placeholder: "Número do documento",
+        },
+        cardholderEmail: {
+            id: "form-checkout__cardholderEmail",
+            placeholder: "E-mail",
+        },
+    },
+    callbacks: {
+        onFormMounted: error => {
+            if (error) return console.warn("Form Mounted handling error: ", error);
+            console.log("Form mounted");
+        },
+        onSubmit: event => {
+            event.preventDefault();
 
-                const {
+            const {
+                paymentMethodId: payment_method_id,
+                issuerId: issuer_id,
+                cardholderEmail: email,
+                amount,
+                token,
+                installments,
+                identificationNumber,
+                identificationType,
+            } = cardFormInstance.getCardFormData();
 
-                    paymentMethodId: payment_method_id,
-                    issuerId: issuer_id,
-                    cardholderEmail: email,
-                    amount,
-                    token,
-                    installments,
-                    identificationNumber,
-                    identificationType,
-                } = cardForm.getCardFormData();
-
-                fetch("{{ route('tentativas.comprar') }}", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                        },
-                        body: JSON.stringify({
-                            token,
-                            issuer_id,
-                            payment_method_id,
-                            transaction_amount: Number(amount),
-                            installments: Number(installments),
-                            description: "Compra de tentativas",
-                            payer: {
-                                email,
-                                identification: {
-                                    type: identificationType,
-                                    number: identificationNumber,
-                                },
+            fetch("{{ route('tentativas.comprar') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({
+                        token,
+                        issuer_id,
+                        payment_method_id,
+                        transaction_amount: Number(amount),
+                        installments: Number(installments),
+                        description: "Compra de tentativas",
+                        payer: {
+                            email,
+                            identification: {
+                                type: identificationType,
+                                number: identificationNumber,
                             },
-                            quantidade: document.getElementById("quantidade").value
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Pagamento aprovado!',
-                                text: 'Suas tentativas foram creditadas com sucesso.',
-                                confirmButtonText: 'OK'
-                            }).then(() => {
-                                window.location.href = "{{ route('home') }}";
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Erro no pagamento',
-                                text: 'Não foi possível processar seu pagamento. Tente novamente mais tarde.',
-                                confirmButtonText: 'OK'
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Erro ao processar pagamento:", error);
+                        },
+                        quantidade: document.getElementById("quantidade").value
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Pagamento aprovado!',
+                            text: 'Suas tentativas foram creditadas com sucesso.',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.href = "{{ route('home') }}";
+                        });
+                    } else {
                         Swal.fire({
                             icon: 'error',
-                            title: 'Erro inesperado',
-                            text: 'Tente novamente mais tarde.',
+                            title: 'Erro no pagamento',
+                            text: 'Não foi possível processar seu pagamento. Tente novamente mais tarde.',
                             confirmButtonText: 'OK'
                         });
+                    }
+                })
+                .catch(error => {
+                    console.error("Erro ao processar pagamento:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erro inesperado',
+                        text: 'Tente novamente mais tarde.',
+                        confirmButtonText: 'OK'
                     });
+                });
 
-            },
-            onFetching: (resource) => {
-                console.log("Fetching resource: ", resource);
-
-                // Animate progress bar
-                const progressBar = document.querySelector(".progress-bar");
-                progressBar.removeAttribute("value");
-
-                return () => {
-                    progressBar.setAttribute("value", "0");
-                };
-            }
         },
-    });
+        onFetching: (resource) => {
+            console.log("Fetching resource: ", resource);
+
+            const progressBar = document.querySelector(".progress-bar");
+            progressBar?.removeAttribute("value");
+
+            return () => {
+                progressBar?.setAttribute("value", "0");
+            };
+        }
+    },
+});
 </script>
 
 @endpush
