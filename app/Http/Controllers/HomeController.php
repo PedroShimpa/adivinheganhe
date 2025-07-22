@@ -35,7 +35,7 @@ class HomeController extends Controller
             $a->count_respostas = AdivinhacoesRespostas::where('adivinhacao_id', $a->id)->count();
         });
 
-        $premios = AdivinhacoesPremiacoes::select('adivinhacoes.uuid', 'adivinhacoes.titulo', 'adivinhacoes.premio', 'users.username', 'premio_enviado')
+        $premios = AdivinhacoesPremiacoes::select('adivinhacoes.uuid', 'adivinhacoes.titulo', 'adivinhacoes.resposta','adivinhacoes.premio', 'users.username', 'premio_enviado')
             ->join('adivinhacoes', 'adivinhacoes.id', '=', 'adivinhacoes_premiacoes.adivinhacao_id')
             ->join('users', 'users.id', '=', 'adivinhacoes_premiacoes.user_id')
             ->orderby('adivinhacoes_premiacoes.id', 'desc')
@@ -44,3 +44,4 @@ class HomeController extends Controller
         return view('home')->with(compact('adivinhacoes', 'limitExceded', 'premios', 'trys'));
     }
 }
+ 

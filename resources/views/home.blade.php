@@ -104,6 +104,7 @@
             <thead class="table-dark">
                 <tr>
                     <th>Título</th>
+                    <th>Resposta</th>
                     <th>Ações</th>
                     <th>Usuário</th>
                     <th>Prêmio Enviado?</th>
@@ -113,6 +114,7 @@
                 @foreach($premios as $premio)
                 <tr>
                     <td>{{ $premio->titulo }}</td>
+                    <td>{{ $premio->resposta }}</td>
                     <td class="d-flex gap-2 flex-wrap">
                         @php
                             $isLink = filter_var($premio->premio, FILTER_VALIDATE_URL);
