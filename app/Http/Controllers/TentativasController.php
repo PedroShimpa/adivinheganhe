@@ -78,12 +78,9 @@ class TentativasController extends Controller
         }
     }
 
-
-
     public function webhook(Request $request)
     {
         Log::info('Webhook mercado pago', $request->all());
-
         return response()->json(['message' => 'OK'], 200);
     }
 }

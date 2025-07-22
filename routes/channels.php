@@ -8,6 +8,5 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('user.{id}', function ($user, $id) {
-    Log::info("Autenticando canal privado user.{$id} para usuário {$user->id}");
     return (int) $user->id === (int) $id;
 });
