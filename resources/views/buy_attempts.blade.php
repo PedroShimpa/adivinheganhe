@@ -103,156 +103,158 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
- const quantidadeInput = document.getElementById('quantidade');
-const valorTotalInput = document.getElementById('valorTotal');
+    const quantidadeInput = document.getElementById('quantidade');
+    const valorTotalInput = document.getElementById('valorTotal');
 
-function calcularValorTotal() {
-    const qtd = parseInt(quantidadeInput.value) || {{ env('MIN_ATTEMPT_BUY', 10) }};
-    const valor = (qtd * {{ env('PRICE_PER_ATTEMPT', 0.25) }}).toFixed(2);
-    valorTotalInput.value = `R$ ${valor.replace('.', ',')}`;
-    return parseFloat(valor);
-}
-
-let valorAtual = calcularValorTotal();
-
-quantidadeInput.addEventListener('input', () => {
-    valorAtual = calcularValorTotal();
-    if (cardFormInstance) {
-        cardFormInstance.update({
-            amount: valorAtual
-        });
+    function calcularValorTotal() {
+        const qtd = parseInt(quantidadeInput.value) ||"{{env('MIN_ATTEMPT_BUY', 10)}}";
+        const valor = (qtd * "{{ env('PRICE_PER_ATTEMPT', 0.25)}}").toFixed(2);
+        valorTotalInput.value = `R$ ${valor.replace('.', ',')}`;
+        return valor;
     }
-});
 
-const mp = new MercadoPago('{{ env("MERCADO_PAGO_PUBLIC_KEY") }}');
+    let valorAtual = calcularValorTotal();
 
-const cardFormInstance = mp.cardForm({
-    amount: valorAtual,
-    iframe: true,
-    form: {
-        id: "form-checkout",
-        cardNumber: {
-            id: "form-checkout__cardNumber",
-            placeholder: "Número do cartão",
-        },
-        expirationDate: {
-            id: "form-checkout__expirationDate",
-            placeholder: "MM/YY",
-        },
-        securityCode: {
-            id: "form-checkout__securityCode",
-            placeholder: "Código de segurança",
-        },
-        cardholderName: {
-            id: "form-checkout__cardholderName",
-            placeholder: "Titular do cartão",
-        },
-        issuer: {
-            id: "form-checkout__issuer",
-            placeholder: "Banco emissor",
-        },
-        installments: {
-            id: "form-checkout__installments",
-            placeholder: "Parcelas",
-        },
-        identificationType: {
-            id: "form-checkout__identificationType",
-            placeholder: "Tipo de documento",
-        },
-        identificationNumber: {
-            id: "form-checkout__identificationNumber",
-            placeholder: "Número do documento",
-        },
-        cardholderEmail: {
-            id: "form-checkout__cardholderEmail",
-            placeholder: "E-mail",
-        },
-    },
-    callbacks: {
-        onFormMounted: error => {
-            if (error) return console.warn("Form Mounted handling error: ", error);
-            console.log("Form mounted");
-        },
-        onSubmit: event => {
-            event.preventDefault();
+    quantidadeInput.addEventListener('input', () => {
+        valorAtual = calcularValorTotal();
+        if (cardFormInstance) {
+            cardFormInstance.update({
+                amount: valorAtual
+            });
+        }
+    });
 
-            const {
-                paymentMethodId: payment_method_id,
-                issuerId: issuer_id,
-                cardholderEmail: email,
-                amount,
-                token,
-                installments,
-                identificationNumber,
-                identificationType,
-            } = cardFormInstance.getCardFormData();
+    const mp = new MercadoPago('{{ env("MERCADO_PAGO_PUBLIC_KEY") }}');
 
-            fetch("{{ route('tentativas.comprar') }}", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                    },
-                    body: JSON.stringify({
-                        token,
-                        issuer_id,
-                        payment_method_id,
-                        transaction_amount: Number(amount),
-                        installments: Number(installments),
-                        description: "Compra de tentativas",
-                        payer: {
-                            email,
-                            identification: {
-                                type: identificationType,
-                                number: identificationNumber,
-                            },
+    const cardForm = mp.cardForm({
+        amount: valorAtual,
+        iframe: true,
+        form: {
+            id: "form-checkout",
+            cardNumber: {
+                id: "form-checkout__cardNumber",
+                placeholder: "Número do cartão",
+            },
+            expirationDate: {
+                id: "form-checkout__expirationDate",
+                placeholder: "MM/YY",
+            },
+            securityCode: {
+                id: "form-checkout__securityCode",
+                placeholder: "Código de segurança",
+            },
+            cardholderName: {
+                id: "form-checkout__cardholderName",
+                placeholder: "Titular do cartão",
+            },
+            issuer: {
+                id: "form-checkout__issuer",
+                placeholder: "Banco emissor",
+            },
+            installments: {
+                id: "form-checkout__installments",
+                placeholder: "Parcelas",
+            },
+            identificationType: {
+                id: "form-checkout__identificationType",
+                placeholder: "Tipo de documento",
+            },
+            identificationNumber: {
+                id: "form-checkout__identificationNumber",
+                placeholder: "Número do documento",
+            },
+            cardholderEmail: {
+                id: "form-checkout__cardholderEmail",
+                placeholder: "E-mail",
+            },
+        },
+        callbacks: {
+            onFormMounted: error => {
+                if (error) return console.warn("Form Mounted handling error: ", error);
+                console.log("Form mounted");
+            },
+            onSubmit: event => {
+                event.preventDefault();
+
+                const {
+
+                    paymentMethodId: payment_method_id,
+                    issuerId: issuer_id,
+                    cardholderEmail: email,
+                    amount,
+                    token,
+                    installments,
+                    identificationNumber,
+                    identificationType,
+                } = cardForm.getCardFormData();
+
+                fetch("{{ route('tentativas.comprar') }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
                         },
-                        quantidade: document.getElementById("quantidade").value
-                    }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Pagamento aprovado!',
-                            text: 'Suas tentativas foram creditadas com sucesso.',
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            window.location.href = "{{ route('home') }}";
-                        });
-                    } else {
+                        body: JSON.stringify({
+                            token,
+                            issuer_id,
+                            payment_method_id,
+                            transaction_amount: Number(amount),
+                            installments: Number(installments),
+                            description: "Compra de tentativas",
+                            payer: {
+                                email,
+                                identification: {
+                                    type: identificationType,
+                                    number: identificationNumber,
+                                },
+                            },
+                            quantidade: document.getElementById("quantidade").value
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Pagamento aprovado!',
+                                text: 'Suas tentativas foram creditadas com sucesso.',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                window.location.href = "{{ route('home') }}";
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Erro no pagamento',
+                                text: 'Não foi possível processar seu pagamento. Tente novamente mais tarde.',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Erro ao processar pagamento:", error);
                         Swal.fire({
                             icon: 'error',
-                            title: 'Erro no pagamento',
-                            text: 'Não foi possível processar seu pagamento. Tente novamente mais tarde.',
+                            title: 'Erro inesperado',
+                            text: 'Tente novamente mais tarde.',
                             confirmButtonText: 'OK'
                         });
-                    }
-                })
-                .catch(error => {
-                    console.error("Erro ao processar pagamento:", error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erro inesperado',
-                        text: 'Tente novamente mais tarde.',
-                        confirmButtonText: 'OK'
                     });
-                });
 
+            },
+            onFetching: (resource) => {
+                console.log("Fetching resource: ", resource);
+
+                // Animate progress bar
+                const progressBar = document.querySelector(".progress-bar");
+                progressBar.removeAttribute("value");
+
+                return () => {
+                    progressBar.setAttribute("value", "0");
+                };
+            }
         },
-        onFetching: (resource) => {
-            console.log("Fetching resource: ", resource);
-
-            const progressBar = document.querySelector(".progress-bar");
-            progressBar?.removeAttribute("value");
-
-            return () => {
-                progressBar?.setAttribute("value", "0");
-            };
-        }
-    },
-});
+    });
 </script>
 
 @endpush
