@@ -38,6 +38,7 @@ Route::get('/tentativas/pending', [TentativasController::class, 'pending'])->nam
 Route::post('/webhook/mercadopago', [TentativasController::class, 'webhook']);
 
 
+Route::get('/adivinhacoes/{adivinhacao}', [AdivinhacoesController::class, 'respostas'])->name('adivinhacoes.index');
 Route::get('/adivinhacoes/{adivinhacao}/respostas-iframe', [AdivinhacoesController::class, 'respostas'])->name('adivinhacoes.respostas');
 
 
