@@ -18,6 +18,7 @@
       <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-primary ms-2">Comprar mais</a>
     </p>
     <p class="small">Você tem 10 tentativas (não acumulativas) gratuitas todos os dias!</p>
+    <p>Entre em nossa comunidade do whatsapp para saber quando novos jogos surgirem e gabaritos de jogos passados: <a href="{{env('WHATSAPP_COMUNITY_URL')}}" target="_blank">{{env('WHATSAPP_COMUNITY_URL')}}</a></p>
   </div>
   @endif
 
