@@ -50,7 +50,7 @@
                         </div>
                     </div>
 
-                    <p class="text-muted small mt-2">
+                    <p class="text-muted small mt-2" id="count-respostas-{{ $adivinhacao->id}}">
                         👥 {{ $adivinhacao->count_respostas ?: 'Ninguém tentou adivinhar ainda!' }}
                     </p>
 
@@ -149,85 +149,70 @@
 </div>
 
 @endsection
-
 @push('scripts')
-  <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.11.1/dist/echo.iife.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ asset('js/pusher.min.js')}}"></script>
+<script src="{{ asset('js/echo.iife.min.js')}}"></script>
 
-  <script>
-    let tentativas = parseInt(document.getElementById('tentativas-restantes').textContent.replace(/\D/g, ''));
+<script>
+  let tentativas = parseInt($('#tentativas-restantes').text().replace(/\D/g, ''));
 
-    const csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
-    const EchoCtor = window.Echo;
+  const csrfToken = $('meta[name="csrf-token"]').attr('content');
+  const EchoCtor = window.Echo;
 
-
-    window.Echo = new EchoCtor({
-      broadcaster: 'pusher',
-      key: '{{ env("REVERB_APP_KEY") }}',
-      wsHost: '{{ env("REVERB_HOST", "localhost") }}',
-      wsPort: '{{ env("REVERB_PORT", 8080) }}',
-      forceTLS: false,
-      disableStats: true,
-      authEndpoint: '/broadcasting/auth',
-      auth: {
-        headers: {
-          'X-CSRF-TOKEN': csrfToken
-        }
+  window.Echo = new EchoCtor({
+    broadcaster: 'pusher',
+    key: '{{ env("REVERB_APP_KEY") }}',
+    wsHost: '{{ env("REVERB_HOST", "localhost") }}',
+    wsPort: '{{ env("REVERB_PORT", 8080) }}',
+    forceTLS: false,
+    disableStats: true,
+    authEndpoint: '/broadcasting/auth',
+    auth: {
+      headers: {
+        'X-CSRF-TOKEN': csrfToken
       }
+    }
+  });
+
+  window.Echo.channel('adivinhacoes')
+    .listen('.resposta.aprovada', e => {
+      $('input[name="resposta"], .btn-success').prop('disabled', true);
+      Swal.fire('Adivinhação encerrada', e.mensagem, 'info');
+
+      const id = e.adivinhacaoId;
+      $(`#resposta-${id}`).prop('disabled', true);
+      $(`#btn-resposta-${id}`).prop('disabled', true);
+    })
+    .listen('.resposta.contagem', e => {
+      $('input[name="resposta"], .btn-success').prop('disabled', true);
+
+      const id = e.adivinhacaoId;
+      $(`#count-respostas-${id}`).html(e.contagem);
     });
 
-
-    window.Echo.channel('adivinhacoes')
-      .listen('.resposta.aprovada', e => {
-
-        document.querySelectorAll('input[name="resposta"], .btn-success')
-                .forEach(el => el.disabled = true);
-
-
-        Swal.fire('Adivinhação encerrada', e.mensagem, 'info');
-
-        const id = e.adivinhacaoId
-                  document.querySelector(`#resposta-${id}`).disabled = true
-                    
-                  document.querySelector(`#btn-resposta-${id}`).disabled  = true;
+  @auth
+  window.Echo.private(`user.{{ Auth::id() }}`)
+    .listen('.resposta.sucesso', e => {
+      Swal.fire(e.title ?? 'Parabéns!', e.mensagem, 'success').then(() => {
+        const id = e.adivinhacaoId;
+        $(`#resposta-${id}`).prop('disabled', true);
+        $(`#btn-resposta-${id}`).prop('disabled', true);
       });
+    });
+  @endauth
 
-    @auth
-    window.Echo.private(`user.{{ Auth::id() }}`)
-      .listen('.resposta.sucesso', e => {
+  $(document).ready(function () {
+    $('.btn-success').on('click', async function () {
+      const $btn = $(this);
+      const $body = $btn.closest('.col-md-7');
+      const id = $body.find('[name="adivinhacao_id"]').val();
+      const $input = $(`#resposta-${id}`);
+      const resposta = $input.val().trim();
 
-        Swal.fire(e.title ?? 'Parabéns!', e.mensagem, 'success')
-          .then(() => {
-            const container = document
-              .querySelector(`input[name="adivinhacao_id"][value="${e.adivinhacaoId}"]`)
-              .closest('.card-body');
+      $body.find('.resposta-enviada, .text-danger').remove();
 
-                 const id = e.adivinhacaoId
-                  document.querySelector(`#resposta-${id}`).disabled = true
-                    
-                  document.querySelector(`#btn-resposta-${id}`).disabled  = true;
-          });
-      });
-    @endauth
-
-  const tentativasEl = document.getElementById('tentativas-restantes');
-  tentativas = tentativasEl ? parseInt(tentativasEl.textContent.replace(/\D/g, '')) : 0;
-
-  document.querySelectorAll('.btn-success').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const body = btn.closest('.col-md-7');
-      const id = body.querySelector('[name="adivinhacao_id"]').value;
-      const input = body.querySelector(`#resposta-${id}`);
-      const resposta = input.value;
-
-      body.querySelectorAll('.resposta-enviada, .text-danger').forEach(el => el.remove());
-
-      if (!resposta.trim()) {
-        const msg = document.createElement('div');
-        msg.className = 'mt-2 text-danger fw-bold';
-        msg.textContent = 'Preencha a resposta primeiro!';
-        input.insertAdjacentElement('afterend', msg);
+      if (!resposta) {
+        $(`<div class="mt-2 text-danger fw-bold">Preencha a resposta primeiro!</div>`).insertAfter($input);
         return;
       }
 
@@ -237,86 +222,68 @@
       }
 
       tentativas--;
-      if (tentativasEl) {
-        tentativasEl.textContent = 'Restam ' + tentativas + ' tentativa' + (tentativas === 1 ? '' : 's');
-      }
+      $('#tentativas-restantes').text(`Restam ${tentativas} tentativa${tentativas === 1 ? '' : 's'}`);
 
-        try {
-          const res = await fetch("{{ route('resposta.enviar') }}", {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-CSRF-TOKEN': csrfToken,
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-              resposta: resposta,
-              adivinhacao_id: id
-            })
-          });
+      try {
+        const res = await fetch("{{ route('resposta.enviar') }}", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            resposta: resposta,
+            adivinhacao_id: id
+          })
+        });
 
-          const json = await res.json();
-          input.value = '';
+        const json = await res.json();
+        $input.val('');
 
-          const msg = document.createElement('div');
-          msg.className = 'mt-2 fw-semibold resposta-enviada';
+        const $msg = $('<div class="mt-2 fw-semibold resposta-enviada"></div>');
 
-          if(json.error) {
-            msg.classList.add('text-danger');
+        if (json.error) {
+          $msg.addClass('text-danger').text(json.error);
+        } else {
+          if (json.status === 'acertou') {
+            $msg.addClass('text-success').text('🎉 Você acertou! Em breve notificaremos o envio do prêmio.');
+            $input.prop('disabled', true);
+            $btn.prop('disabled', true);
           } else {
-            if(json.status == 'acertou') {
-              msg.classList.add('text-success');
-              msg.textContent = '🎉 Você acertou! Em breve notificaremos o envio do prêmio.';
-              input.disabled = true;
-              btn.disabled = true;
-
-            } else {
-              msg.textContent = `Que pena, você errou! ${tentativas > 0 ? 'Mas ainda possui ' + tentativas + ' tentativa' + (tentativas === 1 ? '' : 's') : 'Você não possui mais tentativas 😞'}`;
-
-            }
+            $msg.text(`Que pena, você errou! ${tentativas > 0 ? 'Mas ainda possui ' + tentativas + ' tentativa' + (tentativas === 1 ? '' : 's') : 'Você não possui mais tentativas 😞'}`);
           }
-
-          input.insertAdjacentElement('afterend', msg);
-
-        } catch (error) {
-          Swal.fire('Erro', 'Erro ao enviar a resposta. Tente novamente!', 'error');
         }
+
+        $msg.insertAfter($input);
+      } catch (error) {
+        Swal.fire('Erro', 'Erro ao enviar a resposta. Tente novamente!', 'error');
+      }
+    });
+
+    $('#btnCopiarLink').on('click', function () {
+      const $btn = $(this);
+      const $input = $('#linkIndicacao');
+      $input[0].select();
+      $input[0].setSelectionRange(0, 99999);
+
+      navigator.clipboard.writeText($input.val()).then(() => {
+        $btn.text('Copiado!').removeClass('btn-outline-primary').addClass('btn-success');
+        setTimeout(() => {
+          $btn.text('Copiar link').removeClass('btn-success').addClass('btn-outline-primary');
+        }, 2000);
+      }).catch(() => {
+        Swal.fire('Erro', 'Não foi possível copiar o link. Por favor, tente manualmente.', 'error');
       });
     });
 
+    $('.btn-ver-tentativas').on('click', function () {
+      const uuid = $(this).data('uuid');
+      $('#iframeRespostas').attr('src', `/adivinhacoes/${uuid}/respostas-iframe`);
 
-      document.getElementById('btnCopiarLink').addEventListener('click', function() {
-            const input = document.getElementById('linkIndicacao');
-            input.select();
-            input.setSelectionRange(0, 99999); 
-
-            navigator.clipboard.writeText(input.value).then(() => {
-                this.textContent = 'Copiado!';
-                this.classList.remove('btn-outline-primary');
-                this.classList.add('btn-success');
-                setTimeout(() => {
-                    this.textContent = 'Copiar link';
-                    this.classList.remove('btn-success');
-                    this.classList.add('btn-outline-primary');
-                }, 2000);
-            }).catch(() => {
-               Swal.fire('Erro', 'Não foi possível copiar o link. Por favor, tente manualmente.', 'error');
-            });
-        });
-
-      document.querySelectorAll('.btn-ver-tentativas').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const uuid = btn.dataset.uuid;
-          const iframe = document.getElementById('iframeRespostas');
-
-    
-          iframe.src = `/adivinhacoes/${uuid}/respostas-iframe`; 
-
-
-          const modal = new bootstrap.Modal(document.getElementById('modalRespostas'));
-          modal.show();
-        });
-      });
-
-  </script>
+      const modal = new bootstrap.Modal($('#modalRespostas')[0]);
+      modal.show();
+    });
+  });
+</script>
 @endpush

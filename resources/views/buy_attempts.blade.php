@@ -103,7 +103,6 @@
 
 @push('scripts')
 <script src="https://sdk.mercadopago.com/js/v2"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     const quantidadeInput = document.getElementById('quantidade');

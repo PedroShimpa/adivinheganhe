@@ -2,82 +2,84 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="csrf-token" content="{{ csrf_token() }}">
-<meta name="google-adsense-account" content="{{ env('GOOGLE_ANALYTICS_TAG')}}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="google-adsense-account" content="{{ env('GOOGLE_ANALYTICS_TAG')}}">
 
-<title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Laravel') }}</title>
 
-<!-- Fonts -->
-<link rel="preconnect" href="https://fonts.bunny.net">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
 
-<link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-<!-- Scripts -->
-<!-- Google tag (gtag.js) -->
-@if(env('GOOGLE_ANALYTICS_TAG'))
-<script async src="https://www.googletagmanager.com/gtag/js?id={{ env('GOOGLE_ANALYTICS_TAG')}}"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link href="{{ asset('css/bootstrap-icons.min.css')}}" rel="stylesheet">
+    <link href="{{ asset('css/bootstrap.min.css')}}" rel="stylesheet">
+    <script src="{{asset('js/bootstrap.bundle.min.js')}}"></script>
+    @if(env('GOOGLE_ANALYTICS_TAG'))
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ env('GOOGLE_ANALYTICS_TAG')}}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
 
-  gtag('config', "{{ env('GOOGLE_ANALYTICS_TAG')}}");
-</script>
-@endif
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ env('GOOGLE_ADSENSE_TAG')}}"
-     crossorigin="anonymous"></script>
-@vite(['resources/css/app.css', 'resources/js/app.js'])
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', "{{ env('GOOGLE_ANALYTICS_TAG')}}");
+    </script>
+    @endif
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ env('GOOGLE_ADSENSE_TAG')}}"
+        crossorigin="anonymous"></script>
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="font-sans antialiased">
-<div class="min-h-screen bg-gray-100">
+    <div class="min-h-screen bg-gray-100">
 
 
-    @if(Auth::check())
-    @include('layouts.navigation')
-    @else
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="{{ url('/') }}">
-                {{ config('app.name', 'Laravel') }}
-            </a>
-            <div class="d-flex ms-auto">
-                <a class="btn btn-outline-primary me-2" href="{{ route('login') }}">Entrar</a>
-                <a class="btn btn-primary" href="{{ route('register') }}">Registre-se</a>
+        @if(Auth::check())
+        @include('layouts.navigation')
+        @else
+        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+            <div class="container">
+                <a class="navbar-brand fw-bold" href="{{ url('/') }}">
+                    {{ config('app.name', 'Laravel') }}
+                </a>
+                <div class="d-flex ms-auto">
+                    <a class="btn btn-outline-primary me-2" href="{{ route('login') }}">Entrar</a>
+                    <a class="btn btn-primary" href="{{ route('register') }}">Registre-se</a>
+                </div>
             </div>
-        </div>
-    </nav>
-    @endif
+        </nav>
+        @endif
 
 
-    <main>
-        @yield('content')
-    </main>
-</div>
-@stack('scripts')
-
-<footer class="bg-dark text-white mt-5 py-4">
-    <div class="container text-center">
-        <h5 class="fw-bold mb-2">Adivinhe e Ganhe</h5>
-        <p class="mb-1">
-            Um projeto de código aberto criado por 
-            <span class="fw-bold text-info">Pedro "Shimpa" Falconi</span>
-        </p>
-        <p>
-            Acesse no GitHub: 
-            <a href="https://github.com/PedroShimpa/adivinheganhe" class="text-decoration-none text-warning" target="_blank">
-                github.com/PedroShimpa/adivinheganhe
-            </a>
-        </p>
+        <main>
+            @yield('content')
+        </main>
     </div>
-</footer>
+    <script src="{{ asset('js/jquery.min.js')}}"></script>
+    <script src="{{ asset('js/sweetalert.min.js')}}"></script>
 
+    @stack('scripts')
 
-
+    <footer class="bg-dark text-white mt-5 py-4">
+        <div class="container text-center">
+            <h5 class="fw-bold mb-2">Adivinhe e Ganhe</h5>
+            <p class="mb-1">
+                Um projeto de código aberto criado por
+                <span class="fw-bold text-info">Pedro "Shimpa" Falconi</span>
+            </p>
+            <p>
+                Acesse no GitHub:
+                <a href="https://github.com/PedroShimpa/adivinheganhe" class="text-decoration-none text-warning" target="_blank">
+                    github.com/PedroShimpa/adivinheganhe
+                </a>
+            </p>
+        </div>
+    </footer>
 
 </body>
 

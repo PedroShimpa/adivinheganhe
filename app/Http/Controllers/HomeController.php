@@ -8,6 +8,7 @@ use App\Models\AdivinhacoesPremiacoes;
 use App\Models\AdivinhacoesRespostas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
@@ -15,32 +16,51 @@ class HomeController extends Controller
     {
         $trys = 0;
         $limitExceded = true;
+
         if (Auth::check()) {
-            $countTrysToday = AdivinhacoesRespostas::where('user_id', auth()->user()->id)->whereDate('created_at', today())->count();
-            $countFromIndications = AdicionaisIndicacao::where('user_uuid', auth()->user()->uuid)->value('value') ?? 0;
+            $userId = auth()->user()->id;
+            $userUuid = auth()->user()->uuid;
+
+            $countTrysToday = AdivinhacoesRespostas::where('user_id', $userId)
+                ->whereDate('created_at', today())
+                ->count();
+
+            $countFromIndications = Cache::remember("indicacoes_{$userUuid}", 240, function () use ($userUuid) {
+                return AdicionaisIndicacao::where('user_uuid', $userUuid)->value('value') ?? 0;
+            });
+
             $limitExceded = $countTrysToday >= (env('MAX_ADIVINHATIONS', 10) + $countFromIndications);
             $trys = (env('MAX_ADIVINHATIONS', 10) + $countFromIndications) - $countTrysToday;
         }
-        $adivinhacoes = Adivinhacoes::select('id',
-            'titulo',
-            'imagem',
-            'descricao',
-            'premio')
-        ->where('resolvida', 'N')
-        ->orderBy('id', 'desc')
-        ->get();
 
-        $adivinhacoes->filter(function ($a) {
-            $a->count_respostas = AdivinhacoesRespostas::where('adivinhacao_id', $a->id)->count();
+        $adivinhacoes = Cache::remember('adivinhacoes_ativas', 120, function () {
+            return Adivinhacoes::select('id', 'titulo', 'imagem', 'descricao', 'premio')
+                ->where('resolvida', 'N')
+                ->orderBy('id', 'desc')
+                ->get();
         });
 
-        $premios = AdivinhacoesPremiacoes::select('adivinhacoes.uuid', 'adivinhacoes.titulo', 'adivinhacoes.resposta','adivinhacoes.premio', 'users.username', 'premio_enviado')
-            ->join('adivinhacoes', 'adivinhacoes.id', '=', 'adivinhacoes_premiacoes.adivinhacao_id')
-            ->join('users', 'users.id', '=', 'adivinhacoes_premiacoes.user_id')
-            ->orderby('adivinhacoes_premiacoes.id', 'desc')
-            ->get();
+        $adivinhacoes->each(function ($a) {
+            $a->count_respostas = Cache::remember("respostas_adivinhacao_{$a->id}", 60, function () use ($a) {
+                return AdivinhacoesRespostas::where('adivinhacao_id', $a->id)->count();
+            });
+        });
+
+        $premios = Cache::remember('premios_ultimos', 60, function () {
+            return AdivinhacoesPremiacoes::select(
+                    'adivinhacoes.uuid',
+                    'adivinhacoes.titulo',
+                    'adivinhacoes.resposta',
+                    'adivinhacoes.premio',
+                    'users.username',
+                    'premio_enviado'
+                )
+                ->join('adivinhacoes', 'adivinhacoes.id', '=', 'adivinhacoes_premiacoes.adivinhacao_id')
+                ->join('users', 'users.id', '=', 'adivinhacoes_premiacoes.user_id')
+                ->orderBy('adivinhacoes_premiacoes.id', 'desc')
+                ->get();
+        });
 
         return view('home')->with(compact('adivinhacoes', 'limitExceded', 'premios', 'trys'));
     }
 }
- 
