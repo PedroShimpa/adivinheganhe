@@ -47,7 +47,7 @@ class HomeController extends Controller
                 $a->count_respostas = Cache::get("respostas_adivinhacao_{$a->id}");
             } else {
                 $count = AdivinhacoesRespostas::where('adivinhacao_id', $a->id)->count();
-                Cache::put("respostas_adivinhacao_{$a->id}", $count, 10);
+                Cache::put("respostas_adivinhacao_{$a->id}", $count, now()->addMinutes(300));
                 $a->count_respostas = $count;
             }
             if (!empty($a->expire_at)) {
