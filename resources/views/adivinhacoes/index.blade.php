@@ -36,6 +36,8 @@
                     <button class="btn btn-outline-info btn-sm mb-2" data-bs-toggle="modal" data-bs-target="#modalDescricao-{{ $adivinhacao->id }}">
                         ➕ Informações
                     </button>
+                    
+                    <p> Código da adivinhação: {{ $adivinhacao->uuid}}</p>
 
                     <div class="modal fade" id="modalDescricao-{{ $adivinhacao->id }}" tabindex="-1" aria-labelledby="modalLabel-{{ $adivinhacao->id }}" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">

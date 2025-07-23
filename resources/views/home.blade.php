@@ -38,6 +38,8 @@
             ➕ Informações
           </button>
 
+                    <p> Código da adivinhação: {{ $adivinhacao->uuid}}</p>
+
           <div class="modal fade" id="modalDescricao-{{ $adivinhacao->id }}" tabindex="-1" aria-labelledby="modalLabel-{{ $adivinhacao->id }}" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content">
