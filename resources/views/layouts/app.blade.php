@@ -16,6 +16,7 @@
     <link href="{{ asset('css/bootstrap-icons.min.css')}}" rel="stylesheet">
     <link href="{{ asset('css/bootstrap.min.css')}}" rel="stylesheet">
     <script src="{{asset('js/bootstrap.bundle.min.js')}}"></script>
+    @stack('head-scripts')
     @if(env('GOOGLE_ANALYTICS_TAG'))
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ env('GOOGLE_ANALYTICS_TAG')}}"></script>
     <script>
@@ -29,8 +30,6 @@
         gtag('config', "{{ env('GOOGLE_ANALYTICS_TAG')}}");
     </script>
     @endif
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ env('GOOGLE_ADSENSE_TAG')}}"
-        crossorigin="anonymous"></script>
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>

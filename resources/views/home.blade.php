@@ -149,6 +149,10 @@
 </div>
 
 @endsection
+@push('head-scripts')
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ env('GOOGLE_ADSENSE_TAG')}}"
+        crossorigin="anonymous"></script>
+@endpush
 @push('scripts')
 <script src="{{ asset('js/pusher.min.js')}}"></script>
 <script src="{{ asset('js/echo.iife.min.js')}}"></script>
