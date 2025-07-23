@@ -54,7 +54,7 @@
                     </div>
 
                     <p class="text-muted small mt-2">
-                        👥 <span id="count-respostas-{{ $adivinhacao->id}}"> {{ $adivinhacao->count_respostas ?: 'Ninguém tentou adivinhar ainda!' }}</span>
+                        👥 <span id="count-respostas-{{ $adivinhacao->id}}"> {{ $adivinhacao->count_respostas ?: 'Ninguém tentou adivinhar ainda!' }}</span> respostas até agora
                     </p>
 
                     @auth
