@@ -188,8 +188,6 @@
       $(`#btn-resposta-${id}`).prop('disabled', true);
     })
     .listen('.resposta.contagem', e => {
-      $('input[name="resposta"], .btn-success').prop('disabled', true);
-
       const id = e.adivinhacaoId;
       $(`#count-respostas-${id}`).html(e.contagem);
     });
