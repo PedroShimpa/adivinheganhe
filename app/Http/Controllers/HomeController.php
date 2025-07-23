@@ -49,7 +49,7 @@ class HomeController extends Controller
             if(!empty($a->expire_at)) {
                 $a->expired_at_br = (new DateTime($a->expire_at))->format('d/m H:i');
             }
-            $a->expired = $a->expired_at < now();
+            $a->expired = $a->expire_at < now();
         });
 
         $premios = Cache::remember('premios_ultimos', 60, function () {

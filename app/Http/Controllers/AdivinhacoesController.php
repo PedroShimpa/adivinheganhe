@@ -44,7 +44,7 @@ class AdivinhacoesController extends Controller
             $adivinhacao->expired_at_br = (new DateTime($adivinhacao->expire_at))->format('d/m H:i');
         }
 
-        $adivinhacao->expired = $adivinhacao->expired_at < now();
+        $adivinhacao->expired = $adivinhacao->expire_at < now();
         $respostas = [];
         if ($adivinhacao->resolvida == 'S') {
 

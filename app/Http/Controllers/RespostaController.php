@@ -59,7 +59,7 @@ class RespostaController extends Controller
         try {
             
             $adivinhacao = Adivinhacoes::find($data['adivinhacao_id']);
-            if ($adivinhacao->expired_at < now()) {
+            if ($adivinhacao->expire_at < now()) {
                 return response()->json(['error' => "Esta adivinhação expirou! Em breve outra com o mesmo prêmio será adicionada!"]);
             }
             if ($adivinhacao->resolvida == 'S') {
