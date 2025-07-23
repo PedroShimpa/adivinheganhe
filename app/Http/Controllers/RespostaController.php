@@ -26,13 +26,11 @@ class RespostaController extends Controller
         $userUuid = $user->uuid;
         $hoje = today()->toDateString();
 
-        // Cache de tentativas
         $cacheTryKey = "try_count_user_{$userId}_{$hoje}";
         $countTrysToday = Cache::remember($cacheTryKey, 60, function () use ($userId) {
             return AdivinhacoesRespostas::where('user_id', $userId)->whereDate('created_at', today())->count();
         });
 
-        // Cache de adicionais
         $cacheAdicionalKey = "indicacao_user_{$userUuid}";
         $countFromIndications = Cache::remember($cacheAdicionalKey, 300, function () use ($userUuid) {
             return AdicionaisIndicacao::where('user_uuid', $userUuid)->value('value') ?? 0;
@@ -50,7 +48,6 @@ class RespostaController extends Controller
 
         $respostaCliente = strtolower(trim($data['resposta']));
 
-        // Evita repetição da mesma resposta
         if (AdivinhacoesRespostas::where([
             ['adivinhacao_id', $data['adivinhacao_id']],
             ['user_id', $userId],
@@ -60,14 +57,33 @@ class RespostaController extends Controller
         }
 
         try {
-            DB::beginTransaction();
-
+            
             $adivinhacao = Adivinhacoes::find($data['adivinhacao_id']);
             if ($adivinhacao->expired_at < now()) {
                 return response()->json(['error' => "Esta adivinhação expirou! Em breve outra com o mesmo prêmio será adicionada!"]);
             }
-
+            if ($adivinhacao->resolvida == 'S') {
+                return response()->json(['error' => "Esta adivinhação ja foi adivinhada, obrigado por tentar!"]);
+            }
             $respostaUuid = (string) Str::uuid();
+            if (strtolower(trim($adivinhacao->resposta)) === $respostaCliente) {
+                $adivinhacao->update(['resolvida' => 'S']);
+                
+                broadcast(new RespostaAprovada($user->username, $adivinhacao))->toOthers();
+                
+                broadcast(new RespostaPrivada(
+                    "Você acertou! Seu código de resposta: {$respostaUuid}!!!\n Em breve será notificado do envio do prêmio.",
+                    $adivinhacao->id,
+                    $userId,
+                    "Acertou"
+                ));
+            }
+        
+
+            #tarefas "secundarias"
+            
+            DB::beginTransaction();
+
 
             AdivinhacoesRespostas::insert([
                 'user_id'        => $userId,
@@ -77,10 +93,8 @@ class RespostaController extends Controller
                 'uuid'           => $respostaUuid
             ]);
 
-            // Incrementa contagem de tentativas no cache
             Cache::increment($cacheTryKey);
 
-            // Contador de respostas por adivinhação no cache
             Cache::increment("respostas_adivinhacao_{$adivinhacao->id}", 1);
 
             broadcast(new AumentaContagemRespostas($adivinhacao->id));
@@ -93,29 +107,16 @@ class RespostaController extends Controller
                 }
             }
 
-            // Se acertou
+            DB::commit();
             if (strtolower(trim($adivinhacao->resposta)) === $respostaCliente) {
-                $adivinhacao->update(['resolvida' => 'S']);
-
-                broadcast(new RespostaAprovada($user->username, $adivinhacao))->toOthers();
-
-                broadcast(new RespostaPrivada(
-                    "Você acertou! Seu código de resposta: {$respostaUuid}!!!\n Em breve será notificado do envio do prêmio.",
-                    $adivinhacao->id,
-                    $userId,
-                    "Acertou"
-                ));
-
                 AdivinhacoesPremiacoes::create([
                     'user_id'        => $userId,
                     'adivinhacao_id' => $adivinhacao->id,
                 ]);
-
-                DB::commit();
+                Log::info("Premio adicionado para o usuario $userId");
                 return response()->json(['status' => 'acertou']);
             }
 
-            DB::commit();
             return response()->json(['status' => 'ok']);
         } catch (\Throwable $e) {
             Log::error($e->getMessage());
