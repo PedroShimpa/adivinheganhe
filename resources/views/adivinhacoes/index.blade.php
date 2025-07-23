@@ -21,6 +21,17 @@
     </div>
     @endif
 
+    <div class="alert alert-success mt-4 d-flex align-items-center justify-content-between flex-wrap gap-2 p-3 shadow-sm border-start border-4 border-success">
+        <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-whatsapp fs-4 text-success"></i>
+            <span class="fw-semibold">
+                Entre em nossa comunidade do WhatsApp para saber quando novos jogos surgirem e os gabaritos dos jogos passados.
+            </span>
+        </div>
+        <a href="{{ env('WHATSAPP_COMUNITY_URL') }}" target="_blank" class="btn btn-success btn-sm px-3">
+            Participar agora
+        </a>
+    </div>
     <div class="card mb-4 shadow-sm">
         <div class="row g-0 flex-wrap">
             <div class="col-12 col-md-5 d-flex align-items-center justify-content-center bg-light p-2">
@@ -36,7 +47,7 @@
                     <button class="btn btn-outline-info btn-sm mb-2" data-bs-toggle="modal" data-bs-target="#modalDescricao-{{ $adivinhacao->id }}">
                         ➕ Informações
                     </button>
-                    
+
                     <p> Código da adivinhação: {{ $adivinhacao->uuid}}</p>
 
                     <div class="modal fade" id="modalDescricao-{{ $adivinhacao->id }}" tabindex="-1" aria-labelledby="modalLabel-{{ $adivinhacao->id }}" aria-hidden="true">

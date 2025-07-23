@@ -18,9 +18,19 @@
       <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-primary ms-2">Comprar mais</a>
     </p>
     <p class="small">Você tem 10 tentativas (não acumulativas) gratuitas todos os dias!</p>
-    <p>Entre em nossa comunidade do whatsapp para saber quando novos jogos surgirem e gabaritos de jogos passados: <a href="{{env('WHATSAPP_COMUNITY_URL')}}" target="_blank">{{env('WHATSAPP_COMUNITY_URL')}}</a></p>
   </div>
   @endif
+  <div class="alert alert-success mt-4 d-flex align-items-center justify-content-between flex-wrap gap-2 p-3 shadow-sm border-start border-4 border-success">
+    <div class="d-flex align-items-center gap-2">
+      <i class="bi bi-whatsapp fs-4 text-success"></i>
+      <span class="fw-semibold">
+        Entre em nossa comunidade do WhatsApp para saber quando novos jogos surgirem e os gabaritos dos jogos passados.
+      </span>
+    </div>
+    <a href="{{ env('WHATSAPP_COMUNITY_URL') }}" target="_blank" class="btn btn-success btn-sm px-3">
+      Participar agora
+    </a>
+  </div>
 
   @forelse($adivinhacoes as $adivinhacao)
   <div class="card mb-4 shadow-sm">
