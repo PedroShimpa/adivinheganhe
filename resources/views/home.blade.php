@@ -151,8 +151,7 @@
 @endsection
 @push('scripts')
 <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
-<!-- <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.11.1/dist/echo.iife.js"></script> -->
-<script src="{{ asset('js/echo.iife.min.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.11.1/dist/echo.iife.js"></script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ env('GOOGLE_ADSENSE_TAG')}}"
         crossorigin="anonymous"></script>
 
