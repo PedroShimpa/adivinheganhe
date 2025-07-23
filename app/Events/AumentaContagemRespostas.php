@@ -32,7 +32,7 @@ class AumentaContagemRespostas implements ShouldBroadcastNow
     {
         return [
             'adivinhacaoId' => $this->adivinhacaoId,
-            'contagem'       => Cache::get('respostas_adivinhacao_' . $this->adivinhacaoId, 0) + 1
+            'contagem'       => Cache::get('respostas_adivinhacao_' . $this->adivinhacaoId, 0)
         ];
     }
 }
