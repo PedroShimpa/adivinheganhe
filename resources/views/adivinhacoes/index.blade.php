@@ -64,7 +64,7 @@
                         <input type="text" id="resposta-{{ $adivinhacao->id }}" class="form-control border-primary fs-6 fw-semibold" name="resposta" placeholder="💬 Digite sua resposta">
                     </div>
                     <input type="hidden" name="adivinhacao_id" value="{{ $adivinhacao->id }}">
-                    <button class="btn btn-success w-100" id="btn-resposta-{{ $adivinhacao->id }}" if($adivinhacao->expired == true) disabled="true" @endif>Enviar resposta</button>
+                    <button class="btn btn-success w-100" id="btn-resposta-{{ $adivinhacao->id }}" @if($adivinhacao->expired == true) disabled="true" @endif>Enviar resposta</button>
                     @endif
                     @else
                     <div class="alert alert-warning small">
