@@ -31,7 +31,7 @@
     </script>
     @endif
     <!-- Scripts -->
-    @vite(['resources/css/app.css'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="font-sans antialiased">
