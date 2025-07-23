@@ -63,8 +63,8 @@ class RespostaController extends Controller
             DB::beginTransaction();
 
             $adivinhacao = Adivinhacoes::find($data['adivinhacao_id']);
-            if (!$adivinhacao) {
-                throw new \Exception("Adivinhação não encontrada.");
+            if ($adivinhacao->expired_at < now()) {
+                return response()->json(['error' => "Esta adivinhação expirou! Em breve outra com o mesmo prêmio será adicionada!"]);
             }
 
             $respostaUuid = (string) Str::uuid();
@@ -85,7 +85,6 @@ class RespostaController extends Controller
 
             broadcast(new AumentaContagemRespostas($adivinhacao->id));
 
-            // Se acabou as tentativas grátis e ainda há bônus
             if (($countTrysToday + 1) >= $limiteMax && $countFromIndications > 0) {
                 $indicacao = AdicionaisIndicacao::where('user_uuid', $userUuid)->first();
                 if ($indicacao) {

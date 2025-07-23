@@ -29,7 +29,10 @@
             </div>
             <div class="col-12 col-md-7 p-3 d-flex flex-column justify-content-between">
                 <div>
-                    <h5 class="text-primary fw-bold mb-2">{{ $adivinhacao->titulo }}</h5>
+                    <h5 class="text-primary fw-bold mb-2">{{ $adivinhacao->titulo.  ($adivinhacao->expired ?: ' - EXPIRADA') }}</h5>
+                    @if(!empty($adivinhacao->expired_at_br))
+                    <p class="text-primary">Esta adivinhação expira em {{$adivinhacao->expired_at_br}}, mas não se preocupe, caso ela expire, incluiremos outra com o mesmo prêmio e outra imagem!</p>
+                    @endif
 
                     <button class="btn btn-outline-info btn-sm mb-2" data-bs-toggle="modal" data-bs-target="#modalDescricao-{{ $adivinhacao->id }}">
                         ➕ Informações
@@ -39,7 +42,7 @@
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="modalLabel-{{ $adivinhacao->id }}">{{ $adivinhacao->titulo }}</h5>
+                                    <h5 class="modal-title" id="modalLabel-{{ $adivinhacao->id }}">{{ $adivinhacao->titulo.  ($adivinhacao->expired ?: ' - EXPIRADA')}}</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
                                 <div class="modal-body">{!! $adivinhacao->descricao !!}</div>
@@ -62,7 +65,7 @@
                             <input type="text" id="resposta-{{ $adivinhacao->id }}" class="form-control border-primary fs-6 fw-semibold" name="resposta" placeholder="💬 Digite sua resposta">
                         </div>
                         <input type="hidden" name="adivinhacao_id" value="{{ $adivinhacao->id }}">
-                        <button class="btn btn-success w-100" id="btn-resposta-{{ $adivinhacao->id }}">Enviar resposta</button>
+                        <button class="btn btn-success w-100" id="btn-resposta-{{ $adivinhacao->id }}" disabled="{{ $adivinhacao->expired ? 'true' : 'false'}}">Enviar resposta</button>
                         @endif
                     @else
                     <div class="alert alert-warning small">

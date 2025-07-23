@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-
 class Adivinhacoes extends Model
 {
     /** @use HasFactory<\Database\Factories\AdivinhacoesFactory> */
@@ -18,11 +17,17 @@ class Adivinhacoes extends Model
         'descricao',
         'premio',
         'resposta',
-        'resolvida'
+        'resolvida',
+        'expire_at',
+        'exibir_home'
     ];
 
-    // No model
-    public function getRouteKeyName()
+    
+    protected $dates = [
+        'expire_at'
+    ];
+
+     public function getRouteKeyName()
     {
         return 'uuid';
     }
