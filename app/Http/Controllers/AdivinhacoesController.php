@@ -35,10 +35,13 @@ class AdivinhacoesController extends Controller
             $trys = (env('MAX_ADIVINHATIONS', 10) + $countFromIndications) - $countTrysToday;
         }
 
-
-        $adivinhacao->count_respostas = Cache::remember("respostas_adivinhacao_{$adivinhacao->id}", 60, function () use ($adivinhacao) {
-            return AdivinhacoesRespostas::where('adivinhacao_id', $adivinhacao->id)->count();
-        });
+        if (Cache::get("respostas_adivinhacao_{$adivinhacao->id}")) {
+            $adivinhacao->count_respostas = Cache::get("respostas_adivinhacao_{$adivinhacao->id}");
+        } else {
+            $count = AdivinhacoesRespostas::where('adivinhacao_id', $adivinhacao->id)->count();
+            Cache::put("respostas_adivinhacao_{$adivinhacao->id}", $count, 10);
+            $adivinhacao->count_respostas = $count;
+        }
         if (!empty($adivinhacao->expire_at)) {
             $adivinhacao->expired_at_br = (new DateTime($adivinhacao->expire_at))->format('d/m H:i');
         }

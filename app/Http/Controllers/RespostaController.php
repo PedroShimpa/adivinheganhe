@@ -97,7 +97,7 @@ class RespostaController extends Controller
 
             Cache::increment("respostas_adivinhacao_{$adivinhacao->id}", 1);
 
-            broadcast(new AumentaContagemRespostas($adivinhacao->id));
+            broadcast(new AumentaContagemRespostas($adivinhacao->id, Cache::get("respostas_adivinhacao_{$adivinhacao->id}")));
 
             if (($countTrysToday + 1) >= $limiteMax && $countFromIndications > 0) {
                 $indicacao = AdicionaisIndicacao::where('user_uuid', $userUuid)->first();

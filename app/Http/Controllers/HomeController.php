@@ -43,10 +43,14 @@ class HomeController extends Controller
         });
 
         $adivinhacoes->each(function ($a) {
-            $a->count_respostas = Cache::remember("respostas_adivinhacao_{$a->id}", 60, function () use ($a) {
-                return AdivinhacoesRespostas::where('adivinhacao_id', $a->id)->count();
-            });
-            if(!empty($a->expire_at)) {
+            if (Cache::get("respostas_adivinhacao_{$a->id}")) {
+                $a->count_respostas = Cache::get("respostas_adivinhacao_{$a->id}");
+            } else {
+                $count = AdivinhacoesRespostas::where('adivinhacao_id', $a->id)->count();
+                Cache::put("respostas_adivinhacao_{$a->id}", $count, 10);
+                $a->count_respostas = $count;
+            }
+            if (!empty($a->expire_at)) {
                 $a->expired_at_br = (new DateTime($a->expire_at))->format('d/m H:i');
             }
             $a->expired = $a->expire_at < now();
@@ -54,13 +58,13 @@ class HomeController extends Controller
 
         $premios = Cache::remember('premios_ultimos', 60, function () {
             return AdivinhacoesPremiacoes::select(
-                    'adivinhacoes.uuid',
-                    'adivinhacoes.titulo',
-                    'adivinhacoes.resposta',
-                    'adivinhacoes.premio',
-                    'users.username',
-                    'premio_enviado'
-                )
+                'adivinhacoes.uuid',
+                'adivinhacoes.titulo',
+                'adivinhacoes.resposta',
+                'adivinhacoes.premio',
+                'users.username',
+                'premio_enviado'
+            )
                 ->join('adivinhacoes', 'adivinhacoes.id', '=', 'adivinhacoes_premiacoes.adivinhacao_id')
                 ->join('users', 'users.id', '=', 'adivinhacoes_premiacoes.user_id')
                 ->orderBy('adivinhacoes_premiacoes.id', 'desc')

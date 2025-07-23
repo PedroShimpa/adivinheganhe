@@ -8,14 +8,14 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Support\Facades\Cache;
 
 class AumentaContagemRespostas implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets;
 
     public function __construct(
-        public int $adivinhacaoId
+        public int $adivinhacaoId,
+        public int $contagem
     ){}
 
     public function broadcastOn()
@@ -32,7 +32,7 @@ class AumentaContagemRespostas implements ShouldBroadcastNow
     {
         return [
             'adivinhacaoId' => $this->adivinhacaoId,
-            'contagem'       => Cache::get('respostas_adivinhacao_' . $this->adivinhacaoId, 0)
+            'contagem'       => $this->contagem
         ];
     }
 }
