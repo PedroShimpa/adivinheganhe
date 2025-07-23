@@ -45,8 +45,22 @@ class AdivinhacoesController extends Controller
         }
 
         $adivinhacao->expired = $adivinhacao->expired_at < now();
+        $respostas = [];
+        if ($adivinhacao->resolvida == 'S') {
 
-        return view('adivinhacoes.index')->with(compact('adivinhacao', 'trys', 'limitExceded'));
+            $respostas = AdivinhacoesRespostas::select('adivinhacoes_respostas.uuid', 'users.username', 'adivinhacoes_respostas.created_at', 'resposta')
+                ->join('users', 'users.id', '=', 'adivinhacoes_respostas.user_id')
+                ->where('adivinhacao_id', $adivinhacao->id)
+                ->orderBy('adivinhacoes_respostas.created_at', 'desc')
+                ->paginate(10);
+
+            $respostas->getCollection()->transform(function ($r) {
+                $r->created_at_br = (new DateTime($r->created_at))->format('d/m/Y H:i:s');
+                return $r;
+            });
+        }
+
+        return view('adivinhacoes.index')->with(compact('adivinhacao', 'trys', 'limitExceded', 'respostas'));
     }
 
     public function create()
@@ -73,23 +87,5 @@ class AdivinhacoesController extends Controller
             return redirect()->route('home');
         }
         return redirect()->route('home');
-    }
-
-    public function respostas(Request $request, Adivinhacoes $adivinhacao)
-    {
-        if ($adivinhacao->resolvida == 'S') {
-
-            $respostas = AdivinhacoesRespostas::select('adivinhacoes_respostas.uuid', 'users.username', 'adivinhacoes_respostas.created_at', 'resposta')
-                ->join('users', 'users.id', '=', 'adivinhacoes_respostas.user_id')
-                ->where('adivinhacao_id', $adivinhacao->id)
-                ->orderBy('adivinhacoes_respostas.created_at', 'desc')
-                ->paginate(10);
-
-            $respostas->getCollection()->transform(function ($r) {
-                $r->created_at_br = (new DateTime($r->created_at))->format('d/m/Y H:i:s');
-                return $r;
-            });
-            return view('respostas', compact('respostas', 'adivinhacao'));
-        }
     }
 }
