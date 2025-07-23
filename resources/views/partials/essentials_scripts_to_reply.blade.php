@@ -56,7 +56,7 @@
     $('.btn-success').on('click', async function () {
       const $btn = $(this);
 
-      btn.attr('disabled', true)
+      $btn.attr('disabled', true)
       const $body = $btn.closest('.col-md-7');
       const id = $body.find('[name="adivinhacao_id"]').val();
       const $input = $(`#resposta-${id}`);
