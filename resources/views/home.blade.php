@@ -29,7 +29,7 @@
       </div>
       <div class="col-12 col-md-7 p-3 d-flex flex-column justify-content-between">
         <div>
-          <h5 class="text-primary fw-bold mb-2">{{ $adivinhacao->titulo.  (!empty($adivinhacao->expired_at)_br && $adivinhacao->expired == true ? ' - EXPIRADA': '' ) }}</h5>
+          <h5 class="text-primary fw-bold mb-2">{{ $adivinhacao->titulo.  (!empty($adivinhacao->expired_at_br) && $adivinhacao->expired == true ? ' - EXPIRADA': '' ) }}</h5>
           @if(!empty($adivinhacao->expired_at_br))
           <p class="text-primary">Esta adivinhação expira em {{$adivinhacao->expired_at_br}}, mas não se preocupe, caso ela expire, incluiremos outra com o mesmo prêmio e outra imagem!</p>
           @endif
@@ -42,7 +42,7 @@
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="modalLabel-{{ $adivinhacao->id }}">{{ $adivinhacao->titulo.  (!empty($adivinhacao->expired_at)_br && $adivinhacao->expired == true ? ' - EXPIRADA': '' ) }}</h5>
+                  <h5 class="modal-title" id="modalLabel-{{ $adivinhacao->id }}">{{ $adivinhacao->titulo.  (!empty($adivinhacao->expired_at_br) && $adivinhacao->expired == true ? ' - EXPIRADA': '' ) }}</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">{!! $adivinhacao->descricao !!}</div>
