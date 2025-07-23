@@ -165,8 +165,8 @@
   window.Echo = new EchoCtor({
     broadcaster: 'pusher',
     key: '{{ env("REVERB_APP_KEY") }}',
-    wsHost: '{{ env("REVERB_HOST", "localhost") }}',
-    wsPort: '{{ env("REVERB_PORT", 8080) }}',
+    wsHost: '{{ env("VITE_REVERB_HOST", "localhost") }}',
+    wsPort: '{{ env("VITE_REVERB_PORT", 8080) }}',
     forceTLS: false,
     disableStats: true,
     authEndpoint: '/broadcasting/auth',
