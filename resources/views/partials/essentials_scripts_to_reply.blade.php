@@ -106,8 +106,11 @@
             $input.prop('disabled', true);
             $btn.prop('disabled', true);
           } else {
-            $msg.text(`Que pena, você errou! ${tentativas > 0 ? 'Mas ainda possui ' + tentativas + ' tentativa' + (tentativas === 1 ? '' : 's') : 'Você não possui mais tentativas 😞'}`);
-            $btn.attr('disabled', false)
+           $msg.html(`Que pena, você errou! ${tentativas > 0
+    ? 'Mas ainda possui ' + tentativas + ' tentativa' + (tentativas === 1 ? '' : 's')
+    : 'Você não possui mais tentativas. Se quiser, pode <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-primary ms-2">comprar mais</a> 😞'}`);
+$btn.attr('disabled', false);
+
           }
         }
         $msg.insertAfter($input);
