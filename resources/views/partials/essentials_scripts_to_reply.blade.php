@@ -98,6 +98,8 @@
 
         if (json.error) {
           $msg.addClass('text-danger').text(json.error);
+          $btn.attr('disabled', false)
+
         } else {
           if (json.status === 'acertou') {
             $msg.addClass('text-success').text('🎉 Você acertou! Em breve notificaremos o envio do prêmio.');
@@ -108,8 +110,6 @@
             $btn.attr('disabled', false)
           }
         }
-        $msg.insertAfter($input);
-
         $msg.insertAfter($input);
       } catch (error) {
         Swal.fire('Erro', 'Erro ao enviar a resposta. Tente novamente!', 'error');
