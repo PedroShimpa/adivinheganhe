@@ -39,7 +39,7 @@ class AdivinhacoesController extends Controller
             $adivinhacao->count_respostas = Cache::get("respostas_adivinhacao_{$adivinhacao->id}");
         } else {
             $count = AdivinhacoesRespostas::where('adivinhacao_id', $adivinhacao->id)->count();
-            Cache::put("respostas_adivinhacao_{$adivinhacao->id}", $count, 10);
+            Cache::put("respostas_adivinhacao_{$adivinhacao->id}", $count, now()->addSeconds(20));
             $adivinhacao->count_respostas = $count;
         }
         if (!empty($adivinhacao->expire_at)) {

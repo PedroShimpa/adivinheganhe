@@ -27,14 +27,18 @@ class RespostaController extends Controller
         $hoje = today()->toDateString();
 
         $cacheTryKey = "try_count_user_{$userId}_{$hoje}";
-        $countTrysToday = Cache::remember($cacheTryKey, 60, function () use ($userId) {
-            return AdivinhacoesRespostas::where('user_id', $userId)->whereDate('created_at', today())->count();
-        });
+        $countTrysToday = Cache::get($cacheTryKey);
+        if (is_null($countTrysToday)) {
+            $countTrysToday = AdivinhacoesRespostas::where('user_id', $userId)->whereDate('created_at', today())->count();
+            Cache::put($cacheTryKey, $countTrysToday, now()->addSeconds(60));
+        }
 
         $cacheAdicionalKey = "indicacao_user_{$userUuid}";
-        $countFromIndications = Cache::remember($cacheAdicionalKey, 300, function () use ($userUuid) {
-            return AdicionaisIndicacao::where('user_uuid', $userUuid)->value('value') ?? 0;
-        });
+        $countFromIndications = Cache::get($cacheAdicionalKey);
+        if (is_null($countFromIndications)) {
+            $countFromIndications = AdicionaisIndicacao::where('user_uuid', $userUuid)->value('value') ?? 0;
+            Cache::put($cacheAdicionalKey, $countFromIndications, now()->addSeconds(300));
+        }
 
         $limiteMax = env('MAX_ADIVINHATIONS', 10);
         if ($countTrysToday >= ($limiteMax + $countFromIndications)) {
@@ -57,20 +61,22 @@ class RespostaController extends Controller
         }
 
         try {
-            
             $adivinhacao = Adivinhacoes::find($data['adivinhacao_id']);
             if ($adivinhacao->expire_at < now()) {
                 return response()->json(['error' => "Esta adivinhação expirou! Em breve outra com o mesmo prêmio será adicionada!"]);
             }
             if ($adivinhacao->resolvida == 'S') {
-                return response()->json(['error' => "Esta adivinhação ja foi adivinhada, obrigado por tentar!"]);
+                return response()->json(['error' => "Esta adivinhação já foi adivinhada, obrigado por tentar!"]);
             }
+
             $respostaUuid = (string) Str::uuid();
-            if (strtolower(trim($adivinhacao->resposta)) === $respostaCliente) {
+
+            $acertou = strtolower(trim($adivinhacao->resposta)) === $respostaCliente;
+
+            if ($acertou) {
                 $adivinhacao->update(['resolvida' => 'S']);
-                
                 broadcast(new RespostaAprovada($user->username, $adivinhacao))->toOthers();
-                
+
                 broadcast(new RespostaPrivada(
                     "Você acertou! Seu código de resposta: {$respostaUuid}!!!\n Em breve será notificado do envio do prêmio.",
                     $adivinhacao->id,
@@ -78,12 +84,8 @@ class RespostaController extends Controller
                     "Acertou"
                 ));
             }
-        
 
-            #tarefas "secundarias"
-            
             DB::beginTransaction();
-
 
             AdivinhacoesRespostas::insert([
                 'user_id'        => $userId,
@@ -93,22 +95,30 @@ class RespostaController extends Controller
                 'uuid'           => $respostaUuid
             ]);
 
-            Cache::increment($cacheTryKey);
+            // Atualiza contagem de tentativas
+            $countTrysToday++;
+            Cache::put($cacheTryKey, $countTrysToday, now()->addSeconds(30));
 
-            Cache::increment("respostas_adivinhacao_{$adivinhacao->id}", 1);
+            // Atualiza contagem de respostas da adivinhação
+            $respostaCacheKey = "respostas_adivinhacao_{$adivinhacao->id}";
+            $countRespostas = Cache::get($respostaCacheKey, 0) + 1;
+            Cache::put($respostaCacheKey, $countRespostas, now()->addSeconds(20));
 
-            broadcast(new AumentaContagemRespostas($adivinhacao->id, Cache::get("respostas_adivinhacao_{$adivinhacao->id}")));
+            broadcast(new AumentaContagemRespostas($adivinhacao->id, $countRespostas));
 
-            if (($countTrysToday + 1) >= $limiteMax && $countFromIndications > 0) {
+            // Se passou o limite base e tem tentativas adicionais
+            if (($countTrysToday >= $limiteMax) && $countFromIndications > 0) {
                 $indicacao = AdicionaisIndicacao::where('user_uuid', $userUuid)->first();
                 if ($indicacao) {
                     $indicacao->decrement('value');
-                    Cache::decrement($cacheAdicionalKey);
+                    $countFromIndications = max(0, $countFromIndications - 1);
+                    Cache::put($cacheAdicionalKey, $countFromIndications,  now()->addSeconds(60));
                 }
             }
 
             DB::commit();
-            if (strtolower(trim($adivinhacao->resposta)) === $respostaCliente) {
+
+            if ($acertou) {
                 AdivinhacoesPremiacoes::create([
                     'user_id'        => $userId,
                     'adivinhacao_id' => $adivinhacao->id,
