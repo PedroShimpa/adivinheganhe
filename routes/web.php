@@ -29,7 +29,7 @@ Route::post('/tentativas/comprar', [TentativasController::class, 'buy'])->name('
 Route::post('/webhook/mercadopago', [TentativasController::class, 'webhook']);
 
 
-Route::get('/adv/{adivinhacao}', [AdivinhacoesController::class, 'index'])->name('adivinhacoes.index');
+Route::get('/adivinhacoes/{adivinhacao}', [AdivinhacoesController::class, 'index'])->name('adivinhacoes.index');
 Route::get('/adivinhacoes/{adivinhacao}/respostas-iframe', [AdivinhacoesController::class, 'respostas'])->name('adivinhacoes.respostas');
 
 
