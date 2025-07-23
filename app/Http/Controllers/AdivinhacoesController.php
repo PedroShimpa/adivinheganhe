@@ -46,7 +46,7 @@ class AdivinhacoesController extends Controller
 
         $adivinhacao->expired = $adivinhacao->expired_at < now();
 
-        return view('adivinhacoes.index')->with(compact('adivinhacao', 'trys'));
+        return view('adivinhacoes.index')->with(compact('adivinhacao', 'trys', 'limitExceded'));
     }
 
     public function create()
