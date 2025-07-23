@@ -17,19 +17,6 @@
     <link href="{{ asset('css/bootstrap.min.css')}}" rel="stylesheet">
     <script src="{{asset('js/bootstrap.bundle.min.js')}}"></script>
     @stack('head-scripts')
-    @if(env('GOOGLE_ANALYTICS_TAG'))
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ env('GOOGLE_ANALYTICS_TAG')}}"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', "{{ env('GOOGLE_ANALYTICS_TAG')}}");
-    </script>
-    @endif
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -62,6 +49,20 @@
     <script src="{{ asset('js/jquery.min.js')}}"></script>
     <script src="{{ asset('js/sweetalert.min.js')}}"></script>
 
+     @if(env('GOOGLE_ANALYTICS_TAG'))
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ env('GOOGLE_ANALYTICS_TAG')}}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', "{{ env('GOOGLE_ANALYTICS_TAG')}}");
+    </script>
+    @endif
+
     @stack('scripts')
 
     <footer class="bg-dark text-white mt-5 py-4">
@@ -79,6 +80,8 @@
             </p>
         </div>
     </footer>
+
+
 
 </body>
 
