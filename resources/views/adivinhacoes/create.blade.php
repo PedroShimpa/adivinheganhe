@@ -60,7 +60,7 @@
 </div>
 @endsection
 @push('scripts')
-<script src="{{ asset('js/tinymce.min.js')}}"></script>
+<script src="https://cdn.tiny.cloud/1/ai1aa4q1itml9cxyksgdamr2r0v61fis91gwfmb5bdt9n6df/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         tinymce.init({
