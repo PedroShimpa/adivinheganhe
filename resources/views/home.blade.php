@@ -191,7 +191,10 @@
     })
     .listen('.resposta.contagem', e => {
       const id = e.adivinhacaoId;
-      $(`#count-respostas-${id}`).html(e.contagem);
+      if(e.contagem && e.contagem >0) {
+
+        $(`#count-respostas-${id}`).html(e.contagem);
+      }
     });
 
   @auth
