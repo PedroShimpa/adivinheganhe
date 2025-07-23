@@ -6,6 +6,7 @@ use App\Models\AdicionaisIndicacao;
 use App\Models\Adivinhacoes;
 use App\Models\AdivinhacoesPremiacoes;
 use App\Models\AdivinhacoesRespostas;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -45,8 +46,8 @@ class HomeController extends Controller
             $a->count_respostas = Cache::remember("respostas_adivinhacao_{$a->id}", 60, function () use ($a) {
                 return AdivinhacoesRespostas::where('adivinhacao_id', $a->id)->count();
             });
-            if($a->expire_at) {
-                $a->expired_at_br = $a->expire_at->format('d/m H:i');
+            if(!empty($a->expire_at)) {
+                $a->expired_at_br = (new DateTime($a->expire_at))->format('d/m H:i');
             }
             $a->expired = $a->expired_at < now();
         });
