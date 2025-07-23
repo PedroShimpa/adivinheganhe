@@ -17,7 +17,6 @@
     <link href="{{ asset('css/bootstrap.min.css')}}" rel="stylesheet">
     <script src="{{asset('js/bootstrap.bundle.min.js')}}"></script>
     @stack('head-scripts')
-    <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
