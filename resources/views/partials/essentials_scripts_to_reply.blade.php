@@ -105,7 +105,7 @@
             $btn.prop('disabled', true);
           } else {
             $msg.text(`Que pena, você errou! ${tentativas > 0 ? 'Mas ainda possui ' + tentativas + ' tentativa' + (tentativas === 1 ? '' : 's') : 'Você não possui mais tentativas 😞'}`);
-            btn.attr('disabled', false)
+            $btn.attr('disabled', false)
           }
         }
         $msg.insertAfter($input);
@@ -113,7 +113,7 @@
         $msg.insertAfter($input);
       } catch (error) {
         Swal.fire('Erro', 'Erro ao enviar a resposta. Tente novamente!', 'error');
-            btn.attr('disabled', false)
+            $btn.attr('disabled', false)
 
       }
     });
