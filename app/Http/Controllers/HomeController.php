@@ -35,7 +35,7 @@ class HomeController extends Controller
         }
 
         $adivinhacoes = Cache::remember('adivinhacoes_ativas', 120, function () {
-            return Adivinhacoes::select('id', 'titulo', 'imagem', 'descricao', 'premio', 'expire_at')
+            return Adivinhacoes::select('id', 'uuid', 'titulo', 'imagem', 'descricao', 'premio', 'expire_at')
                 ->where('resolvida', 'N')
                 ->where('exibir_home', 'S')
                 ->orderBy('id', 'desc')
