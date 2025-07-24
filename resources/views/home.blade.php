@@ -56,6 +56,11 @@
         </div>
       </div>
     </div>
+    <p>
+      @if(env('ENABLE_ADS_TERRA', false))
+      @include('layouts.ads.ads_terra_banner')
+      @endif
+    </p>
     @endforeach
   </div>
   @endif
@@ -80,6 +85,11 @@
         </div>
       </div>
     </div>
+    <p>
+      @if(env('ENABLE_ADS_TERRA', false))
+      @include('layouts.ads.ads_terra_banner')
+      @endif
+    </p>
     @endforeach
   </div>
   @endif
