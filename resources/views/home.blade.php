@@ -44,11 +44,12 @@
         </div>
       </div>
     </div>
+    @if(env('ENABLE_ADS_TERRA', false))
     <p>
-      @if(env('ENABLE_ADS_TERRA', false))
-      @include('layouts.ads.ads_terra_banner', ['adId' => 'premio'.$premio->id])
-      @endif
+@include('layouts.ads.ads_terra_banner')
+
     </p>
+    @endif
     @endforeach
   </div>
   @endif
@@ -73,11 +74,12 @@
         </div>
       </div>
     </div>
+    @if(env('ENABLE_ADS_TERRA', false))
     <p>
-      @if(env('ENABLE_ADS_TERRA', false))
-      @include('layouts.ads.ads_terra_banner', ['adId' => 'exp'.$adivinhacao->uuid])
-      @endif
+@include('layouts.ads.ads_terra_banner')
+
     </p>
+    @endif
     @endforeach
   </div>
   @endif
