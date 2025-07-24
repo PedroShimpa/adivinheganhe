@@ -22,7 +22,7 @@
                     ➕ Informações
                 </button>
 
-                @if(!empty($adivinhacao->dica))
+                @if(!empty($adivinhacao->dica) && ($adivinhacao->resolvida != 'S'))
             
                 @if($adivinhacao->dica_paga == 'S')
                 @if(!$adivinhacao->buyed== true)
@@ -46,7 +46,6 @@
 
                 <p class="mb-1 small"><strong>Código da adivinhação:</strong> {{ $adivinhacao->uuid }}</p>
 
-                <!-- Modal -->
                 <div class="modal fade" id="modalDescricao-{{ $adivinhacao->id }}" tabindex="-1" aria-labelledby="modalLabel-{{ $adivinhacao->id }}" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content rounded-4 shadow-sm">
@@ -74,14 +73,18 @@
                     <input type="text" id="resposta-{{ $adivinhacao->id }}" class="form-control border-primary fw-semibold rounded-3" name="resposta" placeholder="💬 Digite sua resposta">
                 </div>
                 <input type="hidden" name="adivinhacao_id" value="{{ $adivinhacao->id }}">
+                @if($adivinhacao->resolvida != 'S')
+
                 <button class="btn btn-success w-100 rounded-pill py-2" id="btn-resposta-{{ $adivinhacao->id }}" @if($adivinhacao->expired == true && !empty($adivinhacao->expired_at_br)) disabled @endif>
                     Enviar resposta
                 </button>
+                @endif
                 @endif
                 @else
                 <div class="alert alert-warning small rounded-3 mt-2">
                     Você precisa <a href="{{ route('login') }}" class="text-decoration-underline fw-semibold">entrar</a> para responder. É <span class="text-success fw-semibold">grátis</span>!
                 </div>
+                @endif
                 @endauth
             </div>
 
