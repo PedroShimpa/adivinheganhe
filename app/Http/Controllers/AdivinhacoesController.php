@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AlertaGlobal;
 use App\Models\Adivinhacoes;
 use App\Http\Requests\StoreAdivinhacoesRequest;
 use App\Models\AdicionaisIndicacao;
@@ -78,7 +79,6 @@ class AdivinhacoesController extends Controller
         if (auth()->user()->id == 1) {
 
             $imagem = $request->file('imagem');
-
             $hash = Str::random(10);
             $fileName = $hash . '_' . time() . '.' . $imagem->getClientOriginalExtension();
             $path = $imagem->storeAs('imagens_adivinhacoes', $fileName, 'public');
@@ -86,6 +86,8 @@ class AdivinhacoesController extends Controller
             $data['imagem'] = $path;
             $data['descricao'] = $request->input('descricao');
             Adivinhacoes::create($data);
+            Cache::delete('adivinhacoes_ativas');
+            broadcast(new AlertaGlobal('Nova Adivinhação', $data['titulo'] . ' adicionada, acesse a pagina inicial para ver'))->toOthers();
             return redirect()->route('home');
         }
         return redirect()->route('home');

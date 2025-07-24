@@ -9,7 +9,6 @@ use App\Models\AdicionaisIndicacao;
 use App\Models\Adivinhacoes;
 use App\Models\AdivinhacoesPremiacoes;
 use App\Models\AdivinhacoesRespostas;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -124,10 +123,11 @@ class RespostaController extends Controller
                     'adivinhacao_id' => $adivinhacao->id,
                 ]);
                 Log::info("Premio adicionado para o usuario $userId");
-                return response()->json(['status' => 'acertou']);
+                return response()->json(['status' => 'acertou', 'code' => $respostaUuid]);
             }
+           
 
-            return response()->json(['status' => 'ok']);
+            return response()->json(['status' => 'ok', 'code' => $respostaUuid]);
         } catch (\Throwable $e) {
             Log::error($e->getMessage());
             DB::rollBack();

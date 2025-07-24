@@ -39,6 +39,9 @@
         
       }
       $(`#count-respostas-${id}`).html(e.contagem);
+    })
+    .listen('.alerta.global', e => {
+      Swal.fire(e.titulo, e.msg, e.tipo)
     });
 
   @auth
@@ -96,24 +99,33 @@
 
         const $msg = $('<div class="mt-2 fw-semibold resposta-enviada"></div>');
 
-        if (json.error) {
-          $msg.addClass('text-danger').text(json.error);
-          $btn.attr('disabled', false)
+      if (json.error) {
+        $msg.addClass('text-danger').text(json.error);
+        $btn.attr('disabled', false);
+      } else {
+        let codigoResposta = json.code ? `<br><small class="text-muted">Seu código de resposta: <strong>${json.code}</strong></small>` : '';
 
+        if (json.status === 'acertou') {
+          $msg
+            .removeClass('text-danger')
+            .addClass('text-success')
+            .html(`🎉 Você acertou! Em breve notificaremos o envio do prêmio.${codigoResposta}`);
+          $input.prop('disabled', true);
+          $btn.prop('disabled', true);
         } else {
-          if (json.status === 'acertou') {
-            $msg.addClass('text-success').text('🎉 Você acertou! Em breve notificaremos o envio do prêmio.');
-            $input.prop('disabled', true);
-            $btn.prop('disabled', true);
-          } else {
-           $msg.html(`Que pena, você errou! ${tentativas > 0
-    ? 'Mas ainda possui ' + tentativas + ' tentativa' + (tentativas === 1 ? '' : 's')
-    : 'Você não possui mais tentativas. Se quiser, pode <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-primary ms-2">comprar mais</a> 😞'}`);
-$btn.attr('disabled', false);
-
-          }
+          $msg
+            .removeClass('text-success')
+            .addClass('text-danger')
+            .html(`Que pena, você errou! ${
+              tentativas > 0
+                ? 'Mas ainda possui ' + tentativas + ' tentativa' + (tentativas === 1 ? '' : 's')
+                : 'Você não possui mais tentativas. Se quiser, pode <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-primary ms-2">comprar mais</a> 😞'
+            }${codigoResposta}`);
+          $btn.attr('disabled', false);
         }
-        $msg.insertAfter($input);
+      }
+      $msg.insertAfter($input);
+
       } catch (error) {
         Swal.fire('Erro', 'Erro ao enviar a resposta. Tente novamente!', 'error');
             $btn.attr('disabled', false)
