@@ -120,9 +120,7 @@
     quantidadeInput.addEventListener('input', () => {
         valorAtual = calcularValorTotal();
         if (cardForm) {
-            cardForm.update({
-                "amount": valorAtual
-            });
+              cardForm.update('amount', valorAtual);
         }
     });
 
