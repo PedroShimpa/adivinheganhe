@@ -2,8 +2,8 @@
     atOptions = {
         'key': "{{ env('ADS_TERRA_BANNER_CODE')}}",
         'format': 'iframe',
-        'height': 90,
-        'width': 728,
+        'height': '20%',
+        'width': '100%',
         'params': {}
     };
 </script>
