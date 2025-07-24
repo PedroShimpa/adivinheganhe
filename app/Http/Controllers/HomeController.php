@@ -71,6 +71,7 @@ class HomeController extends Controller
 
         $premios = Cache::remember('premios_ultimos', 60, function () {
             return AdivinhacoesPremiacoes::select(
+                'adivinhacoes_premiacoes.id',
                 'adivinhacoes.uuid',
                 'adivinhacoes.titulo',
                 'adivinhacoes.resposta',
