@@ -21,7 +21,7 @@ class StoreAdivinhacoesRequest extends FormRequest
             'resposta'=> ['string'],
             'dica' => ['string', 'nullable'],
             'dica_paga' => ['string', 'size:1'],
-            'dica_valor' => ['float', 'nullable'],
+            'dica_valor' => [ 'nullable'],
         ];
     }
 }

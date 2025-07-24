@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('adivinhacoes', function (Blueprint $table) {
             $table->string('dica')->after('resolvida')->nullable();
             $table->string('dica_paga')->after('dica')->nullable('N');
-            $table->decimal('dica_valor')->after('dica_paga');
+            $table->decimal('dica_valor')->after('dica_paga')->nullable();
         });
 
         Schema::create('dicas_compras', function (Blueprint $table) {

@@ -10,17 +10,17 @@
                 </div>
                 <div class="card-body p-4">
                     @if(session('success'))
-                        <div class="alert alert-success">{{ session('success') }}</div>
+                    <div class="alert alert-success">{{ session('success') }}</div>
                     @endif
 
                     @if($errors->any())
-                        <div class="alert alert-danger">
-                            <ul class="mb-0">
-                                @foreach($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
                     @endif
 
                     <form id="form-checkout" class="needs-validation" novalidate>
@@ -28,7 +28,7 @@
 
                         <div class="mb-4">
                             <label class="form-label fw-semibold">Valor total</label>
-                            <input type="text" class="form-control bg-light" id="valorTotal" value="{{ $adivinhacoa->dica_valor}}" readonly>
+                            <input type="text" class="form-control bg-light" id="valorTotal" value="{{ $adivinhacao->dica_valor}}" readonly>
                         </div>
 
                         <div class="mb-3">
@@ -148,7 +148,7 @@
             },
             onSubmit: event => {
                 event.preventDefault();
-
+                $('#form-checkout__submit').attr('disabled', true)
                 const {
 
                     paymentMethodId: payment_method_id,
@@ -211,19 +211,11 @@
                             text: 'Tente novamente mais tarde.',
                             confirmButtonText: 'OK'
                         });
-                    });
+                    });.finally(() => $('#form-checkout__submit').attr('disabled', false));
 
             },
             onFetching: (resource) => {
                 console.log("Fetching resource: ", resource);
-
-                // Animate progress bar
-                const progressBar = document.querySelector(".progress-bar");
-                progressBar.removeAttribute("value");
-
-                return () => {
-                    progressBar.setAttribute("value", "0");
-                };
             }
         },
     });

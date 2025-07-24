@@ -52,8 +52,9 @@ class AdivinhacoesController extends Controller
 
         $adivinhacao->expired = $adivinhacao->expire_at < now();
 
-        if (!empty($adivinhacao->dica) && $adivinhacao->dica_paga == 'S') {
-            $adivinhacao->buyed = DicasCompras::where('user_id', auth()->id)->where('adivinhacao_id', $adivinhacao->id)->exists();
+
+        if (!empty($adivinhacao->dica) && $adivinhacao->dica_paga == 'S' && Auth::check())  {
+            $adivinhacao->buyed = DicasCompras::where('user_id', auth()->user()->id)->where('adivinhacao_id', $adivinhacao->id)->exists();
         }
 
         $respostas = collect([]);

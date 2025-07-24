@@ -60,10 +60,11 @@ class HomeController extends Controller
             }
             $a->expired = $a->expire_at < now();
 
-            if (!empty($a->dica) && $a->dica_paga == 'S') {
-                $a->buyed = DicasCompras::where('user_id', auth()->id)->where('adivinhacao_id', $a->id)->exists();
+            if (!empty($a->dica) && $a->dica_paga == 'S' && Auth::check()) {
+                $a->buyed = DicasCompras::where('user_id', auth()->user()->id)->where('adivinhacao_id', $a->id)->exists();
             }
         });
+
 
         $adivinhacoesExpiradas = Cache::remember('adivinhacoes_expiradas', 120, function () {
             return Adivinhacoes::select('uuid', 'titulo')

@@ -25,7 +25,7 @@ Route::post('/responder', [RespostaController::class, 'enviar'])->name('resposta
 Route::get('/tentativas/comprar', [PagamentosController::class, 'index'])->name('tentativas.shop');
 Route::post('/tentativas/comprar', [PagamentosController::class, 'buy'])->name('tentativas.comprar');
     Route::get('/dicas/{adivinhacao}/comprar', [PagamentosController::class, 'index_buy_dica'])->name('dicas.index_buy');
-    Route::post('/dicas/{adivinhacao}/comprar', [PagamentosController::class, 'buy_dica'])->name('dicas.buy');
+    Route::post('/dicas/{adivinhacao}/comprar', [PagamentosController::class, 'buy_dica'])->name('dicas.comprar');
 });
 Route::post('/webhook/mercadopago', [PagamentosController::class, 'webhook']);
 
