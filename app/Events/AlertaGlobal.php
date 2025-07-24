@@ -9,14 +9,15 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 
-class RespostaAprovada implements ShouldBroadcastNow
+class AlertaGlobal implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets;
 
     public function __construct(
-        public string $username,
-        public object $adivinhacao
-    ){}
+        public string $titulo,
+        public string $msg,
+        public string $tipo = 'warning'
+    ) {}
 
     public function broadcastOn()
     {
@@ -25,16 +26,15 @@ class RespostaAprovada implements ShouldBroadcastNow
 
     public function broadcastAs()
     {
-        return 'resposta.aprovada';
+        return 'alerta.global';
     }
 
     public function broadcastWith()
     {
         return [
-            'username'        => $this->username,
-            'respostaCorreta' => $this->adivinhacao->resposta,
-            'mensagem'        => "O usuário {$this->username} acertou a adivinhação: {$this->adivinhacao->titulo}! Resposta: {$this->adivinhacao->resposta}",
-            "adivinhacaoId"   => $this->adivinhacao->id
+            'titulo' => $this->titulo,
+            'msg' => $this->msg,
+            'tipo' => $this->tipo,
         ];
     }
 }

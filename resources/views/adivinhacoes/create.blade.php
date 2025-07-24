@@ -22,7 +22,6 @@
                         <div class="mb-3">
                             <label for="descricao" class="form-label">{{ __('Descrição') }}</label>
                             <textarea class="form-control @error('descricao') is-invalid @enderror" id="descricao" name="descricao" rows="3">{!! old('descricao') !!}</textarea>
-
                             @error('descricao')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -52,7 +51,7 @@
                             @enderror
                         </div>
 
-                        <div class="mb-3">
+                         <div class="mb-3">
                             <label for="dica" class="form-label">{{ __('Dica') }}</label>
                             <input type="text" class="form-control @error('dica') is-invalid @enderror" id="dica" name="dica" value="{{ old('dica') }}">
                             @error('dica')

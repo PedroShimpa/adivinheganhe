@@ -9,13 +9,13 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 
-class RespostaAprovada implements ShouldBroadcastNow
+class AumentaContagemRespostas implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets;
 
     public function __construct(
-        public string $username,
-        public object $adivinhacao
+        public int $adivinhacaoId,
+        public int $contagem
     ){}
 
     public function broadcastOn()
@@ -25,16 +25,14 @@ class RespostaAprovada implements ShouldBroadcastNow
 
     public function broadcastAs()
     {
-        return 'resposta.aprovada';
+        return 'resposta.contagem';
     }
 
     public function broadcastWith()
     {
         return [
-            'username'        => $this->username,
-            'respostaCorreta' => $this->adivinhacao->resposta,
-            'mensagem'        => "O usuário {$this->username} acertou a adivinhação: {$this->adivinhacao->titulo}! Resposta: {$this->adivinhacao->resposta}",
-            "adivinhacaoId"   => $this->adivinhacao->id
+            'adivinhacaoId' => $this->adivinhacaoId,
+            'contagem'       => $this->contagem
         ];
     }
 }

@@ -13,13 +13,15 @@ class RespostaPrivada implements ShouldBroadcastNow
 
     public function __construct(
         public string $mensagem,
-        public int $adivinhacaoId
+        public int $adivinhacaoId,
+        public int $userId,
+        public ?string $title,
+
     ) {}
 
     public function broadcastOn()
     {
-        // canal privado user.{id}
-        return new PrivateChannel('user.' . auth()->id());
+        return new PrivateChannel('user.' . $this->userId);
     }
 
     public function broadcastAs()
@@ -30,6 +32,7 @@ class RespostaPrivada implements ShouldBroadcastNow
     public function broadcastWith()
     {
         return [
+            'titulo'         => $this->title ?? 'Parabéns!',
             'mensagem'       => $this->mensagem,
             'adivinhacaoId'  => $this->adivinhacaoId,
         ];

@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('respostas_proximas', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('adivinhacao_id')->index();
-            $table->string('proximidade')->default('Próximo');
-            $table->string('resposta');
-            $table->timestamps();
+        Schema::table('adivinhacoes', function (Blueprint $table) {
+            $table->timestamp('expire_at')->nullable();
+            $table->string('exibir_home', 2)->default('S');
         });
     }
 
@@ -25,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('respostas_proximas');
+        Schema::table('adivinhacoes', function (Blueprint $table) {
+            //
+        });
     }
 };

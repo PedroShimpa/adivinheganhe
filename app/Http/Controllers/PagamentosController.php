@@ -7,6 +7,7 @@ use App\Models\Adivinhacoes;
 use App\Models\DicasCompras;
 use App\Models\Pagamentos;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use MercadoPago\Client\Payment\PaymentClient;
 use MercadoPago\Client\Common\RequestOptions;
 use MercadoPago\MercadoPagoConfig;
@@ -26,7 +27,6 @@ class PagamentosController extends Controller
         $quantidade = $request->input('quantidade');
         $valor = $quantidade * env('PRICE_PER_ATTEMPT', 0.25);
         $desc = "Compra de {$quantidade} tentativas ";
-
 
         try {
             $pag =  Pagamentos::create([
@@ -69,6 +69,8 @@ class PagamentosController extends Controller
                 AdicionaisIndicacao::create(['user_uuid' => auth()->user()->uuid, 'value' => $request->input('quantidade')]);
             }
 
+            $uuid = auth()->user()->uuid;
+            Cache::delete("indicacoes_{$uuid}");
             return response()->json(['success' => true]);
         } catch (MPApiException $e) {
             Log::error("Status code: " . $e->getApiResponse()->getStatusCode() . "\n");
@@ -76,6 +78,12 @@ class PagamentosController extends Controller
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
+    }
+
+    public function webhook(Request $request)
+    {
+        Log::info('Webhook mercado pago', $request->all());
+        return response()->json(['message' => 'OK'], 200);
     }
 
     public function index_buy_dica(Request $request, Adivinhacoes $adivinhacao)
@@ -90,7 +98,6 @@ class PagamentosController extends Controller
     public function buy_dica(Request $request, Adivinhacoes $adivinhacao)
     {
         $desc = "Compra de dica - {$adivinhacao->titulo}";
-
 
         try {
 
@@ -135,11 +142,5 @@ class PagamentosController extends Controller
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
-    }
-
-    public function webhook(Request $request)
-    {
-        Log::info('Webhook mercado pago', $request->all());
-        return response()->json(['message' => 'OK'], 200);
     }
 }
