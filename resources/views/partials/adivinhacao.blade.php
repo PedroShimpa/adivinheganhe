@@ -74,5 +74,5 @@
 </div>
 
 @if(env('ENABLE_ADS_TERRA', false))
-@include('components.banner', ['adId' => $adivinhacao->uuid])
+@include('layouts.ads.ads_terra_banner', ['adId' => $adivinhacao->uuid])
 @endif

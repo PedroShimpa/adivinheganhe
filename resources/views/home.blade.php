@@ -46,7 +46,7 @@
     </div>
     <p>
       @if(env('ENABLE_ADS_TERRA', false))
-      @include('components.banner', ['adId' => 'premio'.$premio->id])
+      @include('layouts.ads.ads_terra_banner',, ['adId' => 'premio'.$premio->id])
       @endif
     </p>
     @endforeach
@@ -75,7 +75,7 @@
     </div>
     <p>
       @if(env('ENABLE_ADS_TERRA', false))
-      @include('components.banner', ['adId' => 'exp'.$adivinhacao->uuid])
+      @include('layouts.ads.ads_terra_banner',, ['adId' => 'exp'.$adivinhacao->uuid])
       @endif
     </p>
     @endforeach
