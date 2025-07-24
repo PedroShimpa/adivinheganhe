@@ -22,6 +22,25 @@
                     ➕ Informações
                 </button>
 
+                @if($adivinhacao->dica_paga == 'S')
+                @if(!$adivinhacao->buyer)
+                <div class="alert alert-warning d-flex align-items-center justify-content-between" role="alert">
+                    <div>
+                        <strong>Dica disponível:</strong> Esta dica custa <strong>R${{ number_format($adivinhacao->dica_valor, 2, ',', '.') }}</strong>.
+                    </div>
+                    <a href="{{ route('dicas.index_buy', $adivinhacao->uuid) }}" class="btn btn-sm btn-primary">Comprar dica</a>
+                </div>
+                @else
+                <div class="alert alert-info" role="alert">
+                    <strong>Dica:</strong> {{ $adivinhacao->dica }}
+                </div>
+                @endif
+                @else
+                <div class="alert alert-info" role="alert">
+                    <strong>Dica:</strong> {{ $adivinhacao->dica }}
+                </div>
+                @endif
+
                 <p class="mb-1 small"><strong>Código da adivinhação:</strong> {{ $adivinhacao->uuid }}</p>
 
                 <!-- Modal -->
