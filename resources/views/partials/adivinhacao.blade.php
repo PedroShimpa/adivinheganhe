@@ -79,12 +79,11 @@
                     Enviar resposta
                 </button>
                 @endif
-
+                @endif
                 @else
                 <div class="alert alert-warning small rounded-3 mt-2">
                     Você precisa <a href="{{ route('login') }}" class="text-decoration-underline fw-semibold">entrar</a> para responder. É <span class="text-success fw-semibold">grátis</span>!
                 </div>
-                @endif
                 @endauth
             </div>
 
