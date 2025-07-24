@@ -8,7 +8,7 @@
     @include('partials.adivinhacao', ['adivinhacao' => $adivinhacao])
 </div>
 
-@if($adivinhacao->resolvida == 'S' || $adivinhacao->expire_at < now() )
+@if($adivinhacao->resolvida == 'S' || (!empty($adivinhacao->expire_at) && $adivinhacao->expire_at < now()))
 
 <div class="container py-5">
     <div class="text-center mb-4">

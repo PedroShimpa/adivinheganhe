@@ -46,7 +46,6 @@ class HomeController extends Controller
                 ->get();
         });
 
-
         $adivinhacoes->each(function ($a) {
             if (Cache::get("respostas_adivinhacao_{$a->id}")) {
                 $a->count_respostas = Cache::get("respostas_adivinhacao_{$a->id}");

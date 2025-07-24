@@ -52,7 +52,7 @@ class AdivinhacoesController extends Controller
         $adivinhacao->expired = $adivinhacao->expire_at < now();
 
         $respostas = collect([]);
-        if ($adivinhacao->resolvida == 'S' || $adivinhacao->expired) {
+        if ($adivinhacao->resolvida == 'S' || (!empty($adivinhacao->expire_at) && $adivinhacao->expired)) {
             $respostasKey = "adivinhacoes_expiradas_{$adivinhacao->id}_page_" . request()->get('page', 1);
 
             $respostas = Cache::remember($respostasKey, 600, function () use ($adivinhacao) {
