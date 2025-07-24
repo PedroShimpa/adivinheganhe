@@ -49,7 +49,7 @@ class RespostaController extends Controller
             'adivinhacao_id' => 'required|exists:adivinhacoes,id',
         ]);
 
-        $respostaCliente = strtolower(trim($data['resposta']));
+        $respostaCliente = mb_strtolower(trim($data['resposta']));
 
         if (AdivinhacoesRespostas::where([
             ['adivinhacao_id', $data['adivinhacao_id']],
@@ -70,7 +70,7 @@ class RespostaController extends Controller
 
             $respostaUuid = (string) Str::uuid();
 
-            $acertou = strtolower(trim($adivinhacao->resposta)) === $respostaCliente;
+            $acertou = mb_strtolower(trim($adivinhacao->resposta)) === $respostaCliente;
 
             if ($acertou) {
                 $adivinhacao->update(['resolvida' => 'S']);
