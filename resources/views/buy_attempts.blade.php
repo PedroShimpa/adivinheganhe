@@ -119,8 +119,8 @@
 
     quantidadeInput.addEventListener('input', () => {
         valorAtual = calcularValorTotal();
-        if (cardFormInstance) {
-            cardFormInstance.update({
+        if (cardForm) {
+            cardForm.update({
                 amount: valorAtual
             });
         }
@@ -177,7 +177,7 @@
             },
             onSubmit: event => {
                 event.preventDefault();
-
+  $('#form-checkout__submit').attr('disabled', true)
                 const {
 
                     paymentMethodId: payment_method_id,
@@ -245,7 +245,7 @@
 
             },
             onFetching: (resource) => {
-                $('#form-checkout__submit').attr('disabled', true)
+              
         
             }
         },
