@@ -68,7 +68,8 @@ class TentativasController extends Controller
                 AdicionaisIndicacao::create(['user_uuid' => auth()->user()->uuid, 'value' => $request->input('quantidade')]);
             }
 
-            Cache::delete("indicacoes_{$auth()->user()->uuid}");
+            $uuid = auth()->user()->uuid;
+            Cache::delete("indicacoes_{$uuid}");
             return response()->json(['success' => true]);
         } catch (MPApiException $e) {
             Log::error("Status code: " . $e->getApiResponse()->getStatusCode() . "\n");
@@ -77,7 +78,6 @@ class TentativasController extends Controller
             Log::error($e->getMessage());
         }
     }
-
     public function webhook(Request $request)
     {
         Log::info('Webhook mercado pago', $request->all());
