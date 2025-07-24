@@ -51,6 +51,34 @@
                             @enderror
                         </div>
 
+                         <div class="mb-3">
+                            <label for="dica" class="form-label">{{ __('Dica') }}</label>
+                            <input type="text" class="form-control @error('dica') is-invalid @enderror" id="dica" name="dica" value="{{ old('dica') }}">
+                            @error('dica')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="dica_paga" class="form-label">{{ __('Dica Paga?') }}</label>
+                            <select class="form-select @error('dica_paga') is-invalid @enderror" id="dica_paga" name="dica_paga" required>
+                                <option value="">Selecione...</option>
+                                <option value="S" {{ old('dica_paga') == 'S' ? 'selected' : '' }}>Sim</option>
+                                <option value="N" {{ old('dica_paga') == 'N' ? 'selected' : '' }}>Não</option>
+                            </select>
+                            @error('dica_paga')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3" id="dica_valor_container" style="display: none;">
+                            <label for="dica_valor" class="form-label">{{ __('Valor da Dica (R$)') }}</label>
+                            <input type="number" step="0.01" class="form-control @error('dica_valor') is-invalid @enderror" id="dica_valor" name="dica_valor" value="{{ old('dica_valor') }}">
+                            @error('dica_valor')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         <button type="submit" class="btn btn-primary">{{ __('Salvar Adivinhação') }}</button>
                     </form>
                 </div>
@@ -71,6 +99,22 @@
             toolbar: 'undo redo | bold italic underline | bullist numlist | link | code',
             language: 'pt_BR'
         });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const dicaPagaSelect = document.getElementById('dica_paga');
+        const dicaValorContainer = document.getElementById('dica_valor_container');
+
+        function toggleDicaValor() {
+            if (dicaPagaSelect.value === 'S') {
+                dicaValorContainer.style.display = 'block';
+            } else {
+                dicaValorContainer.style.display = 'none';
+            }
+        }
+
+        dicaPagaSelect.addEventListener('change', toggleDicaValor);
+        toggleDicaValor();
     });
 </script>
 @endpush

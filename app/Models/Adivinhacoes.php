@@ -19,15 +19,18 @@ class Adivinhacoes extends Model
         'resposta',
         'resolvida',
         'expire_at',
-        'exibir_home'
+        'exibir_home',
+        'dica',
+        'dica_paga',
+        'dica_valor'
     ];
 
-    
+
     protected $dates = [
         'expire_at'
     ];
 
-     public function getRouteKeyName()
+    public function getRouteKeyName()
     {
         return 'uuid';
     }
