@@ -38,9 +38,14 @@ class HomeController extends Controller
             return Adivinhacoes::select('id', 'uuid', 'titulo', 'imagem', 'descricao', 'premio', 'expire_at')
                 ->where('resolvida', 'N')
                 ->where('exibir_home', 'S')
+                ->where(function ($q) {
+                    $q->where('expire_at', '>', now());
+                    $q->orWhereNull('expire_at');
+                })
                 ->orderBy('id', 'desc')
                 ->get();
         });
+
 
         $adivinhacoes->each(function ($a) {
             if (Cache::get("respostas_adivinhacao_{$a->id}")) {
@@ -54,6 +59,15 @@ class HomeController extends Controller
                 $a->expired_at_br = (new DateTime($a->expire_at))->format('d/m H:i');
             }
             $a->expired = $a->expire_at < now();
+        });
+
+        $adivinhacoesExpiradas = Cache::remember('adivinhacoes_expiradas', 120, function () {
+            return Adivinhacoes::select('uuid', 'titulo')
+                ->where('resolvida', 'N')
+                ->whereNotNull('expire_at')
+                ->where('expire_at', '<', now())
+                ->orderBy('expire_at', 'desc')
+                ->get();
         });
 
         $premios = Cache::remember('premios_ultimos', 60, function () {
@@ -71,6 +85,6 @@ class HomeController extends Controller
                 ->get();
         });
 
-        return view('home')->with(compact('adivinhacoes', 'limitExceded', 'premios', 'trys'));
+        return view('home')->with(compact('adivinhacoes', 'limitExceded', 'premios', 'trys', 'adivinhacoesExpiradas'));
     }
 }

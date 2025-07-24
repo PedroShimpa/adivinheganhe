@@ -14,14 +14,13 @@ use Illuminate\Support\Str;
 
 class AdivinhacoesController extends Controller
 {
-
     public function index(Adivinhacoes $adivinhacao)
     {
         $trys = 0;
         $limitExceded = true;
 
         if (Auth::check()) {
-            $userId = auth()->user()->id;
+            $userId = auth()->id();
             $userUuid = auth()->user()->uuid;
 
             $countTrysToday = AdivinhacoesRespostas::where('user_id', $userId)
@@ -32,38 +31,47 @@ class AdivinhacoesController extends Controller
                 return AdicionaisIndicacao::where('user_uuid', $userUuid)->value('value') ?? 0;
             });
 
-            $limitExceded = $countTrysToday >= (env('MAX_ADIVINHATIONS', 10) + $countFromIndications);
-            $trys = (env('MAX_ADIVINHATIONS', 10) + $countFromIndications) - $countTrysToday;
+            $limit = env('MAX_ADIVINHATIONS', 10) + $countFromIndications;
+            $limitExceded = $countTrysToday >= $limit;
+            $trys = $limit - $countTrysToday;
         }
 
-        if (Cache::get("respostas_adivinhacao_{$adivinhacao->id}")) {
-            $adivinhacao->count_respostas = Cache::get("respostas_adivinhacao_{$adivinhacao->id}");
+        $respostasCountKey = "respostas_adivinhacao_{$adivinhacao->id}";
+        if (Cache::has($respostasCountKey)) {
+            $adivinhacao->count_respostas = Cache::get($respostasCountKey);
         } else {
             $count = AdivinhacoesRespostas::where('adivinhacao_id', $adivinhacao->id)->count();
-            Cache::put("respostas_adivinhacao_{$adivinhacao->id}", $count, now()->addMinutes(300));
+            Cache::put($respostasCountKey, $count, now()->addMinutes(300));
             $adivinhacao->count_respostas = $count;
         }
+
         if (!empty($adivinhacao->expire_at)) {
             $adivinhacao->expired_at_br = (new DateTime($adivinhacao->expire_at))->format('d/m H:i');
         }
 
         $adivinhacao->expired = $adivinhacao->expire_at < now();
-        $respostas = [];
-        if ($adivinhacao->resolvida == 'S') {
 
-            $respostas = AdivinhacoesRespostas::select('adivinhacoes_respostas.uuid', 'users.username', 'adivinhacoes_respostas.created_at', 'resposta')
-                ->join('users', 'users.id', '=', 'adivinhacoes_respostas.user_id')
-                ->where('adivinhacao_id', $adivinhacao->id)
-                ->orderBy('adivinhacoes_respostas.created_at', 'desc')
-                ->paginate(10);
+        $respostas = collect([]);
+        if ($adivinhacao->resolvida == 'S' || $adivinhacao->expired) {
+            $respostasKey = "adivinhacoes_expiradas_{$adivinhacao->id}_page_" . request()->get('page', 1);
 
-            $respostas->getCollection()->transform(function ($r) {
-                $r->created_at_br = (new DateTime($r->created_at))->format('d/m/Y H:i:s');
-                return $r;
+            $respostas = Cache::remember($respostasKey, 600, function () use ($adivinhacao) {
+                $paginated = AdivinhacoesRespostas::select('adivinhacoes_respostas.uuid', 'users.username', 'adivinhacoes_respostas.created_at', 'resposta')
+                    ->join('users', 'users.id', '=', 'adivinhacoes_respostas.user_id')
+                    ->where('adivinhacao_id', $adivinhacao->id)
+                    ->orderBy('adivinhacoes_respostas.created_at', 'desc')
+                    ->paginate(10);
+
+                $paginated->getCollection()->transform(function ($r) {
+                    $r->created_at_br = (new DateTime($r->created_at))->format('d/m/Y H:i:s');
+                    return $r;
+                });
+
+                return $paginated;
             });
         }
 
-        return view('adivinhacoes.index')->with(compact('adivinhacao', 'trys', 'limitExceded', 'respostas'));
+        return view('adivinhacoes.index', compact('adivinhacao', 'trys', 'limitExceded', 'respostas'));
     }
 
     public function create()
@@ -90,6 +98,7 @@ class AdivinhacoesController extends Controller
             broadcast(new AlertaGlobal('Nova Adivinhação', $data['titulo'] . ' adicionada, acesse a pagina inicial para ver'))->toOthers();
             return redirect()->route('home');
         }
+
         return redirect()->route('home');
     }
 }

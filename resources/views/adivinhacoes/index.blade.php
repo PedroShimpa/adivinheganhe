@@ -8,7 +8,7 @@
     @include('partials.adivinhacao', ['adivinhacao' => $adivinhacao])
 </div>
 
-@if($adivinhacao->resolvida == 'S')
+@if($adivinhacao->resolvida == 'S' || $adivinhacao->expire_at < now() )
 
 <div class="container py-5">
     <div class="text-center mb-4">
@@ -59,5 +59,4 @@
 @endsection
 @push('scripts')
 @include('partials.essentials_scripts_to_reply')
-
 @endpush
