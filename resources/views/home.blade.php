@@ -2,18 +2,6 @@
 
 @section('content')
 <div class="container py-4">
-  @if(env('ENABLE_ADS_TERRA', false))
-  <script type="text/javascript">
-    atOptions = {
-      'key': "{{ env('ADS_TERRA_BANNER_CODE')}}",
-      'format': 'iframe',
-      'height': 90,
-      'width': 728,
-      'params': {}
-    };
-  </script>
-  <script type="text/javascript" src="//www.highperformanceformat.com/{{ env('ADS_TERRA_BANNER_CODE')}}/invoke.js"></script>
-  @endif
   @include('layouts.base_header')
   @forelse($adivinhacoes as $adivinhacao)
   @include('partials.adivinhacao', ['adivinhacao' => $adivinhacao])
@@ -56,11 +44,6 @@
         </div>
       </div>
     </div>
-    <p>
-      @if(env('ENABLE_ADS_TERRA', false))
-      @include('layouts.ads.ads_terra_banner')
-      @endif
-    </p>
     @endforeach
   </div>
   @endif
