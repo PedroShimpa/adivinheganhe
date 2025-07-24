@@ -110,7 +110,7 @@
 
     function calcularValorTotal() {
         const qtd = parseInt(quantidadeInput.value) ||"{{env('MIN_ATTEMPT_BUY', 10)}}";
-        const valor = (qtd * "{{ env('PRICE_PER_ATTEMPT', 0.25)}}").toFixed(2);
+        const valor = (qtd * "{{ env('PRICE_PER_ATTEMPT', 0.25)}}").toFixed(2).toString();
         valorTotalInput.value = `R$ ${valor.replace('.', ',')}`;
         return valor;
     }
