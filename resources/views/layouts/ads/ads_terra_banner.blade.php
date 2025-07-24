@@ -7,4 +7,4 @@
         'params': {}
     };
 </script>
-<script type="text/javascript" src="//www.highperformanceformat.com/{{ env('ADS_TERRA_BANNER_CODE')}}/invoke.js"></script>
+<script type="text/javascript" async src="//www.highperformanceformat.com/{{ env('ADS_TERRA_BANNER_CODE')}}/invoke.js"></script>
