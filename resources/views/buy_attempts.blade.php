@@ -121,7 +121,7 @@
         valorAtual = calcularValorTotal();
         if (cardForm) {
             cardForm.update({
-                amount: valorAtual
+                "amount": valorAtual
             });
         }
     });
