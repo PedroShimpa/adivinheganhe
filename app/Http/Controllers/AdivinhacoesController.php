@@ -77,7 +77,8 @@ class AdivinhacoesController extends Controller
             });
         }
 
-        return view('adivinhacoes.index', compact('adivinhacao', 'trys', 'limitExceded', 'respostas'));
+        $title = $adivinhacao->titulo .' - '. config('app.name');
+        return view('adivinhacoes.index', compact('adivinhacao', 'trys', 'limitExceded', 'respostas', 'title'));
     }
 
     public function create()

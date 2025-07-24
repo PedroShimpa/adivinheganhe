@@ -3,7 +3,6 @@
 
 @section('content')
 <div class="container py-4">
-
     @include('layouts.base_header')
     @include('partials.adivinhacao', ['adivinhacao' => $adivinhacao])
 </div>
