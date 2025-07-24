@@ -105,68 +105,39 @@
 <script src="https://sdk.mercadopago.com/js/v2"></script>
 
 <script>
-    const quantidadeInput = document.getElementById('quantidade');
-    const valorTotalInput = document.getElementById('valorTotal');
+ const quantidadeInput = document.getElementById('quantidade');
+const valorTotalInput = document.getElementById('valorTotal');
 
-    function calcularValorTotal() {
-        const qtd = parseInt(quantidadeInput.value) ||"{{env('MIN_ATTEMPT_BUY', 10)}}";
-        const valor = (qtd * "{{ env('PRICE_PER_ATTEMPT', 0.25)}}").toFixed(2).toString();
-        valorTotalInput.value = `R$ ${valor.replace('.', ',')}`;
-        return valor;
+const mp = new MercadoPago('{{ env("MERCADO_PAGO_PUBLIC_KEY") }}');
+let cardForm = null;
+
+function calcularValorTotal() {
+    const qtd = parseInt(quantidadeInput.value) || {{ env('MIN_ATTEMPT_BUY', 10) }};
+    const precoUnitario = {{ env('PRICE_PER_ATTEMPT', 0.25) }};
+    const valor = (qtd * precoUnitario).toFixed(2);
+    valorTotalInput.value = `R$ ${valor.replace('.', ',')}`;
+    return valor;
+}
+
+function inicializarCardForm(amount) {
+    if (cardForm && cardForm.unmount) {
+        cardForm.unmount();
     }
 
-    let amount = calcularValorTotal();
-
-    quantidadeInput.addEventListener('input', () => {
-        amount = calcularValorTotal();
-        if (cardForm) {
-              cardForm.update({ amount });
-        }
-    });
-
-    const mp = new MercadoPago('{{ env("MERCADO_PAGO_PUBLIC_KEY") }}');
-
-    const cardForm = mp.cardForm({
+    cardForm = mp.cardForm({
         amount: amount,
         iframe: true,
         form: {
             id: "form-checkout",
-            cardNumber: {
-                id: "form-checkout__cardNumber",
-                placeholder: "Número do cartão",
-            },
-            expirationDate: {
-                id: "form-checkout__expirationDate",
-                placeholder: "MM/YY",
-            },
-            securityCode: {
-                id: "form-checkout__securityCode",
-                placeholder: "Código de segurança",
-            },
-            cardholderName: {
-                id: "form-checkout__cardholderName",
-                placeholder: "Titular do cartão",
-            },
-            issuer: {
-                id: "form-checkout__issuer",
-                placeholder: "Banco emissor",
-            },
-            installments: {
-                id: "form-checkout__installments",
-                placeholder: "Parcelas",
-            },
-            identificationType: {
-                id: "form-checkout__identificationType",
-                placeholder: "Tipo de documento",
-            },
-            identificationNumber: {
-                id: "form-checkout__identificationNumber",
-                placeholder: "Número do documento",
-            },
-            cardholderEmail: {
-                id: "form-checkout__cardholderEmail",
-                placeholder: "E-mail",
-            },
+            cardNumber: { id: "form-checkout__cardNumber", placeholder: "Número do cartão" },
+            expirationDate: { id: "form-checkout__expirationDate", placeholder: "MM/YY" },
+            securityCode: { id: "form-checkout__securityCode", placeholder: "Código de segurança" },
+            cardholderName: { id: "form-checkout__cardholderName", placeholder: "Titular do cartão" },
+            issuer: { id: "form-checkout__issuer", placeholder: "Banco emissor" },
+            installments: { id: "form-checkout__installments", placeholder: "Parcelas" },
+            identificationType: { id: "form-checkout__identificationType", placeholder: "Tipo de documento" },
+            identificationNumber: { id: "form-checkout__identificationNumber", placeholder: "Número do documento" },
+            cardholderEmail: { id: "form-checkout__cardholderEmail", placeholder: "E-mail" },
         },
         callbacks: {
             onFormMounted: error => {
@@ -175,9 +146,8 @@
             },
             onSubmit: event => {
                 event.preventDefault();
-  $('#form-checkout__submit').attr('disabled', true)
+                $('#form-checkout__submit').attr('disabled', true);
                 const {
-
                     paymentMethodId: payment_method_id,
                     issuerId: issuer_id,
                     cardholderEmail: email,
@@ -239,15 +209,25 @@
                             text: 'Tente novamente mais tarde.',
                             confirmButtonText: 'OK'
                         });
-                    }).finally(() =>   $('#form-checkout__submit').attr('disabled', false));
-
+                    }).finally(() => $('#form-checkout__submit').attr('disabled', false));
             },
             onFetching: (resource) => {
-              
-        
+                // opcional: loading
             }
         },
     });
+}
+
+// Primeira renderização
+let amount = calcularValorTotal();
+inicializarCardForm(amount);
+
+// Quando o usuário alterar a quantidade
+quantidadeInput.addEventListener('input', () => {
+    amount = calcularValorTotal();
+    inicializarCardForm(amount);
+});
+
 </script>
 
 @endpush
