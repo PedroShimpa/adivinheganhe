@@ -241,11 +241,12 @@
                             text: 'Tente novamente mais tarde.',
                             confirmButtonText: 'OK'
                         });
-                    });
+                    }).finally(() =>   $('#form-checkout__submit').attr('disabled', false));
 
             },
             onFetching: (resource) => {
-                console.log("Fetching resource: ", resource);
+                $('#form-checkout__submit').attr('disabled', true)
+        
             }
         },
     });

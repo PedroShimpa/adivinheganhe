@@ -94,18 +94,15 @@ class RespostaController extends Controller
                 'uuid'           => $respostaUuid
             ]);
 
-            // Atualiza contagem de tentativas
             $countTrysToday++;
             Cache::put($cacheTryKey, $countTrysToday, now()->addSeconds(30));
 
-            // Atualiza contagem de respostas da adivinhação
             $respostaCacheKey = "respostas_adivinhacao_{$adivinhacao->id}";
             $countRespostas = Cache::get($respostaCacheKey, 0) + 1;
             Cache::put($respostaCacheKey, $countRespostas, now()->addSeconds(20));
 
             broadcast(new AumentaContagemRespostas($adivinhacao->id, $countRespostas));
 
-            // Se passou o limite base e tem tentativas adicionais
             if (($countTrysToday >= $limiteMax) && $countFromIndications > 0) {
                 $indicacao = AdicionaisIndicacao::where('user_uuid', $userUuid)->first();
                 if ($indicacao) {

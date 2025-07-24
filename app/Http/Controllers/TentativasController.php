@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AdicionaisIndicacao;
 use App\Models\Pagamentos;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use MercadoPago\Client\Payment\PaymentClient;
 use MercadoPago\Client\Common\RequestOptions;
 use MercadoPago\MercadoPagoConfig;
@@ -24,7 +25,6 @@ class TentativasController extends Controller
         $quantidade = $request->input('quantidade');
         $valor = $quantidade * env('PRICE_PER_ATTEMPT', 0.25);
         $desc = "Compra de {$quantidade} tentativas ";
-
 
         try {
 
@@ -68,6 +68,7 @@ class TentativasController extends Controller
                 AdicionaisIndicacao::create(['user_uuid' => auth()->user()->uuid, 'value' => $request->input('quantidade')]);
             }
 
+            Cache::delete("indicacoes_{$auth()->user()->uuid}");
             return response()->json(['success' => true]);
         } catch (MPApiException $e) {
             Log::error("Status code: " . $e->getApiResponse()->getStatusCode() . "\n");
