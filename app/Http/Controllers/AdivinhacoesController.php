@@ -7,6 +7,7 @@ use App\Models\Adivinhacoes;
 use App\Http\Requests\StoreAdivinhacoesRequest;
 use App\Models\AdicionaisIndicacao;
 use App\Models\AdivinhacoesRespostas;
+use App\Models\DicasCompras;
 use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -51,6 +52,11 @@ class AdivinhacoesController extends Controller
 
         $adivinhacao->expired = $adivinhacao->expire_at < now();
 
+
+        if (!empty($adivinhacao->dica) && $adivinhacao->dica_paga == 'S' && Auth::check())  {
+            $adivinhacao->buyed = DicasCompras::where('user_id', auth()->user()->id)->where('adivinhacao_id', $adivinhacao->id)->exists();
+        }
+
         $respostas = collect([]);
         if ($adivinhacao->resolvida == 'S' || (!empty($adivinhacao->expire_at) && $adivinhacao->expired)) {
             $respostasKey = "adivinhacoes_expiradas_{$adivinhacao->id}_page_" . request()->get('page', 1);
@@ -85,7 +91,6 @@ class AdivinhacoesController extends Controller
     public function store(StoreAdivinhacoesRequest $request)
     {
         if (auth()->user()->id == 1) {
-
             $imagem = $request->file('imagem');
             $hash = Str::random(10);
             $fileName = $hash . '_' . time() . '.' . $imagem->getClientOriginalExtension();

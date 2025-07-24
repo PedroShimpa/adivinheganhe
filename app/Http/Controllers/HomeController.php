@@ -6,6 +6,7 @@ use App\Models\AdicionaisIndicacao;
 use App\Models\Adivinhacoes;
 use App\Models\AdivinhacoesPremiacoes;
 use App\Models\AdivinhacoesRespostas;
+use App\Models\DicasCompras;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,7 +36,7 @@ class HomeController extends Controller
         }
 
         $adivinhacoes = Cache::remember('adivinhacoes_ativas', 120, function () {
-            return Adivinhacoes::select('id', 'uuid', 'titulo', 'imagem', 'descricao', 'premio', 'expire_at')
+            return Adivinhacoes::select('id', 'uuid', 'titulo', 'imagem', 'descricao', 'premio', 'expire_at', 'dica', 'dica_paga', 'dica_valor')
                 ->where('resolvida', 'N')
                 ->where('exibir_home', 'S')
                 ->where(function ($q) {
@@ -58,7 +59,12 @@ class HomeController extends Controller
                 $a->expired_at_br = (new DateTime($a->expire_at))->format('d/m H:i');
             }
             $a->expired = $a->expire_at < now();
+
+            if (!empty($a->dica) && $a->dica_paga == 'S' && Auth::check()) {
+                $a->buyed = DicasCompras::where('user_id', auth()->user()->id)->where('adivinhacao_id', $a->id)->exists();
+            }
         });
+
 
         $adivinhacoesExpiradas = Cache::remember('adivinhacoes_expiradas', 120, function () {
             return Adivinhacoes::select('uuid', 'titulo')

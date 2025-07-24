@@ -47,7 +47,6 @@
     @if(env('ENABLE_ADS_TERRA', false))
     <p>
       @include('layouts.ads.ads_terra_banner')
-
     </p>
     @endif
     @endforeach
