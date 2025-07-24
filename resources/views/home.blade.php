@@ -16,45 +16,40 @@
   @if($premios->isNotEmpty())
   <hr class="my-4">
 
-  <h5 class="mb-3">🎉 Ultimos prêmios enviados</h5>
+  <h5 class="mb-3">🎉 Últimos prêmios enviados</h5>
 
-  <div class="table-responsive">
-    <table class="table table-bordered table-striped align-middle">
-      <thead class="table-dark small">
-        <tr>
-          <th>Título</th>
-          <th>Resposta</th>
-          <th>Ações</th>
-          <th>Usuário</th>
-          <th>Enviado?</th>
-        </tr>
-      </thead>
-      <tbody>
-        @foreach($premios as $premio)
-        <tr>
-          <td>{{ $premio->titulo }}</td>
-          <td>{{ $premio->resposta }}</td>
-          <td>
+  <div class="row g-3">
+    @foreach($premios as $premio)
+    <div class="col-12">
+      <div class="card shadow-sm border-0 rounded-4 p-3 bg-light h-100">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+          <div class="flex-grow-1">
+            <h6 class="fw-bold text-primary mb-1">{{ $premio->titulo }}</h6>
+            <p class="mb-2"><strong>Resposta:</strong> <span class="text-dark">{{ $premio->resposta }}</span></p>
+            <p class="mb-2 small text-muted">👤 <strong>Usuário:</strong> {{ $premio->username }}</p>
+            <p class="mb-2 small">
+              📦 <strong>Enviado?</strong>
+              @if($premio->premio_enviado === 'S')
+              <span class="badge bg-success">Sim</span>
+              @else
+              <span class="badge bg-warning text-dark">Não</span>
+              @endif
+            </p>
+          </div>
+          <div class="d-flex flex-column gap-2">
             @php $isLink = filter_var($premio->premio, FILTER_VALIDATE_URL); @endphp
             @if($isLink)
-            <a href="{{ $premio->premio }}" target="_blank" class="btn btn-sm btn-outline-primary">Ver prêmio</a>
+            <a href="{{ $premio->premio }}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3">🎁 Ver prêmio</a>
             @endif
-            <a href="{{ route('adivinhacoes.index',$premio->uuid) }}" target="_blank" class="btn btn-sm btn-outline-success">Ver Adivinhação</a>
-          </td>
-          <td>{{ $premio->username }}</td>
-          <td>
-            @if($premio->premio_enviado === 'S')
-            <span class="badge bg-success">Sim</span>
-            @else
-            <span class="badge bg-warning text-dark">Não</span>
-            @endif
-          </td>
-        </tr>
-        @endforeach
-      </tbody>
-    </table>
+            <a href="{{ route('adivinhacoes.index',$premio->uuid) }}" target="_blank" class="btn btn-sm btn-outline-success rounded-pill px-3">🔍 Ver Adivinhação</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    @endforeach
   </div>
   @endif
+
 </div>
 @endsection
 @push('scripts')

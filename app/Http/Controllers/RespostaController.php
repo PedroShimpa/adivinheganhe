@@ -61,7 +61,7 @@ class RespostaController extends Controller
 
         try {
             $adivinhacao = Adivinhacoes::find($data['adivinhacao_id']);
-            if ($adivinhacao->expire_at < now()) {
+            if (!empty($adivinhacao->expire_at) && $adivinhacao->expire_at < now()) {
                 return response()->json(['error' => "Esta adivinhação expirou! Em breve outra com o mesmo prêmio será adicionada!"]);
             }
             if ($adivinhacao->resolvida == 'S') {
@@ -115,6 +115,8 @@ class RespostaController extends Controller
             DB::commit();
 
             if ($acertou) {
+                Cache::delete('adivinhacoes_ativas');
+
                 AdivinhacoesPremiacoes::create([
                     'user_id'        => $userId,
                     'adivinhacao_id' => $adivinhacao->id,
@@ -122,7 +124,7 @@ class RespostaController extends Controller
                 Log::info("Premio adicionado para o usuario $userId");
                 return response()->json(['status' => 'acertou', 'code' => $respostaUuid]);
             }
-           
+
 
             return response()->json(['status' => 'ok', 'code' => $respostaUuid]);
         } catch (\Throwable $e) {
