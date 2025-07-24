@@ -115,19 +115,19 @@
         return valor;
     }
 
-    let valorAtual = calcularValorTotal();
+    let amount = calcularValorTotal();
 
     quantidadeInput.addEventListener('input', () => {
-        valorAtual = calcularValorTotal();
+        amount = calcularValorTotal();
         if (cardForm) {
-              cardForm.update('amount', valorAtual);
+              cardForm.update({ amount });
         }
     });
 
     const mp = new MercadoPago('{{ env("MERCADO_PAGO_PUBLIC_KEY") }}');
 
     const cardForm = mp.cardForm({
-        amount: valorAtual,
+        amount: amount,
         iframe: true,
         form: {
             id: "form-checkout",
