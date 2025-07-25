@@ -121,16 +121,6 @@ class RespostaController extends Controller
         //aqui algumas coisas que não tão importantes pra ser rapido
         try {
 
-            DB::beginTransaction();
-
-            //usado insert para melhorar tempo de resposta do banco
-            AdivinhacoesRespostas::insert([
-                'user_id'        => $userId,
-                'adivinhacao_id' => $data['adivinhacao_id'],
-                'resposta'       => $respostaCliente,
-                'created_at'     => now(),
-                'uuid'           => $respostaUuid
-            ]);
 
             //aumenta as tentativas diarias do usuario
             $countTrysToday++;
@@ -147,8 +137,6 @@ class RespostaController extends Controller
             }
 
 
-            DB::commit();
-
             if ($acertou) {
                 Cache::set('adivinhacoes_ativas', null);
                 Cache::set('premios_ultimos', null);
@@ -164,7 +152,6 @@ class RespostaController extends Controller
             return response()->json(['status' => 'ok', 'code' => $respostaUuid]);
         } catch (\Throwable $e) {
             Log::error($e->getMessage());
-            DB::rollBack();
             return response()->json(['error' => 'Não foi possível inserir sua resposta agora, tente novamente mais tarde...']);
         }
     }
