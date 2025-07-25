@@ -150,8 +150,8 @@ class RespostaController extends Controller
             DB::commit();
 
             if ($acertou) {
-                Cache::delete('adivinhacoes_ativas');
-                Cache::delete('premios_ultimos');
+                Cache::set('adivinhacoes_ativas', null);
+                Cache::set('premios_ultimos', null);
 
                 AdivinhacoesPremiacoes::create([
                     'user_id'        => $userId,
