@@ -8,6 +8,8 @@ use App\Http\Requests\StoreAdivinhacoesRequest;
 use App\Models\AdicionaisIndicacao;
 use App\Models\AdivinhacoesRespostas;
 use App\Models\DicasCompras;
+use App\Trais\CountTrys;
+use App\Trais\TentativasTrait;
 use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -15,53 +17,22 @@ use Illuminate\Support\Str;
 
 class AdivinhacoesController extends Controller
 {
+    use TentativasTrait;
+    use CountTrys;
+
     public function index(Adivinhacoes $adivinhacao)
     {
         $trys = 0;
         $limitExceded = true;
 
-        if (Auth::check()) {
-            $userId = auth()->id();
-            $userUuid = auth()->user()->uuid;
-
-            $countTrysToday = AdivinhacoesRespostas::where('user_id', $userId)
-                ->whereDate('created_at', today())
-                ->count();
-
-            $countFromIndications = Cache::remember("indicacoes_{$userUuid}", 240, function () use ($userUuid) {
-                return AdicionaisIndicacao::where('user_uuid', $userUuid)->value('value') ?? 0;
-            });
-
-            $limit = env('MAX_ADIVINHATIONS', 10) + $countFromIndications;
-            $limitExceded = $countTrysToday >= $limit;
-            $trys = $limit - $countTrysToday;
-        }
-
-        $respostasCountKey = "respostas_adivinhacao_{$adivinhacao->id}";
-        if (Cache::has($respostasCountKey)) {
-            $adivinhacao->count_respostas = Cache::get($respostasCountKey);
-        } else {
-            $count = AdivinhacoesRespostas::where('adivinhacao_id', $adivinhacao->id)->count();
-            Cache::put($respostasCountKey, $count, now()->addMinutes(300));
-            $adivinhacao->count_respostas = $count;
-        }
-
-        if (!empty($adivinhacao->expire_at)) {
-            $adivinhacao->expired_at_br = (new DateTime($adivinhacao->expire_at))->format('d/m H:i');
-        }
-
-        $adivinhacao->expired = $adivinhacao->expire_at < now();
-
-
-        if (!empty($adivinhacao->dica) && $adivinhacao->dica_paga == 'S' && Auth::check())  {
-            $adivinhacao->buyed = DicasCompras::where('user_id', auth()->user()->id)->where('adivinhacao_id', $adivinhacao->id)->exists();
-        }
+        $this->count($trys, $limitExceded);
+        $this->customize($adivinhacao);
 
         $respostas = collect([]);
         if ($adivinhacao->resolvida == 'S' || (!empty($adivinhacao->expire_at) && $adivinhacao->expired)) {
             $respostasKey = "adivinhacoes_expiradas_{$adivinhacao->id}_page_" . request()->get('page', 1);
 
-            $respostas = Cache::remember($respostasKey, 600, function () use ($adivinhacao) {
+            $respostas = Cache::remember($respostasKey, 3600, function () use ($adivinhacao) {
                 $paginated = AdivinhacoesRespostas::select('adivinhacoes_respostas.uuid', 'users.username', 'adivinhacoes_respostas.created_at', 'resposta')
                     ->join('users', 'users.id', '=', 'adivinhacoes_respostas.user_id')
                     ->where('adivinhacao_id', $adivinhacao->id)

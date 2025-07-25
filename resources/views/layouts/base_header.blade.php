@@ -11,7 +11,7 @@
 @if(Auth::check())
 <div class="mb-4 p-4 bg-light rounded-4 shadow-sm text-center">
     <h5 class="mb-3 text-primary fw-semibold">
-        🎯 Indique e ganhe <strong>5 tentativas</strong> por novo Adivinhador registrado no seu link!
+        🎯 Indique e ganhe <strong>{{ env('INDICATION_ADICIONAL')}} tentativas</strong> por novo Adivinhador registrado no seu link!
     </h5>
 
     <div class="d-flex justify-content-center">
