@@ -5,8 +5,10 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PagamentosController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RespostaController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
+use Pusher\Pusher;
 
 Broadcast::routes(['middleware' => ['web', 'auth']]);
 
@@ -33,5 +35,29 @@ Route::post('/webhook/mercadopago', [PagamentosController::class, 'webhook']);
 Route::get('/adivinhacoes/{adivinhacao}', [AdivinhacoesController::class, 'index'])->name('adivinhacoes.index');
 Route::get('/adivinhacoes/{adivinhacao}/respostas-iframe', [AdivinhacoesController::class, 'respostas'])->name('adivinhacoes.respostas');
 
+Route::post('/broadcasting/auth-mixed', function (Request $request) {
+    $pusher = new Pusher(
+        env('REVERB_APP_KEY'),
+        env('REVERB_APP_SECRET'),
+        env('REVERB_APP_ID'),
+        ['cluster' => env('PUSHER_APP_CLUSTER')]
+    );
+
+    $user = auth()->user();
+    if ($user) {
+        $id   = 'user-' . $user->id;
+        $info = ['name' => $user->name];
+    } else {
+        $id   = 'guest-' . substr(md5($request->ip() . microtime()), 0, 8);
+        $info = ['name' => 'Visitante'];
+    }
+
+    return $pusher->presence_auth(
+        $request->channel_name,
+        $request->socket_id,
+        $id,
+        $info
+    );
+});
 
 require __DIR__ . '/auth.php';

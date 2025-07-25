@@ -16,15 +16,16 @@
     wsPort: '{{ env("VITE_REVERB_PORT", 8080) }}',
     forceTLS: false,
     disableStats: true,
-    authEndpoint: '/broadcasting/auth',
+    authEndpoint: '/broadcasting/auth-mixed', // <- NOVO ENDPOINT
     auth: {
-      headers: {
-        'X-CSRF-TOKEN': csrfToken
-      }
+      headers: { 'X-CSRF-TOKEN': csrfToken }
     }
   });
 
   window.Echo.channel('adivinhacoes')
+    .here(users => updateCount(users.length))
+    .joining(user => updateCount(online + 1))
+    .leaving(user => updateCount(Math.max(online - 1, 0)))
     .listen('.resposta.aprovada', e => {
       $('input[name="resposta"], .btn-success').prop('disabled', true);
       Swal.fire('Adivinhação encerrada', e.mensagem, 'info');
@@ -149,12 +150,4 @@
       });
     });
   });
-
-  const pusher = window.Echo.connector.pusher;
-  const rawChannel = pusher.subscribe('adivinhacoes');
-
-  rawChannel.bind('pusher:subscription_count', ({ subscription_count }) => {
-      document.getElementById('online-count').innerText = subscription_count;
-  });
-
 </script>

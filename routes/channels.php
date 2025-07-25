@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Broadcast;
-use Illuminate\Support\Facades\Log;
 
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
@@ -9,4 +8,19 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 
 Broadcast::channel('user.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
+});
+
+Broadcast::channel('adivinhacoes', function ($user) {
+    if ($user) {
+        return [
+            'id'   => 'user-' . $user->id,
+            'name' => $user->name,
+        ];
+    }
+
+    // Para visitantes (não logados)
+    return [
+        'id'   => 'guest-' . uniqid(),
+        'name' => 'Convidado',
+    ];
 });
