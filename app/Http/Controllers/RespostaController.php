@@ -98,6 +98,7 @@ class RespostaController extends Controller
 
         try {
             AdivinhacoesRespostas::insert([
+                'uuid' => Str::uuid(),
                 'adivinhacao_id' => $data['adivinhacao_id'],
                 'user_id'        => $userId,
                 'resposta'       => $respostaCliente,
