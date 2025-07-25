@@ -112,8 +112,8 @@
           $btn.prop('disabled', true);
         } else {
           $msg
-            .removeClass('text-success')
-            .addClass('text-danger')
+            .removeClass('text-success fw-bold')
+            .addClass('text-warning fw-bold')
             .html(`Que pena, você errou! ${
               tentativas > 0
                 ? 'Mas ainda possui ' + tentativas + ' tentativa' + (tentativas === 1 ? '' : 's')
