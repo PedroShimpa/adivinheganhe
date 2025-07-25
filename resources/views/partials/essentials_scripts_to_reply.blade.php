@@ -23,9 +23,6 @@
   });
 
   window.Echo.channel('adivinhacoes')
-    .here(users => updateCount(users.length))
-    .joining(user => updateCount(online + 1))
-    .leaving(user => updateCount(Math.max(online - 1, 0)))
     .listen('.resposta.aprovada', e => {
       $('input[name="resposta"], .btn-success').prop('disabled', true);
       Swal.fire('Adivinhação encerrada', e.mensagem, 'info');
@@ -44,6 +41,7 @@
     .listen('.alerta.global', e => {
       Swal.fire(e.titulo, e.msg, e.tipo)
     });
+
 
   @auth
   window.Echo.private(`user.{{ Auth::id() }}`)
@@ -150,4 +148,8 @@
       });
     });
   });
+
+    window.Echo.join('presence') .here(users => updateCount(users.length))
+    .joining(user => updateCount(online + 1))
+    .leaving(user => updateCount(Math.max(online - 1, 0)))
 </script>

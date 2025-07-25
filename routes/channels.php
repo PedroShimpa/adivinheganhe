@@ -10,7 +10,7 @@ Broadcast::channel('user.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-Broadcast::channel('adivinhacoes', function ($user) {
+Broadcast::channel('presence', function ($user) {
     if ($user) {
         return [
             'id'   => 'user-' . $user->id,
