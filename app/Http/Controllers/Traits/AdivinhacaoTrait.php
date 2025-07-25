@@ -12,7 +12,7 @@ trait AdivinhacaoTrait
 {
     public function customize(Adivinhacoes &$adivinhacao)
     {
-        $adivinhacao->count_respostas = AdivinhacoesRespostas::where('created_at', '>', $adivinhacao->created_at)->where('adivinhacao_id', $adivinhacao->id)->count();
+        $adivinhacao->count_respostas =0;
 
         if (!empty($adivinhacao->expire_at)) {
             $adivinhacao->expired_at_br = (new DateTime($adivinhacao->expire_at))->format('d/m H:i');
