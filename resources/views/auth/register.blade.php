@@ -88,6 +88,7 @@
                             <button type="submit" class="btn btn-primary px-4">
                                 Registrar
                             </button>
+                            <small>Ao se cadastrar você concorda com nossos termos e condições!</small>
                         </div>
                     </form>
                 </div>
