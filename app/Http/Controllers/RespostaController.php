@@ -61,11 +61,11 @@ class RespostaController extends Controller
 
         try {
             $adivinhacao = Adivinhacoes::find($data['adivinhacao_id']);
-            if (!empty($adivinhacao->expire_at) && $adivinhacao->expire_at < now()) {
-                return response()->json(['error' => "Esta adivinhação expirou! Em breve outra com o mesmo prêmio será adicionada!"]);
-            }
             if ($adivinhacao->resolvida == 'S') {
                 return response()->json(['error' => "Esta adivinhação já foi adivinhada, obrigado por tentar!"]);
+            }
+            if (!empty($adivinhacao->expire_at) && $adivinhacao->expire_at < now()) {
+                return response()->json(['error' => "Esta adivinhação expirou! Em breve outra com o mesmo prêmio será adicionada!"]);
             }
 
             $respostaUuid = (string) Str::uuid();
@@ -88,7 +88,7 @@ class RespostaController extends Controller
 
             AdivinhacoesRespostas::insert([
                 'user_id'        => $userId,
-                'adivinhacao_id' => $adivinhacao->id,
+                'adivinhacao_id' => $data['adivinhacao_id'],
                 'resposta'       => $respostaCliente,
                 'created_at'     => now(),
                 'uuid'           => $respostaUuid
@@ -97,11 +97,11 @@ class RespostaController extends Controller
             $countTrysToday++;
             Cache::put($cacheTryKey, $countTrysToday, now()->addSeconds(30));
 
-            $respostaCacheKey = "respostas_adivinhacao_{$adivinhacao->id}";
+            $respostaCacheKey = "respostas_adivinhacao_{$data['adivinhacao_id']}";
             $countRespostas = Cache::get($respostaCacheKey, 0) + 1;
             Cache::put($respostaCacheKey, $countRespostas, now()->addSeconds(20));
 
-            broadcast(new AumentaContagemRespostas($adivinhacao->id, $countRespostas));
+            broadcast(new AumentaContagemRespostas($data['adivinhacao_id'], $countRespostas));
 
             if (($countTrysToday >= $limiteMax) && $countFromIndications > 0) {
                 $indicacao = AdicionaisIndicacao::where('user_uuid', $userUuid)->first();
@@ -119,12 +119,11 @@ class RespostaController extends Controller
 
                 AdivinhacoesPremiacoes::create([
                     'user_id'        => $userId,
-                    'adivinhacao_id' => $adivinhacao->id,
+                    'adivinhacao_id' => $data['adivinhacao_id'],
                 ]);
                 Log::info("Premio adicionado para o usuario $userId");
                 return response()->json(['status' => 'acertou', 'code' => $respostaUuid]);
             }
-
 
             return response()->json(['status' => 'ok', 'code' => $respostaUuid]);
         } catch (\Throwable $e) {
