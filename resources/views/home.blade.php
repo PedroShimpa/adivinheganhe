@@ -26,6 +26,21 @@
             <p class="mb-2"><strong>Resposta:</strong> <span class="text-dark">{{ $premio->resposta }}</span></p>
             <p class="mb-2 small text-muted">👤 <strong>Usuário:</strong> {{ $premio->username }}</p>
             <p class="mb-2 small">
+              <strong>Vencedor notificado?</strong>
+              @if($premio->vencedor_notificado === 'S')
+              <span class="badge bg-success">Sim</span>
+              @else
+              <span class="badge bg-warning text-dark">Não</span>
+              @endif
+            </p>
+
+            @if(!empty($premio->previsao_envio_premio))
+            <p class="mb-2 small">
+              <strong>Data prevista para envio:</strong>
+              <span class="badge bg-success">{{ (new DateTime($premio->previsao_envio_premio))->format('d/m/Y')}}</span>
+            </p>
+            @endif
+            <p class="mb-2 small">
               📦 <strong>Enviado?</strong>
               @if($premio->premio_enviado === 'S')
               <span class="badge bg-success">Sim</span>
@@ -76,7 +91,6 @@
     @if(env('ENABLE_ADS_TERRA', false))
     <p>
       @include('layouts.ads.ads_terra_banner')
-
     </p>
     @endif
     @endforeach

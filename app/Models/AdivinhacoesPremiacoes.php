@@ -12,5 +12,7 @@ class AdivinhacoesPremiacoes extends Model
         'user_id',
         'adivinhacao_id',
         'premio_enviado',
+        'previsao_envio_premio',
+        'vencedor_notificado'
     ];
 }
