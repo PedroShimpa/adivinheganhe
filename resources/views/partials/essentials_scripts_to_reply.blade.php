@@ -58,7 +58,6 @@
     $('.btn-success').on('click', async function () {
       const $btn = $(this);
 
-      $btn.attr('disabled', true)
       const $body = $btn.closest('.col-md-7');
       const id = $body.find('[name="adivinhacao_id"]').val();
       const $input = $(`#resposta-${id}`);
@@ -71,13 +70,13 @@
         return;
       }
 
+
       if (tentativas <= 0) {
         Swal.fire('Sem tentativas!', 'Você não possui mais tentativas 😞', 'warning');
         return;
       }
-
-      tentativas--;
-      $('#tentativas-restantes').text(`Restam ${tentativas} tentativa${tentativas === 1 ? '' : 's'}`);
+      $btn.attr('disabled', true)
+   
 
       try {
         const res = await fetch("{{ route('resposta.enviar') }}", {
@@ -123,6 +122,8 @@
           $btn.attr('disabled', false);
         }
       }
+      tentativas--;
+      $('#tentativas-restantes').text(`Restam ${tentativas} tentativa${tentativas === 1 ? '' : 's'}`);
       $msg.insertAfter($input);
 
       } catch (error) {
