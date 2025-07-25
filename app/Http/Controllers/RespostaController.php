@@ -9,6 +9,7 @@ use App\Models\AdicionaisIndicacao;
 use App\Models\Adivinhacoes;
 use App\Models\AdivinhacoesPremiacoes;
 use App\Models\AdivinhacoesRespostas;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -20,7 +21,11 @@ class RespostaController extends Controller
 {
     /**
      * Como são milhares de requisições por minuto, eu deixo as insereções no banco de dados por ultimo, primeiro eu verifico se o usuario pode responder, se puder, busco a adivinhação, verifico se ela pode ser respondida, se puder, verifico se ele acertou, se ele acertou, instantanemaneto bloqueio a adivinhação para ningume mais acertar e ai sigo os outros processos que não são tão importantes
+     * 
+     *A tabela de respostas vai ser gigante, então fazemos o minimo de consultas possivel nela pra evitar gargalo no banco
+     *A tebala de respostas tem que estar sempre muito bem indexada
      */
+    
     public function enviar(Request $request)
     {
         $data = $request->validate([
@@ -62,15 +67,6 @@ class RespostaController extends Controller
 
         $respostaCliente = mb_strtolower(trim($data['resposta']));
 
-        #verifica se o cliente ja tentou pra economizar uma consulta na adivinhacao
-        if (AdivinhacoesRespostas::where([
-            ['adivinhacao_id', $data['adivinhacao_id']],
-            ['user_id', $userId],
-            ['resposta', $respostaCliente],
-        ])->exists()) {
-            return response()->json(['error' => "Você já tentou isso!"]);
-        }
-
         #busca a adivinhacao e verifica novsmente se ela ja foi resolvida ou expirou
         $adivinhacao = Adivinhacoes::find($data['adivinhacao_id']);
         if ($adivinhacao->resolvida == 'S') {
@@ -100,6 +96,20 @@ class RespostaController extends Controller
             ));
         }
 
+        try {
+            AdivinhacoesRespostas::insert(
+                [
+                    'adivinhacao_id' => $data['adivinhacao_id'],
+                    'user_id' => $userId,
+                    'resposta' => $respostaCliente
+                ]
+            );
+        } catch (Exception $e) {
+            #se falhar é pq ele ja tentou essa
+            return response()->json(['error' => "Você já tentou isso!"]);
+        }
+
+
         //aqui algumas coisas que não tão importantes pra ser rapido
         try {
 
@@ -128,17 +138,15 @@ class RespostaController extends Controller
                 }
             }
 
-
             //aumenta o contador de respotas 
             $respostaCacheKey = "respostas_adivinhacao_{$data['adivinhacao_id']}";
             $countRespostas = Cache::get($respostaCacheKey, 0) + 1;
             Cache::put($respostaCacheKey, $countRespostas);
             broadcast(new AumentaContagemRespostas($data['adivinhacao_id'], $countRespostas));
 
-            
             DB::commit();
 
-            //aqui adiciona o premio para o ganhador e faze retorno do http
+            //aqui adiciona o premio para o ganhador e faz o retorno do http
             if ($acertou) {
                 Cache::delete('adivinhacoes_ativas');
 
