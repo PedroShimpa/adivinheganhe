@@ -1,7 +1,7 @@
 <div class="card mb-4 shadow-sm border-0 rounded-4 overflow-hidden">
     <div class="row g-0 flex-wrap">
         <div class="col-12 col-md-5 bg-light d-flex align-items-center justify-content-center p-3">
-            <img src="{{ asset('storage/' . $adivinhacao->imagem) }}" class="img-fluid rounded-4 shadow-sm w-100" alt="Imagem da adivinhação" style="max-height: 300px; object-fit: cover;">
+            <img src="{{ secure_asset('storage/' . $adivinhacao->imagem) }}" class="img-fluid rounded-4 shadow-sm w-100" alt="Imagem da adivinhação" style="max-height: 300px; object-fit: cover;">
         </div>
 
         <div class="col-12 col-md-7 p-4 d-flex flex-column justify-content-between">
