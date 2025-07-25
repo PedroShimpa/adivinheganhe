@@ -12,16 +12,20 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
 
- <link rel="preload" as="style" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap"></noscript>
+    <link rel="preload" as="style" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap">
+    </noscript>
 
-<link rel="preload" as="style" href="{{ asset('css/bootstrap.icons.min.css') }}" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="{{ asset('css/bootstrap.icons.min.css') }}"></noscript>
+    <link rel="preload" as="style" href="{{ asset('css/bootstrap.icons.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.icons.min.css') }}">
 
-<link rel="preload" as="style" href="{{ asset('css/bootstrap.min.css') }}" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}"></noscript>
+    <link rel="preload" as="style" href="{{ asset('css/bootstrap.min.css') }}" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    </noscript>
 
-<script src="{{ asset('js/bootstrap.bundle.min.js') }}" defer></script>
+    <script src="{{ asset('js/bootstrap.bundle.min.js') }}" defer></script>
 
     @stack('head-scripts')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -49,7 +53,7 @@
         </main>
     </div>
     <script src="{{ asset('js/jquery.min.js')}}"></script>
-    <script src="{{ asset('js/sweetalert.min.js')}}"></script>
+    <script src="{{ asset('js/sweetalert.min.js')}}" defer></script>
 
     @if(env('GOOGLE_ANALYTICS_TAG'))
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ env('GOOGLE_ANALYTICS_TAG')}}"></script>

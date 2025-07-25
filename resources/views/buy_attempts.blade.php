@@ -105,7 +105,7 @@
 <script src="https://sdk.mercadopago.com/js/v2"></script>
 
 <script>
- const quantidadeInput = document.getElementById('quantidade');
+const quantidadeInput = document.getElementById('quantidade');
 const valorTotalInput = document.getElementById('valorTotal');
 
 const mp = new MercadoPago('{{ env("MERCADO_PAGO_PUBLIC_KEY") }}');
