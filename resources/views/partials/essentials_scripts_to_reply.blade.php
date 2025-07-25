@@ -149,4 +149,12 @@
       });
     });
   });
+
+  const pusher = window.Echo.connector.pusher;
+  const rawChannel = pusher.subscribe('adivinhacoes');
+
+  rawChannel.bind('pusher:subscription_count', ({ subscription_count }) => {
+      document.getElementById('online-count').innerText = subscription_count;
+  });
+
 </script>
