@@ -17,8 +17,8 @@
         <link rel="stylesheet" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap">
     </noscript>
 
-    <link rel="preload" as="style" href="{{ asset('css/bootstrap.icons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.icons.min.css') }}">
+    <link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
     <link rel="preload" as="style" href="{{ asset('css/bootstrap.min.css') }}" onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
