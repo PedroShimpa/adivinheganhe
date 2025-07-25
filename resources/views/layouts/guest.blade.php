@@ -28,8 +28,8 @@
         </div>
     </div>
 
-    <script src="{{ secure_asset('js/jquery.min.js')}}"></script>
-    <script src="{{ secure_asset('js/jquery.inputmask.min.js')}}"></script>
+    <script src="{{ asset('js/jquery.min.js')}}"></script>
+    <script src="{{ asset('js/jquery.inputmask.min.js')}}"></script>
     <script>
         $(document).ready(function() {
             $('#cpf').inputmask('999.999.999-99');

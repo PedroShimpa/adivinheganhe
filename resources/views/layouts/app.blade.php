@@ -14,8 +14,8 @@
 
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="{{ secure_asset('css/bootstrap.min.css')}}" rel="stylesheet">
-    <script src="{{secure_asset('js/bootstrap.bundle.min.js')}}"></script>
+    <link href="{{ asset('css/bootstrap.min.css')}}" rel="stylesheet">
+    <script src="{{asset('js/bootstrap.bundle.min.js')}}"></script>
     @stack('head-scripts')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -41,8 +41,8 @@
             @yield('content')
         </main>
     </div>
-    <script src="{{ secure_asset('js/jquery.min.js')}}"></script>
-    <script src="{{ secure_asset('js/sweetalert.min.js')}}"></script>
+    <script src="{{ asset('js/jquery.min.js')}}"></script>
+    <script src="{{ asset('js/sweetalert.min.js')}}"></script>
 
     @if(env('GOOGLE_ANALYTICS_TAG'))
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ env('GOOGLE_ANALYTICS_TAG')}}"></script>
