@@ -1,3 +1,13 @@
+<!-- Contador de usuários online -->
+<div class="mb-4 p-3 bg-white border rounded-4 shadow-sm text-center">
+    <span class="d-inline-flex align-items-center justify-content-center gap-2 text-secondary">
+        <i class="bi bi-people-fill text-primary fs-5"></i>
+        <span class="fw-semibold">
+            <span id="online-count" class="text-primary fs-5">0</span> jogadores online agora
+        </span>
+    </span>
+</div>
+
 @if(Auth::check())
 <div class="mb-4 p-4 bg-light rounded-4 shadow-sm text-center">
     <h5 class="mb-3 text-primary fw-semibold">
@@ -12,7 +22,7 @@
     </div>
 
     <p class="mb-2">
-        <strong id="tentativas-restantes">🎮 Você ainda tem {{ $trys }}</strong> tentativas.
+        <strong id="tentativas-restantes">🎮 Você tem {{ $trys }}</strong> tentativas.
         <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-primary ms-2 rounded-pill">Comprar mais</a>
     </p>
     <p class="small text-muted">🕓 Você recebe 10 tentativas gratuitas todos os dias (não acumulativas).</p>
