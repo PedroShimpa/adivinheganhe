@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Cache;
 use MercadoPago\Client\Payment\PaymentClient;
 use MercadoPago\Client\Common\RequestOptions;
 use MercadoPago\MercadoPagoConfig;
-
 use Illuminate\Support\Facades\Log;
 use MercadoPago\Exceptions\MPApiException;
 

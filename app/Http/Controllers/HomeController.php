@@ -83,7 +83,9 @@ class HomeController extends Controller
                 'adivinhacoes.resposta',
                 'adivinhacoes.premio',
                 'users.username',
-                'premio_enviado'
+                'premio_enviado',
+                'previsao_envio_premio',
+                'vencedor_notificado'
             )
                 ->join('adivinhacoes', 'adivinhacoes.id', '=', 'adivinhacoes_premiacoes.adivinhacao_id')
                 ->join('users', 'users.id', '=', 'adivinhacoes_premiacoes.user_id')
