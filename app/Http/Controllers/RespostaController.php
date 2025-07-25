@@ -10,6 +10,7 @@ use App\Models\Adivinhacoes;
 use App\Models\AdivinhacoesPremiacoes;
 use App\Models\AdivinhacoesRespostas;
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -25,7 +26,7 @@ class RespostaController extends Controller
      *A tabela de respostas vai ser gigante, então fazemos o minimo de consultas possivel nela pra evitar gargalo no banco
      *A tebala de respostas tem que estar sempre muito bem indexada
      */
-    
+
     public function enviar(Request $request)
     {
         $data = $request->validate([
@@ -97,16 +98,22 @@ class RespostaController extends Controller
         }
 
         try {
-            AdivinhacoesRespostas::insert(
-                [
-                    'adivinhacao_id' => $data['adivinhacao_id'],
-                    'user_id' => $userId,
-                    'resposta' => $respostaCliente
-                ]
-            );
-        } catch (Exception $e) {
-            #se falhar é pq ele ja tentou essa
-            return response()->json(['error' => "Você já tentou isso!"]);
+            AdivinhacoesRespostas::create([
+                'adivinhacao_id' => $data['adivinhacao_id'],
+                'user_id'        => $userId,
+                'resposta'       => $respostaCliente,
+            ]);
+
+            return response()->json(['ok' => true], 201);
+        } catch (QueryException $e) {
+            // 23000 = integrity constraint violation | 1062 = duplicate entry (MySQL/MariaDB)
+            if ($e->getCode() === '23000' || ($e->errorInfo[1] ?? null) === 1062) {
+                return response()->json(['error' => 'Você já tentou isso!'], 409);
+            }
+
+            // outras falhas
+            report($e);
+            return response()->json(['error' => 'Erro inesperado'], 500);
         }
 
 
