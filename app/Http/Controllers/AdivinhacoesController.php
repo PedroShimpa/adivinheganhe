@@ -5,13 +5,10 @@ namespace App\Http\Controllers;
 use App\Events\AlertaGlobal;
 use App\Models\Adivinhacoes;
 use App\Http\Requests\StoreAdivinhacoesRequest;
-use App\Models\AdicionaisIndicacao;
 use App\Models\AdivinhacoesRespostas;
-use App\Models\DicasCompras;
-use App\Trais\CountTrys;
-use App\Trais\TentativasTrait;
+use App\Http\Controllers\Traits\CountTrys;
+use App\Http\Controllers\Traits\TentativasTrait;
 use DateTime;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 

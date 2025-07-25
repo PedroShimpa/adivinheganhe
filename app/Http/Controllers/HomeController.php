@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\CountTrys;
+use App\Http\Controllers\Traits\TentativasTrait;
 use App\Models\Adivinhacoes;
 use App\Models\AdivinhacoesPremiacoes;
-use App\Trais\CountTrys;
-use App\Trais\TentativasTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
