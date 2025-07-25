@@ -24,8 +24,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/adivinhacoes/create', [AdivinhacoesController::class, 'create'])->name('adivinhacoes.create');
     Route::post('/adivinhacoes/create', [AdivinhacoesController::class, 'store'])->name('adivinhacoes.store');
     Route::post('/responder', [RespostaController::class, 'enviar'])->name('resposta.enviar');
-    Route::get('/tentativas/comprar', [PagamentosController::class, 'index'])->name('tentativas.shop');
-    Route::post('/tentativas/comprar', [PagamentosController::class, 'buy'])->name('tentativas.comprar');
+    Route::get('/tentativas/comprar', [PagamentosController::class, 'index_buy_attempts'])->name('tentativas.shop');
+    Route::post('/tentativas/comprar', [PagamentosController::class, 'buy_attempts'])->name('tentativas.comprar');
     Route::get('/dicas/{adivinhacao}/comprar', [PagamentosController::class, 'index_buy_dica'])->name('dicas.index_buy');
     Route::post('/dicas/{adivinhacao}/comprar', [PagamentosController::class, 'buy_dica'])->name('dicas.comprar');
 });
