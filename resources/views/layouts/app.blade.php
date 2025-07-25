@@ -13,8 +13,8 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
 
     <link rel="preload" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    <link href="{{ asset('css/bootstrap.icons.min.css')}}" rel="preload" as="style">
-    <link rel="preload" as="style" href="{{ asset('css/bootstrap.min.css')}}">
+    <link href="{{ asset('css/bootstrap.icons.min.css')}}" rel="preload" rel="stylesheet">
+    <link rel="preload" rel="stylesheet" href="{{ asset('css/bootstrap.min.css')}}">
     <script  src="{{asset('js/bootstrap.bundle.min.js')}}"></script>
     @stack('head-scripts')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
