@@ -147,9 +147,7 @@ class RespostaController extends Controller
             }
 
             //aumenta o contador de respotas 
-            $respostaCacheKey = "respostas_adivinhacao_{$data['adivinhacao_id']}";
-            $countRespostas = Cache::get($respostaCacheKey, 0) + 1;
-            Cache::put($respostaCacheKey, $countRespostas);
+            $countRespostas =  AdivinhacoesRespostas::where('created_at', '>', $adivinhacao->created_at)->where('adivinhacao_id', $data['adivinhacao_id'])->count();
             broadcast(new AumentaContagemRespostas($data['adivinhacao_id'], $countRespostas));
 
             DB::commit();
