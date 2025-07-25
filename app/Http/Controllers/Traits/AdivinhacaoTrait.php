@@ -12,7 +12,6 @@ trait AdivinhacaoTrait
 {
     public function customize(Adivinhacoes &$adivinhacao)
     {
-        $adivinhacao->count_respostas =0;
 
         if (!empty($adivinhacao->expire_at)) {
             $adivinhacao->expired_at_br = (new DateTime($adivinhacao->expire_at))->format('d/m H:i');

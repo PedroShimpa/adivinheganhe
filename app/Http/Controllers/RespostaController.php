@@ -146,13 +146,9 @@ class RespostaController extends Controller
                 }
             }
 
-            //aumenta o contador de respotas 
-            $countRespostas =  AdivinhacoesRespostas::where('created_at', '>', $adivinhacao->created_at)->where('adivinhacao_id', $data['adivinhacao_id'])->count();
-            broadcast(new AumentaContagemRespostas($data['adivinhacao_id'], $countRespostas));
 
             DB::commit();
 
-            //aqui adiciona o premio para o ganhador e faz o retorno do http
             if ($acertou) {
                 Cache::delete('adivinhacoes_ativas');
 

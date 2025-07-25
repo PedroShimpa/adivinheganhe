@@ -61,10 +61,6 @@
                     </div>
                 </div>
 
-                <p class="text-muted small mt-2">
-                    👥 <span id="count-respostas-{{ $adivinhacao->id }}"> {{ $adivinhacao->count_respostas ?: 'Ninguém tentou adivinhar ainda!' }}</span>
-                </p>
-
                 @auth
                 @if($limitExceded)
                 <div class="alert alert-warning small py-2 px-3 rounded-pill">⚠️ Você atingiu o limite de tentativas hoje!</div>
