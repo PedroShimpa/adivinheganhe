@@ -136,10 +136,9 @@ class RespostaController extends Controller
                 }
             }
 
-
             if ($acertou) {
-                Cache::set('adivinhacoes_ativas', null);
-                Cache::set('premios_ultimos', null);
+                Cache::delete('adivinhacoes_ativas');
+                Cache::delete('premios_ultimos');
 
                 AdivinhacoesPremiacoes::create([
                     'user_id'        => $userId,
