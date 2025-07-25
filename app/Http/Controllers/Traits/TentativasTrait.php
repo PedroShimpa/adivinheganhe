@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Trais;
+namespace App\Http\Controllers\Traits;
 
 use App\Models\Adivinhacoes;
 use App\Models\AdivinhacoesRespostas;
