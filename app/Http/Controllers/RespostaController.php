@@ -43,7 +43,6 @@ class RespostaController extends Controller
         $userId = $user->id;
         $userUuid = $user->uuid;
 
-
         #verifica se o usuario tem tentativas ainda
         $hoje = today()->toDateString();
         $cacheTryKey = "try_count_user_{$userId}_{$hoje}";
@@ -98,10 +97,11 @@ class RespostaController extends Controller
         }
 
         try {
-            AdivinhacoesRespostas::create([
+            AdivinhacoesRespostas::insert([
                 'adivinhacao_id' => $data['adivinhacao_id'],
                 'user_id'        => $userId,
                 'resposta'       => $respostaCliente,
+                'created_at'     => now()
             ]);
 
             return response()->json(['ok' => true], 201);
