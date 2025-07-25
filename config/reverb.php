@@ -90,5 +90,10 @@ return [
         ],
 
     ],
+    'statistics' => [
+        'enabled' => true,
+        'interval' => 10,
+    ],
+
 
 ];

@@ -12,7 +12,7 @@
     </div>
 
     <p class="mb-2">
-        <strong id="tentativas-restantes">🎮 Restam {{ $trys }}</strong> tentativas.
+        <strong id="tentativas-restantes">🎮 Você ainda tem {{ $trys }}</strong> tentativas.
         <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-primary ms-2 rounded-pill">Comprar mais</a>
     </p>
     <p class="small text-muted">🕓 Você recebe 10 tentativas gratuitas todos os dias (não acumulativas).</p>
