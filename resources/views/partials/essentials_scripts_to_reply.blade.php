@@ -149,7 +149,13 @@
     });
   });
 
+  let online = 0;
     window.Echo.join('presence') .here(users => updateCount(users.length))
     .joining(user => updateCount(online + 1))
     .leaving(user => updateCount(Math.max(online - 1, 0)))
+
+  const updateCount = (n) => {
+    online = n;
+    document.getElementById('online-count').innerText = n;
+  };
 </script>
