@@ -35,7 +35,7 @@ class HomeController extends Controller
             $trys = (env('MAX_ADIVINHATIONS', 10) + $countFromIndications) - $countTrysToday;
         }
 
-        $adivinhacoes = Cache::remember('adivinhacoes_ativas', 120, function () {
+        $adivinhacoes = Cache::remember('adivinhacoes_ativas', 600, function () {
             return Adivinhacoes::select('id', 'uuid', 'titulo', 'imagem', 'descricao', 'premio', 'expire_at', 'dica', 'dica_paga', 'dica_valor')
                 ->where('resolvida', 'N')
                 ->where('exibir_home', 'S')
@@ -66,7 +66,7 @@ class HomeController extends Controller
         });
 
 
-        $adivinhacoesExpiradas = Cache::remember('adivinhacoes_expiradas', 120, function () {
+        $adivinhacoesExpiradas = Cache::remember('adivinhacoes_expiradas', 240, function () {
             return Adivinhacoes::select('uuid', 'titulo')
                 ->where('resolvida', 'N')
                 ->whereNotNull('expire_at')
@@ -75,7 +75,7 @@ class HomeController extends Controller
                 ->get();
         });
 
-        $premios = Cache::remember('premios_ultimos', 60, function () {
+        $premios = Cache::remember('premios_ultimos', 240, function () {
             return AdivinhacoesPremiacoes::select(
                 'adivinhacoes_premiacoes.id',
                 'adivinhacoes.uuid',
