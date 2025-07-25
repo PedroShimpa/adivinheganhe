@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\CountTrys;
-use App\Http\Controllers\Traits\TentativasTrait;
+use App\Http\Controllers\Traits\AdivinhacaoTrait;
 use App\Models\Adivinhacoes;
 use App\Models\AdivinhacoesPremiacoes;
 use Illuminate\Http\Request;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
-    use TentativasTrait;
+    use AdivinhacaoTrait;
     use CountTrys;
 
     public function index(Request $request)

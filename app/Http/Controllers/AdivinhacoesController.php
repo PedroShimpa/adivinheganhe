@@ -7,14 +7,14 @@ use App\Models\Adivinhacoes;
 use App\Http\Requests\StoreAdivinhacoesRequest;
 use App\Models\AdivinhacoesRespostas;
 use App\Http\Controllers\Traits\CountTrys;
-use App\Http\Controllers\Traits\TentativasTrait;
+use App\Http\Controllers\Traits\AdivinhacaoTrait;
 use DateTime;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class AdivinhacoesController extends Controller
 {
-    use TentativasTrait;
+    use AdivinhacaoTrait;
     use CountTrys;
 
     public function index(Adivinhacoes $adivinhacao)
