@@ -20,11 +20,17 @@ class RespostaController extends Controller
 {
     public function enviar(Request $request)
     {
+        $data = $request->validate([
+            'resposta'       => 'required|string',
+            'adivinhacao_id' => 'required|exists:adivinhacoes,id',
+        ]);
+        if (Cache::get('adivinhaca_resolvida' . $data['adivinhacao_id'])) {
+            return response()->json(['error' => "Esta adivinhação já foi adivinhada, obrigado por tentar!"]);
+        }
         $user = Auth::user();
         $userId = $user->id;
         $userUuid = $user->uuid;
         $hoje = today()->toDateString();
-
         $cacheTryKey = "try_count_user_{$userId}_{$hoje}";
         $countTrysToday = Cache::get($cacheTryKey);
         if (is_null($countTrysToday)) {
@@ -43,11 +49,6 @@ class RespostaController extends Controller
         if ($countTrysToday >= ($limiteMax + $countFromIndications)) {
             return response()->json(['error' => "Você atingiu seu limite respostas de hoje!"]);
         }
-
-        $data = $request->validate([
-            'resposta'       => 'required|string',
-            'adivinhacao_id' => 'required|exists:adivinhacoes,id',
-        ]);
 
         $respostaCliente = mb_strtolower(trim($data['resposta']));
 
@@ -74,6 +75,7 @@ class RespostaController extends Controller
 
             if ($acertou) {
                 $adivinhacao->update(['resolvida' => 'S']);
+                Cache::set('adivinhaca_resolvida' . $data['adivinhacao_id'], true);
                 broadcast(new RespostaAprovada($user->username, $adivinhacao))->toOthers();
 
                 broadcast(new RespostaPrivada(
