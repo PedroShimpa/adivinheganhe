@@ -28,7 +28,7 @@ class PagamentosController extends Controller
         $desc = "Compra de {$quantidade} tentativas ";
 
         try {
-            $pag =  Pagamentos::create([
+            $pag = Pagamentos::create([
                 'user_id' => auth()->id(),
                 'value' => $valor,
                 'desc' => $desc,

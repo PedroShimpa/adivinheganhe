@@ -8,7 +8,6 @@ use Illuminate\Support\Str;
 
 class Adivinhacoes extends Model
 {
-    /** @use HasFactory<\Database\Factories\AdivinhacoesFactory> */
     use HasFactory;
 
     protected $fillable = [
