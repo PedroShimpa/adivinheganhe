@@ -28,7 +28,7 @@
                 @if(!$adivinhacao->buyed== true)
                 <div class="alert alert-warning d-flex align-items-center justify-content-between" role="alert">
                     <div>
-                        <strong>Dica disponível:</strong> Esta dica custa <strong>R${{ number_format($adivinhacao->dica_valor, 2, ',', '.') }}</strong>.
+                        <strong>Dica disponível:</strong> Esta dica custa <strong>R${{ number_format($adivinhacao->dica_valor, 2, ',', '.') }} (a dica só aparecerá para você)</strong>.
                     </div>
                     <a href="{{ route('dicas.index_buy', $adivinhacao->uuid) }}" class="btn btn-sm btn-primary">Comprar dica</a>
                 </div>
