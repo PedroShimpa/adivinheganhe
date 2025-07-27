@@ -117,8 +117,6 @@ class RespostaController extends Controller
             return response()->json(['error' => 'Erro inesperado'], 500);
         }
 
-
-        //aqui algumas coisas que não tão importantes pra ser rapido
         try {
 
 

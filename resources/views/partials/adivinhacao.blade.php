@@ -12,7 +12,7 @@
 
                 @if(!empty($adivinhacao->expired_at_br))
                 <p class="text-primary small mb-2">
-                    Expira em <strong>{{ $adivinhacao->expired_at_br }}</strong>. Caso expire, outra será incluída com o mesmo prêmio e nova imagem.
+                    Expira em <strong>{{ $adivinhacao->expired_at_br }}</strong>. 
                 </p>
                 @else
                 <p class="text-primary small mb-2">Esta adivinhação não expira.</p>
