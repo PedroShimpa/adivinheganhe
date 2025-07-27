@@ -22,7 +22,8 @@ class HomeController extends Controller
         $this->count($trys, $limitExceded);
 
         $adivinhacoes = Cache::remember('adivinhacoes_ativas', 600, function () {
-            return Adivinhacoes::select('id', 'uuid', 'titulo', 'imagem', 'descricao', 'premio', 'expire_at', 'dica', 'dica_paga', 'dica_valor', 'created_at')
+            return Adivinhacoes::select(
+                'id', 'uuid', 'titulo', 'imagem', 'descricao', 'premio', 'expire_at', 'dica', 'dica_paga', 'dica_valor', 'created_at')
                 ->where('resolvida', 'N')
                 ->where('exibir_home', 'S')
                 ->where(function ($q) {
