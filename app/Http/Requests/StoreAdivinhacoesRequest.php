@@ -22,6 +22,7 @@ class StoreAdivinhacoesRequest extends FormRequest
             'dica' => ['string', 'nullable'],
             'dica_paga' => ['string', 'size:1'],
             'dica_valor' => [ 'nullable'],
+            'expire_at' => ['nullable'],
         ];
     }
 }

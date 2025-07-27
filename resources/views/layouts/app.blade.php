@@ -2,32 +2,35 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="google-adsense-account" content="{{ env('GOOGLE_ANALYTICS_TAG')}}">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <meta name="google-adsense-account" content="{{ env('GOOGLE_ANALYTICS_TAG')}}" />
 
     <title>{{ isset($title) ? $title : config('app.name', 'Laravel') }}</title>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
+    <!-- Google Fonts: Figtree -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&display=swap"
+        rel="stylesheet"
+    />
 
-    <link rel="preload" as="style" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript>
-        <link rel="stylesheet" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap">
-    </noscript>
+    <!-- Bootstrap CSS v5.3 (latest stable) -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+       
+        crossorigin="anonymous"
+    />
 
-    <link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-
-    <link rel="preload" as="style" href="{{ asset('css/bootstrap.min.css') }}" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript>
-        <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
-    </noscript>
-
-    <script src="{{ asset('js/bootstrap.bundle.min.js') }}" defer></script>
+    <!-- Bootstrap Icons v1.10.5 -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+        rel="stylesheet"
+    />
 
     @stack('head-scripts')
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -48,24 +51,32 @@
             </div>
         </nav>
         @endif
+
         <main>
             @yield('content')
         </main>
     </div>
-    <script src="{{ asset('js/jquery.min.js')}}"></script>
-    <script src="{{ asset('js/sweetalert.min.js')}}" defer></script>
 
+    <!-- jQuery latest 3.x (slim) -->
+    <script
+        src="https://code.jquery.com/jquery-3.7.0.min.js"
+        crossorigin="anonymous"
+    ></script>
+
+    <!-- SweetAlert2 latest -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"
+        defer
+    ></script>
+
+    <!-- Google Analytics -->
     @if(env('GOOGLE_ANALYTICS_TAG'))
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ env('GOOGLE_ANALYTICS_TAG')}}"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ env('GOOGLE_ANALYTICS_TAG') }}"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
+        function gtag(){ dataLayer.push(arguments); }
         gtag('js', new Date());
-
-        gtag('config', "{{ env('GOOGLE_ANALYTICS_TAG')}}");
+        gtag('config', "{{ env('GOOGLE_ANALYTICS_TAG') }}");
     </script>
     @endif
 
@@ -80,15 +91,15 @@
             </p>
             <p>
                 Acesse no GitHub:
-                <a href="https://github.com/PedroShimpa/adivinheganhe" class="text-decoration-none text-warning" target="_blank">
-                    github.com/PedroShimpa/adivinheganhe
-                </a>
+                <a
+                    href="https://github.com/PedroShimpa/adivinheganhe"
+                    class="text-decoration-none text-warning"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >github.com/PedroShimpa/adivinheganhe</a
+                >
             </p>
         </div>
     </footer>
-
-
-
 </body>
-
 </html>

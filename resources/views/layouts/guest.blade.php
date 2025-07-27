@@ -28,7 +28,10 @@
         </div>
     </div>
 
-    <script src="{{ asset('js/jquery.min.js')}}"></script>
+    <script
+        src="https://code.jquery.com/jquery-3.7.0.min.js"
+        crossorigin="anonymous"
+    ></script>
     <script src="{{ asset('js/jquery.inputmask.min.js')}}"></script>
     <script>
         $(document).ready(function() {

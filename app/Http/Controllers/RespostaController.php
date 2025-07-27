@@ -2,19 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\AumentaContagemRespostas;
 use App\Events\RespostaAprovada;
 use App\Events\RespostaPrivada;
 use App\Models\AdicionaisIndicacao;
 use App\Models\Adivinhacoes;
 use App\Models\AdivinhacoesPremiacoes;
 use App\Models\AdivinhacoesRespostas;
-use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -119,12 +116,9 @@ class RespostaController extends Controller
 
         try {
 
-
-            //aumenta as tentativas diarias do usuario
             $countTrysToday++;
             Cache::put($cacheTryKey, $countTrysToday);
 
-            //se o usuario ja usou todas as respostas do dia, deve verificar se ele tem bonus e remover
             if (($countTrysToday >= $limiteMax) && $countFromIndications > 0) {
                 $indicacao = AdicionaisIndicacao::where('user_uuid', $userUuid)->first();
                 if ($indicacao) {

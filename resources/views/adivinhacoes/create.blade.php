@@ -51,7 +51,7 @@
                             @enderror
                         </div>
 
-                         <div class="mb-3">
+                        <div class="mb-3">
                             <label for="dica" class="form-label">{{ __('Dica') }}</label>
                             <input type="text" class="form-control @error('dica') is-invalid @enderror" id="dica" name="dica" value="{{ old('dica') }}">
                             @error('dica')
@@ -67,6 +67,14 @@
                                 <option value="N" {{ old('dica_paga') == 'N' ? 'selected' : '' }}>Não</option>
                             </select>
                             @error('dica_paga')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="expire_at" class="form-label">{{ __('Expira em') }}</label>
+                            <input type="datetime-local" class="form-control @error('expire_at') is-invalid @enderror" id="expire_at" name="expire_at" value="{{ old('expire_at') }}">
+                            @error('expire_at')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
