@@ -26,7 +26,8 @@ class User extends Authenticatable
         'username',
         'cpf',
         'whatsapp',
-        'indicated_by'
+        'indicated_by',
+        'is_admin'
     ];
 
     /**
