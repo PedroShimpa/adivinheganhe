@@ -63,24 +63,19 @@ class AdivinhacoesController extends Controller
     public function store(StoreAdivinhacoesRequest $request)
     {
         if (auth()->user()->is_admin == 'S') {
+            $data = $request->validated();
+
             $imagem = $request->file('imagem');
             $hash = Str::random(10);
             $fileName = $hash . '_' . time() . '.webp';
 
-            $image = Image::read($imagem)
-                ->resize(1280, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                    $constraint->upsize();
-                })
-                ->encodeByExtension('webp', 85);
+            $image = Image::read($imagem)->encodeByExtension('webp', 85);
 
             Storage::disk('public')->put('imagens_adivinhacoes/' . $fileName, (string) $image);
 
-            $data = $request->validated();
             $data['imagem'] = 'imagens_adivinhacoes/' . $fileName;
             $data['descricao'] = $request->input('descricao');
 
-            $data = $request->validated();
 
             if (!empty($data['expire_at'])) {
                 $data['expire_at'] = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i', $data['expire_at'])->format('Y-m-d H:i:s');
