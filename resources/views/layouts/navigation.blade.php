@@ -16,11 +16,6 @@
         <div class="collapse navbar-collapse" id="navbarContent">
             <ul class="navbar-nav ms-auto align-items-center">
                 <!-- Exemplo de Link (Home) -->
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">
-                        {{ __('Adivinhe e Ganhe') }}
-                    </a>
-                </li>
 
                 <!-- Dropdown de usuário -->
                 <li class="nav-item dropdown">
