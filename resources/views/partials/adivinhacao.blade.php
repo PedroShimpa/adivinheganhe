@@ -1,11 +1,16 @@
 <div class="card mb-4 shadow-sm border-0 rounded-4 overflow-hidden">
     <div class="row g-0 flex-wrap">
-       <img 
-            src="{{ asset('storage/' . $adivinhacao->imagem) }}" 
-            class="img-fluid rounded-4 shadow-sm w-100" 
-            alt="Imagem da adivinhação" 
-            style="max-height: 300px; object-fit: cover;" 
-            loading="lazy">
+        <div class="col-12 col-md-5">
+            <img 
+                src="{{ asset('storage/' . $adivinhacao->imagem) }}" 
+                class="img-fluid rounded-4 shadow-sm w-100"
+                alt="Imagem da adivinhação" 
+                loading="lazy"
+                style="aspect-ratio: 4/3; object-fit: cover; width: 100%; height: auto;"
+                width="600"
+                height="450"
+            >
+        </div>
 
         <div class="col-12 col-md-7 p-4 d-flex flex-column justify-content-between">
             <div>
@@ -15,7 +20,7 @@
 
                 @if(!empty($adivinhacao->expired_at_br))
                 <p class="text-primary small mb-2">
-                    Expira em <strong>{{ $adivinhacao->expired_at_br }}</strong>. 
+                    Expira em <strong>{{ $adivinhacao->expired_at_br }}</strong>.
                 </p>
                 @else
                 <p class="text-primary small mb-2">Esta adivinhação não expira.</p>
@@ -26,7 +31,6 @@
                 </button>
 
                 @if(!empty($adivinhacao->dica) && ($adivinhacao->resolvida != 'S'))
-            
                 @if($adivinhacao->dica_paga == 'S')
                 @if(!$adivinhacao->buyed== true)
                 <div class="alert alert-warning d-flex align-items-center justify-content-between" role="alert">
@@ -73,7 +77,6 @@
                 </div>
                 <input type="hidden" name="adivinhacao_id" value="{{ $adivinhacao->id }}">
                 @if($adivinhacao->resolvida != 'S')
-
                 <button class="btn btn-success w-100 rounded-pill py-2" id="btn-resposta-{{ $adivinhacao->id }}" @if($adivinhacao->expired == true && !empty($adivinhacao->expired_at_br)) disabled @endif>
                     Enviar resposta
                 </button>

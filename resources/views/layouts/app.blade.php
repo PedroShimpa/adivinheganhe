@@ -9,47 +9,39 @@
 
     <title>{{ isset($title) ? $title : config('app.name', 'Laravel') }}</title>
 
-    <!-- Google Fonts: Figtree -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&display=swap"
-        rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&display=swap" rel="stylesheet" />
 
-    <!-- Bootstrap CSS v5.3 (latest stable) -->
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-       
-        crossorigin="anonymous"
-    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
 
-    <!-- Bootstrap Icons v1.10.5 -->
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-        rel="stylesheet"
-    />
+    <style>
+        body {
+            -webkit-font-smoothing: antialiased;
+            font-smooth: always;
+            text-rendering: optimizeLegibility;
+        }
+    </style>
 
     @stack('head-scripts')
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100">
+<body class="font-sans bg-light text-dark">
+    <div class="min-h-screen">
         @if(Auth::check())
-        @include('layouts.navigation')
+            @include('layouts.navigation')
         @else
-        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-            <div class="container">
-                <a class="navbar-brand fw-bold" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <div class="d-flex ms-auto">
-                    <a class="btn btn-outline-primary me-2" href="{{ route('login') }}">Entrar</a>
-                    <a class="btn btn-primary" href="{{ route('register') }}">Registre-se</a>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+                <div class="container">
+                    <a class="navbar-brand fw-bold" href="{{ url('/') }}">
+                        {{ config('app.name', 'Laravel') }}
+                    </a>
+                    <div class="d-flex ms-auto">
+                        <a class="btn btn-outline-primary me-2" href="{{ route('login') }}">Entrar</a>
+                        <a class="btn btn-primary" href="{{ route('register') }}">Registre-se</a>
+                    </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
         @endif
 
         <main>
@@ -57,19 +49,9 @@
         </main>
     </div>
 
-    <!-- jQuery latest 3.x (slim) -->
-    <script
-        src="https://code.jquery.com/jquery-3.7.0.min.js"
-        crossorigin="anonymous"
-    ></script>
-
-    <!-- SweetAlert2 latest -->
-    <script
-        src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"
-        defer
-    ></script>
-
-    <!-- Google Analytics -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js" defer></script>
     @if(env('GOOGLE_ANALYTICS_TAG'))
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ env('GOOGLE_ANALYTICS_TAG') }}"></script>
     <script>
@@ -91,13 +73,9 @@
             </p>
             <p>
                 Acesse no GitHub:
-                <a
-                    href="https://github.com/PedroShimpa/adivinheganhe"
-                    class="text-decoration-none text-warning"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    >github.com/PedroShimpa/adivinheganhe</a
-                >
+                <a href="https://github.com/PedroShimpa/adivinheganhe" class="text-decoration-none text-warning" target="_blank" rel="noopener noreferrer">
+                    github.com/PedroShimpa/adivinheganhe
+                </a>
             </p>
         </div>
     </footer>
