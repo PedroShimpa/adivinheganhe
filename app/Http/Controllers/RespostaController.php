@@ -31,8 +31,8 @@ class RespostaController extends Controller
             'adivinhacao_id' => 'required|exists:adivinhacoes,id',
         ]);
 
-        #verifica se ja foi adivinhada, se ja foi, ja para aqui
-        if (Cache::get('adivinhaca_resolvida' . $data['adivinhacao_id'])) {
+        // Verifica se já foi adivinhada, para bloquear tentativas repetidas
+        if (Cache::get('adivinhacao_resolvida' . $data['adivinhacao_id'])) {
             return response()->json(['error' => "Esta adivinhação já foi adivinhada, obrigado por tentar!"]);
         }
 
@@ -40,7 +40,7 @@ class RespostaController extends Controller
         $userId = $user->id;
         $userUuid = $user->uuid;
 
-        #verifica se o usuario tem tentativas ainda
+        // Controle de tentativas do usuário no dia
         $hoje = today()->toDateString();
         $cacheTryKey = "try_count_user_{$userId}_{$hoje}";
         $countTrysToday = Cache::get($cacheTryKey);
@@ -49,7 +49,9 @@ class RespostaController extends Controller
         $countFromIndications = Cache::get($cacheAdicionalKey);
 
         if (is_null($countTrysToday)) {
-            $countTrysToday = AdivinhacoesRespostas::where('user_id', $userId)->whereDate('created_at', today())->count();
+            $countTrysToday = AdivinhacoesRespostas::where('user_id', $userId)
+                ->whereDate('created_at', today())
+                ->count();
             Cache::put($cacheTryKey, $countTrysToday, now()->addSeconds(60));
         }
 
@@ -64,8 +66,12 @@ class RespostaController extends Controller
 
         $respostaCliente = mb_strtolower(trim($data['resposta']));
 
-        #busca a adivinhacao e verifica novsmente se ela ja foi resolvida ou expirou
-        $adivinhacao = Adivinhacoes::find($data['adivinhacao_id']);
+        // Busca a adivinhação com cache remember
+        $cacheKey = 'adivinhacao_' . $data['adivinhacao_id'];
+        $adivinhacao = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($data) {
+            return Adivinhacoes::find($data['adivinhacao_id']);
+        });
+
         if ($adivinhacao->resolvida == 'S') {
             return response()->json(['error' => "Esta adivinhação já foi adivinhada, obrigado por tentar!"]);
         }
@@ -77,12 +83,16 @@ class RespostaController extends Controller
 
         $acertou = mb_strtolower(trim($adivinhacao->resposta)) === $respostaCliente;
 
-        //se acertou, a primeira coisa que deve fazer  é salvar para ninguem mais acertar e bloquear a proxima requisição
         if ($acertou) {
             Cache::set('adivinhacao_resolvida' . $data['adivinhacao_id'], true);
+
             $adivinhacao->update(['resolvida' => 'S']);
 
-            //avisa todos os outros que a adivinhação encerrou e bloqueia o campo
+            // Atualiza o cache para refletir a resolução
+            $adivinhacao->resolvida = 'S';
+            Cache::put($cacheKey, $adivinhacao, now()->addMinutes(10));
+
+            // Broadcast para outros usuários
             broadcast(new RespostaAprovada($user->username, $adivinhacao))->toOthers();
 
             broadcast(new RespostaPrivada(
@@ -101,21 +111,16 @@ class RespostaController extends Controller
                 'resposta'       => $respostaCliente,
                 'created_at'     => now()
             ]);
-
-            return response()->json(['ok' => true], 201);
         } catch (QueryException $e) {
-            // 23000 = integrity constraint violation | 1062 = duplicate entry (MySQL/MariaDB)
+            // 23000 = integrity constraint violation | 1062 = duplicate entry
             if ($e->getCode() === '23000' || ($e->errorInfo[1] ?? null) === 1062) {
                 return response()->json(['error' => 'Você já tentou isso!'], 409);
             }
-
-            // outras falhas
             report($e);
             return response()->json(['error' => 'Erro inesperado'], 500);
         }
 
         try {
-
             $countTrysToday++;
             Cache::put($cacheTryKey, $countTrysToday);
 
@@ -129,8 +134,8 @@ class RespostaController extends Controller
             }
 
             if ($acertou) {
-                Cache::delete('adivinhacoes_ativas');
-                Cache::delete('premios_ultimos');
+                Cache::forget('adivinhacoes_ativas');
+                Cache::forget('premios_ultimos');
 
                 AdivinhacoesPremiacoes::create([
                     'user_id'        => $userId,
