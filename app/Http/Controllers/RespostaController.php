@@ -138,10 +138,10 @@ class RespostaController extends Controller
                     'adivinhacao_id' => $data['adivinhacao_id'],
                 ]);
                 Log::info("Premio adicionado para o usuario $userId");
-                return response()->json(['message' => 'acertou', 'code' => $respostaUuid], 200);
+                return response()->json(['message' => 'acertou', 'responde_code' => $respostaUuid], 200);
             }
 
-            return response()->json(['message' => 'ok', 'code' => $respostaUuid], 200);
+            return response()->json(['message' => 'ok', 'responde_code' => $respostaUuid], 200);
         } catch (QueryException $e) {
             Log::error('Erro ao adicionar premiação ' . $e->getMessage());
             return response()->json(['error' => 'Não foi possível inserir sua resposta agora, tente novamente mais tarde...']);

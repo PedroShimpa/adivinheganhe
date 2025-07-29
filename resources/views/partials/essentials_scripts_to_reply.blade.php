@@ -101,7 +101,7 @@
         $msg.addClass('text-danger').text(json.error);
         $btn.attr('disabled', false);
       } else {
-        let codigoResposta = json.code ? `<br><small class="text-muted">Seu código de resposta: <strong>${json.code}</strong></small>` : '';
+        let codigoResposta = json.responde_code ? `<br><small class="text-muted">Seu código de resposta: <strong>${json.responde_code}</strong></small>` : '';
 
         if (json.message === 'acertou') {
           $msg
