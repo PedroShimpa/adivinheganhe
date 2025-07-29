@@ -23,7 +23,7 @@ class RegisterUserRequest extends FormRequest
             'email' => ['required', 'string', 'lowercase', 'email:rfc,dns', 'max:255', 'unique:users,email'],
             'username' => ['required', 'string', 'max:255', 'unique:users,username', 'regex:/\w*$/', 'lowercase'],
             'password' => ['required', Rules\Password::defaults()],
-            'cpf' => ['required', 'string', 'max:20', 'unique:users,cpf', new Cpf()],
+            'cpf' => ['required', 'string', 'max:20', 'unique:users,cpf'],
             'whatsapp' => ['nullable', 'string', 'max:15', 'unique:users,whatsapp', 'regex:/^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/'],
             'indicated_by' => ['nullable', 'string']
         ];

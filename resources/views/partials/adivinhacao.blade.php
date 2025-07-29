@@ -14,7 +14,7 @@
 
         <div class="col-12 col-md-7 p-4 d-flex flex-column justify-content-between">
             <div>
-                @if(auth()->user()->is_admin == 'S')
+                @if(auth()->user()->isAdmin())
                 <a href="{{ route('adivinhacoes.view', $adivinhacao->uuid)}}" class="btn btn-warning">Editar</a>
                 <br>
                 @endif

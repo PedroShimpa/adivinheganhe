@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,9 +22,12 @@ class AppServiceProvider extends ServiceProvider
     {
 
         Paginator::useBootstrapFive();
-            if (env('APP_ENV') === 'production') { // Or another condition for HTTPS
-                $url->forceScheme('https');
-            }
-        
+        if (env('APP_ENV') === 'production') {
+            $url->forceScheme('https');
+        }
+
+        Gate::define('viewPulse', function (User $user) {
+            return $user->isAdmin();
+        });
     }
 }
