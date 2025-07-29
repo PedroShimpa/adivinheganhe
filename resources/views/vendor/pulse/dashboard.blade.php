@@ -16,4 +16,7 @@
     <livewire:pulse.slow-jobs cols="6" />
 
     <livewire:pulse.slow-outgoing-requests cols="6" />
+
+    <livewire:pulse.redis-monitor cols="full" />
+
 </x-pulse>

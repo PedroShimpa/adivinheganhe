@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2a4a3b66d28235e364c743ab683ea7ac",
+    "content-hash": "7a7650977daf69bd4383ca435c82bf9a",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -3987,6 +3987,51 @@
                 }
             ],
             "time": "2024-07-20T21:41:07+00:00"
+        },
+        {
+            "name": "praatmetdedokter/pulse-redis-monitor",
+            "version": "v0.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PraatmetdeDokter/pulse-redis-monitor.git",
+                "reference": "82d8b619e0112ef125ea286e2de254fdf8d73be8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PraatmetdeDokter/pulse-redis-monitor/zipball/82d8b619e0112ef125ea286e2de254fdf8d73be8",
+                "reference": "82d8b619e0112ef125ea286e2de254fdf8d73be8",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/pulse": "^1.2",
+                "php": "^8.3"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.17"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "PraatmetdeDokter\\Pulse\\RedisMonitor\\RedisMonitorServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PraatmetdeDokter\\Pulse\\RedisMonitor\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Redis monitoring card for Laravel Pulse",
+            "support": {
+                "issues": "https://github.com/PraatmetdeDokter/pulse-redis-monitor/issues",
+                "source": "https://github.com/PraatmetdeDokter/pulse-redis-monitor/tree/v0.1.3"
+            },
+            "time": "2024-08-14T10:30:09+00:00"
         },
         {
             "name": "psr/clock",
