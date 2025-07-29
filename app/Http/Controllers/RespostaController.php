@@ -129,7 +129,7 @@ class RespostaController extends Controller
         }
 
         try {
-            if (mb_strtolower(trim($adivinhacao->resposta)) === $respostaCliente) {
+            if ($acertou) {
                 Cache::forget('adivinhacoes_ativas');
                 Cache::forget('premios_ultimos');
 
@@ -138,10 +138,10 @@ class RespostaController extends Controller
                     'adivinhacao_id' => $data['adivinhacao_id'],
                 ]);
                 Log::info("Premio adicionado para o usuario $userId");
-                return response()->json(['status' => 'acertou', 'code' => $respostaUuid]);
+                return response()->json(['message' => 'acertou', 'code' => $respostaUuid], 200);
             }
 
-            return response()->json(['status' => 'ok', 'code' => $respostaUuid]);
+            return response()->json(['message' => 'ok', 'code' => $respostaUuid], 200);
         } catch (QueryException $e) {
             Log::error('Erro ao adicionar premiação ' . $e->getMessage());
             return response()->json(['error' => 'Não foi possível inserir sua resposta agora, tente novamente mais tarde...']);
