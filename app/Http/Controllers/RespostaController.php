@@ -66,7 +66,6 @@ class RespostaController extends Controller
 
         $respostaCliente = mb_strtolower(trim($data['resposta']));
 
-        // Busca a adivinhação com cache remember
         $cacheKey = 'adivinhacao_' . $data['adivinhacao_id'];
         $adivinhacao = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($data) {
             return Adivinhacoes::find($data['adivinhacao_id']);
@@ -88,11 +87,9 @@ class RespostaController extends Controller
 
             $adivinhacao->update(['resolvida' => 'S']);
 
-            // Atualiza o cache para refletir a resolução
             $adivinhacao->resolvida = 'S';
             Cache::put($cacheKey, $adivinhacao, now()->addMinutes(10));
 
-            // Broadcast para outros usuários
             broadcast(new RespostaAprovada($user->username, $adivinhacao))->toOthers();
 
             broadcast(new RespostaPrivada(
@@ -112,27 +109,29 @@ class RespostaController extends Controller
                 'created_at'     => now()
             ]);
         } catch (QueryException $e) {
-            // 23000 = integrity constraint violation | 1062 = duplicate entry
             if ($e->getCode() === '23000' || ($e->errorInfo[1] ?? null) === 1062) {
                 return response()->json(['error' => 'Você já tentou isso!'], 409);
             }
-            report($e);
-            return response()->json(['error' => 'Erro inesperado'], 500);
+            Log::error('Erro na adição de resposta:' . $e->getMessage());
+            if (!$acertou) {
+
+                return response()->json(['error' => 'Erro inesperado'], 500);
+            }
+        }
+
+        $countTrysToday++;
+        Cache::put($cacheTryKey, $countTrysToday);
+
+        if (($countTrysToday >= $limiteMax) && $countFromIndications > 0) {
+            $indicacao = AdicionaisIndicacao::where('user_uuid', $userUuid)->first();
+            if ($indicacao) {
+                $indicacao->decrement('value');
+                $countFromIndications = max(0, $countFromIndications - 1);
+                Cache::put($cacheAdicionalKey, $countFromIndications);
+            }
         }
 
         try {
-            $countTrysToday++;
-            Cache::put($cacheTryKey, $countTrysToday);
-
-            if (($countTrysToday >= $limiteMax) && $countFromIndications > 0) {
-                $indicacao = AdicionaisIndicacao::where('user_uuid', $userUuid)->first();
-                if ($indicacao) {
-                    $indicacao->decrement('value');
-                    $countFromIndications = max(0, $countFromIndications - 1);
-                    Cache::put($cacheAdicionalKey, $countFromIndications);
-                }
-            }
-
             if ($acertou) {
                 Cache::forget('adivinhacoes_ativas');
                 Cache::forget('premios_ultimos');
@@ -146,8 +145,8 @@ class RespostaController extends Controller
             }
 
             return response()->json(['status' => 'ok', 'code' => $respostaUuid]);
-        } catch (\Throwable $e) {
-            Log::error($e->getMessage());
+        } catch (QueryException $e) {
+            Log::error('Erro ao adicionar premiação ' . $e->getMessage());
             return response()->json(['error' => 'Não foi possível inserir sua resposta agora, tente novamente mais tarde...']);
         }
     }
