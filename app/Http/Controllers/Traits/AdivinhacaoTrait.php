@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Traits;
 
 use App\Models\Adivinhacoes;
-use App\Models\AdivinhacoesRespostas;
 use App\Models\DicasCompras;
 use DateTime;
 use Illuminate\Support\Facades\Auth;

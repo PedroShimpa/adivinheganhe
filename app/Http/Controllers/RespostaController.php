@@ -20,8 +20,8 @@ class RespostaController extends Controller
     /**
      * Como são milhares de requisições por minuto, eu deixo as insereções no banco de dados por ultimo, primeiro eu verifico se o usuario pode responder, se puder, busco a adivinhação, verifico se ela pode ser respondida, se puder, verifico se ele acertou, se ele acertou, instantanemaneto bloqueio a adivinhação para ningume mais acertar e ai sigo os outros processos que não são tão importantes
      * 
-     *A tabela de respostas vai ser gigante, então fazemos o minimo de consultas possivel nela pra evitar gargalo no banco
-     *A tebala de respostas tem que estar sempre muito bem indexada
+     * A tabela de respostas vai ser gigante, então fazemos o minimo de consultas possivel nela pra evitar gargalo no banco
+     * A tebala de respostas tem que estar sempre muito bem indexada
      */
 
     public function enviar(Request $request)
@@ -31,7 +31,6 @@ class RespostaController extends Controller
             'adivinhacao_id' => 'required|exists:adivinhacoes,id',
         ]);
 
-        // Verifica se já foi adivinhada, para bloquear tentativas repetidas
         if (Cache::get('adivinhacao_resolvida' . $data['adivinhacao_id'])) {
             return response()->json(['error' => "Esta adivinhação já foi adivinhada, obrigado por tentar!"]);
         }
@@ -40,7 +39,6 @@ class RespostaController extends Controller
         $userId = $user->id;
         $userUuid = $user->uuid;
 
-        // Controle de tentativas do usuário no dia
         $hoje = today()->toDateString();
         $cacheTryKey = "try_count_user_{$userId}_{$hoje}";
         $countTrysToday = Cache::get($cacheTryKey);
