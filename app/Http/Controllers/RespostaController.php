@@ -113,10 +113,7 @@ class RespostaController extends Controller
                 return response()->json(['error' => 'Você já tentou isso!'], 409);
             }
             Log::error('Erro na adição de resposta:' . $e->getMessage());
-            if (!$acertou) {
-
-                return response()->json(['error' => 'Erro inesperado'], 500);
-            }
+            return response()->json(['error' => 'Erro inesperado'], 500);
         }
 
         $countTrysToday++;
@@ -132,7 +129,7 @@ class RespostaController extends Controller
         }
 
         try {
-            if ($acertou) {
+            if (mb_strtolower(trim($adivinhacao->resposta)) === $respostaCliente) {
                 Cache::forget('adivinhacoes_ativas');
                 Cache::forget('premios_ultimos');
 
