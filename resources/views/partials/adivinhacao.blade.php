@@ -14,6 +14,10 @@
 
         <div class="col-12 col-md-7 p-4 d-flex flex-column justify-content-between">
             <div>
+                @if(auth()->user()->is_admin == 'S')
+                <a href="{{ route('adivinhacoes.view', $adivinhacao->uuid)}}" class="btn btn-warning">Editar</a>
+                <br>
+                @endif
                 <h5 class="text-primary fw-bold mb-2">
                     {{ $adivinhacao->titulo.  (!empty($adivinhacao->expired_at_br) && $adivinhacao->expired == true ? ' - EXPIRADA': '' ) }}
                 </h5>

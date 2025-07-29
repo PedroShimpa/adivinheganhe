@@ -18,7 +18,7 @@ class PagamentosController extends Controller
 {
     public function index_buy_attempts(Request $request)
     {
-        return view('buy_attempts');
+        return view('buy.buy_attempts');
     }
 
     public function buy_attempts(Request $request)
@@ -89,7 +89,7 @@ class PagamentosController extends Controller
     {
         if ($adivinhacao->dica_paga == 'S') {
 
-            return view('buy_dica')->with(compact('adivinhacao'));
+            return view('buy.buy_dica')->with(compact('adivinhacao'));
         }
         return redirect()->route('home');
     }

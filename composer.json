@@ -8,6 +8,7 @@
     "require": {
         "php": "^8.2",
         "aws/aws-sdk-php": "^3.351",
+        "bissolli/validador-cpf-cnpj": "^1.2",
         "genealabs/laravel-model-caching": "^12.0",
         "intervention/image": "^3.11",
         "intervention/image-laravel": "^1.5",
