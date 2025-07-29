@@ -103,7 +103,7 @@
       } else {
         let codigoResposta = json.code ? `<br><small class="text-muted">Seu código de resposta: <strong>${json.code}</strong></small>` : '';
 
-        if (json.status === 'acertou') {
+        if (json.message === 'acertou') {
           $msg
             .removeClass('text-danger')
             .addClass('text-success')
