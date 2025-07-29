@@ -21,9 +21,20 @@ class HomeController extends Controller
 
         $this->count($trys, $limitExceded);
 
-        $adivinhacoes = Cache::remember('adivinhacoes_ativas', 600, function () {
+        $adivinhacoes = Cache::remember('adivinhacoes_ativas', 1200, function () {
             return Adivinhacoes::select(
-                'id', 'uuid', 'titulo', 'imagem', 'descricao', 'premio', 'expire_at', 'dica', 'dica_paga', 'dica_valor', 'created_at')
+                'id',
+                'uuid',
+                'titulo',
+                'imagem',
+                'descricao',
+                'premio',
+                'expire_at',
+                'dica',
+                'dica_paga',
+                'dica_valor',
+                'created_at'
+            )
                 ->where('resolvida', 'N')
                 ->where('exibir_home', 'S')
                 ->where(function ($q) {
@@ -34,7 +45,16 @@ class HomeController extends Controller
                 ->get();
         });
 
+        //remover expirados durante periodo de cache
+        $adivinhacoes = $adivinhacoes->filter(function ($a) {
+            return is_null($a->expire_at) || $a->expire_at > now();
+        })->values();
+
+
         $adivinhacoes->each(function ($a) {
+            if ($a->expire_at < now()) {
+                return null;
+            }
             $this->customize($a);
         });
 

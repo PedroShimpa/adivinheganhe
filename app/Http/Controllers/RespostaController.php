@@ -111,10 +111,7 @@ class RespostaController extends Controller
                 return response()->json(['error' => 'Você já tentou isso!'], 409);
             }
             Log::error('Erro na adição de resposta:' . $e->getMessage());
-            if (!$acertou) {
-
-                return response()->json(['error' => 'Erro inesperado'], 500);
-            }
+            return response()->json(['error' => 'Erro inesperado'], 500);
         }
 
         $countTrysToday++;
@@ -139,10 +136,10 @@ class RespostaController extends Controller
                     'adivinhacao_id' => $data['adivinhacao_id'],
                 ]);
                 Log::info("Premio adicionado para o usuario $userId");
-                return response()->json(['status' => 'acertou', 'code' => $respostaUuid]);
+                return response()->json(['message' => 'acertou', 'responde_code' => $respostaUuid], 200);
             }
 
-            return response()->json(['status' => 'ok', 'code' => $respostaUuid]);
+            return response()->json(['message' => 'ok', 'responde_code' => $respostaUuid], 200);
         } catch (QueryException $e) {
             Log::error('Erro ao adicionar premiação ' . $e->getMessage());
             return response()->json(['error' => 'Não foi possível inserir sua resposta agora, tente novamente mais tarde...']);
