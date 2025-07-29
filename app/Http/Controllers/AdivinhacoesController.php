@@ -30,7 +30,7 @@ class AdivinhacoesController extends Controller
         $this->customize($adivinhacao);
 
         $respostas = collect([]);
-        if (($adivinhacao->resolvida == 'S' || (!empty($adivinhacao->expire_at) && $adivinhacao->expired) || (Auth::check() && auth()->user()->is_admin == 'S'))) {
+        if (($adivinhacao->resolvida == 'S' || (!empty($adivinhacao->expire_at) && $adivinhacao->expired) || (Auth::check() && auth()->user()->isAdmin()))) {
             $respostasKey = "adivinhacoes_expiradas_{$adivinhacao->id}_page_" . request()->get('page', 1);
 
             $respostas = Cache::remember($respostasKey, 3600, function () use ($adivinhacao) {
@@ -55,7 +55,7 @@ class AdivinhacoesController extends Controller
 
     public function create()
     {
-        if (auth()->user()->is_admin == 'S') {
+        if (auth()->user()->isAdmin()) {
             return view('adivinhacoes.create');
         }
         return redirect()->route('home');
@@ -63,7 +63,7 @@ class AdivinhacoesController extends Controller
 
     public function view(Adivinhacoes $adivinhacao)
     {
-        if (auth()->user()->is_admin == 'S') {
+        if (auth()->user()->isAdmin()) {
             return view('adivinhacoes.view')->with(compact('adivinhacao'));
         }
         return redirect()->route('home');
@@ -71,7 +71,7 @@ class AdivinhacoesController extends Controller
 
     public function update(UpdateAdivinhacoesRequest $request, $adivinhacaoId)
     {
-      if (auth()->user()->is_admin == 'S') {
+      if (auth()->user()->isAdmin()) {
             $data = $request->validated();
 
             $imagem = $request->file('imagem');
@@ -104,7 +104,7 @@ class AdivinhacoesController extends Controller
 
     public function store(StoreAdivinhacoesRequest $request)
     {
-        if (auth()->user()->is_admin == 'S') {
+        if (auth()->user()->isAdmin()) {
             $data = $request->validated();
 
             $imagem = $request->file('imagem');

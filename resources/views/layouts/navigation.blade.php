@@ -24,7 +24,7 @@
                         {{ Auth::user()->name }}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        @if(auth()->user()->is_admin == 'S')
+                        @if(auth()->user()->isAdmin())
                             <li>
                                 <a class="dropdown-item" href="{{ route('adivinhacoes.create') }}">
                                     {{ __('Nova adivinhação') }}
