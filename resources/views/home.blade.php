@@ -14,7 +14,7 @@
   @if($premios->isNotEmpty())
   <hr class="my-4">
 
-  <h3 class="mb-3">🎉 Últimos prêmios enviados</h3>
+  <h3 class="mb-3">🎉 Últimos prêmiados</h3>
 
   <div class="row g-3">
     @foreach($premios as $premio)
