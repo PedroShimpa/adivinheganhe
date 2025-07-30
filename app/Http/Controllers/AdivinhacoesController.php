@@ -134,7 +134,7 @@ class AdivinhacoesController extends Controller
             broadcast(new AlertaGlobal('Nova Adivinhação', $data['titulo'] . ' adicionada, acesse a pagina inicial para ver'))->toOthers();
 
             $titulo = $adivinhacao->titulo;
-            $url = route('adivinhacao.index', $adivinhacao->uuid);
+            $url = route('adivinhacoes.index', $adivinhacao->uuid);
 
             EnviarNotificacaoNovaAdivinhacao::dispatch($titulo, $url);
 
