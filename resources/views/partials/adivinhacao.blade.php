@@ -1,16 +1,16 @@
 <div class="card mb-4 shadow-sm border-0 rounded-4 overflow-hidden">
     <div class="row g-0 flex-wrap">
         <div class="col-12 col-md-5">
-            <img 
-                src="{{ asset('storage/' . $adivinhacao->imagem) }}" 
+            <img
+                src="{{ asset('storage/' . $adivinhacao->imagem) }}"
                 class="img-fluid rounded-4 shadow-sm w-100"
-                alt="Imagem da adivinhação" 
+                alt="Imagem da adivinhação"
                 loading="lazy"
-                style="aspect-ratio: 4/3; object-fit: cover; width: 100%; height: auto;"
+                style="aspect-ratio: 4/3; object-fit: contain; width: 100%; height: auto;"
                 width="600"
-                height="450"
-            >
+                height="450">
         </div>
+
 
         <div class="col-12 col-md-7 p-4 d-flex flex-column justify-content-between">
             <div>
