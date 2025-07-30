@@ -1,9 +1,9 @@
-<div class="card mb-4 shadow-sm border-0 rounded-4 overflow-hidden">
+<div class="card mb-4 shadow-5 border-0 rounded-4 overflow-hidden">
     <div class="row g-0 flex-wrap">
         <div class="col-12 col-md-5">
             <img
                 src="{{ asset('storage/' . $adivinhacao->imagem) }}"
-                class="img-fluid rounded-4 shadow-sm w-100"
+                class="img-fluid rounded-4 shadow-5 w-100 "
                 alt="Imagem da adivinhação"
                 loading="lazy"
                 style="aspect-ratio: 4/3; object-fit: contain; width: 100%; height: auto;"
@@ -59,7 +59,7 @@
 
                 <div class="modal fade" id="modalDescricao-{{ $adivinhacao->id }}" tabindex="-1" aria-labelledby="modalLabel-{{ $adivinhacao->id }}" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content rounded-4 shadow-sm">
+                        <div class="modal-content rounded-4 shadow-5">
                             <div class="modal-header border-0">
                                 <h5 class="modal-title" id="modalLabel-{{ $adivinhacao->id }}">{{ $adivinhacao->titulo.  (!empty($adivinhacao->expired_at_br) && $adivinhacao->expired == true ? ' - EXPIRADA': '' ) }}</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>

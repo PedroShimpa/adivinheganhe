@@ -19,7 +19,7 @@
   <div class="row g-3">
     @foreach($premios as $premio)
     <div class="col-12">
-      <div class="card shadow-sm border-0 rounded-4 p-3 bg-light h-100">
+      <div class="card shadow-5 border-0 rounded-4 p-3 h-100">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
           <div class="flex-grow-1">
             <h6 class="fw-bold text-primary mb-1">{{ $premio->titulo }}</h6>
@@ -77,7 +77,7 @@
   <div class="row g-3">
     @foreach($adivinhacoesExpiradas as $adivinhacao)
     <div class="col-12">
-      <div class="card shadow-sm border-0 rounded-4 p-3 bg-light h-100">
+      <div class="card shadow-5 border-0 rounded-4 p-3  h-100">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
           <div class="flex-grow-1">
             <h6 class="fw-bold text-primary mb-1">{{ $adivinhacao->titulo }} - Expirada</h6>
