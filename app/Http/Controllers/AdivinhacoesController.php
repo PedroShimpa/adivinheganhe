@@ -71,18 +71,21 @@ class AdivinhacoesController extends Controller
 
     public function update(UpdateAdivinhacoesRequest $request, $adivinhacaoId)
     {
-      if (auth()->user()->isAdmin()) {
+        if (auth()->user()->isAdmin()) {
             $data = $request->validated();
 
             $imagem = $request->file('imagem');
             $hash = Str::random(10);
             $fileName = $hash . '_' . time() . '.webp';
+            if (!empty($imagem) && !$imagem->getClientOriginalExtension() != 'webp') {
 
-            $image = Image::read($imagem)->encodeByExtension('webp', 85);
+                $image = Image::read($imagem)->encodeByExtension('webp', 85);
 
-            Storage::disk('public')->put('imagens_adivinhacoes/' . $fileName, (string) $image);
+                Storage::disk('public')->put('imagens_adivinhacoes/' . $fileName, (string) $image);
 
-            $data['imagem'] = 'imagens_adivinhacoes/' . $fileName;
+                $data['imagem'] = 'imagens_adivinhacoes/' . $fileName;
+            }
+            
             $data['descricao'] = $request->input('descricao');
 
 
