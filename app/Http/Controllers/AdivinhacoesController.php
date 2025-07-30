@@ -9,6 +9,7 @@ use App\Models\AdivinhacoesRespostas;
 use App\Http\Controllers\Traits\CountTrys;
 use App\Http\Controllers\Traits\AdivinhacaoTrait;
 use App\Http\Requests\UpdateAdivinhacoesRequest;
+use App\Jobs\EnviarNotificacaoNovaAdivinhacao;
 use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -85,7 +86,7 @@ class AdivinhacoesController extends Controller
 
                 $data['imagem'] = 'imagens_adivinhacoes/' . $fileName;
             }
-            
+
             $data['descricao'] = $request->input('descricao');
 
 
@@ -94,11 +95,12 @@ class AdivinhacoesController extends Controller
             }
 
             $adivinhacao = Adivinhacoes::where('id', $adivinhacaoId)->update($data);
+
             Cache::delete('adivinhacoes_ativas');
 
             broadcast(new AlertaGlobal('Nova Adivinhação', $data['titulo'] . ' foi atualizada, acesse a pagina inicial para ver'))->toOthers();
 
-            return redirect()->route('adivinhacoes.index', $adivinhacao->uuid);
+            return redirect()->route('adivinhacoes.index', Adivinhacoes::find($adivinhacaoId)->uuid);
         }
 
         return redirect()->route('home');
@@ -130,6 +132,11 @@ class AdivinhacoesController extends Controller
             Cache::delete('adivinhacoes_ativas');
 
             broadcast(new AlertaGlobal('Nova Adivinhação', $data['titulo'] . ' adicionada, acesse a pagina inicial para ver'))->toOthers();
+
+            $titulo = $adivinhacao->titulo;
+            $url = route('adivinhacao.index', $adivinhacao->uuid);
+
+            EnviarNotificacaoNovaAdivinhacao::dispatch($titulo, $url);
 
             return redirect()->route('adivinhacoes.index', $adivinhacao->uuid);
         }
