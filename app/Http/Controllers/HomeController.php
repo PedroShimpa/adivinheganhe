@@ -65,6 +65,7 @@ class HomeController extends Controller
                 ->whereNotNull('expire_at')
                 ->where('expire_at', '<', now())
                 ->orderBy('expire_at', 'desc')
+                ->limit(10)
                 ->get();
         });
 
@@ -83,6 +84,7 @@ class HomeController extends Controller
                 ->join('adivinhacoes', 'adivinhacoes.id', '=', 'adivinhacoes_premiacoes.adivinhacao_id')
                 ->join('users', 'users.id', '=', 'adivinhacoes_premiacoes.user_id')
                 ->orderBy('adivinhacoes_premiacoes.id', 'desc')
+                ->limit(10)
                 ->get();
         });
 
