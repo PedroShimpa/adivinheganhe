@@ -122,8 +122,15 @@
             $(this).find('button[type="submit"]').attr('disabled', true).text('Registrando...');
         });
 
-        FingerprintJS.load().then(fp => {
-            fp.get().then(result => {
+        const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4')
+            .then(FingerprintJS => FingerprintJS.load())
+
+        // Get the visitor identifier when you need it.
+        fpPromise
+            .then(fp => fp.get())
+            .then(result => {
+                // This is the visitor identifier:
+                const visitorId = result.visitorId
                 fetch("{{ route('salvar_fingerprint')}}", {
                     method: 'POST',
                     headers: {
@@ -131,11 +138,10 @@
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
                     body: JSON.stringify({
-                        fingerprint: result.visitorId
+                        fingerprint: visitorId
                     })
                 });
-            });
-        });
+            })
     });
 </script>
 @endpush
