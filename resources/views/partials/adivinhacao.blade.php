@@ -76,14 +76,18 @@
                 @if($limitExceded)
                 <div class="alert alert-warning small py-2 px-3 rounded-pill">⚠️ Você atingiu o limite de tentativas hoje!</div>
                 @else
+                @if($adivinhacao->resolvida != 'S')
                 <div class="mb-2">
                     <input type="text" id="resposta-{{ $adivinhacao->id }}" class="form-control border-primary fw-semibold rounded-3" name="resposta" placeholder="💬 Digite sua resposta">
                 </div>
                 <input type="hidden" name="adivinhacao_id" value="{{ $adivinhacao->id }}">
-                @if($adivinhacao->resolvida != 'S')
                 <button class="btn btn-success w-100 rounded-pill py-2" id="btn-resposta-{{ $adivinhacao->id }}" @if($adivinhacao->expired == true && !empty($adivinhacao->expired_at_br)) disabled @endif>
                     Enviar resposta
                 </button>
+                @else
+                <div class="alert alert-warning small rounded-3 mt-2">
+                    Esta adivinhação ja foi resolvida
+                </div>
                 @endif
                 @endif
                 @else
