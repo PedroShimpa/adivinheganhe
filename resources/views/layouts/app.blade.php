@@ -13,10 +13,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&display=swap" rel="stylesheet" />
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-        media="print" onload="this.media='all'" crossorigin="anonymous">
+    <link
+        href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+        rel="stylesheet" />
+    <!-- MDB -->
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/9.1.0/mdb.min.css"
+        rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
         media="print" onload="this.media='all'">
 
@@ -39,19 +42,19 @@
 <body class="font-sans bg-light text-dark">
     <div class="min-h-screen">
         @if(Auth::check())
-            @include('layouts.navigation')
+        @include('layouts.navigation')
         @else
-            <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-                <div class="container">
-                    <a class="navbar-brand fw-bold" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
-                    </a>
-                    <div class="d-flex ms-auto">
-                        <a class="btn btn-outline-primary me-2" href="{{ route('login') }}">Entrar</a>
-                        <a class="btn btn-primary" href="{{ route('register') }}">Registre-se</a>
-                    </div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+            <div class="container">
+                <a class="navbar-brand fw-bold" href="{{ url('/') }}">
+                    {{ config('app.name', 'Laravel') }}
+                </a>
+                <div class="d-flex ms-auto">
+                    <a class="btn btn-outline-primary me-2" href="{{ route('login') }}">Entrar</a>
+                    <a class="btn btn-primary" href="{{ route('register') }}">Registre-se</a>
                 </div>
-            </nav>
+            </div>
+        </nav>
         @endif
 
         <main>
@@ -67,7 +70,10 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ env('GOOGLE_ANALYTICS_TAG') }}"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){ dataLayer.push(arguments); }
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
         gtag('js', new Date());
         gtag('config', "{{ env('GOOGLE_ANALYTICS_TAG') }}");
     </script>
@@ -91,4 +97,5 @@
         </div>
     </footer>
 </body>
+
 </html>
