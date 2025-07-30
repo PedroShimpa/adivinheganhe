@@ -2,7 +2,6 @@
 
 <?php
 
-// Preload Composer autoload (classes essenciais)
 require __DIR__.'/vendor/autoload.php';
 
 // Preload arquivos principais do Laravel

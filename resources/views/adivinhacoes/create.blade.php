@@ -64,17 +64,9 @@
                             <select class="form-select @error('dica_paga') is-invalid @enderror" id="dica_paga" name="dica_paga" required>
                                 <option value="">Selecione...</option>
                                 <option value="S" {{ old('dica_paga') == 'S' ? 'selected' : '' }}>Sim</option>
-                                <option value="N" {{ old('dica_paga') == 'N' ? 'selected' : '' }}>Não</option>
+                                <option value="N" {{ old('dica_paga') == 'N' ? 'selected' : '' }} selected>Não</option>
                             </select>
                             @error('dica_paga')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="expire_at" class="form-label">{{ __('Expira em') }}</label>
-                            <input type="datetime-local" class="form-control @error('expire_at') is-invalid @enderror" id="expire_at" name="expire_at" value="{{ old('expire_at') }}">
-                            @error('expire_at')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -86,6 +78,26 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+                        <div class="mb-3">
+                            <label for="dica_paga" class="form-label">{{ __('Enviar E-mails?') }}</label>
+                            <select class="form-select @error('dica_paga') is-invalid @enderror" id="dica_paga" name="enviar_email" required>
+                                <option value="S" {{ old('dica_paga') == 'S' ? 'selected' : '' }}>Sim</option>
+                                <option value="N" {{ old('dica_paga') == 'N' ? 'selected' : '' }} selected>Não</option>
+                            </select>
+                            @error('enviar_email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="expire_at" class="form-label">{{ __('Expira em') }}</label>
+                            <input type="datetime-local" class="form-control @error('expire_at') is-invalid @enderror" id="expire_at" name="expire_at" value="{{ old('expire_at', now()->addHours(6)->format('Y-m-d\TH:i')) }}">
+                            @error('expire_at')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+
 
                         <button type="submit" class="btn btn-primary">{{ __('Salvar Adivinhação') }}</button>
                     </form>
