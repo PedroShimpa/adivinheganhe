@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use App\Rules\Cpf;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules;
@@ -16,6 +17,11 @@ class RegisterUserRequest extends FormRequest
         return true;
     }
 
+    public function prepareForValidation()
+    {
+        $this->merge(['fingerprint' => session('fingerprint')]);
+    }
+
     public function rules(): array
     {
         return [
@@ -25,7 +31,25 @@ class RegisterUserRequest extends FormRequest
             'password' => ['required', Rules\Password::defaults()],
             'cpf' => ['required', 'string', 'max:20', 'unique:users,cpf'],
             'whatsapp' => ['nullable', 'string', 'max:15', 'unique:users,whatsapp', 'regex:/^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/'],
-            'indicated_by' => ['nullable', 'string']
+            'indicated_by' => ['nullable', 'string'],
+            'fingerprint' => ['required', 'string']
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $fingerprint = $this->input('fingerprint');
+
+            if ($fingerprint) {
+                $quantidade = User::where('fingerprint', $fingerprint)
+                    ->whereNotNull('fingerprint')
+                    ->count();
+
+                if ($quantidade >= env('MAX_REG_PER_FINGERPOINT', 3)) {
+                    $validator->errors()->add('fingerprint', 'Você já tem muitos cadastros, entre em contato com nossa equipe caso precise fazer mais cadastros.');
+                }
+            }
+        });
     }
 }

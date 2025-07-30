@@ -52,7 +52,7 @@
                             @error('cpf')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                             <div class="form-text">
+                            <div class="form-text">
                                 Só pedimos seu CPF para controle maior de contas, ele não será exibido em nenhum lugar do site e nenhum dos nossos colaboradores tem acesso a ele!
                             </div>
                         </div>
@@ -100,6 +100,8 @@
 @push('scripts')
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.9/jquery.inputmask.min.js" integrity="sha512-F5Ul1uuyFlGnIT1dk2c4kB4DBdi5wnBJjVhL7gQlGh46Xn0VhvD8kgxLtjdZ5YN83gybk/aASUAlpdoWUjRR3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://openfpcdn.io/fingerprintjs/v4"></script>
+
 <script>
     $(document).ready(function() {
         // Máscaras existentes
@@ -118,6 +120,21 @@
         $('form').on('submit', function() {
             // Desabilita o botão dentro deste form para evitar múltiplos cliques
             $(this).find('button[type="submit"]').attr('disabled', true).text('Registrando...');
+        });
+
+        FingerprintJS.load().then(fp => {
+            fp.get().then(result => {
+                fetch("{{ route('salvar_fingerprint')}}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        fingerprint: result.visitorId
+                    })
+                });
+            });
         });
     });
 </script>
