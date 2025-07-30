@@ -31,7 +31,8 @@ class User extends Authenticatable
         'cpf',
         'whatsapp',
         'indicated_by',
-        'is_admin'
+        'is_admin',
+        'fingerprint'
     ];
 
     /**

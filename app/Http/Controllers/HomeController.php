@@ -90,4 +90,11 @@ class HomeController extends Controller
 
         return view('home')->with(compact('adivinhacoes', 'limitExceded', 'premios', 'trys', 'adivinhacoesExpiradas'));
     }
+
+    public function saveFingerprint(Request $request)
+    {
+        $fingerprint = $request->input('fingerprint');
+
+        session(['fingerprint' => $fingerprint]);
+    }
 }
