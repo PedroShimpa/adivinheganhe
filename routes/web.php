@@ -13,7 +13,7 @@ use Pusher\Pusher;
 Broadcast::routes(['middleware' => ['web', 'auth']]);
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/salvar_fingerprint', [HomeController::class, 'saveFingerprint'])->name('salvar_fingerprint');
+Route::post('/salvar_fingerprint', [HomeController::class, 'saveFingerprint'])->name('salvar_fingerprint');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
