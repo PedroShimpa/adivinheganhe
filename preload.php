@@ -10,7 +10,6 @@ $paths = [
     __DIR__.'/bootstrap/app.php',
     __DIR__.'/app/Providers/AppServiceProvider.php',
     __DIR__.'/app/Http/Kernel.php',
-    __DIR__.'/routes/web.php',
 ];
 
 foreach ($paths as $file) {
