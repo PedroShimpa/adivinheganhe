@@ -139,4 +139,9 @@ class HomeController extends Controller
 
         session(['fingerprint' => $fingerprint]);
     }
+
+    public function sobre()
+    {
+        return view('sobre');
+    }
 }
