@@ -56,6 +56,11 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                             <li>
+                                <a class="dropdown-item" href="{{ route('sobre') }}">
+                                    {{ __('Sobre') }}
+                                </a>
+                            </li>
+                            <li>
                                 <a class="dropdown-item" href="{{ route('hall_da_fama') }}">
                                     {{ __('Hall da Fama') }}
                                 </a>
@@ -95,6 +100,7 @@
                     {{ config('app.name', 'Laravel') }}
                 </a>
                 <div class="d-flex ms-auto">
+                    <a class="btn btn-outline-primary me-2" href="{{ route('sobre') }}">Sobre</a>
                     <a class="btn btn-outline-primary me-2" href="{{ route('login') }}">Entrar</a>
                     <a class="btn btn-primary" href="{{ route('register') }}">Registre-se</a>
                 </div>
