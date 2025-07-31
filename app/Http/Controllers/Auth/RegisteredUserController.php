@@ -24,7 +24,6 @@ class RegisteredUserController extends Controller
 
     /**
      * Handle an incoming registration request.
-     * TODO criar request especifico para registro e validaro cpf
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(RegisterUserRequest $request): RedirectResponse
@@ -41,8 +40,6 @@ class RegisteredUserController extends Controller
             'indicated_by' => $request->input('indicated_by'),
             'fingerprint' =>  $request->input('fingerprint')
         ]);
-
-        event(new Registered($user));
 
         if (!empty($request->input('indicated_by'))) {
             $indicated = AdicionaisIndicacao::where('user_uuid',  $request->input('indicated_by'))->first();

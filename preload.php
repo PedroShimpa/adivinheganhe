@@ -1,10 +1,7 @@
-// /var/www/adivinheganhe/preload.php
-
 <?php
 
 require __DIR__.'/vendor/autoload.php';
 
-// Preload arquivos principais do Laravel
 $paths = [
     __DIR__.'/bootstrap/app.php',
     __DIR__.'/app/Providers/AppServiceProvider.php',
