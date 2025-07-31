@@ -148,7 +148,11 @@ return [
     | quickly accessed by other workers on the particular Swoole server.
     |
     */
+    'swoole' => [
+        'clear_opcache' => false,
+    ],
 
+    
     'tables' => [
         'example:1000' => [
             'name' => 'string:1000',
