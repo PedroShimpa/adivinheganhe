@@ -106,7 +106,7 @@ return [
             FlushOnce::class,
             FlushTemporaryContainerInstances::class,
             // DisconnectFromDatabases::class,
-            // CollectGarbage::class,
+            CollectGarbage::class,
         ],
 
         WorkerErrorOccurred::class => [
@@ -152,7 +152,7 @@ return [
         'clear_opcache' => false,
     ],
 
-    
+
     'tables' => [
         'example:1000' => [
             'name' => 'string:1000',
