@@ -68,4 +68,8 @@ Route::post('/broadcasting/auth-mixed', function (Request $request) {
     );
 });
 
+Route::get('/ping', function () {
+    return 'pong';
+});
+
 require __DIR__ . '/auth.php';
