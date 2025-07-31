@@ -27,12 +27,12 @@ class RespostaController extends Controller
     public function enviar(Request $request)
     {
         $data = $request->validate([
-            'resposta'       => 'required|string',
+            'resposta'       => 'required|string|max:255',
             'adivinhacao_id' => 'required|exists:adivinhacoes,id',
         ]);
 
         if (Cache::get('adivinhacao_resolvida' . $data['adivinhacao_id'])) {
-            return response()->json(['error' => "Esta adivinhação já foi adivinhada, obrigado por tentar!"]);
+            return response()->json(['info' => "Esta adivinhação já foi adivinhada, obrigado por tentar!"]);
         }
 
         $user = Auth::user();
@@ -59,7 +59,7 @@ class RespostaController extends Controller
         }
 
         if ($countTrysToday >= ($limiteMax + $countFromIndications)) {
-            return response()->json(['error' => "Você já ultilizou todas as suas tentativas!"]);
+            return response()->json(['info' => "Você já ultilizou todas as suas tentativas!"]);
         }
 
         $respostaCliente = mb_strtolower(trim($data['resposta']));
@@ -70,10 +70,10 @@ class RespostaController extends Controller
         });
 
         if ($adivinhacao->resolvida == 'S') {
-            return response()->json(['error' => "Esta adivinhação já foi adivinhada, obrigado por tentar!"]);
+            return response()->json(['info' => "Esta adivinhação já foi adivinhada, obrigado por tentar!"]);
         }
         if (!empty($adivinhacao->expire_at) && $adivinhacao->expire_at < now()) {
-            return response()->json(['error' => "Esta adivinhação expirou! Obrigado por tentar!"]);
+            return response()->json(['info' => "Esta adivinhação expirou! Obrigado por tentar!"]);
         }
 
         $respostaUuid = (string) Str::uuid();
@@ -108,7 +108,7 @@ class RespostaController extends Controller
             ]);
         } catch (QueryException $e) {
             if ($e->getCode() === '23000' || ($e->errorInfo[1] ?? null) === 1062) {
-                return response()->json(['error' => 'Você já tentou isso!'], 409);
+                return response()->json(['info' => 'Você já tentou isso!'], 409);
             }
             Log::error('Erro na adição de resposta:' . $e->getMessage());
             return response()->json(['error' => 'Erro inesperado'], 500);

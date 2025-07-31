@@ -45,7 +45,6 @@ class HomeController extends Controller
                 ->get();
         });
 
-        //remover expirados durante periodo de cache
         $adivinhacoes = $adivinhacoes->filter(function ($a) {
             return is_null($a->expire_at) || $a->expire_at > now();
         })->values();
