@@ -42,7 +42,52 @@
 <body class="font-sans bg-light text-dark">
     <div class="min-h-screen">
         @if(Auth::check())
-        @include('layouts.navigation')
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center me-3" href="{{ route('home') }}">
+                    {{ config('app.name', 'Laravel') }}
+                </a>
+
+                <div class="navbar-nav ms-auto d-flex align-items-center">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ Auth::user()->name }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li>
+                                <a class="dropdown-item" href="{{ route('hall_da_fama') }}">
+                                    {{ __('Hall da Fama') }}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('meus_premios') }}">
+                                    {{ __('Meus Prêmios') }}
+                                </a>
+                            </li>
+                            @if(auth()->user()->isAdmin())
+                            <li>
+                                <a class="dropdown-item" href="{{ route('adivinhacoes.create') }}">
+                                    {{ __('Nova adivinhação') }}
+                                </a>
+                            </li>
+                            @endif
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item">
+                                        {{ __('Log Out') }}
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                </div>
+            </div>
+        </nav>
         @else
         <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
             <div class="container">

@@ -31,8 +31,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/tentativas/comprar', [PagamentosController::class, 'buy_attempts'])->name('tentativas.comprar');
     Route::get('/dicas/{adivinhacao}/comprar', [PagamentosController::class, 'index_buy_dica'])->name('dicas.index_buy');
     Route::post('/dicas/{adivinhacao}/comprar', [PagamentosController::class, 'buy_dica'])->name('dicas.comprar');
+
+    Route::post('/meus_premios', [HomeController::class, 'meusPremios'])->name('meus_premios');
 });
+
 Route::post('/webhook/mercadopago', [PagamentosController::class, 'webhook']);
+Route::post('/hall-da-fama', [HomeController::class, 'hallOfFame'])->name('hall_da_fama');
 
 
 Route::get('/adivinhacoes/{adivinhacao}', [AdivinhacoesController::class, 'index'])->name('adivinhacoes.index');

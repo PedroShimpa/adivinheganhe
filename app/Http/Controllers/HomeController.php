@@ -8,6 +8,7 @@ use App\Models\Adivinhacoes;
 use App\Models\AdivinhacoesPremiacoes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -89,6 +90,48 @@ class HomeController extends Controller
 
         return view('home')->with(compact('adivinhacoes', 'limitExceded', 'premios', 'trys', 'adivinhacoesExpiradas'));
     }
+
+    public function meusPremios(Request $request)
+    {
+        $meusPremios = Cache::remember('meus_premios' . auth()->user()->id, 240, function () {
+            return AdivinhacoesPremiacoes::select(
+                'adivinhacoes_premiacoes.id',
+                'adivinhacoes.uuid',
+                'adivinhacoes.titulo',
+                'adivinhacoes.resposta',
+                'adivinhacoes.premio',
+                'users.username',
+                'premio_enviado',
+                'previsao_envio_premio',
+                'vencedor_notificado'
+            )
+                ->join('adivinhacoes', 'adivinhacoes.id', '=', 'adivinhacoes_premiacoes.adivinhacao_id')
+                ->join('users', 'users.id', '=', 'adivinhacoes_premiacoes.user_id')
+                ->where('adivinhacoes_premiacoes.user_id', auth()->user()->id)
+                ->orderBy('adivinhacoes_premiacoes.id', 'desc')
+                ->get();
+        });
+
+        return view('meus_premios')->with(compact('meusPremios'));
+    }
+
+    public function hallOfFame(Request $request)
+    {
+        $usuariosComMaisPremios = Cache::remember('hall_of_fame_top10', 240, function () {
+            return AdivinhacoesPremiacoes::select(
+                'users.username',
+                DB::raw('COUNT(adivinhacoes_premiacoes.id) as count_premiacoes')
+            )
+                ->join('users', 'users.id', '=', 'adivinhacoes_premiacoes.user_id')
+                ->groupBy('adivinhacoes_premiacoes.user_id', 'users.username')
+                ->orderByDesc('count_premiacoes')
+                ->limit(10)
+                ->get();
+        });
+
+        return view('hall_da_fama')->with(compact('usuariosComMaisPremios'));
+    }
+
 
     public function saveFingerprint(Request $request)
     {
