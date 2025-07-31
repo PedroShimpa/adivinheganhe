@@ -50,7 +50,7 @@ class AdivinhacoesController extends Controller
             });
         }
 
-        $title = $adivinhacao->titulo . ' - ' . config('app.name');
+        $title = $adivinhacao->titulo . ' - ' . env('APP_NAME', 'Adivinhe e Ganhe');
         return view('adivinhacoes.index', compact('adivinhacao', 'trys', 'limitExceded', 'respostas', 'title'));
     }
 
