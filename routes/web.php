@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
 
 Route::post('/webhook/mercadopago', [PagamentosController::class, 'webhook']);
 Route::get('/hall-da-fama', [HomeController::class, 'hallOfFame'])->name('hall_da_fama');
+Route::get('/sobre', [HomeController::class, 'sobre'])->name('sobre');
 
 
 Route::get('/adivinhacoes/{adivinhacao}', [AdivinhacoesController::class, 'index'])->name('adivinhacoes.index');
