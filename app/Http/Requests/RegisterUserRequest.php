@@ -27,11 +27,11 @@ class RegisterUserRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email:rfc,dns', 'max:255', 'unique:users,email'],
-            'username' => ['required', 'string', 'max:255', 'unique:users,username', 'regex:/\w*$/', 'lowercase'],
+            'username' => ['required', 'string', 'max:255', 'unique:users,username', 'regex:/^[a-z0-9_]+$/i', 'lowercase'],
             'password' => ['required', Rules\Password::defaults()],
-            'cpf' => ['required', 'string', 'max:20', 'unique:users,cpf'],
+            'cpf' => ['required', 'string', 'max:20', 'unique:users,cpf', new Cpf()],
             'whatsapp' => ['nullable', 'string', 'max:15', 'unique:users,whatsapp', 'regex:/^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/'],
-            'indicated_by' => ['nullable', 'string'],
+            'indicated_by' => ['nullable', 'string', 'exists:users,uuid'],
             'fingerprint' => ['required', 'string']
         ];
     }
