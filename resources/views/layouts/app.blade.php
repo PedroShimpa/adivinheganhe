@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <meta name="google-adsense-account" content="{{ env('GOOGLE_ANALYTICS_TAG')}}" />
 
-    <title>{{ $title ?? config('app.name', 'Laravel') }}</title>
+    <title>{{ $title ?? env('APP_NAME', 'Adivinhe e Ganhe') }}</title>
 
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -45,7 +45,7 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
             <div class="container">
                 <a class="navbar-brand d-flex align-items-center me-3" href="{{ route('home') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    {{ env('APP_NAME', 'Adivinhe e Ganhe'); }}
                 </a>
 
                 <div class="navbar-nav ms-auto d-flex align-items-center">
@@ -97,7 +97,7 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
             <div class="container">
                 <a class="navbar-brand fw-bold" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    {{ env('APP_NAME', 'Adivinhe e Ganhe') }}
                 </a>
                 <div class="d-flex ms-auto">
                     <a class="btn btn-outline-primary me-2" href="{{ route('sobre') }}">Sobre</a>
