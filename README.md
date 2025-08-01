@@ -68,6 +68,15 @@
   <li><a href="https://github.com/PedroShimpa/adivinheganhe" target="_blank">📁 Repositório no GitHub</a></li>
 </ul>
 
+<h2>Para o futuro</h2>
+
+<ul>
+  <li>Incluir fale conosco e suporte</li>
+  <li>Notificações automaticas via whatsapp usando WppConnect server</li>
+  <li>Aprimorar o envio de e-mails automaticas</li>
+  <li>Incluir testes de todas as fuções</li>
+</ul>
+
 <hr>
 
 <p align="center">
