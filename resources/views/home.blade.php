@@ -17,11 +17,6 @@
   <h3 class="mb-3">🎉 Últimos prêmiados</h3>
 
   <div class="row g-3">
-    @if(env('ENABLE_ADS_TERRA', false))
-    <p>
-      @include('layouts.ads.ads_terra_banner')
-    </p>
-    @endif
     @foreach($premios as $premio)
     <div class="col-12">
       <div class="card shadow-5 border-0 rounded-4 p-3 h-100">
@@ -67,11 +62,6 @@
 
     @endforeach
   </div>
-  @if(env('ENABLE_ADS_TERRA', false))
-  <p>
-    @include('layouts.ads.ads_terra_banner')
-  </p>
-  @endif
   @endif
 
   @if($adivinhacoesExpiradas->isNotEmpty())
@@ -97,11 +87,6 @@
 
     @endforeach
   </div>
-  @if(env('ENABLE_ADS_TERRA', false))
-  <p>
-    @include('layouts.ads.ads_terra_banner')
-  </p>
-  @endif
   @endif
 </div>
 @endsection
