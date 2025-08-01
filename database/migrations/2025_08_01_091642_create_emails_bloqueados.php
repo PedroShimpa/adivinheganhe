@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('fingerprint')->nullable()->index();
+        Schema::create('emails_bloqueados', function (Blueprint $table) {
+            $table->id();
+            $table->string('email')->index();
+            $table->timestamps();
         });
     }
 
@@ -21,5 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('emails_bloqueados');
     }
 };

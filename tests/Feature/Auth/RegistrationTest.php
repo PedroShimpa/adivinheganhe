@@ -68,7 +68,7 @@ class RegistrationTest extends TestCase
             'username' => 'testuser',
             'email' => 'test@example.com',
             'password' => str_repeat('a', 8),
-            'cpf' => '12345678909',
+            'cpf' => '123.456.789-09',
             'whatsapp' => '(11) 99387-0997',
         ]);
 
@@ -95,10 +95,10 @@ class RegistrationTest extends TestCase
             'username' => 'testuser',
             'email' => 'test@gmail.com',
             'password' => str_repeat('a', 8),
-            'cpf' => '12345678909',
+            'cpf' => '123.456.789-09',
             'whatsapp' => '(11) 99387-0997',
         ];
-        $response = $this->post('/register', $data);
+        $response = $this->postJson('/register', $data);
 
         $data['fingerprint'] =  'teste-fingerprint-123';
         unset($data['password']);
@@ -120,7 +120,7 @@ class RegistrationTest extends TestCase
             'username' => 'testuser',
             'email' => 'test@gmail.com',
             'password' => str_repeat('a', 8),
-            'cpf' => '12345678909',
+            'cpf' => '123.456.789-09',
             'whatsapp' => '(11) 99387-0997',
             'indicated_by' => $indicatedBy->uuid
         ];
@@ -149,7 +149,7 @@ class RegistrationTest extends TestCase
             'username' => 'testuser',
             'email' => 'test@gmail.com',
             'password' => str_repeat('a', 8),
-            'cpf' => '12345678909',
+            'cpf' => '123.456.789-09',
             'whatsapp' => '(11) 99387-0997',
             'indicated_by' => $indicatedBy->uuid
         ];

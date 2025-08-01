@@ -17,9 +17,7 @@ class Cpf implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $isRg = strlen(preg_replace('/[^0-9X]/', '', $value)) === 9;
-
-        if ($isRg || $this->isCpfValid($value)) {
+        if ($this->isCpfValid(preg_replace('/[^0-9]/', '', $value))) {
             return;
         }
 
