@@ -7,21 +7,23 @@ use Illuminate\Support\Facades\Auth;
 
 class CreateSuporteRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
+
     public function authorize(): bool
     {
         return true;
     }
 
-    public function prepareForValidation() {}
+    public function prepareForValidation()
+    {
+        $data = [];
+        if (Auth::check()) {
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
+            $data['user_id'] =  auth()->user()->id;
+        }
+
+        $this->merge($data);
+    }
+
     public function rules(): array
     {
         $rules = [
