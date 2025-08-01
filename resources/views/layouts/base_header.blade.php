@@ -1,5 +1,5 @@
 @if(!Auth::check())
-<div class="alert alert-warning text-center rounded-0 mb-0">
+<div class="alert alert-warning text-center rounded-0 mb-3">
     <strong>🎯 Você precisa se registrar para jogar.</strong>
     <a href="{{ route('register') }}" class="text-decoration-underline text-primary">Clique aqui para registrar-se</a>
 </div>
