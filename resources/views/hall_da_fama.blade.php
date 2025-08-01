@@ -1,11 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-@if(env('ENABLE_ADS_TERRA', false))
-<p>
-    @include('layouts.ads.ads_terra_banner')
-</p>
-@endif
 <div class="container py-4">
     <h2 class="mb-4">🏆 Hall da Fama - Jogadores mais premiados</h2>
 
@@ -30,9 +25,5 @@
         </table>
     </div>
 </div>
-@if(env('ENABLE_ADS_TERRA', false))
-<p>
-    @include('layouts.ads.ads_terra_banner')
-</p>
-@endif
+
 @endsection
