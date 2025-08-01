@@ -60,6 +60,9 @@ class PagamentosController extends Controller
             $pag->payment_id = $payment->id;
             $pag->save();
 
+            if ($payment->status == 'rejected') {
+                return response()->json(['success' => false]);
+            }
             $indicated = AdicionaisIndicacao::where('user_uuid',  auth()->user()->uuid)->first();
             if (!empty($indicated)) {
                 $indicated->value = $indicated->value + $request->input('quantidade');
@@ -131,6 +134,10 @@ class PagamentosController extends Controller
             $pag->payment_status = $payment->status;
             $pag->payment_id = $payment->id;
             $pag->save();
+
+            if ($payment->status == 'rejected') {
+                return response()->json(['success' => false]);
+            }
 
             DicasCompras::create(['user_id' => auth()->id, 'adivinhacao_id' => $adivinhacao->id, 'pagamento_id' => $pag->id]);
 
