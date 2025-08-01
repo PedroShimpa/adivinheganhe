@@ -31,7 +31,7 @@ class NotifyNewAdivinhacaoMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.nova-adivinhacao', // vamos criar isso abaixo
+            view: 'emails.nova-adivinhacao',
         );
     }
 
