@@ -1,3 +1,11 @@
+@if(!Auth::check())
+<div class="alert alert-warning text-center rounded-0 mb-0">
+    <strong>🎯 Você precisa se registrar para jogar.</strong>
+    <a href="{{ route('register') }}" class="text-decoration-underline text-primary">Clique aqui para registrar-se</a>
+</div>
+@endif
+
+
 <!-- Contador de usuários online -->
 <div class="mb-4 p-3 bg-white border rounded-4 shadow-sm text-center">
     <span class="d-inline-flex align-items-center justify-content-center gap-2 text-secondary">
