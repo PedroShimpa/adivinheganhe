@@ -1,8 +1,17 @@
-{{-- resources/views/auth/login.blade.php --}}
 @extends('layouts.app')
 
 @section('content')
 <div class="container py-5">
+
+    <!-- Seção de convite para registro -->
+    <div class="text-center mb-5">
+        <h3 class="fw-bold text-dark">Ainda não tem uma conta?</h3>
+        <p class="text-muted">Junte-se a nós gratuitamente e comece agora mesmo!</p>
+        <a href="{{ route('register') }}" class="btn btn-outline-primary px-4 py-2 rounded-pill shadow-sm">
+            Criar minha conta
+        </a>
+    </div>
+
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
             <div class="card shadow rounded-4">
@@ -10,7 +19,6 @@
 
                     <h2 class="mb-4 text-center text-primary fw-bold">Entrar</h2>
 
-                    {{-- Status de Sessão (ex: "Senha redefinida com sucesso") --}}
                     @if (session('status'))
                         <div class="alert alert-success">
                             {{ session('status') }}
@@ -62,6 +70,7 @@
                             </button>
                         </div>
                     </form>
+
                 </div>
             </div>
         </div>

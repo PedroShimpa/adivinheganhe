@@ -81,13 +81,13 @@
                         </div>
 
                         <!-- Botão -->
-                        <div class="d-flex justify-content-between align-items-center">
+                        <div class="align-items-center">
                             <a href="{{ route('login') }}" class="text-decoration-none small text-muted">
-                                Já tem uma conta?
-                            </a>
+                                Já tem uma conta? Entrar.
+                            </a><br />
                             <button type="submit" class="btn btn-primary px-4">
                                 Registrar
-                            </button>
+                            </button><br />
                             <small>Ao se cadastrar você concorda com nossos termos e condições!</small>
                         </div>
                     </form>
