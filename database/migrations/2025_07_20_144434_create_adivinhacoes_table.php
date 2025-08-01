@@ -39,6 +39,10 @@ return new class extends Migration
             $table->string('premio_enviado')->default('N');
             $table->timestamps();
         });
+
+        Schema::table('adivinhacoes_respostas', function (Blueprint $table) {
+            $table->unique(['user_id', 'adivinhacao_id', 'resposta'], 'unique_rep');
+        });
     }
 
     /**

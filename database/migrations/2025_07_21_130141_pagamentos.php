@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('desc')->comment('descricao do pedido');
             $table->decimal('value', 15, 2)->comment('valor total do pedido');
             $table->string('client_id')->nullable();
-            $table->string('payment_id')->nullable();
+            $table->string('payment_id')->nullable()->index();
             $table->string('payment_status')->nullable();
             $table->boolean('confirmed')->default(false);
             $table->timestamps();
