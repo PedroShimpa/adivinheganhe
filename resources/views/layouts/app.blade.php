@@ -56,6 +56,11 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                             <li>
+                                <a class="dropdown-item" href="{{ route('suporte.index') }}">
+                                    {{ __('Suporte') }}
+                                </a>
+                            </li>
+                            <li>
                                 <a class="dropdown-item" href="{{ route('sobre') }}">
                                     {{ __('Sobre') }}
                                 </a>
@@ -94,15 +99,46 @@
             </div>
         </nav>
         @else
-        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
             <div class="container">
-                <a class="navbar-brand fw-bold" href="{{ url('/') }}">
-                    {{ env('APP_NAME', 'Adivinhe e Ganhe') }}
+                <a class="navbar-brand d-flex align-items-center me-3" href="{{ route('home') }}">
+                    {{ env('APP_NAME', 'Adivinhe e Ganhe'); }}
                 </a>
-                <div class="d-flex ms-auto">
-                    <a class="btn btn-outline-primary me-2" href="{{ route('sobre') }}">Sobre</a>
-                    <a class="btn btn-outline-primary me-2" href="{{ route('login') }}">Entrar</a>
-                    <a class="btn btn-primary" href="{{ route('register') }}">Registre-se</a>
+
+                <div class="navbar-nav ms-auto d-flex align-items-center">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ Auth::user()->name }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li>
+                                <a class="dropdown-item" href="{{ route('suporte.index') }}">
+                                    {{ __('Suporte') }}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('sobre') }}">
+                                    {{ __('Sobre') }}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('hall_da_fama') }}">
+                                    {{ __('Hall da Fama') }}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('login') }}">
+                                    {{ __('Entrar') }}
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                        </ul>
+                    </li>
                 </div>
             </div>
         </nav>
