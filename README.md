@@ -39,8 +39,8 @@
 <ol>
   <li>Clone o projeto:<br><code>git clone https://github.com/PedroShimpa/adivinheganhe</code></li>
   <li>Entre na pasta:<br><code>cd adivinheganhe</code></li>
-  <li>Instale as dependências:<br><code>composer install</code></li>
   <li>Copie o arquivo de ambiente:<br><code>cp .env.example .env</code></li>
+  <li>Instale as dependências:<br><code>composer install</code></li>
   <li>Gere a chave da aplicação:<br><code>php artisan key:generate</code></li>
   <li>Insira as tabelas essenciais:<br><code>php artisan migrate</code></li> 
   <li>Crie o link simbólico para o storage:<br><code>php artisan storage:link</code></li>
