@@ -4,7 +4,7 @@
 <div class="container py-5">
     <div class="text-center mb-5">
         <h1 class="display-4 fw-bold">🎯 Bem-vindo ao <span class="text-primary">Adivinhe e Ganhe!</span></h1>
-        <p class="fs-5 text-muted">O jogo brasileiro mais justo, divertido e premiado da internet!</p>
+        <p class="fs-5 text-white">O jogo brasileiro mais justo, divertido e premiado da internet!</p>
     </div>
 
     <div class="row justify-content-center mb-5">
@@ -61,7 +61,7 @@
                         <li class="list-group-item">🎯 Comprar dica ou tentativa <strong>não garante</strong> acerto. É uma ajuda, não uma certeza.</li>
                         <li class="list-group-item">⏰ O jogo <strong>beneficia os mais ativos</strong>. Quem estiver online no site é notificado primeiro sobre novos desafios!</li>
                     </ul>
-                    <p class="mt-4 text-muted">Jogue com responsabilidade, seja rápido e divirta-se com a comunidade!</p>
+                    <p class="mt-4 text-white">Jogue com responsabilidade, seja rápido e divirta-se com a comunidade!</p>
                 </div>
             </div>
         </div>

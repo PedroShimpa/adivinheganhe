@@ -106,7 +106,7 @@
         $btn.attr('disabled', false);  
       }
       else {
-        let codigoResposta = json.responde_code ? `<br><small class="text-muted">Seu código de resposta: <strong>${json.responde_code}</strong></small>` : '';
+        let codigoResposta = json.responde_code ? `<br><small class="text-white">Seu código de resposta: <strong>${json.responde_code}</strong></small>` : '';
 
         if (json.message === 'acertou') {
           $msg
