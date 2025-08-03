@@ -1,43 +1,37 @@
 @if(!Auth::check())
-<div class="alert alert-warning text-center rounded-0 mb-3">
+<div class="alert alert-warning text-center rounded-0 mb-3 animate__animated animate__fadeInDown">
     <strong>🎯 Você precisa se registrar para jogar.</strong>
     <a href="{{ route('register') }}" class="text-decoration-underline text-primary">Clique aqui para registrar-se</a>
 </div>
 @endif
 
-
-<!-- Contador de usuários online -->
-<div class="mb-4 p-3 bg-white border rounded-4 shadow-sm text-center">
-    <span class="d-inline-flex align-items-center justify-content-center gap-2 text-secondary">
-        <i class="bi bi-people-fill text-primary fs-5"></i>
-        <span class="fw-semibold">
-            <span id="online-count" class="text-primary fs-5">0</span> jogadores online agora
-        </span>
+<div class="mb-4 p-3 glass text-center animate__animated animate__fadeInDown">
+    <span class="d-inline-flex align-items-center justify-content-center gap-2 text-glow fs-5">
+        <i class="bi bi-people-fill fs-4"></i>
+        <span id="online-count">0</span> jogadores online agora
     </span>
 </div>
 
 @if(Auth::check())
-<div class="mb-4 p-4 rounded-4 border-success bg-white shadow-sm text-center">
-    <h5 class="mb-3 text-primary fw-semibold">
-        🎯 Indique e ganhe <strong>{{ env('INDICATION_ADICIONAL')}} tentativas</strong> por novo Adivinhador registrado no seu link!
+<div class="mb-4 p-4 glass text-center animate__animated animate__fadeInUp">
+    <h5 class="mb-3 text-glow">
+        🎯 Indique e ganhe <strong>{{ env('INDICATION_ADICIONAL')}} tentativas</strong>
     </h5>
 
-    <div class="d-flex justify-content-center">
-        <div class="input-group mb-3" style="max-width: 100%; width: 100%; max-width: 500px;">
-            <input type="text" id="linkIndicacao" class="form-control text-truncate rounded-start" value="{{ route('register', ['ib' => auth()->user()->uuid]) }}" readonly>
-            <button class="btn btn-outline-primary" id="btnCopiarLink">Copiar link</button>
-        </div>
+    <div class="input-group mb-3 mx-auto" style="max-width: 500px;">
+        <input type="text" id="linkIndicacao" class="form-control rounded-start" value="{{ route('register', ['ib' => auth()->user()->uuid]) }}" readonly>
+        <button class="btn btn-success text-white" id="btnCopiarLink">Copiar link</button>
     </div>
 
     <p class="mb-2">
-        <strong id="tentativas-restantes">🎮 Você tem {{ $trys }}</strong> tentativas.
-        <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-primary ms-2 rounded-pill">Comprar mais</a>
+        <strong>🎮 Você tem {{ $trys }}</strong> tentativas.
+        <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-success text-white ms-2">Comprar mais</a>
     </p>
-    <p class="small text-muted">🕓 Você recebe {{ env('MAX_ADIVINHATIONS')}} tentativas gratuitas todos os dias (não acumulativas).</p>
+    <p class="small text-white">🕓 Você recebe {{ env('MAX_ADIVINHATIONS')}} tentativas gratuitas todos os dias (não acumulativas).</p>
 </div>
 @endif
 
-<div class="alert alert-success mt-4 d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 p-3 shadow-sm border-start border-4 border-success rounded-4">
+<div class="alert alert-success mt-4 d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 p-3 shadow-sm border-start border-4 border-success rounded-4 animate__animated animate__fadeInUp">
     <div class="d-flex align-items-center gap-3 text-center text-md-start">
         <i class="bi bi-whatsapp fs-4 text-success"></i>
         <span class="fw-semibold">
@@ -48,3 +42,4 @@
         Participar agora
     </a>
 </div>
+
