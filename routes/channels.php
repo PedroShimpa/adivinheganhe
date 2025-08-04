@@ -18,7 +18,6 @@ Broadcast::channel('presence', function ($user) {
         ];
     }
 
-    // Para visitantes (não logados)
     return [
         'id'   => 'guest-' . uniqid(),
         'name' => 'Convidado',
