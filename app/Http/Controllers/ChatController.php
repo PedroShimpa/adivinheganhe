@@ -23,7 +23,7 @@ class ChatController extends Controller
                 'message' => $request->input('message')
             ];
 
-            event(new MensagemEnviada(auth()->user()->name, $request->input('message')));
+            event(new MensagemEnviada(auth()->user()->username, $request->input('message')));
             ChatMessages::create($data);
         } catch (Exception $e) {
 
