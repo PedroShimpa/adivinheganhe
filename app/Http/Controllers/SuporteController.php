@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateSuporteRequest;
+use App\Mail\NotifyAdminsOfNewTicket;
 use App\Models\Suporte;
 use App\Models\SuporteCategorias;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 
 class SuporteController extends Controller
 {
@@ -16,7 +19,20 @@ class SuporteController extends Controller
 
     public function store(CreateSuporteRequest $request)
     {
-        Suporte::create($request->validated());
+
+        $suporte = Suporte::create($request->validated());
+
+        $nome = auth()->check() ? auth()->user()->name : $request->input('nome');
+        $email = auth()->check() ? null : $request->input('email');
+
+        $categoria = SuporteCategorias::find($request->input('categoria_id'))->nome ?? 'Desconhecida';
+
+        $descricao = $request->input('descricao');
+
+        $admins = User::where('is_admin', true)->get();
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->queue(new NotifyAdminsOfNewTicket($nome, $email, $categoria, $descricao));
+        }
 
         return redirect()->back()->with(['success' => 'Seu chamado foi aberto, em breve retornaremos com respostas']);
     }

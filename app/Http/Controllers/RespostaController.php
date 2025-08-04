@@ -4,15 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Events\RespostaAprovada;
 use App\Events\RespostaPrivada;
+use App\Mail\AcertoAdminMail;
+use App\Mail\AcertoUsuarioMail;
 use App\Models\AdicionaisIndicacao;
 use App\Models\Adivinhacoes;
 use App\Models\AdivinhacoesPremiacoes;
 use App\Models\AdivinhacoesRespostas;
+use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class RespostaController extends Controller
@@ -136,6 +140,14 @@ class RespostaController extends Controller
                     'adivinhacao_id' => $data['adivinhacao_id'],
                 ]);
                 Log::info("Premio adicionado para o usuario $userId");
+
+                Mail::to($user->email)->queue(new AcertoUsuarioMail($user->name, $adivinhacao));
+
+                // Envia email aos admins
+                $admins = User::where('is_admin', true)->get();
+                foreach ($admins as $admin) {
+                    Mail::to($admin->email)->queue(new AcertoAdminMail($user, $adivinhacao));
+                }
                 return response()->json(['message' => 'acertou', 'responde_code' => $respostaUuid], 200);
             }
 
