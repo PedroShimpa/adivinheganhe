@@ -33,7 +33,9 @@ class ChatController extends Controller
             event(new MensagemEnviada($messageData['user'], $messageData['message']));
 
             $cachedMessages = Cache::get('chat_messages', []);
+            $cachedMessages = array_slice($cachedMessages, -199); // pega no máximo as últimas 199
             $cachedMessages[] = $messageData;
+
             Cache::put('chat_messages', $cachedMessages, now()->addHour());
 
             DB::table('chat_messages')->insert([
