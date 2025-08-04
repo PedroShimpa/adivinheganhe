@@ -8,7 +8,7 @@
         @include('partials.adivinhacao', ['adivinhacao' => $adivinhacao])
     @empty
     <div class="text-center animate__animated animate__fadeIn">
-        <h5 class="text-white">Nenhuma adivinhação disponível no momento.</h5>
+        <h5 class="text-dark">Nenhuma adivinhação disponível no momento.</h5>
     </div>
     @endforelse
 
@@ -23,7 +23,7 @@
                     <div class="flex-grow-1">
                         <h6 class="fw-bold text-primary mb-1">{{ $premio->titulo }}</h6>
                         <p class="mb-2"><strong>Resposta:</strong> <span class="text-light">{{ $premio->resposta }}</span></p>
-                        <p class="mb-2 small text-white">👤 <strong>Usuário:</strong> {{ $premio->username }}</p>
+                        <p class="mb-2 small text-dark">👤 <strong>Usuário:</strong> {{ $premio->username }}</p>
                         <p class="mb-2 small">
                             <strong>Vencedor notificado?</strong>
                             @if($premio->vencedor_notificado === 'S')
