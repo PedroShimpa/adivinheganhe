@@ -5,8 +5,8 @@
 
     <!-- Seção de convite para registro -->
     <div class="text-center mb-5">
-        <h3 class="fw-bold text-dark">Ainda não tem uma conta?</h3>
-        <p class="text-dark">Junte-se a nós gratuitamente e comece agora mesmo!</p>
+        <h3 class="fw-bold text-white">Ainda não tem uma conta?</h3>
+        <p class="text-white">Junte-se a nós gratuitamente e comece agora mesmo!</p>
         <a href="{{ route('register') }}" class="btn btn-outline-primary px-4 py-2 rounded-pill shadow-sm">
             Criar minha conta
         </a>

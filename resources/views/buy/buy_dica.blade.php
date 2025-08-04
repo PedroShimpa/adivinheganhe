@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8">
             <div class="card shadow-sm border-0">
-                <div class="card-header bg-primary text-dark text-center">
+                <div class="card-header bg-primary text-white text-center">
                     <h4 class="mb-0">🛒 Comprar Dica para - {{ $adivinhacao->titulo}}</h4>
                 </div>
                 <div class="card-body p-4">

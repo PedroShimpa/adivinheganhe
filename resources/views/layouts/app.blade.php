@@ -66,7 +66,7 @@
     @stack('head-scripts')
 </head>
 
-<body class="bg-dark text-dark d-flex flex-column min-vh-100">
+<body class="bg-dark text-white d-flex flex-column min-vh-100">
 
     <nav class="navbar navbar-expand-lg fixed-top glass shadow-lg py-3 px-4">
         <div class="container">
