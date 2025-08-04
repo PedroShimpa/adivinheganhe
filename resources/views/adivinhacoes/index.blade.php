@@ -11,7 +11,7 @@
 
 <div class="container py-5">
     <div class="text-center mb-4">
-        <p class="text-dark">Confira abaixo quem respondeu e quando</p>
+        <p class="text-white">Confira abaixo quem respondeu e quando</p>
         <hr class="w-25 mx-auto">
     </div>
 
