@@ -106,88 +106,79 @@
     }
 </style>
 <script>
-$(function() {
-    const $chatBody = $('#chatBody');
-    const $chatToggleBtn = $('#chatToggleBtn');
-    const $chatMessages = $('#chatMessages');
-    const $chatForm = $('#chatForm');
-    const $chatInput = $('#chatInput');
-    const $sendBtn = $chatForm.find('button[type="submit"]');
+    $(function() {
+        const $chatBody = $('#chatBody');
+        const $chatToggleBtn = $('#chatToggleBtn');
+        const $chatMessages = $('#chatMessages');
+        const $chatForm = $('#chatForm');
+        const $chatInput = $('#chatInput');
+        const $sendBtn = $chatForm.find('button[type="submit"]');
 
-    $chatToggleBtn.on('click', () => {
-        $chatBody.toggleClass('d-none');
-        const isVisible = !$chatBody.hasClass('d-none');
-        $chatToggleBtn.html(isVisible ?
-            '<i class="bi bi-x-lg"></i>' :
-            '<i class="bi bi-chat-dots"></i>');
-    });
+        $chatToggleBtn.on('click', () => {
+            $chatBody.toggleClass('d-none');
+            const isVisible = !$chatBody.hasClass('d-none');
+            $chatToggleBtn.html(isVisible ?
+                '<i class="bi bi-x-lg"></i>' :
+                '<i class="bi bi-chat-dots"></i>');
+        });
 
-    @auth
-    async function enviarMensagem(texto) {
-        if (!texto.trim()) return;
+        @auth
+        async function enviarMensagem(texto) {
+            if (!texto.trim()) return;
 
-        // Bloqueia input e botão
-        $chatInput.prop('disabled', true);
-        $sendBtn.prop('disabled', true);
+            // Bloqueia input e botão
+            $chatInput.prop('disabled', true);
+            $sendBtn.prop('disabled', true);
 
-        try {
-            const res = await fetch('{{ route("chat.enviar") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    message: texto
-                })
-            });
+            try {
+                const res = await fetch('{{ route("chat.enviar") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: texto
+                    })
+                });
 
-            if (!res.ok) throw new Error('Falha no envio');
+                if (!res.ok) throw new Error('Falha no envio');
 
-        } catch (err) {
-            // Pode exibir erro, se quiser
-        } finally {
-            // Reabilita input e botão sempre no final
-            $chatInput.prop('disabled', false);
-            $sendBtn.prop('disabled', false);
+            } catch (err) {
+                // Pode exibir erro, se quiser
+            } finally {
+                // Reabilita input e botão sempre no final
+                $chatInput.prop('disabled', false);
+                $sendBtn.prop('disabled', false);
+            }
         }
-    }
 
-    $chatForm.on('submit', async function(e) {
-        e.preventDefault();
-        const texto = $chatInput.val().trim();
-        if (!texto) return;
-        await enviarMensagem(texto);
-        $chatInput.val('').focus();
-    });
-    @endauth
+        $chatForm.on('submit', async function(e) {
+            e.preventDefault();
+            const texto = $chatInput.val().trim();
+            if (!texto) return;
+            await enviarMensagem(texto);
+            $chatInput.val('').focus();
+        });
+        @endauth
 
-    async function carregarMensagens() {
-    try {
-        const res = await fetch('{{ route("chat.buscar") }}');
-        const mensagens = await res.json();
+        async function carregarMensagens() {
+            const res = await fetch('{{ route("chat.buscar") }}');
+            const mensagens = await res.json();
 
-        if (Array.isArray(mensagens)) {
-            mensagens.forEach(msg => {
-                const classe = msg.user === '{{ auth()->check() ? auth()->user()->username : '' }}' ? 'user' : 'bot';
-                $chatMessages.append(`
-                    <div class="d-flex flex-column message ${classe}">
-                        <small><strong>${msg.user}</strong></small>
-                        <div>${msg.message}</div>
-                        <small class="text-muted">${msg.created_at}</small>
-                    </div>
-                `);
-            });
+            if (Array.isArray(mensagens)) {
+                mensagens.forEach(msg => {
+                    adicionarMensagem(`${msg.user}: ${msg.message}`, 'message');
 
-            $chatMessages.scrollTop($chatMessages[0].scrollHeight);
-        }
-            } catch (e) {
-                console.error('Erro ao carregar mensagens:', e);
+                    ;
+                });
+
+                $chatMessages.scrollTop($chatMessages[0].scrollHeight);
             }
         }
 
         carregarMensagens();
 
-});
+    });
 </script>

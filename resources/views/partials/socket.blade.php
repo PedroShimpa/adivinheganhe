@@ -72,7 +72,6 @@
 
     window.Echo.channel('chat')
         .listen('.MensagemEnviada', e => {
-            console.log('mensagem recebida', e)
             adicionarMensagem(`${e.usuario}: ${e.mensagem}`, 'message');
         });
 
