@@ -144,7 +144,7 @@ class RespostaController extends Controller
                 Mail::to($user->email)->queue(new AcertoUsuarioMail($user->name, $adivinhacao));
 
                 // Envia email aos admins
-                $admins = User::where('is_admin', true)->get();
+                $admins = User::where('is_admin', 'S')->get();
                 foreach ($admins as $admin) {
                     Mail::to($admin->email)->queue(new AcertoAdminMail($user, $adivinhacao));
                 }
