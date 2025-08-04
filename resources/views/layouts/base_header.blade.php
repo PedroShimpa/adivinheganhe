@@ -20,14 +20,14 @@
 
     <div class="input-group mb-3 mx-auto" style="max-width: 500px;">
         <input type="text" id="linkIndicacao" class="form-control rounded-start" value="{{ route('register', ['ib' => auth()->user()->uuid]) }}" readonly>
-        <button class="btn btn-success text-white" id="btnCopiarLink">Copiar link</button>
+        <button class="btn btn-success text-dark" id="btnCopiarLink">Copiar link</button>
     </div>
 
     <p class="mb-2">
         <strong>🎮 Você tem {{ $trys }}</strong> tentativas.
-        <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-success text-white ms-2">Comprar mais</a>
+        <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-success text-dark ms-2">Comprar mais</a>
     </p>
-    <p class="small text-white">🕓 Você recebe {{ env('MAX_ADIVINHATIONS')}} tentativas gratuitas todos os dias (não acumulativas).</p>
+    <p class="small text-dark">🕓 Você recebe {{ env('MAX_ADIVINHATIONS')}} tentativas gratuitas todos os dias (não acumulativas).</p>
 </div>
 @endif
 
