@@ -159,9 +159,6 @@
     $('#modalLabel').html($(this).attr('titulo'));
     $('#modalDescricao').html($(this).attr('descricao'));
 
-
-
-
   })
 
   let online = 0;
