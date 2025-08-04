@@ -33,11 +33,11 @@
                             <td class="fw-semibold text-center">{{ $resposta->uuid }}</td>
                             <td class="fw-semibold">{{ $resposta->username }}</td>
                             <td>{{ $resposta->resposta }}</td>
-                            <td class="text-white text-center">{{ $resposta->created_at_br }}</td>
+                            <td class=" text-center">{{ $resposta->created_at_br }}</td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="4" class="text-center text-white">Acabou! Você viu tudo...</td>
+                            <td colspan="4" class="text-center ">Acabou! Você viu tudo...</td>
                         </tr>
                         @endforelse
 

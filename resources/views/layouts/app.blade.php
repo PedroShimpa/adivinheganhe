@@ -92,29 +92,31 @@
                     </li>
 
                     @auth
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                {{ Auth::user()->name }}
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="{{ route('meus_premios') }}">Meus Prêmios</a></li>
-                                @if(auth()->user()->isAdmin())
-                                <li><a class="dropdown-item" href="{{ route('adivinhacoes.create') }}">Nova Adivinhação</a></li>
-                                @endif
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <form method="POST" action="{{ route('logout') }}">
-                                        @csrf
-                                        <button type="submit" class="dropdown-item">Sair</button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ Auth::user()->name }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{ route('meus_premios') }}">Meus Prêmios</a></li>
+                            @if(auth()->user()->isAdmin())
+                            <li><a class="dropdown-item" href="{{ route('adivinhacoes.create') }}">Nova Adivinhação</a></li>
+                            @endif
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item">Sair</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
                     @else
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">Entrar</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('login') }}">Entrar</a>
+                    </li>
                     @endauth
                 </ul>
             </div>
@@ -133,6 +135,24 @@
         </a>
     </footer>
 
+
+
+    <div class="modal fade" id="modalInformacoes" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-5">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="modalLabel"><h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="modalDescricao"></div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <script src="https://code.jquery.com/jquery-3.7.0.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js" defer></script>
@@ -141,6 +161,7 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ env('GOOGLE_ANALYTICS_TAG') }}"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
+
         function gtag() {
             dataLayer.push(arguments);
         }
