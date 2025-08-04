@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/chat', [ChatController::class, 'store'])->name('chat.enviar');
 });
 
+Route::get('/chat', [ChatController::class, 'get_messages'])->name('chat.buscar');
 Route::post('/webhook/mercadopago', [PagamentosController::class, 'webhook']);
 Route::get('/hall-da-fama', [HomeController::class, 'hallOfFame'])->name('hall_da_fama');
 Route::get('/sobre', [HomeController::class, 'sobre'])->name('sobre');
