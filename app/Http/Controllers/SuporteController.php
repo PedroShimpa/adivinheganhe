@@ -25,7 +25,7 @@ class SuporteController extends Controller
         $nome = auth()->check() ? auth()->user()->name : $request->input('nome');
         $email = auth()->check() ? null : $request->input('email');
 
-        $categoria = SuporteCategorias::find($request->input('categoria_id'))->nome ?? 'Desconhecida';
+        $categoria = SuporteCategorias::find($request->input('categoria_id'))->descricao ?? 'Desconhecida';
 
         $descricao = $request->input('descricao');
 
