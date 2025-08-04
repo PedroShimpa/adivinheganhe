@@ -60,7 +60,7 @@
 
                         <div class="d-flex justify-content-between align-items-center">
                             @if (Route::has('password.request'))
-                                <a class="text-decoration-none small text-white" href="{{ route('password.request') }}">
+                                <a class="text-decoration-none small" href="{{ route('password.request') }}">
                                     Esqueceu a senha?
                                 </a>
                             @endif

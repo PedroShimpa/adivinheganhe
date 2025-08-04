@@ -82,7 +82,7 @@
 
                         <!-- Botão -->
                         <div class="align-items-center">
-                            <a href="{{ route('login') }}" class="text-decoration-none small text-white">
+                            <a href="{{ route('login') }}" class="text-decoration-none small ">
                                 Já tem uma conta? Entrar.
                             </a><br />
                             <button type="submit" class="btn btn-primary px-4">
