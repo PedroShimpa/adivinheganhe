@@ -135,7 +135,7 @@ $(function() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content');,
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
@@ -162,5 +162,32 @@ $(function() {
         $chatInput.val('').focus();
     });
     @endauth
+
+    async function carregarMensagens() {
+    try {
+        const res = await fetch('{{ route("chat.buscar") }}');
+        const mensagens = await res.json();
+
+        if (Array.isArray(mensagens)) {
+            mensagens.forEach(msg => {
+                const classe = msg.user === '{{ auth()->check() ? auth()->user()->username : '' }}' ? 'user' : 'bot';
+                $chatMessages.append(`
+                    <div class="d-flex flex-column message ${classe}">
+                        <small><strong>${msg.user}</strong></small>
+                        <div>${msg.message}</div>
+                        <small class="text-muted">${msg.created_at}</small>
+                    </div>
+                `);
+            });
+
+            $chatMessages.scrollTop($chatMessages[0].scrollHeight);
+        }
+            } catch (e) {
+                console.error('Erro ao carregar mensagens:', e);
+            }
+        }
+
+        carregarMensagens();
+
 });
 </script>
