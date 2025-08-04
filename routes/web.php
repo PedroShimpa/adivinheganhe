@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdivinhacoesController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PagamentosController;
 use App\Http\Controllers\ProfileController;
@@ -32,8 +33,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/tentativas/comprar', [PagamentosController::class, 'buy_attempts'])->name('tentativas.comprar');
     Route::get('/dicas/{adivinhacao}/comprar', [PagamentosController::class, 'index_buy_dica'])->name('dicas.index_buy');
     Route::post('/dicas/{adivinhacao}/comprar', [PagamentosController::class, 'buy_dica'])->name('dicas.comprar');
-
+    
     Route::get('/meus_premios', [HomeController::class, 'meusPremios'])->name('meus_premios');
+
+    Route::post('/chat', [ChatController::class, 'store'])->name('chat.enviar');
 });
 
 Route::post('/webhook/mercadopago', [PagamentosController::class, 'webhook']);

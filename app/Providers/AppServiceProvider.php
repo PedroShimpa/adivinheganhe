@@ -33,20 +33,12 @@ class AppServiceProvider extends ServiceProvider
         });
 
 
-
-
-
-
-
-        # habilitar a dubbhar em ambiente de produção para os adms
-        if (app()->environment('local')) {
-            return; 
-        }
-
-        if (Auth::check() && Auth::user()->isAdmin()) {
-            Debugbar::enable();
-        } else {
+        if (app()->environment('production')) {
             Debugbar::disable();
+
+            if (Auth::check() && Auth::user()->isAdmin()) {
+                Debugbar::enable();
+            }
         }
     }
 }
