@@ -12,7 +12,7 @@
             <div class="card shadow border-0">
                 <div class="card-body p-4">
                     <h3 class="mb-3">🔍 Como Funciona?</h3>
-                    <p>Você vai ter acesso a ima imagem, video ou audio e precisa descobrir o que é primeiro!</p>
+                    <p>Você vai ter acesso a uma imagem, video ou audio e precisa descobrir o que é primeiro!</p>
                     <p>Acertou? <strong>Você ganha!</strong> Quanto mais você participa, mais chances tem de ganhar prêmios incríveis e aparecer no nosso <strong>Hall da Fama</strong>! 🏆</p>
                 </div>
             </div>
