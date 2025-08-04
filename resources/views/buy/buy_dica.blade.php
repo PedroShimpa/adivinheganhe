@@ -211,7 +211,7 @@
                             text: 'Tente novamente mais tarde.',
                             confirmButtonText: 'OK'
                         });
-                    });.finally(() => $('#form-checkout__submit').attr('disabled', false));
+                    }).finally(() => $('#form-checkout__submit').attr('disabled', false));
 
             },
             onFetching: (resource) => {
