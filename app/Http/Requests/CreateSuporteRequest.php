@@ -35,7 +35,7 @@ class CreateSuporteRequest extends FormRequest
             $rules['nome'] = 'required|max:255';
             $rules['email'] = 'required|email:rfc,dns|max:255';
         } else {
-            $rules['user_id'] = 'required|exists:users';
+            $rules['user_id'] = 'required|exists:users,id';
         }
 
         return $rules;
