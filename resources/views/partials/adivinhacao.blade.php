@@ -29,7 +29,7 @@
                 <p class="text-info small mb-2">Esta adivinhação não expira.</p>
                 @endif
 
-                <button class="btn btn-outline-info btn-sm mb-3 rounded-pill px-3 abrirModalInformacoes" data-bs-toggle="modal" data-bs-target="#modalInformacoes" titulo="{ $adivinhacao->titulo. (!empty($adivinhacao->expired_at_br) && $adivinhacao->expired ? ' - EXPIRADA' : '') }}"
+                <button class="btn btn-outline-info btn-sm mb-3 rounded-pill px-3 abrirModalInformacoes" data-bs-toggle="modal" data-bs-target="#modalInformacoes" titulo="{{ $adivinhacao->titulo. (!empty($adivinhacao->expired_at_br) && $adivinhacao->expired ? ' - EXPIRADA' : '') }}"
                 descricao="{{ $adivinhacao->descricao}}">
                     ➕ Informações
                 </button>
