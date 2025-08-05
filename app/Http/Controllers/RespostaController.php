@@ -48,12 +48,10 @@ class RespostaController extends Controller
         $userId = $user->id;
         $userUuid = $user->uuid;
 
-        $cacheTryKey = AdivinhacoesRespostas::where('user_id', $userId)
+        $countTrysToday = AdivinhacoesRespostas::where('user_id', $userId)
                 ->whereDate('created_at', today())
                 ->count();
-        $countTrysToday = Cache::get($cacheTryKey);
         $limiteMax = env('MAX_ADIVINHATIONS', 10);
-        $cacheAdicionalKey = "indicacao_user_{$userUuid}";
         $countFromIndications = AdicionaisIndicacao::where('user_uuid', $userUuid)->value('value') ?? 0;
 
 
@@ -114,14 +112,11 @@ class RespostaController extends Controller
         }
 
         $countTrysToday++;
-        Cache::put($cacheTryKey, $countTrysToday);
 
         if (($countTrysToday >= $limiteMax) && $countFromIndications > 0) {
             $indicacao = AdicionaisIndicacao::where('user_uuid', $userUuid)->first();
             if ($indicacao) {
                 $indicacao->decrement('value');
-                $countFromIndications = max(0, $countFromIndications - 1);
-                Cache::put($cacheAdicionalKey, $countFromIndications);
             }
         }
 
