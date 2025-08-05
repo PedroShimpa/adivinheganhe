@@ -14,11 +14,18 @@ class ChatController extends Controller
 {
     public function get_messages()
     {
+        if (!env('ENABLE_CHAT', true)) {
+            return;
+        }
         return response()->json(Cache::get('chat_messages', []));
     }
 
     public function store(Request $request)
     {
+        if (!env('ENABLE_CHAT', true)) {
+            return;
+        }
+
         try {
             $request->validate([
                 'message' => 'required|string'
@@ -33,7 +40,7 @@ class ChatController extends Controller
             event(new MensagemEnviada($messageData['user'], $messageData['message']));
 
             $cachedMessages = Cache::get('chat_messages', []);
-            $cachedMessages = array_slice($cachedMessages, -199); // pega no máximo as últimas 199
+            $cachedMessages = array_slice($cachedMessages, -199);
             $cachedMessages[] = $messageData;
 
             Cache::put('chat_messages', $cachedMessages, now()->addHour());
