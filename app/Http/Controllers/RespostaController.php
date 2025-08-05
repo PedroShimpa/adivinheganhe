@@ -105,7 +105,7 @@ class RespostaController extends Controller
             ]);
         } catch (QueryException $e) {
             if ($e->getCode() === '23000' || ($e->errorInfo[1] ?? null) === 1062) {
-                return response()->json(['info' => 'Você já tentou isso!'], 409);
+                return response()->json(['info' => 'Você já tentou isso! A tentativa não foi contabilizada'], 409);
             }
             Log::error('Erro na adição de resposta:' . $e->getMessage());
             return response()->json(['error' => 'Erro inesperado'], 500);
