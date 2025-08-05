@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdivinhacoesController;
+use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PagamentosController;
@@ -33,7 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/tentativas/comprar', [PagamentosController::class, 'buy_attempts'])->name('tentativas.comprar');
     Route::get('/dicas/{adivinhacao}/comprar', [PagamentosController::class, 'index_buy_dica'])->name('dicas.index_buy');
     Route::post('/dicas/{adivinhacao}/comprar', [PagamentosController::class, 'buy_dica'])->name('dicas.comprar');
-    
+
     Route::get('/meus_premios', [HomeController::class, 'meusPremios'])->name('meus_premios');
 
     Route::post('/chat', [ChatController::class, 'store'])->name('chat.enviar');
@@ -79,5 +80,11 @@ Route::post('/broadcasting/auth-mixed', function (Request $request) {
 
 Route::get('/r', [HomeController::class, 'regioes'])->name('regioes.index');
 Route::get('/r/{regiao}', [HomeController::class, 'get_by_region'])->name('adivinhacoes.buscar_por_regiao');
+
+Route::get('login/google', [GoogleController::class, 'redirectToGoogle'])->name('login.google');
+Route::get('login/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+Route::get('/register/extra', [GoogleController::class, 'showExtraForm'])->name('register.extra');
+Route::post('/register/extra', [GoogleController::class, 'storeExtraForm']);
+
 
 require __DIR__ . '/auth.php';
