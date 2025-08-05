@@ -54,8 +54,7 @@ class RespostaController extends Controller
         $limiteMax = env('MAX_ADIVINHATIONS', 10);
         $countFromIndications = AdicionaisIndicacao::where('user_uuid', $userUuid)->value('value') ?? 0;
 
-
-        if ($countTrysToday >= ($limiteMax + $countFromIndications)) {
+        if ($countTrysToday >= $limiteMax && $countFromIndications == 0) {
             return response()->json(['info' => "Você já ultilizou todas as suas tentativas!"]);
         }
 
