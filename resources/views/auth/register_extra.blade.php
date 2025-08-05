@@ -1,4 +1,3 @@
-{{-- resources/views/auth/register.blade.php --}}
 @extends('layouts.app')
 
 @section('content')
@@ -7,41 +6,23 @@
         <div class="col-md-8 col-lg-6">
             <div class="card shadow rounded-4">
                 <div class="card-body p-5">
-                    <h2 class="mb-4 text-center text-primary fw-bold">Criar Conta</h2>
+                    <h2 class="mb-4 text-center text-primary fw-bold">Finalizar Cadastro</h2>
                     @error('fingerprint')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
-                    <form method="POST" action="{{ route('register') }}">
+                    <form method="POST" action="{{ route('register.extra') }}">
                         @csrf
 
-                        <input name="indicated_by" hidden>
+                        <!-- Campos ocultos do Socialite -->
+                        <input type="hidden" name="name" value="{{ old('name', $user['name']) }}">
+                        <input type="hidden" name="email" value="{{ old('email', $user['email']) }}">
+                        <input type="hidden" name="username" value="{{ old('username', $user['username'] ?? explode('@', $user['email'])[0]) }}">
 
-                        <!-- Nome -->
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Nome</label>
-                            <input id="name" type="text" class="form-control @error('name') is-invalid @enderror"
-                                name="name" value="{{ old('name') }}" required autofocus>
-                            @error('name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Nome de Usuário -->
                         <div class="mb-3">
                             <label for="username" class="form-label">Nome de Usuário</label>
                             <input id="username" type="text" class="form-control @error('username') is-invalid @enderror"
                                 name="username" value="{{ old('username') }}" required>
                             @error('username')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Email -->
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
-                                name="email" value="{{ old('email') }}" required>
-                            @error('email')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -63,7 +44,7 @@
                         <div class="mb-3">
                             <label for="whatsapp" class="form-label">WhatsApp</label>
                             <input id="whatsapp" type="text" class="form-control @error('whatsapp') is-invalid @enderror"
-                                name="whatsapp" value="{{ old('whatsapp') }}">
+                                name="whatsapp" value="{{ old('whatsapp') }}" required>
                             @error('whatsapp')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -72,35 +53,21 @@
                             </div>
                         </div>
 
-                        <!-- Senha -->
-                        <div class="mb-4">
-                            <label for="password" class="form-label">Senha</label>
-                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror"
-                                name="password" required autocomplete="new-password">
-                            @error('password')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
                         <!-- Botão -->
                         <div class="align-items-center">
-                            <a href="{{ route('login') }}" class="text-decoration-none small ">
-                                Já tem uma conta? Entrar.
-                            </a><br />
                             <button type="submit" class="btn btn-primary px-4">
-                                Registrar
+                                Finalizar Cadastro
                             </button><br />
                             <small>Ao se cadastrar você concorda com nossos termos e condições!</small>
                         </div>
-
                     </form>
-
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
 @push('scripts')
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.9/jquery.inputmask.min.js" integrity="sha512-F5Ul1uuyFlGnIT1dk2c4kB4DBdi5wnBJjVhL7gQlGh46Xn0VhvD8kgxLtjdZ5YN83gybk/aASUAlpdoWUjRR3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
