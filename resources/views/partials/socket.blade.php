@@ -66,12 +66,27 @@
             $msg.addClass('user');
         }
         $msg.text(texto);
-        $('#chatMessages').append($msg);
-        $('#chatMessages').scrollTop($('#chatMessages')[0].scrollHeight);
+
+        const $chatMessages = $('#chatMessages');
+        $chatMessages.append($msg);
+
+        const mensagens = $chatMessages.children('.message');
+        if (mensagens.length > 200) {
+            mensagens.slice(0, mensagens.length - 200).remove();
+        }
+
+        $chatMessages.scrollTop($chatMessages[0].scrollHeight);
     }
 
     window.Echo.channel('chat')
         .listen('.MensagemEnviada', e => {
+                var tipo = 'message'
+                @auth
+                if("{{ auth()->user()->username }}" == e.usuario) {
+                    tipo = 'user'
+                }
+                @endauth
+
             adicionarMensagem(`${e.usuario}: ${e.mensagem}`, 'message');
         });
 
