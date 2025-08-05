@@ -10,6 +10,7 @@ use App\Http\Controllers\Traits\CountTrys;
 use App\Http\Controllers\Traits\AdivinhacaoTrait;
 use App\Http\Requests\UpdateAdivinhacoesRequest;
 use App\Jobs\EnviarNotificacaoNovaAdivinhacao;
+use App\Models\Regioes;
 use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -32,7 +33,7 @@ class AdivinhacoesController extends Controller
 
         $respostas = collect([]);
         if (($adivinhacao->resolvida == 'S' || (!empty($adivinhacao->expire_at) && $adivinhacao->expired) || (Auth::check() && auth()->user()->isAdmin()))) {
-            $respostasKey = "adivinhacoes_expiradas_{$adivinhacao->id}_page_" . request()->get('page', 1);
+            $respostasKey = "respostas_{$adivinhacao->id}_page_" . request()->get('page', 1);
 
             $respostas = Cache::remember($respostasKey, 3600, function () use ($adivinhacao) {
                 $paginated = AdivinhacoesRespostas::select('adivinhacoes_respostas.uuid', 'users.username', 'adivinhacoes_respostas.created_at', 'resposta')
@@ -57,7 +58,8 @@ class AdivinhacoesController extends Controller
     public function create()
     {
         if (auth()->user()->isAdmin()) {
-            return view('adivinhacoes.create');
+            $regioes = Regioes::all();
+            return view('adivinhacoes.create')->with(compact('regioes'));
         }
         return redirect()->route('home');
     }
@@ -65,7 +67,9 @@ class AdivinhacoesController extends Controller
     public function view(Adivinhacoes $adivinhacao)
     {
         if (auth()->user()->isAdmin()) {
-            return view('adivinhacoes.view')->with(compact('adivinhacao'));
+            $regioes = Regioes::all();
+
+            return view('adivinhacoes.view')->with(compact('adivinhacao', 'regioes'));
         }
         return redirect()->route('home');
     }
@@ -89,12 +93,10 @@ class AdivinhacoesController extends Controller
 
             $data['descricao'] = $request->input('descricao');
 
-
             if (!empty($data['expire_at'])) {
                 $data['expire_at'] = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i', $data['expire_at'])->format('Y-m-d H:i:s');
             }
-
-            $adivinhacao = Adivinhacoes::where('id', $adivinhacaoId)->update($data);
+            Adivinhacoes::where('id', $adivinhacaoId)->update($data);
 
             Cache::delete('adivinhacoes_ativas');
 
@@ -131,8 +133,10 @@ class AdivinhacoesController extends Controller
             $adivinhacao = Adivinhacoes::create($data);
             Cache::delete('adivinhacoes_ativas');
 
-            broadcast(new AlertaGlobal('Nova Adivinhação', $data['titulo'] . ' adicionada, acesse a pagina inicial para ver'))->toOthers();
+            if ($request->input('enviar_alerta_global') == 'S') {
 
+                broadcast(new AlertaGlobal('Nova Adivinhação', $data['titulo'] . ' adicionada, acesse a pagina inicial para ver'))->toOthers();
+            }
             $titulo = $adivinhacao->titulo;
             $url = route('adivinhacoes.index', $adivinhacao->uuid);
 

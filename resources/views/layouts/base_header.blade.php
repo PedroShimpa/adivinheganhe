@@ -5,6 +5,11 @@
 </div>
 @endif
 
+<div class="alert alert-info text-center rounded-0 mb-3 shadow-sm border-start border-4 border-primary animate__animated animate__fadeInDown">
+    <strong>🎁 Em caso de acerto, você não será cobrado de nada!</strong><br>
+    Os prêmios são inteiramente pagos por nós, incluindo fretes e afins <strong>(exceto impostos regionais)</strong>.
+</div>
+
 <div class="mb-4 p-3 glass text-center animate__animated animate__fadeInDown">
     <span class="d-inline-flex align-items-center justify-content-center gap-2 text-glow fs-5">
         <i class="bi bi-people-fill fs-4"></i>
@@ -42,4 +47,3 @@
         Participar agora
     </a>
 </div>
-

@@ -12,7 +12,6 @@
     <div id="chatBody" class="flex-grow-1 overflow-auto px-3 pb-3 d-none"
         style="background: rgba(0, 0, 0, 0.25); border-radius: 0 0 1rem 1rem;">
         <div id="chatMessages" class="mb-3" style="max-height: 320px; overflow-y: auto;">
-            <!-- Messages aparecerão aqui -->
         </div>
 
         @auth
@@ -59,7 +58,6 @@
 
         #chatBody {
             max-height: calc(80vh - 70px);
-            /* ajustar altura do body */
             padding: 0.5rem 1rem 1rem 1rem !important;
         }
 
@@ -79,14 +77,12 @@
         }
     }
 
-    /* Cabeçalho */
     #chatHeader {
         user-select: none;
         cursor: pointer;
         padding: 0.8rem 1.2rem !important;
     }
 
-    /* Mensagens */
     #chatMessages .message {
         padding: 0.4rem 0.75rem;
         max-width: 80%;
@@ -126,7 +122,6 @@
         async function enviarMensagem(texto) {
             if (!texto.trim()) return;
 
-            // Bloqueia input e botão
             $chatInput.prop('disabled', true);
             $sendBtn.prop('disabled', true);
 
@@ -146,9 +141,7 @@
                 if (!res.ok) throw new Error('Falha no envio');
 
             } catch (err) {
-                // Pode exibir erro, se quiser
             } finally {
-                // Reabilita input e botão sempre no final
                 $chatInput.prop('disabled', false);
                 $sendBtn.prop('disabled', false);
             }

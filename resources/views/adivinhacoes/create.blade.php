@@ -79,14 +79,18 @@
                             @enderror
                         </div>
                         <div class="mb-3">
-                            <label for="dica_paga" class="form-label">{{ __('Enviar E-mails?') }}</label>
-                            <select class="form-select @error('dica_paga') is-invalid @enderror" id="dica_paga" name="enviar_email" required>
-                                <option value="S" {{ old('dica_paga') == 'S' ? 'selected' : '' }}>Sim</option>
-                                <option value="N" {{ old('dica_paga') == 'N' ? 'selected' : '' }} selected>Não</option>
+                            <label class="form-label">{{ __('Enviar E-mails?') }}</label>
+                            <select class="form-select" name="enviar_email" required>
+                                <option value="S">Sim</option>
+                                <option value="N" selected>Não</option>
                             </select>
-                            @error('enviar_email')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">{{ __('Enviar Alerta Global?') }}</label>
+                            <select class="form-select" name="enviar_alerta_global" required>
+                                <option value="S">Sim</option>
+                                <option value="N" selected>Não</option>
+                            </select>
                         </div>
 
                         <div class="mb-3">
@@ -97,6 +101,18 @@
                             @enderror
                         </div>
 
+                        <div class="mb-3">
+                            <label for="regiao_id" class="form-label">Região</label>
+                            <select name="regiao_id" class="form-select">
+                                <option value="">Selecione</option>
+                                @foreach($regioes as $regiao)
+                                <option value="{{ $regiao->id }}" {{ old('regiao_id') == $regiao->id ? 'selected' : '' }}>
+                                    {{ $regiao->nome }}
+                                </option>
+                                @endforeach
+                            </select>
+                            @error('regiao_id') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
 
 
                         <button type="submit" class="btn btn-primary">{{ __('Salvar Adivinhação') }}</button>
