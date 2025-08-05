@@ -21,7 +21,8 @@ class Adivinhacoes extends Model
         'exibir_home',
         'dica',
         'dica_paga',
-        'dica_valor'
+        'dica_valor',
+        'regiao_id'
     ];
 
 
