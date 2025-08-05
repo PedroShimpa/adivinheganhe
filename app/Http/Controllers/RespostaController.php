@@ -43,24 +43,14 @@ class RespostaController extends Controller
         $userId = $user->id;
         $userUuid = $user->uuid;
 
-        $hoje = today()->toDateString();
-        $cacheTryKey = "try_count_user_{$userId}_{$hoje}";
+        $cacheTryKey = AdivinhacoesRespostas::where('user_id', $userId)
+                ->whereDate('created_at', today())
+                ->count();
         $countTrysToday = Cache::get($cacheTryKey);
         $limiteMax = env('MAX_ADIVINHATIONS', 10);
         $cacheAdicionalKey = "indicacao_user_{$userUuid}";
-        $countFromIndications = Cache::get($cacheAdicionalKey);
+        $countFromIndications = AdicionaisIndicacao::where('user_uuid', $userUuid)->value('value') ?? 0;
 
-        if (is_null($countTrysToday)) {
-            $countTrysToday = AdivinhacoesRespostas::where('user_id', $userId)
-                ->whereDate('created_at', today())
-                ->count();
-            Cache::put($cacheTryKey, $countTrysToday, now()->addSeconds(60));
-        }
-
-        if (is_null($countFromIndications)) {
-            $countFromIndications = AdicionaisIndicacao::where('user_uuid', $userUuid)->value('value') ?? 0;
-            Cache::put($cacheAdicionalKey, $countFromIndications, now()->addSeconds(300));
-        }
 
         if ($countTrysToday >= ($limiteMax + $countFromIndications)) {
             return response()->json(['info' => "Você já ultilizou todas as suas tentativas!"]);
