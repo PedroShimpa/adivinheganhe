@@ -25,7 +25,7 @@
                 @foreach($meusPremios as $premio)
                 <tr>
                     <td>
-                        <a href="{{ route('adivinhacao.show', $premio->uuid) }}" target="_blank">
+                        <a href="{{ route('adivinhacoes.index', $premio->uuid) }}" target="_blank">
                             {{ $premio->titulo }}
                         </a>
                     </td>
