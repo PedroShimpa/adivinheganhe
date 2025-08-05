@@ -43,7 +43,7 @@ class ChatController extends Controller
             $cachedMessages = array_slice($cachedMessages, -199);
             $cachedMessages[] = $messageData;
 
-            Cache::put('chat_messages', $cachedMessages, now()->addHour());
+            Cache::put('chat_messages', $cachedMessages, now()->addHours(5));
 
             DB::table('chat_messages')->insert([
                 'user_id' => auth()->user()->id,
