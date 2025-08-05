@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Traits;
 use App\Models\AdicionaisIndicacao;
 use App\Models\AdivinhacoesRespostas;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 
 trait CountTrys
 {
@@ -20,12 +19,10 @@ trait CountTrys
                 ->whereDate('created_at', today())
                 ->count();
 
-            $countFromIndications = Cache::remember("indicacoes_{$userUuid}", 240, function () use ($userUuid) {
-                return AdicionaisIndicacao::where('user_uuid', $userUuid)->value('value') ?? 0;
-            });
+            $countFromIndications = AdicionaisIndicacao::where('user_uuid', $userUuid)->value('value') ?? 0;
 
             $limit = env('MAX_ADIVINHATIONS', 10) + $countFromIndications;
-            $limitExceded = $countTrysToday >= $limit;
+            $limitExceded = $countTrysToday >= env('MAX_ADIVINHATIONS', 10) && $countFromIndications == 0;
             $trys = $limit - $countTrysToday;
         }
     }
