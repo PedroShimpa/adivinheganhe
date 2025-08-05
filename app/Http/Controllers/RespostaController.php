@@ -30,14 +30,19 @@ class RespostaController extends Controller
 
     public function enviar(Request $request)
     {
+        if(!env('ENABLE_REPLY', true)) {
+            return;
+        }
+        
+        if (Cache::get('adivinhacao_resolvida' . $request->input('adivinhacao_id'))) {
+            return response()->json(['info' => "Esta adivinhação já foi adivinhada, obrigado por tentar!"]);
+        }
+
+
         $data = $request->validate([
             'resposta'       => 'required|string|max:255',
             'adivinhacao_id' => 'required|exists:adivinhacoes,id',
         ]);
-
-        if (Cache::get('adivinhacao_resolvida' . $data['adivinhacao_id'])) {
-            return response()->json(['info' => "Esta adivinhação já foi adivinhada, obrigado por tentar!"]);
-        }
 
         $user = Auth::user();
         $userId = $user->id;
@@ -143,7 +148,6 @@ class RespostaController extends Controller
 
                 Mail::to($user->email)->queue(new AcertoUsuarioMail($user->name, $adivinhacao));
 
-                // Envia email aos admins
                 $admins = User::where('is_admin', 'S')->get();
                 foreach ($admins as $admin) {
                     Mail::to($admin->email)->queue(new AcertoAdminMail($user, $adivinhacao));

@@ -6,6 +6,7 @@ use App\Http\Controllers\Traits\CountTrys;
 use App\Http\Controllers\Traits\AdivinhacaoTrait;
 use App\Models\Adivinhacoes;
 use App\Models\AdivinhacoesPremiacoes;
+use App\Models\Regioes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -36,6 +37,7 @@ class HomeController extends Controller
                 'dica_valor',
                 'created_at'
             )
+                ->whereNull('regiao_id')
                 ->where('resolvida', 'N')
                 ->where('exibir_home', 'S')
                 ->where(function ($q) {
@@ -115,6 +117,85 @@ class HomeController extends Controller
         return view('meus_premios')->with(compact('meusPremios'));
     }
 
+    public function get_by_region(Regioes $regiao)
+    {
+        $trys = 0;
+        $limitExceded = true;
+
+        $this->count($trys, $limitExceded);
+
+        $adivinhacoes = Cache::remember('adivinhacoes_ativas_rg_' . $regiao->id, 1200, function () use ($regiao) {
+            return Adivinhacoes::select(
+                'id',
+                'uuid',
+                'titulo',
+                'imagem',
+                'descricao',
+                'premio',
+                'expire_at',
+                'dica',
+                'dica_paga',
+                'dica_valor',
+                'created_at'
+            )
+                ->where('regiao_id', $regiao->id)
+                ->where('resolvida', 'N')
+                ->where('exibir_home', 'S')
+                ->where(function ($q) {
+                    $q->where('expire_at', '>', now());
+                    $q->orWhereNull('expire_at');
+                })
+                ->orderBy('id', 'desc')
+                ->get();
+        });
+
+        $adivinhacoes = $adivinhacoes->filter(function ($a) {
+            return is_null($a->expire_at) || $a->expire_at > now();
+        })->values();
+
+
+        $adivinhacoes->each(function ($a) {
+            if ($a->expire_at < now()) {
+                return null;
+            }
+            $this->customize($a);
+        });
+
+
+        $adivinhacoesExpiradas = Cache::remember('adivinhacoes_expiradas_rg_' . $regiao->id, 240, function () use ($regiao) {
+            return Adivinhacoes::select('uuid', 'titulo')
+                ->where('resolvida', 'N')
+                ->where('regiao_id', $regiao->id)
+                ->whereNotNull('expire_at')
+                ->where('expire_at', '<', now())
+                ->orderBy('expire_at', 'desc')
+                ->limit(10)
+                ->get();
+        });
+
+        $premios = Cache::remember('premios_ultimos_rg' . $regiao->id, 240, function () use ($regiao) {
+            return AdivinhacoesPremiacoes::select(
+                'adivinhacoes_premiacoes.id',
+                'adivinhacoes.uuid',
+                'adivinhacoes.titulo',
+                'adivinhacoes.resposta',
+                'adivinhacoes.premio',
+                'users.username',
+                'premio_enviado',
+                'previsao_envio_premio',
+                'vencedor_notificado'
+            )
+                ->join('adivinhacoes', 'adivinhacoes.id', '=', 'adivinhacoes_premiacoes.adivinhacao_id')
+                ->join('users', 'users.id', '=', 'adivinhacoes_premiacoes.user_id')
+                ->where('regiao_id', $regiao->id)
+                ->orderBy('adivinhacoes_premiacoes.id', 'desc')
+                ->limit(10)
+                ->get();
+        });
+
+        return view('home')->with(compact('adivinhacoes', 'limitExceded', 'premios', 'trys', 'adivinhacoesExpiradas', 'regiao'));
+    }
+
     public function hallOfFame(Request $request)
     {
         $usuariosComMaisPremios = Cache::remember('hall_of_fame_top10', 240, function () {
@@ -132,12 +213,17 @@ class HomeController extends Controller
         return view('hall_da_fama')->with(compact('usuariosComMaisPremios'));
     }
 
-
     public function saveFingerprint(Request $request)
     {
         $fingerprint = $request->input('fingerprint');
 
         session(['fingerprint' => $fingerprint]);
+    }
+
+    public function regioes()
+    {
+        $regioes = Regioes::orderBy('nome', 'asc')->get();
+        return view('regioes')->with(compact('regioes'));
     }
 
     public function sobre()

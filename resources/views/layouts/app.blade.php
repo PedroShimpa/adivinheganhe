@@ -61,6 +61,15 @@
         .nav-link:hover {
             color: #00f7ff !important;
         }
+
+        .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.7);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.9)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
     </style>
 
     @stack('head-scripts')
@@ -76,11 +85,14 @@
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
                 aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon text-white"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 d-flex align-items-center gap-3">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('regioes.index') }}">Regiões</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('suporte.index') }}">Suporte</a>
                     </li>
@@ -135,8 +147,6 @@
         </a>
     </footer>
 
-
-
     <div class="modal fade" id="modalInformacoes" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-4 shadow-5">
@@ -158,7 +168,9 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js" defer></script>
 
     @include('partials.socket')
+    @if(env('ENABLE_CHAT', true))
     @include('partials.chat-floating')
+    @endif
 
 
     @if(env('GOOGLE_ANALYTICS_TAG'))

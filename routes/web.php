@@ -77,8 +77,7 @@ Route::post('/broadcasting/auth-mixed', function (Request $request) {
     );
 });
 
-Route::get('/ping', function () {
-    return 'pong';
-});
+Route::get('/r', [HomeController::class, 'regioes'])->name('regioes.index');
+Route::get('/r/{regiao}', [HomeController::class, 'get_by_region'])->name('adivinhacoes.buscar_por_regiao');
 
 require __DIR__ . '/auth.php';
