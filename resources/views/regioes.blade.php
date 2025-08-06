@@ -12,7 +12,7 @@
                     <div class="card border-0 shadow-sm h-100 rounded-4 text-center py-4 px-2 hover-shadow" style="transition: all 0.3s ease;">
                         <div class="card-body">
                             <h5 class="card-title text-primary fw-bold">{{ $regiao->nome }}</h5><br>
-                            <small class="text-white">{{ $regiao->count_adivinhacoes }} adivinhações ativas</small>
+                            <small class="text-primary ">{{ $regiao->count_adivinhacoes }} adivinhações ativas</small>
                         </div>
                     </div>
                 </a>
