@@ -71,7 +71,7 @@
                     <input type="text" id="resposta-{{ $adivinhacao->id }}" class="form-control border-primary fw-semibold rounded-3" name="resposta" placeholder="💬 Digite sua resposta">
                 </div>
                 <input type="hidden" name="adivinhacao_id" value="{{ $adivinhacao->id }}">
-                <button class="btn btn-success w-100 rounded-pill py-2" id="btn-resposta-{{ $adivinhacao->id }}" @if($adivinhacao->expired && !empty($adivinhacao->expired_at_br)) disabled @endif>
+                <button class="btn btn-success w-100 rounded-pill py-2 sendResposta" id="btn-resposta-{{ $adivinhacao->id }}" @if($adivinhacao->expired && !empty($adivinhacao->expired_at_br)) disabled @endif>
                     Enviar resposta
                 </button>
                 @else
