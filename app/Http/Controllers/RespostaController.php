@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\RespostaAprovada;
 use App\Events\RespostaPrivada;
+use App\Jobs\IncluirResposta;
 use App\Mail\AcertoAdminMail;
 use App\Mail\AcertoUsuarioMail;
 use App\Models\AdicionaisIndicacao;
@@ -94,22 +95,25 @@ class RespostaController extends Controller
             ));
         }
 
-        try {
-            AdivinhacoesRespostas::insert([
-                'uuid' => Str::uuid(),
-                'adivinhacao_id' => $data['adivinhacao_id'],
-                'user_id'        => $userId,
-                'resposta'       => $respostaCliente,
-                'created_at'     => now()
-            ]);
-        } catch (QueryException $e) {
-            if ($e->getCode() === '23000' || ($e->errorInfo[1] ?? null) === 1062) {
-                return response()->json(['info' => 'Você já tentou isso! A tentativa não foi contabilizada'], 409);
-            }
-            Log::error('Erro na adição de resposta:' . $e->getMessage());
-            return response()->json(['error' => 'Erro inesperado'], 500);
+        $jaEnviou = AdivinhacoesRespostas::where([
+            'adivinhacao_id' => $data['adivinhacao_id'],
+            'user_id'        => $userId,
+            'resposta'       => $respostaCliente,
+        ])->exists();
+
+        if ($jaEnviou) {
+            return response()->json(['info' => 'Você já tentou isso!'], 409);
         }
 
+
+        dispatch(new IncluirResposta([
+            'uuid' => Str::uuid(),
+            'adivinhacao_id' => $data['adivinhacao_id'],
+            'user_id'        => $userId,
+            'resposta'       => $respostaCliente,
+            'created_at'     => now()
+        ]));
+        
         $countTrysToday++;
 
         if (($countTrysToday >= $limiteMax) && $countFromIndications > 0) {
@@ -126,6 +130,7 @@ class RespostaController extends Controller
                 Cache::forget('adivinhacoes_ativas');
                 Cache::forget('premios_ultimos');
 
+                dispatch(new IncluirResposta($userId,));
                 AdivinhacoesPremiacoes::create([
                     'user_id'        => $userId,
                     'adivinhacao_id' => $data['adivinhacao_id'],
@@ -138,7 +143,7 @@ class RespostaController extends Controller
                 foreach ($admins as $admin) {
                     Mail::to($admin->email)->queue(new AcertoAdminMail($user, $adivinhacao));
                 }
-                return response()->json(['message' => 'acertou', 'reply_code' => $respostaUuid,  'trys' => $trysRestantes] , 200);
+                return response()->json(['message' => 'acertou', 'reply_code' => $respostaUuid,  'trys' => $trysRestantes], 200);
             }
 
             return response()->json(['message' => 'ok', 'reply_code' => $respostaUuid, 'trys' => $trysRestantes], 200);

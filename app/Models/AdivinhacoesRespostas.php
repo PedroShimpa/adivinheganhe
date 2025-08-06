@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class AdivinhacoesRespostas extends Model
 {
+    use Cachable;
+    
     const UPDATED_AT = null;
 
     protected $table = 'adivinhacoes_respostas';

@@ -46,6 +46,7 @@
   <li>Crie o link simbólico para o storage:<br><code>php artisan storage:link</code></li>
   <li>Inicie o reverb com <br><code>php artisan reverb:start</code></li>
   <li>Inicie o projeto com <br><code>php artisan serve</code></li>
+  <li>O sistema depende MUITO de queues, então não esqueça do: php artisan queue:work!</li>
 </ol>
 <p>
   Para cadastrar um colaborador como ADM, você precisa fazer isso direto no banco de dados na tabela user, sete a coluna `is_admin` de "N" para "S" no usuario desejado.
