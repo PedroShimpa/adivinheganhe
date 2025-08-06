@@ -59,7 +59,7 @@
 
                 @auth
                 <div class="d-flex justify-content-between align-items-center flex-wrap mb-3 gap-2">
-                    <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill verRespostas" adivinhacao_id="{{ $adivinhacao->id}}" data-bs-toggle="modal" data-bs-target="#modalSuasRespostas">
+                    <button type="button" class="btn btn-success btn-sm rounded-pill verRespostas" adivinhacao_id="{{ $adivinhacao->id}}" data-bs-toggle="modal" data-bs-target="#modalSuasRespostas">
                         📜 Suas Respostas
                     </button>
                 </div>
