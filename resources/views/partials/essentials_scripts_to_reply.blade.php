@@ -1,5 +1,4 @@
 <script>
-  let tentativas = parseInt($('#tentativas-restantes').text().replace(/\D/g, ''));
 
   $(document).ready(function () {
     $('.sendResposta').on('click', async function () {
@@ -13,11 +12,6 @@
 
       if (!resposta) {
         $(`<div class="mt-2 text-danger fw-bold">Preencha a resposta primeiro!</div>`).insertAfter($input);
-        return;
-      }
-
-      if (tentativas <= 0) {
-        Swal.fire('Sem tentativas!', 'Você não possui mais tentativas 😞', 'warning');
         return;
       }
 
@@ -51,7 +45,7 @@
           $btn.attr('disabled', false);  
         }
         else {
-          let codigoResposta = json.responde_code ? `<br><small class="text-white">Seu código de resposta: <strong>${json.responde_code}</strong></small>` : '';
+          let codigoResposta = json.reply_code ? `<br><small class="text-white">Seu código de resposta: <strong>${json.reply_code}</strong></small>` : '';
 
           if (json.message === 'acertou') {
             $msg
@@ -65,16 +59,14 @@
               .removeClass('text-success fw-bold')
               .addClass('text-warning fw-bold')
               .html(`Que pena, você errou! ${
-                tentativas > 0
-                  ? 'Mas ainda possui ' + tentativas + ' tentativa' + (tentativas === 1 ? '' : 's')
+                json.trys > 0
+                  ? 'Mas ainda possui ' + json.trys + ' tentativa' + (json.trys === 1 ? '' : 's')
                   : 'Você não possui mais tentativas. Se quiser, pode <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-primary ms-2">comprar mais</a> 😞'
               }${codigoResposta}`);
             $btn.attr('disabled', false);
           }
         }
 
-        tentativas--;
-        $('#tentativas-restantes').text(`Restam ${tentativas} tentativa${tentativas === 1 ? '' : 's'}`);
         $msg.insertAfter($input);
 
       } catch (error) {
