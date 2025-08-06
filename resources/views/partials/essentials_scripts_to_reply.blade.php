@@ -114,7 +114,7 @@
       tbody.empty(); // limpa antes
 
       if (!respostas.length) {
-          tbody.append(`<tr><td class="text-muted text-center">Nenhum palpite enviada ainda.</td></tr>`);
+          tbody.append(`<tr><td class="text-muted text-center">Nenhum palpite enviado ainda.</td></tr>`);
       } else {
           respostas.forEach(resposta => {
               tbody.append(`<tr><td>${resposta.resposta}</td></tr>`);
