@@ -63,6 +63,8 @@
                   ? 'Mas ainda possui ' + json.trys + ' tentativa' + (json.trys === 1 ? '' : 's')
                   : 'Você não possui mais tentativas. Se quiser, pode <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-primary ms-2">comprar mais</a> 😞'
               }${codigoResposta}`);
+
+              $('#trysRestantes').html(json.trys)
             $btn.attr('disabled', false);
           }
         }

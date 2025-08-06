@@ -29,7 +29,7 @@
     </div>
 
     <p class="mb-2">
-        <strong>🎮 Você tem {{ $trys }}</strong> tentativas.
+        <strong>🎮 Você tem <span id="trysRestantes">{{ $trys }} </span> </strong> tentativas.
         <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-success text-white ms-2">Comprar mais</a>
     </p>
     <p class="small text-white">🕓 Você recebe {{ env('MAX_ADIVINHATIONS')}} tentativas gratuitas todos os dias (não acumulativas).</p>
