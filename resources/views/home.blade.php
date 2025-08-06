@@ -26,7 +26,7 @@
                         <div class="glass p-4 h-100 animate__animated animate__fadeInUp">
                             <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
                                 <div class="flex-grow-1">
-                                    <h6 class="fw-bold text-primary mb-1">{{ $premio->titulo }}</h6>
+                                    <h6 class="fw-bold text-white mb-1">{{ $premio->titulo }}</h6>
                                     <p class="mb-2"><strong>Resposta:</strong> <span
                                             class="text-light">{{ $premio->resposta }}</span></p>
                                     <p class="mb-2 small text-white">👤 <strong>Usuário:</strong> {{ $premio->username }}
