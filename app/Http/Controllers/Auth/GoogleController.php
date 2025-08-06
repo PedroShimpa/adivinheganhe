@@ -6,13 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterExtraUserRequest;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class GoogleController extends Controller
 {
     public function redirectToGoogle()
     {
+        session(['indicated_by' => request()->input('ib')]);
         return Socialite::driver('google')->redirect();
     }
 
@@ -60,7 +60,8 @@ class GoogleController extends Controller
             'email_verified_at' => now(),
             'cpf' => $request->cpf,
             'whatsapp' => $request->whatsapp,
-            'fingerprint' => $request->input('fingerprint')
+            'fingerprint' => $request->input('fingerprint'),
+            'indicated_by' => session('indicated_by')
         ]);
 
         session()->forget('social_user');
