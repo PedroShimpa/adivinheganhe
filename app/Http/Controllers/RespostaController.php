@@ -105,7 +105,6 @@ class RespostaController extends Controller
             return response()->json(['info' => 'Você já tentou isso!'], 409);
         }
 
-
         dispatch(new IncluirResposta([
             'uuid' => $respostaUuid,
             'adivinhacao_id' => $data['adivinhacao_id'],
@@ -130,7 +129,6 @@ class RespostaController extends Controller
                 Cache::forget('adivinhacoes_ativas');
                 Cache::forget('premios_ultimos');
 
-                dispatch(new IncluirResposta($userId,));
                 AdivinhacoesPremiacoes::create([
                     'user_id'        => $userId,
                     'adivinhacao_id' => $data['adivinhacao_id'],
