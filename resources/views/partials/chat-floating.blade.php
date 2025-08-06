@@ -93,12 +93,6 @@
         font-size: 0.9rem;
     }
 
-    #chatMessages .message.user {
-        background: #00f7ff;
-        color: #000;
-        align-self: flex-end;
-    }
-
     #chatMessages .message.bot {
         background: rgba(255, 255, 255, 0.15);
         color: #fff;
