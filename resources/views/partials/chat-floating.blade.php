@@ -4,9 +4,13 @@
     <div id="chatHeader" class="d-flex justify-content-between align-items-center p-3 cursor-pointer"
         style="user-select: none; cursor: pointer;">
         <h6 class="m-0 text-glow">Chat</h6>
-        <button id="chatToggleBtn" class="btn btn-glow btn-sm btn-primary" style="line-height: 1;">
+        <button id="chatToggleBtn" class="btn btn-glow btn-sm btn-primary position-relative" style="line-height: 1;">
             <i class="bi bi-chat-dots"></i>
+            <span id="chatNotification" class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle d-none">
+                <span class="visually-hidden">Nova mensagem</span>
+            </span>
         </button>
+
     </div>
 
     <div id="chatBody" class="flex-grow-1 overflow-auto px-3 pb-3 d-none"
@@ -115,8 +119,14 @@
             const isVisible = !$chatBody.hasClass('d-none');
             $chatToggleBtn.html(isVisible ?
                 '<i class="bi bi-x-lg"></i>' :
-                '<i class="bi bi-chat-dots"></i>');
+                '<i class="bi bi-chat-dots"></i><span id="chatNotification" class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle d-none"><span class="visually-hidden">Nova mensagem</span></span>'
+            );
+
+            if (isVisible) {
+                $('#chatNotification').addClass('d-none');
+            }
         });
+
 
         @auth
         async function enviarMensagem(texto) {
@@ -140,8 +150,7 @@
 
                 if (!res.ok) throw new Error('Falha no envio');
 
-            } catch (err) {
-            } finally {
+            } catch (err) {} finally {
                 $chatInput.prop('disabled', false);
                 $sendBtn.prop('disabled', false);
             }
