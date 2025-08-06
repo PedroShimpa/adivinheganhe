@@ -30,10 +30,10 @@ class RespostaController extends Controller
 
     public function enviar(Request $request)
     {
-        if(!env('ENABLE_REPLY', true)) {
+        if (!env('ENABLE_REPLY', true)) {
             return;
         }
-        
+
         if (Cache::get('adivinhacao_resolvida' . $request->input('adivinhacao_id'))) {
             return response()->json(['info' => "Esta adivinhação já foi adivinhada, obrigado por tentar!"]);
         }
@@ -49,8 +49,8 @@ class RespostaController extends Controller
         $userUuid = $user->uuid;
 
         $countTrysToday = AdivinhacoesRespostas::where('user_id', $userId)
-                ->whereDate('created_at', today())
-                ->count();
+            ->whereDate('created_at', today())
+            ->count();
         $limiteMax = env('MAX_ADIVINHATIONS', 10);
         $countFromIndications = AdicionaisIndicacao::where('user_uuid', $userUuid)->value('value') ?? 0;
 
@@ -120,6 +120,8 @@ class RespostaController extends Controller
         }
 
         try {
+            $limit = env('MAX_ADIVINHATIONS', 10) + $countFromIndications;
+            $trysRestantes = $limit - $countTrysToday;
             if ($acertou) {
                 Cache::forget('adivinhacoes_ativas');
                 Cache::forget('premios_ultimos');
@@ -136,10 +138,10 @@ class RespostaController extends Controller
                 foreach ($admins as $admin) {
                     Mail::to($admin->email)->queue(new AcertoAdminMail($user, $adivinhacao));
                 }
-                return response()->json(['message' => 'acertou', 'responde_code' => $respostaUuid], 200);
+                return response()->json(['message' => 'acertou', 'reply_code' => $respostaUuid,  'trys' => $trysRestantes] , 200);
             }
 
-            return response()->json(['message' => 'ok', 'responde_code' => $respostaUuid], 200);
+            return response()->json(['message' => 'ok', 'reply_code' => $respostaUuid, 'trys' => $trysRestantes], 200);
         } catch (QueryException $e) {
             Log::error('Erro ao adicionar premiação ' . $e->getMessage());
             return response()->json(['error' => 'Não foi possível inserir sua resposta agora, tente novamente mais tarde...']);
