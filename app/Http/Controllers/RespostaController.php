@@ -22,129 +22,170 @@ use Illuminate\Support\Str;
 
 class RespostaController extends Controller
 {
-    /**
-     * Como são milhares de requisições por minuto, eu deixo as insereções no banco de dados por ultimo, primeiro eu verifico se o usuario pode responder, se puder, busco a adivinhação, verifico se ela pode ser respondida, se puder, verifico se ele acertou, se ele acertou, instantanemaneto bloqueio a adivinhação para ningume mais acertar e ai sigo os outros processos que não são tão importantes
-     * 
-     * A tabela de respostas vai ser gigante, então fazemos o minimo de consultas possivel nela pra evitar gargalo no banco
-     * A tebala de respostas tem que estar sempre muito bem indexada
-     */
-
     public function enviar(Request $request)
     {
-        if (!env('ENABLE_REPLY', true)) {
-            return;
-        }
+        if (!$this->respostasHabilitadas()) return;
 
-        if (Cache::get('adivinhacao_resolvida' . $request->input('adivinhacao_id'))) {
+        $adivinhacaoId = $request->input('adivinhacao_id');
+
+        if ($this->adivinhacaoJaResolvida($adivinhacaoId)) {
             return response()->json(['info' => "Esta adivinhação já foi adivinhada, obrigado por tentar!"]);
         }
 
-
-        $data = $request->validate([
-            'resposta'       => 'required|string|max:255',
-            'adivinhacao_id' => 'required|exists:adivinhacoes,id',
-        ]);
-
+        $data = $this->validarRequisicao($request);
         $user = Auth::user();
         $userId = $user->id;
         $userUuid = $user->uuid;
 
-        $countTrysToday = AdivinhacoesRespostas::where('user_id', $userId)
-            ->whereDate('created_at', today())
-            ->count();
-        $limiteMax = env('MAX_ADIVINHATIONS', 10);
-        $countFromIndications = AdicionaisIndicacao::where('user_uuid', $userUuid)->value('value') ?? 0;
-
-        if ($countTrysToday >= $limiteMax && $countFromIndications == 0) {
+        if ($this->ultrapassouLimite($userId, $userUuid)) {
             return response()->json(['info' => "Você já ultilizou todos os seus palpites!"]);
         }
 
         $respostaCliente = mb_strtolower(trim($data['resposta']));
+        $adivinhacao = $this->buscarAdivinhacao($data['adivinhacao_id']);
 
-        $cacheKey = 'adivinhacao_' . $data['adivinhacao_id'];
-        $adivinhacao = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($data) {
-            return Adivinhacoes::find($data['adivinhacao_id']);
-        });
-
-        if ($adivinhacao->resolvida == 'S') {
-            return response()->json(['info' => "Esta adivinhação já foi adivinhada, obrigado por tentar!"]);
-        }
-        if (!empty($adivinhacao->expire_at) && $adivinhacao->expire_at < now()) {
-            return response()->json(['info' => "Esta adivinhação expirou! Obrigado por tentar!"]);
+        if ($this->naoPodeResponder($adivinhacao)) {
+            return response()->json(['info' => "Esta adivinhação já foi adivinhada ou expirou. Obrigado por tentar!"]);
         }
 
         $respostaUuid = (string) Str::uuid();
-
         $acertou = mb_strtolower(trim($adivinhacao->resposta)) === $respostaCliente;
 
         if ($acertou) {
-            Cache::set('adivinhacao_resolvida' . $data['adivinhacao_id'], true);
-
-            $adivinhacao->update(['resolvida' => 'S']);
-
-            $adivinhacao->resolvida = 'S';
-            Cache::put($cacheKey, $adivinhacao, now()->addMinutes(10));
-
-            broadcast(new RespostaAprovada($user->username, $adivinhacao))->toOthers();
-
-            broadcast(new RespostaPrivada(
-                "Você acertou! Seu código de resposta: {$respostaUuid}!!!\n Em breve será notificado do envio do prêmio.",
-                $adivinhacao->id,
-                $userId,
-                "Acertou"
-            ));
+            $this->processarAcerto($adivinhacao, $user, $respostaUuid);
         }
 
-        $jaEnviou = AdivinhacoesRespostas::where([
-            'adivinhacao_id' => $data['adivinhacao_id'],
-            'user_id'        => $userId,
-            'resposta'       => $respostaCliente,
-        ])->exists();
-
-        if ($jaEnviou) {
+        if ($this->respostaJaEnviada($data['adivinhacao_id'], $userId, $respostaCliente)) {
             return response()->json(['info' => 'Você já tentou isso!'], 409);
         }
 
         dispatch(new IncluirResposta([
             'uuid' => $respostaUuid,
             'adivinhacao_id' => $data['adivinhacao_id'],
-            'user_id'        => $userId,
-            'resposta'       => $respostaCliente,
-            'created_at'     => now()
+            'user_id' => $userId,
+            'resposta' => $respostaCliente,
+            'created_at' => now()
         ]));
-        
-        $countTrysToday++;
 
-        if (($countTrysToday >= $limiteMax) && $countFromIndications > 0) {
-            $indicacao = AdicionaisIndicacao::where('user_uuid', $userUuid)->first();
-            if ($indicacao) {
-                $indicacao->decrement('value');
-            }
-        }
+        return $this->responderAoUsuario($acertou, $user, $adivinhacao, $respostaUuid, $userUuid);
+    }
 
+    private function respostasHabilitadas()
+    {
+        return env('ENABLE_REPLY', true);
+    }
+
+    private function adivinhacaoJaResolvida($id)
+    {
+        return Cache::get('adivinhacao_resolvida' . $id);
+    }
+
+    private function validarRequisicao(Request $request)
+    {
+        return $request->validate([
+            'resposta' => 'required|string|max:255',
+            'adivinhacao_id' => 'required|exists:adivinhacoes,id',
+        ]);
+    }
+
+    private function ultrapassouLimite($userId, $userUuid)
+    {
+        $count = AdivinhacoesRespostas::where('user_id', $userId)
+            ->whereDate('created_at', today())
+            ->count();
+        $limite = env('MAX_ADIVINHATIONS', 10);
+        $bonus = AdicionaisIndicacao::where('user_uuid', $userUuid)->value('value') ?? 0;
+
+        return $count >= $limite && $bonus == 0;
+    }
+
+    private function buscarAdivinhacao($id)
+    {
+        $cacheKey = 'adivinhacao_' . $id;
+
+        return Cache::remember($cacheKey, now()->addMinutes(10), function () use ($id) {
+            return Adivinhacoes::find($id);
+        });
+    }
+
+    private function naoPodeResponder($adivinhacao)
+    {
+        return $adivinhacao->resolvida == 'S' || (!empty($adivinhacao->expire_at) && $adivinhacao->expire_at < now());
+    }
+
+    private function processarAcerto($adivinhacao, $user, $respostaUuid)
+    {
+        $cacheKey = 'adivinhacao_' . $adivinhacao->id;
+
+        Cache::set('adivinhacao_resolvida' . $adivinhacao->id, true);
+        $adivinhacao->update(['resolvida' => 'S']);
+        $adivinhacao->resolvida = 'S';
+        Cache::put($cacheKey, $adivinhacao, now()->addMinutes(10));
+
+        broadcast(new RespostaAprovada($user->username, $adivinhacao))->toOthers();
+
+        broadcast(new RespostaPrivada(
+            "Você acertou! Seu código de resposta: {$respostaUuid}!!!\n Em breve será notificado do envio do prêmio.",
+            $adivinhacao->id,
+            $user->id,
+            "Acertou"
+        ));
+    }
+
+    private function respostaJaEnviada($adivinhacaoId, $userId, $resposta)
+    {
+        return AdivinhacoesRespostas::where([
+            'adivinhacao_id' => $adivinhacaoId,
+            'user_id' => $userId,
+            'resposta' => $resposta,
+        ])->exists();
+    }
+
+    private function responderAoUsuario($acertou, $user, $adivinhacao, $respostaUuid, $userUuid)
+    {
         try {
-            $limit = env('MAX_ADIVINHATIONS', 10) + $countFromIndications;
-            $trysRestantes = $limit - $countTrysToday;
+            $count = AdivinhacoesRespostas::where('user_id', $user->id)
+                ->whereDate('created_at', today())
+                ->count();
+
+            $bonus = AdicionaisIndicacao::where('user_uuid', $userUuid)->value('value') ?? 0;
+
+            if (($count >= env('MAX_ADIVINHATIONS', 10)) && $bonus > 0) {
+                $indicacao = AdicionaisIndicacao::where('user_uuid', $userUuid)->first();
+                $indicacao?->decrement('value');
+            }
+
+            $limite = env('MAX_ADIVINHATIONS', 10) + $bonus;
+            $trysRestantes = $limite - $count;
+
             if ($acertou) {
                 Cache::forget('adivinhacoes_ativas');
                 Cache::forget('premios_ultimos');
 
                 AdivinhacoesPremiacoes::create([
-                    'user_id'        => $userId,
-                    'adivinhacao_id' => $data['adivinhacao_id'],
+                    'user_id' => $user->id,
+                    'adivinhacao_id' => $adivinhacao->id,
                 ]);
-                Log::info("Premio adicionado para o usuario $userId");
 
                 Mail::to($user->email)->queue(new AcertoUsuarioMail($user->name, $adivinhacao));
-
                 $admins = User::where('is_admin', 'S')->get();
+
                 foreach ($admins as $admin) {
                     Mail::to($admin->email)->queue(new AcertoAdminMail($user, $adivinhacao));
                 }
-                return response()->json(['message' => 'acertou', 'reply_code' => $respostaUuid,  'trys' => $trysRestantes], 200);
+
+                return response()->json([
+                    'message' => 'acertou',
+                    'reply_code' => $respostaUuid,
+                    'trys' => $trysRestantes,
+                ]);
             }
 
-            return response()->json(['message' => 'ok', 'reply_code' => $respostaUuid, 'trys' => $trysRestantes], 200);
+            return response()->json([
+                'message' => 'ok',
+                'reply_code' => $respostaUuid,
+                'trys' => $trysRestantes,
+            ]);
         } catch (QueryException $e) {
             Log::error('Erro ao adicionar premiação ' . $e->getMessage());
             return response()->json(['error' => 'Não foi possível inserir sua resposta agora, tente novamente mais tarde...']);
