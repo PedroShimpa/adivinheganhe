@@ -6,7 +6,7 @@
         <div class="col-md-10 col-lg-8">
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-primary text-white text-center">
-                    <h4 class="mb-0">🛒 Comprar Tentativas</h4>
+                    <h4 class="mb-0">🛒 Comprar Palpites</h4>
                 </div>
                 <div class="card-body p-4">
                     @if(session('success'))
@@ -27,9 +27,9 @@
                         @csrf
 
                         <div class="mb-3">
-                            <label for="quantidade" class="form-label fw-semibold">Quantidade de tentativas</label>
+                            <label for="quantidade" class="form-label fw-semibold">Quantidade de palpites</label>
                             <input type="number" name="quantidade" id="quantidade" class="form-control" min="{{ env('MIN_ATTEMPT_BUY', 10) }}" step="1" value="{{ env('MIN_ATTEMPT_BUY', 10)}}" required>
-                            <div class="form-text">Mínimo de 10 tentativas. Cada uma custa R$ {{ env('PRICE_PER_ATTEMPT', 0.25)}}.</div>
+                            <div class="form-text">Mínimo de {{ env('MIN_ATTEMPT_BUY', 10)}} palpites. Cada uma custa R$ {{ env('PRICE_PER_ATTEMPT', 0.25)}}.</div>
                              <div class="form-text">
                                 Tentivas compradas são cumulativas e nunca expiram.
                             </div>
@@ -170,7 +170,7 @@ function inicializarCardForm(amount) {
                             payment_method_id,
                             transaction_amount: Number(amount),
                             installments: Number(installments),
-                            description: "Compra de tentativas",
+                            description: "Compra de palpites",
                             payer: {
                                 email,
                                 identification: {
@@ -187,7 +187,7 @@ function inicializarCardForm(amount) {
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Pagamento aprovado!',
-                                text: 'Suas tentativas foram creditadas com sucesso.',
+                                text: 'Seus palpites foram creditados com sucesso.',
                                 confirmButtonText: 'OK'
                             }).then(() => {
                                 window.location.href = "{{ route('home') }}";
