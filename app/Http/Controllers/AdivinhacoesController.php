@@ -100,8 +100,9 @@ class AdivinhacoesController extends Controller
             Adivinhacoes::where('id', $adivinhacaoId)->update($data);
 
             Cache::delete('adivinhacoes_ativas');
-
-            broadcast(new AlertaGlobal('Nova Adivinhação', $data['titulo'] . ' foi atualizada, acesse a pagina inicial para ver'))->toOthers();
+            if ($request->input('enviar_alerta_global') == 'S') {
+                broadcast(new AlertaGlobal('Adivinhação Editada', $data['titulo'] . ' foi atualizada, acesse a pagina inicial para ver'))->toOthers();
+            }
 
             return redirect()->route('adivinhacoes.index', Adivinhacoes::find($adivinhacaoId)->uuid);
         }

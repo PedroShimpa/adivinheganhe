@@ -118,6 +118,14 @@
                         </div>
 
                         <div class="mb-3">
+                            <label class="form-label">{{ __('Enviar Alerta Global?') }}</label>
+                            <select class="form-select" name="enviar_alerta_global" required>
+                                <option value="S">Sim</option>
+                                <option value="N" selected>Não</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
                             <label for="expire_at" class="form-label">{{ __('Expira em') }}</label>
                             <input type="datetime-local"
                                 class="form-control @error('expire_at') is-invalid @enderror"

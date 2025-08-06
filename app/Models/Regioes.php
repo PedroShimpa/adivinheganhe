@@ -23,4 +23,9 @@ class Regioes extends Model
     {
         return 'slug_url';
     }
+
+    public function adivinhacoes()
+    {
+        return $this->hasMany(\App\Models\Adivinhacoes::class, 'regiao_id');
+    }
 }
