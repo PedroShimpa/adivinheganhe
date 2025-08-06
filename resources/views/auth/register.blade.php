@@ -4,7 +4,7 @@
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
-            
+
             {{-- Login com Google destacado --}}
             <div class="text-center mb-4">
                 <a href="{{ route('login.google') }}" class="btn btn-outline-light bg-white border d-flex align-items-center justify-content-center gap-2 shadow-sm py-2 rounded-3">
@@ -19,7 +19,7 @@
                     <h2 class="mb-4 text-center text-primary fw-bold">Criar Conta</h2>
 
                     @error('fingerprint')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
 
                     <form method="POST" action="{{ route('register') }}">
@@ -32,7 +32,7 @@
                             <input id="name" type="text" class="form-control @error('name') is-invalid @enderror"
                                 name="name" value="{{ old('name') }}" required autofocus>
                             @error('name')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
@@ -42,7 +42,7 @@
                             <input id="username" type="text" class="form-control @error('username') is-invalid @enderror"
                                 name="username" value="{{ old('username') }}" required>
                             @error('username')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
@@ -52,7 +52,7 @@
                             <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
                                 name="email" value="{{ old('email') }}" required>
                             @error('email')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
@@ -62,7 +62,7 @@
                             <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror"
                                 name="cpf" value="{{ old('cpf') }}" required>
                             @error('cpf')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                             <div class="form-text">
                                 Só pedimos seu CPF para controle maior de contas. Ele não será exibido e é totalmente protegido.
@@ -75,7 +75,7 @@
                             <input id="whatsapp" type="text" class="form-control @error('whatsapp') is-invalid @enderror"
                                 name="whatsapp" value="{{ old('whatsapp') }}">
                             @error('whatsapp')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                             <div class="form-text">
                                 Usado para informar sobre prêmios e solicitações importantes.
@@ -88,7 +88,7 @@
                             <input id="password" type="password" class="form-control @error('password') is-invalid @enderror"
                                 name="password" required autocomplete="new-password">
                             @error('password')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
@@ -118,7 +118,7 @@
 <script src="https://openfpcdn.io/fingerprintjs/v4"></script>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('#cpf').inputmask('999.999.999-99');
         $('#whatsapp').inputmask('(99) 99999-9999');
 
@@ -128,7 +128,13 @@
             $('input[name="indicated_by"]').val(ib);
         }
 
-        $('form').on('submit', function () {
+        const googleBtn = document.getElementById('google-register-btn');
+        if (googleBtn) {
+            const baseHref = googleBtn.getAttribute('href').split('?')[0];
+            googleBtn.setAttribute('href', `${baseHref}?ib=${encodeURIComponent(ib)}`);
+        }
+
+        $('form').on('submit', function() {
             $(this).find('button[type="submit"]').attr('disabled', true).text('Registrando...');
         });
 
@@ -143,7 +149,9 @@
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                body: JSON.stringify({ fingerprint: visitorId })
+                body: JSON.stringify({
+                    fingerprint: visitorId
+                })
             });
         });
     });
