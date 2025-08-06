@@ -34,21 +34,16 @@ class AdivinhacoesController extends Controller
 
         $respostas = collect([]);
         if (($adivinhacao->resolvida == 'S' || (!empty($adivinhacao->expire_at) && $adivinhacao->expired) || (Auth::check() && auth()->user()->isAdmin()))) {
-            $respostasKey = "respostas_{$adivinhacao->id}_page_" . request()->get('page', 1);
 
-            $respostas = Cache::remember($respostasKey, 3600, function () use ($adivinhacao) {
-                $paginated = AdivinhacoesRespostas::select('adivinhacoes_respostas.uuid', 'users.username', 'adivinhacoes_respostas.created_at', 'resposta')
-                    ->join('users', 'users.id', '=', 'adivinhacoes_respostas.user_id')
-                    ->where('adivinhacao_id', $adivinhacao->id)
-                    ->orderBy('adivinhacoes_respostas.created_at', 'desc')
-                    ->paginate(10);
+            $respostas = AdivinhacoesRespostas::select('adivinhacoes_respostas.uuid', 'users.username', 'adivinhacoes_respostas.created_at', 'resposta')
+                ->join('users', 'users.id', '=', 'adivinhacoes_respostas.user_id')
+                ->where('adivinhacao_id', $adivinhacao->id)
+                ->orderBy('adivinhacoes_respostas.created_at', 'desc')
+                ->paginate(10);
 
-                $paginated->getCollection()->transform(function ($r) {
-                    $r->created_at_br = (new DateTime($r->created_at))->format('d/m/Y H:i:s');
-                    return $r;
-                });
-
-                return $paginated;
+            $respostas->getCollection()->transform(function ($r) {
+                $r->created_at_br = (new DateTime($r->created_at))->format('d/m/Y H:i:s');
+                return $r;
             });
         }
 
