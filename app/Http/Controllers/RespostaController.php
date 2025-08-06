@@ -107,7 +107,7 @@ class RespostaController extends Controller
 
 
         dispatch(new IncluirResposta([
-            'uuid' => Str::uuid(),
+            'uuid' => $respostaUuid,
             'adivinhacao_id' => $data['adivinhacao_id'],
             'user_id'        => $userId,
             'resposta'       => $respostaCliente,
