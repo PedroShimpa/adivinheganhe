@@ -69,7 +69,7 @@
     @if($adivinhacoesExpiradas->isNotEmpty())
     <hr class="my-4">
     <h3 class="mb-3 text-glow">🎯 Adivinhações expiradas</h3>
-    <small class="text-light">Você poderá ver todas as respostas enviadas, não revelaremos a resposta da imagem pois ela pode ser usada novamente no futuro.</small>
+    <small class="text-light">Você poderá ver todas os palpites enviadas, não revelaremos a resposta da imagem pois ela pode ser usada novamente no futuro.</small>
     <div class="row g-3 mt-3">
         @foreach($adivinhacoesExpiradas as $adivinhacao)
         <div class="col-12">

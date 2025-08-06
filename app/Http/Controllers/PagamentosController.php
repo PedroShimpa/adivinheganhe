@@ -25,7 +25,7 @@ class PagamentosController extends Controller
     {
         $quantidade = $request->input('quantidade');
         $valor = $quantidade * env('PRICE_PER_ATTEMPT', 0.25);
-        $desc = "Compra de {$quantidade} tentativas ";
+        $desc = "Compra de {$quantidade} palpites ";
 
         try {
             $pag = Pagamentos::create([

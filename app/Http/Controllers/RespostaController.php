@@ -55,7 +55,7 @@ class RespostaController extends Controller
         $countFromIndications = AdicionaisIndicacao::where('user_uuid', $userUuid)->value('value') ?? 0;
 
         if ($countTrysToday >= $limiteMax && $countFromIndications == 0) {
-            return response()->json(['info' => "Você já ultilizou todas as suas tentativas!"]);
+            return response()->json(['info' => "Você já ultilizou todos os seus palpites!"]);
         }
 
         $respostaCliente = mb_strtolower(trim($data['resposta']));

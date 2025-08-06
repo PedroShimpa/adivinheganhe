@@ -166,14 +166,14 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-4 shadow-5">
                 <div class="modal-header border-0">
-                    <h5 class="modal-title" id="">Suas Respostas
+                    <h5 class="modal-title" id="">Seus Palpites
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body" id="">
                     <table class="table">
                         <thead>
-                            Resposta
+                            Palpite
                         </thead>
                         <tbody id="tbodyRespostas">
 

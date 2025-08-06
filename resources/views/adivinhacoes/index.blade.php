@@ -23,7 +23,7 @@
                         <tr>
                             <th class="text-center">Código</th>
                             <th>Usuário</th>
-                            <th>Resposta</th>
+                            <th>Palpite</th>
                             <th class="text-center">Hora</th>
                         </tr>
                     </thead>

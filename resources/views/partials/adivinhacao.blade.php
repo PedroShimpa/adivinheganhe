@@ -60,19 +60,19 @@
                 @auth
                 <div class="d-flex justify-content-between align-items-center flex-wrap mb-3 gap-2">
                     <button type="button" class="btn btn-success btn-sm rounded-pill verRespostas" adivinhacao_id="{{ $adivinhacao->id}}" data-bs-toggle="modal" data-bs-target="#modalSuasRespostas">
-                        📜 Suas Respostas
+                        📜 Seus Palpites
                     </button>
                 </div>
                 @if($limitExceded)
-                <div class="alert alert-warning small py-2 px-3 rounded-pill">⚠️ Você atingiu o limite de tentativas hoje!</div>
+                <div class="alert alert-warning small py-2 px-3 rounded-pill">⚠️ Você atingiu o limite de palpites hoje!</div>
                 @else
                 @if($adivinhacao->resolvida != 'S')
                 <div class="mb-2">
-                    <input type="text" id="resposta-{{ $adivinhacao->id }}" class="form-control border-primary fw-semibold rounded-3" name="resposta" placeholder="💬 Digite sua resposta">
+                    <input type="text" id="resposta-{{ $adivinhacao->id }}" class="form-control border-primary fw-semibold rounded-3" name="resposta" placeholder="💬 Digite seu palmite">
                 </div>
                 <input type="hidden" name="adivinhacao_id" value="{{ $adivinhacao->id }}">
                 <button class="btn btn-success w-100 rounded-pill py-2 sendResposta" id="btn-resposta-{{ $adivinhacao->id }}" @if($adivinhacao->expired && !empty($adivinhacao->expired_at_br)) disabled @endif>
-                    Enviar resposta
+                    Enviar palpite
                 </button>
                 @else
                 <div class="alert alert-warning small rounded-3 mt-2">

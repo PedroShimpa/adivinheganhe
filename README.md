@@ -19,7 +19,7 @@
 </p>
 
 <p>
-  Atualmente vendemos <b>dicas</b> e <b>tentativas</b> apenas para manter o projeto online. 
+  Atualmente vendemos <b>dicas</b> e <b>palpites</b> apenas para manter o projeto online. 
   No jogo, o usuário tenta adivinhar corretamente um item, que pode ser uma imagem, vídeo ou áudio. Em caso de acerto, ele é premiado!
 </p>
 

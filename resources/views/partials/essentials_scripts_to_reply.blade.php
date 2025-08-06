@@ -11,7 +11,7 @@
       $body.find('.resposta-enviada, .text-danger').remove();
 
       if (!resposta) {
-        $(`<div class="mt-2 text-danger fw-bold">Preencha a resposta primeiro!</div>`).insertAfter($input);
+        $(`<div class="mt-2 text-danger fw-bold">Preencha seu palpite primeiro!</div>`).insertAfter($input);
         return;
       }
 
@@ -45,7 +45,7 @@
           $btn.attr('disabled', false);  
         }
         else {
-          let codigoResposta = json.reply_code ? `<br><small class="text-white">Seu código de resposta: <strong>${json.reply_code}</strong></small>` : '';
+          let codigoResposta = json.reply_code ? `<br><small class="text-white">Seu código de palpite: <strong>${json.reply_code}</strong></small>` : '';
 
           if (json.message === 'acertou') {
             $msg
@@ -61,7 +61,7 @@
               .html(`Que pena, você errou! ${
                 json.trys > 0
                   ? 'Mas ainda possui ' + json.trys + ' tentativa' + (json.trys === 1 ? '' : 's')
-                  : 'Você não possui mais tentativas. Se quiser, pode <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-primary ms-2">comprar mais</a> 😞'
+                  : 'Você não possui mais palpites. Se quiser, pode <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-primary ms-2">comprar mais</a> 😞'
               }${codigoResposta}`);
 
               $('#trysRestantes').html(json.trys)
@@ -72,7 +72,7 @@
         $msg.insertAfter($input);
 
       } catch (error) {
-        Swal.fire('Erro', 'Erro ao enviar a resposta. Tente novamente!', 'error');
+        Swal.fire('Erro', 'Erro ao enviar o palpite. Tente novamente!', 'error');
         $btn.attr('disabled', false);
       }
     });
@@ -114,7 +114,7 @@
       tbody.empty(); // limpa antes
 
       if (!respostas.length) {
-          tbody.append(`<tr><td class="text-muted text-center">Nenhuma resposta enviada ainda.</td></tr>`);
+          tbody.append(`<tr><td class="text-muted text-center">Nenhum palpite enviada ainda.</td></tr>`);
       } else {
           respostas.forEach(resposta => {
               tbody.append(`<tr><td>${resposta.resposta}</td></tr>`);

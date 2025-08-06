@@ -20,7 +20,7 @@
 @if(Auth::check())
 <div class="mb-4 p-4 glass text-center animate__animated animate__fadeInUp">
     <h5 class="mb-3 text-glow">
-        🎯 Indique e ganhe <strong>{{ env('INDICATION_ADICIONAL')}} tentativas</strong>
+        🎯 Indique e ganhe <strong>{{ env('INDICATION_ADICIONAL')}} palpites</strong>
     </h5>
 
     <div class="input-group mb-3 mx-auto" style="max-width: 500px;">
@@ -29,10 +29,10 @@
     </div>
 
     <p class="mb-2">
-        <strong>🎮 Você tem <span id="trysRestantes">{{ $trys }} </span> </strong> tentativas.
+        <strong>🎮 Você tem <span id="trysRestantes">{{ $trys }} </span> </strong> palpites.
         <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-success text-white ms-2">Comprar mais</a>
     </p>
-    <p class="small text-white">🕓 Você recebe {{ env('MAX_ADIVINHATIONS')}} tentativas gratuitas todos os dias (não acumulativas).</p>
+    <p class="small text-white">🕓 Você recebe {{ env('MAX_ADIVINHATIONS')}} palpites gratuitos todos os dias (não acumulativas).</p>
 </div>
 @endif
 
