@@ -222,7 +222,13 @@ class HomeController extends Controller
 
     public function regioes()
     {
-        $regioes = Regioes::orderBy('nome', 'asc')->get();
+        $regioes = Regioes::withCount([
+            'adivinhacoes as count_adivinhacoes' => function ($query) {
+                $query->where('resolvida', 'N');
+            }
+        ])
+            ->orderBy('nome', 'asc')
+            ->get();
         return view('regioes')->with(compact('regioes'));
     }
 
