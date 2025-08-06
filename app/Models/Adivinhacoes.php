@@ -22,7 +22,8 @@ class Adivinhacoes extends Model
         'dica',
         'dica_paga',
         'dica_valor',
-        'regiao_id'
+        'regiao_id',
+        'visualizacoes'
     ];
 
 
