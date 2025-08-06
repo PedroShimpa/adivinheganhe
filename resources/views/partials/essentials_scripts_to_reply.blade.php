@@ -2,7 +2,7 @@
   let tentativas = parseInt($('#tentativas-restantes').text().replace(/\D/g, ''));
 
   $(document).ready(function () {
-    $('.btn-success').on('click', async function () {
+    $('.sendResposta').on('click', async function () {
       const $btn = $(this);
       const $body = $btn.closest('.col-md-7');
       const id = $body.find('[name="adivinhacao_id"]').val();
