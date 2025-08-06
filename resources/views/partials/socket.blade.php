@@ -80,14 +80,18 @@
 
     window.Echo.channel('chat')
         .listen('.MensagemEnviada', e => {
-                var tipo = 'message'
-                @auth
-                if("{{ auth()->user()->username }}" == e.usuario) {
-                    tipo = 'user'
-                }
-                @endauth
+            var tipo = 'message'
+            @auth
+            if("{{ auth()->user()->username }}" == e.usuario) {
+                tipo = 'user'
+            }
+            @endauth
 
-            adicionarMensagem(`${e.usuario}: ${e.mensagem}`, 'message');
+            adicionarMensagem(`${e.usuario}: ${e.mensagem}`, tipo);
+
+            if ($('#chatBody').hasClass('d-none')) {
+                $('#chatNotification').removeClass('d-none');
+            }
         });
 
    
