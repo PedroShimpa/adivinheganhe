@@ -35,13 +35,13 @@ class GoogleController extends Controller
         }
 
         Auth::login($user);
-        return redirect('/home');
+        return redirect()->route('home');
     }
 
     public function showExtraForm()
     {
         $socialUser = session('social_user');
-        if (!$socialUser) return redirect('/');
+        if (!$socialUser) return redirect()->route('home');
 
         return view('auth.register_extra', ['user' => $socialUser]);
     }
@@ -50,7 +50,7 @@ class GoogleController extends Controller
     {
 
         $socialUser = session('social_user');
-        if (!$socialUser) return redirect('/');
+        if (!$socialUser) return redirect()->route('home');
 
         $user = User::create([
             'name' => $socialUser['name'],
