@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\MensagemEnviada;
 use App\Http\Controllers\Controller;
+use App\Jobs\IncluirMensagemChat;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -45,11 +46,11 @@ class ChatController extends Controller
 
             Cache::put('chat_messages', $cachedMessages, now()->addHours(5));
 
-            DB::table('chat_messages')->insert([
+            dispatch(new IncluirMensagemChat([
                 'user_id' => auth()->user()->id,
                 'message' => $messageData['message'],
                 'created_at' => now(),
-            ]);
+            ]));
         } catch (Exception $e) {
             Log::error('Erro ao adicionar mensagem no chat: ' . $e->getMessage());
         }
