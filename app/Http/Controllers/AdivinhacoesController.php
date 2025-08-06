@@ -12,6 +12,7 @@ use App\Http\Requests\UpdateAdivinhacoesRequest;
 use App\Jobs\EnviarNotificacaoNovaAdivinhacao;
 use App\Models\Regioes;
 use DateTime;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
@@ -148,5 +149,11 @@ class AdivinhacoesController extends Controller
         }
 
         return redirect()->route('home');
+    }
+
+    public function findUserReply(Request $request)
+    {
+        $respostas = AdivinhacoesRespostas::select('resposta')->where('adivinhacao_id', $request->adivinhacao_id)->where('user_id', auth()->user()->id)->get();
+        return response()->json($respostas);
     }
 }

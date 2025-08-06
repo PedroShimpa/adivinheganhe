@@ -63,13 +63,12 @@
         }
 
         .navbar-toggler {
-    border-color: rgba(255, 255, 255, 0.7);
-}
+            border-color: rgba(255, 255, 255, 0.7);
+        }
 
-.navbar-toggler-icon {
-    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.9)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
-}
-
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.9)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+        }
     </style>
 
     @stack('head-scripts')
@@ -151,10 +150,37 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-4 shadow-5">
                 <div class="modal-header border-0">
-                    <h5 class="modal-title" id="modalLabel"><h5>
+                    <h5 class="modal-title" id="modalLabel">
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body" id="modalDescricao"></div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalSuasRespostas" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-5">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="">Suas Respostas
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="">
+                    <table class="table">
+                        <thead>
+                            Resposta
+                        </thead>
+                        <tbody id="tbodyRespostas">
+
+                        </tbody>
+                    </table>
+
+                </div>
                 <div class="modal-footer border-0">
                     <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Fechar</button>
                 </div>

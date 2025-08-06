@@ -100,6 +100,37 @@
     });
   });
 
+  @auth
+  $(document).on('click', '.verRespostas', async function () {
+      const adivinhacaoId = $(this).attr('adivinhacao_id');
+
+      const res = await fetch("{{ route('adivinhacoes.respostas_do_usuario') }}", {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+              'Accept': 'application/json'
+          },
+          body: JSON.stringify({ adivinhacao_id: adivinhacaoId })
+      });
+
+      const respostas = await res.json();
+
+      const tbody = $('#tbodyRespostas');
+      tbody.empty(); // limpa antes
+
+      if (!respostas.length) {
+          tbody.append(`<tr><td class="text-muted text-center">Nenhuma resposta enviada ainda.</td></tr>`);
+      } else {
+          respostas.forEach(resposta => {
+              tbody.append(`<tr><td>${resposta.resposta}</td></tr>`);
+          });
+      }
+  });
+  @endauth
+
+
+
   $('.abrirModalInformacoes').click(function() {
     $('#modalLabel').html($(this).attr('titulo'));
     $('#modalDescricao').html($(this).attr('descricao'));
