@@ -79,7 +79,7 @@
 <h2>Estrutura</h2>
 
 <p>
- A ideia do projeto é ser extremamente rapido e competitivo, então estamos usando redis para cache, queues e afins, futuramente protendo inserir as respostas em um banco de dados cassandra por escalar melhor que bancos de dados SQL, por enquanto estamos rodando em um servidor da locaweb com 1Gb ram e 2 Vcpus, a locaweb não é o melhor provedor para sistemas que exigem milhares de requisções, mas por enquanto é o que esta oferecendo melhor custo para seguimento do projeto.
+     A ideia do projeto é ser extremamente rapido e competitivo, então estamos usando redis para cache, queues e afins, futuramente pretendo inserir as respostas em um banco de dados cassandra por escalar melhor que bancos de dados SQL, por enquanto estamos rodando em um servidor da locaweb com 1Gb ram e 2 Vcpus, a locaweb não é o melhor provedor para sistemas que exigem milhares de requisções, mas por enquanto é o que esta oferecendo melhor custo para seguimento do projeto.
 </p>
 <hr>
 
