@@ -94,7 +94,12 @@ class AdivinhacoesController extends Controller
             }
             Adivinhacoes::where('id', $adivinhacaoId)->update($data);
 
-            Cache::delete('adivinhacoes_ativas');
+            if ($request->input('regiao_id')) {
+                Cache::delete('adivinhacoes_ativas_rg_' . $request->input('regiao_id'));
+            } else {
+
+                Cache::delete('adivinhacoes_ativas');
+            }
             if ($request->input('enviar_alerta_global') == 'S') {
                 broadcast(new AlertaGlobal('Adivinhação Editada', $data['titulo'] . ' foi atualizada, acesse a pagina inicial para ver'))->toOthers();
             }
@@ -128,8 +133,12 @@ class AdivinhacoesController extends Controller
             }
 
             $adivinhacao = Adivinhacoes::create($data);
-            Cache::delete('adivinhacoes_ativas');
+            if ($request->input('regiao_id')) {
+                Cache::delete('adivinhacoes_ativas_rg_' . $request->input('regiao_id'));
+            } else {
 
+                Cache::delete('adivinhacoes_ativas');
+            }
             if ($request->input('enviar_alerta_global') == 'S') {
 
                 broadcast(new AlertaGlobal('Nova Adivinhação', $data['titulo'] . ' adicionada, acesse a pagina inicial para ver'))->toOthers();
