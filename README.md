@@ -29,7 +29,7 @@
   <li><b>PHP 8.2+</b></li>
   <li><b>Laravel</b> (framework principal)</li>
   <li><b>Laravel Reverb</b> (WebSocket para comunicação em tempo real)</li>
-  <li><b>Octane + FrankenPHP</b> (ambiente de produção)</li>
+  <li><b>Octane + Swoole</b> (ambiente de produção)</li>
 </ul>
 
 <p><i>Em breve: migração para <b>Swoole</b> para performance ainda melhor!</i></p>
