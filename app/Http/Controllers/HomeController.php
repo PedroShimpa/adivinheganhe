@@ -23,7 +23,7 @@ class HomeController extends Controller
 
         $this->count($trys, $limitExceded);
 
-        $adivinhacoes = Cache::remember('adivinhacoes_ativas', 1200, function () {
+        $adivinhacoes = Cache::remember('adivinhacoes_ativas', 2400, function () {
             return Adivinhacoes::select(
                 'id',
                 'uuid',
@@ -61,7 +61,7 @@ class HomeController extends Controller
         });
 
 
-        $adivinhacoesExpiradas = Cache::remember('adivinhacoes_expiradas', 240, function () {
+        $adivinhacoesExpiradas = Cache::remember('adivinhacoes_expiradas', 2400, function () {
             return Adivinhacoes::select('uuid', 'titulo')
                 ->where('resolvida', 'N')
                 ->whereNotNull('expire_at')
@@ -71,7 +71,7 @@ class HomeController extends Controller
                 ->get();
         });
 
-        $premios = Cache::remember('premios_ultimos', 240, function () {
+        $premios = Cache::remember('premios_ultimos', 2400, function () {
             return AdivinhacoesPremiacoes::select(
                 'adivinhacoes_premiacoes.id',
                 'adivinhacoes.uuid',
@@ -95,7 +95,7 @@ class HomeController extends Controller
 
     public function meusPremios(Request $request)
     {
-        $meusPremios = Cache::remember('meus_premios' . auth()->user()->id, 240, function () {
+        $meusPremios = Cache::remember('meus_premios' . auth()->user()->id, 2400, function () {
             return AdivinhacoesPremiacoes::select(
                 'adivinhacoes_premiacoes.id',
                 'adivinhacoes.uuid',
@@ -124,7 +124,7 @@ class HomeController extends Controller
 
         $this->count($trys, $limitExceded);
 
-        $adivinhacoes = Cache::remember('adivinhacoes_ativas_rg_' . $regiao->id, 1200, function () use ($regiao) {
+        $adivinhacoes = Cache::remember('adivinhacoes_ativas_rg_' . $regiao->id, 2400, function () use ($regiao) {
             return Adivinhacoes::select(
                 'id',
                 'uuid',
@@ -162,7 +162,7 @@ class HomeController extends Controller
         });
 
 
-        $adivinhacoesExpiradas = Cache::remember('adivinhacoes_expiradas_rg_' . $regiao->id, 240, function () use ($regiao) {
+        $adivinhacoesExpiradas = Cache::remember('adivinhacoes_expiradas_rg_' . $regiao->id, 2400, function () use ($regiao) {
             return Adivinhacoes::select('uuid', 'titulo')
                 ->where('resolvida', 'N')
                 ->where('regiao_id', $regiao->id)
@@ -173,7 +173,7 @@ class HomeController extends Controller
                 ->get();
         });
 
-        $premios = Cache::remember('premios_ultimos_rg' . $regiao->id, 240, function () use ($regiao) {
+        $premios = Cache::remember('premios_ultimos_rg' . $regiao->id, 2400, function () use ($regiao) {
             return AdivinhacoesPremiacoes::select(
                 'adivinhacoes_premiacoes.id',
                 'adivinhacoes.uuid',
@@ -198,7 +198,7 @@ class HomeController extends Controller
 
     public function hallOfFame(Request $request)
     {
-        $usuariosComMaisPremios = Cache::remember('hall_of_fame_top10', 240, function () {
+        $usuariosComMaisPremios = Cache::remember('hall_of_fame_top10', 2400, function () {
             return AdivinhacoesPremiacoes::select(
                 'users.username',
                 DB::raw('COUNT(adivinhacoes_premiacoes.id) as count_premiacoes')

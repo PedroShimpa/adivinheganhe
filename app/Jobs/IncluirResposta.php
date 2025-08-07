@@ -23,6 +23,7 @@ class IncluirResposta implements ShouldQueue
      */
     public function handle(): void
     {
+        //Eu chamo o model pra atualizar o cachable também
         AdivinhacoesRespostas::insert($this->data);
     }
 }
