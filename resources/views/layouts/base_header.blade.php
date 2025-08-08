@@ -40,7 +40,7 @@
     <div class="d-flex align-items-center gap-3 text-center text-md-start">
         <i class="bi bi-whatsapp fs-4 text-success"></i>
         <span class="fw-semibold">
-            Entre na nossa <strong>comunidade do WhatsApp</strong> para ser avisado de novos jogos e votar nos nos prêmios.
+            Entre na nossa <strong>comunidade do WhatsApp!</strong> 
         </span>
     </div>
     <a href="{{ env('WHATSAPP_COMUNITY_URL') }}" target="_blank" class="btn btn-success btn-sm rounded-pill px-4">
