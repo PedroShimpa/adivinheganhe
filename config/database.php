@@ -143,42 +143,30 @@ return [
 
     'redis' => [
 
-        'client' => env('REDIS_CLIENT', 'predis'),
-
-        'options' => [
-            'replication' => 'sentinel',
-            'service' => env('REDIS_SENTINEL_SERVICE', 'mymaster'),
-            'parameters' => [
-                'password' => env('REDIS_PASSWORD', null),
-                'database' => 0,
-            ],
-        ],
+        'client' => env('REDIS_CLIENT', 'phpredis-sentinel'),
 
         'default' => [
-            'host' => env('REDIS_HOST', '127.0.0.1'),
-            'password' => env('REDIS_PASSWORD', null),
-            'port' => env('REDIS_PORT', 6379),
-            'database' => 0,
+            'sentinel_host' => env('REDIS_SENTINEL_HOST', '10.0.0.1'),   
+            'sentinel_port' => (int) env('REDIS_SENTINEL_PORT', 26379),
+            'sentinel_service' => env('REDIS_SENTINEL_SERVICE', 'mymaster'),
+            'sentinel_timeout' => (float) env('REDIS_SENTINEL_TIMEOUT', 0),
+            'sentinel_persistent' => env('REDIS_SENTINEL_PERSISTENT', false),
+            'sentinel_retry_interval' => (int) env('REDIS_SENTINEL_RETRY_INTERVAL', 0),
+            'sentinel_read_timeout' => (float) env('REDIS_SENTINEL_READ_TIMEOUT', 0),
+            'sentinel_username' => env('REDIS_SENTINEL_USERNAME'),
+            'sentinel_password' => env('REDIS_SENTINEL_PASSWORD'),
+
+            'password' => env('REDIS_PASSWORD'),
+            'database' => (int) env('REDIS_DB', 0),
         ],
 
         'cache' => [
-            'host' => env('REDIS_HOST', '127.0.0.1'),
-            'password' => env('REDIS_PASSWORD', null),
-            'port' => env('REDIS_PORT', 6379),
-            'database' => 1,
+            'sentinel_host' => env('REDIS_SENTINEL_HOST', '10.0.0.1'),
+            'sentinel_port' => (int) env('REDIS_SENTINEL_PORT', 26379),
+            'sentinel_service' => env('REDIS_SENTINEL_SERVICE', 'mymaster'),
+            'password' => env('REDIS_PASSWORD'),
+            'database' => (int) env('REDIS_CACHE_DB', 1),
         ],
-
-        'sentinel' => [
-            [
-                'host' => env('REDIS_SENTINEL_1_HOST', '10.0.0.1'),
-                'port' => env('REDIS_SENTINEL_1_PORT', 26379),
-            ],
-            [
-                'host' => env('REDIS_SENTINEL_2_HOST', '10.0.0.2'),
-                'port' => env('REDIS_SENTINEL_2_PORT', 26379),
-            ],
-        ],
-
     ],
 
 
