@@ -155,17 +155,17 @@ return [
         ],
 
         'default' => [
-            'host' => null,
+            'host' => env('REDIS_HOST', '127.0.0.1'),
             'password' => env('REDIS_PASSWORD', null),
-            'port' => 6379,
+            'port' => env('REDIS_PORT', 6379),
             'database' => 0,
         ],
 
         'cache' => [
-            'host' => null,
+            'host' => env('REDIS_HOST', '127.0.0.1'),
             'password' => env('REDIS_PASSWORD', null),
-            'port' => 6379,
-            'database' => 1,  // cache em outro database Redis é uma prática comum
+            'port' => env('REDIS_PORT', 6379),
+            'database' => 1,
         ],
 
         'sentinel' => [
