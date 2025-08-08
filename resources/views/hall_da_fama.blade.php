@@ -1,4 +1,5 @@
-@extends('layouts.app')
+@extends('layouts.app', ['enable_adsense' => true])
+
 
 @section('content')
 <div class="container py-4">

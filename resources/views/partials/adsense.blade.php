@@ -1,0 +1,1 @@
+    <meta name="google-adsense-account" content="{{ env('GOOGLE_ADSENSE_TAG') }}" />
