@@ -5,7 +5,16 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <meta name="google-adsense-account" content="{{ env('GOOGLE_ANALYTICS_TAG') }}" />
+    @isset($enable_adsense)
+
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#6a1b9a">
+
+    <!-- iOS support -->
+    <link rel="apple-touch-icon" href="/icons/icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
 
     <title>{{ $title ?? env('APP_NAME', 'Adivinhe e Ganhe') }}</title>
 
@@ -211,6 +220,14 @@
         gtag('config', "{{ env('GOOGLE_ANALYTICS_TAG') }}");
     </script>
     @endif
+
+    <script>
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js")
+            .then(() => console.log("Service Worker registrado!"))
+            .catch(err => console.log("Erro ao registrar Service Worker:", err));
+    }
+    </script>
 
     @stack('scripts')
 </body>
