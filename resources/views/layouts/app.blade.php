@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     @isset($enable_adsense)
+    <meta name="google-adsense-account" content="{{ env('GOOGLE_ADSENSE_TAG') }}" />
+    @endisset
 
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#6a1b9a">
@@ -222,11 +224,11 @@
     @endif
 
     <script>
-    if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("/sw.js")
-            .then(() => console.log("Service Worker registrado!"))
-            .catch(err => console.log("Erro ao registrar Service Worker:", err));
-    }
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/sw.js")
+                .then(() => console.log("Service Worker registrado!"))
+                .catch(err => console.log("Erro ao registrar Service Worker:", err));
+        }
     </script>
 
     @stack('scripts')
