@@ -142,6 +142,13 @@ return [
     */
 
     'redis' => [
+        // Conexão default necessária!
+        'default' => [
+            'host' => null,
+            'password' => env('REDIS_PASSWORD', null),
+            'port' => 6379,
+            'database' => 0,
+        ],
 
         'client' => env('REDIS_CLIENT', 'predis'),
 
