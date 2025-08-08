@@ -142,13 +142,6 @@ return [
     */
 
     'redis' => [
-        // Conexão default necessária!
-        'default' => [
-            'host' => null,
-            'password' => env('REDIS_PASSWORD', null),
-            'port' => 6379,
-            'database' => 0,
-        ],
 
         'client' => env('REDIS_CLIENT', 'predis'),
 
@@ -159,6 +152,20 @@ return [
                 'password' => env('REDIS_PASSWORD', null),
                 'database' => 0,
             ],
+        ],
+
+        'default' => [
+            'host' => null,
+            'password' => env('REDIS_PASSWORD', null),
+            'port' => 6379,
+            'database' => 0,
+        ],
+
+        'cache' => [
+            'host' => null,
+            'password' => env('REDIS_PASSWORD', null),
+            'port' => 6379,
+            'database' => 1,  // cache em outro database Redis é uma prática comum
         ],
 
         'sentinel' => [
