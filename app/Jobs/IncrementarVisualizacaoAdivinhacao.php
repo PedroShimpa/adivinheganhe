@@ -14,6 +14,8 @@ class IncrementarVisualizacaoAdivinhacao implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
+    protected $queue = 'incluir_visualilzacoes';
+
     protected $adivinhacaoId;
 
     public function __construct($adivinhacaoId)
