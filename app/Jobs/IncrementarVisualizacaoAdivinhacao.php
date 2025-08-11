@@ -2,8 +2,6 @@
 
 namespace App\Jobs;
 
-namespace App\Jobs;
-
 use App\Models\Adivinhacoes;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -14,13 +12,14 @@ class IncrementarVisualizacaoAdivinhacao implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $queue = 'incluir_visualilzacoes';
-
     protected $adivinhacaoId;
 
     public function __construct($adivinhacaoId)
     {
         $this->adivinhacaoId = $adivinhacaoId;
+
+        // Define a fila que esse job vai rodar
+        $this->onQueue('incluir_visualizacoes');
     }
 
     public function handle()
