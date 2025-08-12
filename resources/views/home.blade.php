@@ -43,7 +43,7 @@
                                         <p class="mb-2 small">
                                             <strong>Data prevista para envio:</strong>
                                             <span
-                                                class="badge bg-success">{{ new DateTime($premio->previsao_envio_premio)->format('d/m/Y') }}</span>
+                                                class="badge bg-success">{{ (new DateTime($premio->previsao_envio_premio))->format('d/m/Y') }}</span>
                                         </p>
                                     @endif
                                     <p class="mb-2 small">
