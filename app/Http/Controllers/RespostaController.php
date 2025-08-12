@@ -59,13 +59,13 @@ class RespostaController extends Controller
             return response()->json(['info' => 'Você já tentou isso!'], 409);
         }
 
-        dispatch(new IncluirResposta([
+        AdivinhacoesRespostas::insertOrIgnore([
             'uuid' => $respostaUuid,
             'adivinhacao_id' => $data['adivinhacao_id'],
             'user_id' => $userId,
             'resposta' => $respostaCliente,
             'created_at' => now()
-        ]));
+        ]);
 
         return $this->responderAoUsuario($acertou, $user, $adivinhacao, $respostaUuid, $userUuid);
     }
