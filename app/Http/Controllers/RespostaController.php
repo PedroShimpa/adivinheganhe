@@ -101,11 +101,7 @@ class RespostaController extends Controller
 
     private function buscarAdivinhacao($id)
     {
-        $cacheKey = 'adivinhacao_' . $id;
-
-        return Cache::remember($cacheKey, now()->addMinutes(10), function () use ($id) {
-            return Adivinhacoes::find($id);
-        });
+        return Adivinhacoes::find($id);
     }
 
     private function naoPodeResponder($adivinhacao)
