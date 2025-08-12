@@ -22,7 +22,7 @@
 
     window.Echo.channel('adivinhacoes')
         .listen('.resposta.aprovada', e => {
-            $('input[name="resposta"], .btn-success').prop('disabled', true);
+            $('input[name="resposta"], .btn-primary').prop('disabled', true);
             Swal.fire('Adivinhação encerrada', e.mensagem, 'info');
 
             const id = e.adivinhacaoId;
