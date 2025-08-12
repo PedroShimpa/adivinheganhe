@@ -147,7 +147,7 @@ class AdivinhacoesController extends Controller
             $url = route('adivinhacoes.index', $adivinhacao->uuid);
 
             if ($request->input('enviar_email') == 'S') {
-                EnviarNotificacaoNovaAdivinhacao::dispatch($titulo, $url);
+                dispatch(new EnviarNotificacaoNovaAdivinhacao($titulo, $url));
             }
 
             return redirect()->route('adivinhacoes.index', $adivinhacao->uuid);
