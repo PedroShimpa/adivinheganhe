@@ -10,29 +10,29 @@
     Os prêmios são inteiramente pagos por nós, incluindo fretes e afins <strong>(exceto impostos regionais)</strong>.
 </div>
 
-<div class="mb-4 p-3 glass text-center animate__animated animate__fadeInDown">
-    <span class="d-inline-flex align-items-center justify-content-center gap-2 text-glow fs-5">
+<!-- <div class="mb-4 p-3 card text-center animate__animated animate__fadeInDown">
+    <span class="d-inline-flex align-items-center justify-content-center gap-2  fs-5">
         <i class="bi bi-people-fill fs-4"></i>
         <span id="online-count">0</span> jogadores online agora
     </span>
-</div>
+</div> -->
 
 @if(Auth::check())
-<div class="mb-4 p-4 glass text-center animate__animated animate__fadeInUp">
-    <h5 class="mb-3 text-glow">
+<div class="mb-4 p-4 card text-center animate__animated animate__fadeInUp">
+    <h5 class="mb-3 ">
         🎯 Indique e ganhe <strong>{{ env('INDICATION_ADICIONAL')}} palpites</strong>
     </h5>
 
     <div class="input-group mb-3 mx-auto" style="max-width: 500px;">
         <input type="text" id="linkIndicacao" class="form-control rounded-start" value="{{ route('register', ['ib' => auth()->user()->uuid]) }}" readonly>
-        <button class="btn btn-success text-white" id="btnCopiarLink">Copiar link</button>
+        <button class="btn btn-primary text-white" id="btnCopiarLink">Copiar link</button>
     </div>
 
     <p class="mb-2">
         <strong>🎮 Você tem <span id="trysRestantes">{{ $trys }} </span> </strong> palpites.
-        <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-success text-white ms-2">Comprar mais</a>
+        <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-primary text-white ms-2">Comprar mais</a>
     </p>
-    <p class="small text-white">🕓 Você recebe {{ env('MAX_ADIVINHATIONS')}} palpites gratuitos todos os dias (não acumulativas).</p>
+    <p class="small text-dark">🕓 Você recebe {{ env('MAX_ADIVINHATIONS')}} palpites gratuitos todos os dias (não acumulativas).</p>
 </div>
 @endif
 
@@ -43,7 +43,7 @@
             Entre na nossa <strong>comunidade do WhatsApp!</strong> 
         </span>
     </div>
-    <a href="{{ env('WHATSAPP_COMUNITY_URL') }}" target="_blank" class="btn btn-success btn-sm rounded-pill px-4">
+    <a href="{{ env('WHATSAPP_COMUNITY_URL') }}" target="_blank" class="btn btn-primary btn-sm rounded-pill px-4">
         Participar agora
     </a>
 </div>

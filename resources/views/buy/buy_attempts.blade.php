@@ -88,7 +88,7 @@
                             <input type="email" id="form-checkout__cardholderEmail" class="form-control">
                         </div>
 
-                        <button type="submit" id="form-checkout__submit" class="btn btn-success w-100 py-2 fs-5">
+                        <button type="submit" id="form-checkout__submit" class="btn btn-primary w-100 py-2 fs-5">
                             💳 Confirmar Compra
                         </button>
 

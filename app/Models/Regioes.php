@@ -28,4 +28,15 @@ class Regioes extends Model
     {
         return $this->hasMany(\App\Models\Adivinhacoes::class, 'regiao_id');
     }
+
+    public function getAll()
+    {
+        return $this->withCount([
+            'adivinhacoes as count_adivinhacoes' => function ($query) {
+                $query->where('resolvida', 'N');
+            }
+        ])
+            ->orderBy('nome', 'asc')
+            ->get();
+    }
 }
