@@ -10,20 +10,10 @@ class IncluirResposta implements ShouldQueue
 {
     use Queueable;
 
-    /**
-     * Create a new job instance.
-     */
-    public function __construct(private array $data)
-    {
-        //
-    }
+    public function __construct(private array $data) {}
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
-        //Eu chamo o model pra atualizar o cachable também
         AdivinhacoesRespostas::insertOrIgnore($this->data);
     }
 }

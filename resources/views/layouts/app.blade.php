@@ -60,7 +60,7 @@
             box-shadow: 0 0 20px #00f7ff, 0 0 30px #00f7ff;
         }
 
-        .text-glow {
+        . {
             color: #00f7ff;
             text-shadow: 0 0 5px #00f7ff, 0 0 10px #00f7ff;
         }
@@ -87,9 +87,9 @@
 
 <body class="bg-dark text-white d-flex flex-column min-vh-100">
 
-    <nav class="navbar navbar-expand-lg fixed-top glass shadow-lg py-3 px-4">
+    <nav class="navbar navbar-expand-sm fixed-top bg-dark  shadow-lg py-3 px-4">
         <div class="container">
-            <a class="navbar-brand text-glow fs-4" href="{{ route('home') }}">
+            <a class="navbar-brand  text-white fs-4" href="{{ route('home') }}">
                 🎮 {{ env('APP_NAME', 'Adivinhe e Ganhe') }}
             </a>
 
@@ -149,8 +149,8 @@
         @yield('content')
     </main>
 
-    <footer class="text-center py-4 mt-auto glass animate__animated animate__fadeInUp">
-        <h5 class="fw-bold text-glow">Adivinhe e Ganhe</h5>
+    <footer class="text-center py-4 mt-auto bg-dark animate__animated animate__fadeInUp">
+        <h5 class="fw-bold ">Adivinhe e Ganhe</h5>
         <p class="text-light mb-1">Projeto de código aberto criado e mantido por <span class="text-info">Pedro "Shimpa" Falconi</span></p>
         <a href="https://github.com/PedroShimpa/adivinheganhe" class="text-warning text-decoration-none" target="_blank">
             github.com/PedroShimpa/adivinheganhe

@@ -79,7 +79,7 @@ Route::post('/broadcasting/auth-mixed', function (Request $request) {
     );
 });
 
-Route::get('/r', [HomeController::class, 'regioes'])->name('regioes.index');
+Route::get('/r', [HomeController::class, 'getRegioes'])->name('regioes.index');
 Route::get('/r/{regiao}', [HomeController::class, 'get_by_region'])->name('adivinhacoes.buscar_por_regiao');
 
 Route::get('login/google', [GoogleController::class, 'redirectToGoogle'])->name('login.google');

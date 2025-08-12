@@ -84,9 +84,9 @@
       $input[0].setSelectionRange(0, 99999);
 
       navigator.clipboard.writeText($input.val()).then(() => {
-        $btn.text('Copiado!').removeClass('btn-outline-primary').addClass('btn-success');
+        $btn.text('Copiado!').removeClass('btn-outline-primary').addClass('btn-primary');
         setTimeout(() => {
-          $btn.text('Copiar link').removeClass('btn-success').addClass('btn-outline-primary');
+          $btn.text('Copiar link').removeClass('btn-primary').addClass('btn-primary');
         }, 2000);
       }).catch(() => {
         Swal.fire('Erro', 'Não foi possível copiar o link. Por favor, tente manualmente.', 'error');

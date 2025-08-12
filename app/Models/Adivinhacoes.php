@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Adivinhacoes extends Model
 {
-    use HasFactory;
+    use HasFactory, Cachable;
 
     protected $fillable = [
         'titulo',
@@ -26,7 +27,6 @@ class Adivinhacoes extends Model
         'visualizacoes'
     ];
 
-
     protected $dates = [
         'expire_at'
     ];
@@ -34,6 +34,81 @@ class Adivinhacoes extends Model
     public function getRouteKeyName()
     {
         return 'uuid';
+    }
+
+    public function getAtivas()
+    {
+        return $this->select(
+            'id',
+            'uuid',
+            'titulo',
+            'imagem',
+            'descricao',
+            'premio',
+            'expire_at',
+            'dica',
+            'dica_paga',
+            'dica_valor',
+            'created_at'
+        )
+            ->whereNull('regiao_id')
+            ->where('resolvida', 'N')
+            ->where('exibir_home', 'S')
+            ->where(function ($q) {
+                $q->where('expire_at', '>', now());
+                $q->orWhereNull('expire_at');
+            })
+            ->orderBy('id', 'desc')
+            ->get();
+    }
+
+    public function getByRegion(int $regiaoId)
+    {
+        return $this->select(
+            'id',
+            'uuid',
+            'titulo',
+            'imagem',
+            'descricao',
+            'premio',
+            'expire_at',
+            'dica',
+            'dica_paga',
+            'dica_valor',
+            'created_at'
+        )
+            ->where('regiao_id', $regiaoId)
+            ->where('resolvida', 'N')
+            ->where('exibir_home', 'S')
+            ->where(function ($q) {
+                $q->where('expire_at', '>', now());
+                $q->orWhereNull('expire_at');
+            })
+            ->orderBy('id', 'desc')
+            ->get();
+    }
+
+    public function getExpiradasByRegion(int $regiaoId)
+    {
+        return $this->select('uuid', 'titulo')
+            ->where('resolvida', 'N')
+            ->where('regiao_id', $regiaoId)
+            ->whereNotNull('expire_at')
+            ->where('expire_at', '<', now())
+            ->orderBy('expire_at', 'desc')
+            ->limit(10)
+            ->get();
+    }
+
+    public function getExpiradas()
+    {
+        return $this->select('uuid', 'titulo')
+            ->where('resolvida', 'N')
+            ->whereNotNull('expire_at')
+            ->where('expire_at', '<', now())
+            ->orderBy('expire_at', 'desc')
+            ->limit(10)
+            ->get();
     }
 
     protected static function booted()

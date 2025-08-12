@@ -18,7 +18,6 @@ class IncrementarVisualizacaoAdivinhacao implements ShouldQueue
     {
         $this->adivinhacaoId = $adivinhacaoId;
 
-        // Define a fila que esse job vai rodar
         $this->onQueue('incluir_visualizacoes');
     }
 

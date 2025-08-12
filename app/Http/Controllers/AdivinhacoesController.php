@@ -14,7 +14,6 @@ use App\Models\Regioes;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Laravel\Facades\Image;
@@ -94,12 +93,6 @@ class AdivinhacoesController extends Controller
             }
             Adivinhacoes::where('id', $adivinhacaoId)->update($data);
 
-            if ($request->input('regiao_id')) {
-                Cache::delete('adivinhacoes_ativas_rg_' . $request->input('regiao_id'));
-            } else {
-
-                Cache::delete('adivinhacoes_ativas');
-            }
             if ($request->input('enviar_alerta_global') == 'S') {
                 broadcast(new AlertaGlobal('Adivinhação Editada', $data['titulo'] . ' foi atualizada, acesse a pagina inicial para ver'))->toOthers();
             }
@@ -133,12 +126,6 @@ class AdivinhacoesController extends Controller
             }
 
             $adivinhacao = Adivinhacoes::create($data);
-            if ($request->input('regiao_id')) {
-                Cache::delete('adivinhacoes_ativas_rg_' . $request->input('regiao_id'));
-            } else {
-
-                Cache::delete('adivinhacoes_ativas');
-            }
             if ($request->input('enviar_alerta_global') == 'S') {
 
                 broadcast(new AlertaGlobal('Nova Adivinhação', $data['titulo'] . ' adicionada, acesse a pagina inicial para ver'))->toOthers();

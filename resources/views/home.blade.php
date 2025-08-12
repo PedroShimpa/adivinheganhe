@@ -19,17 +19,17 @@
 
         @if ($premios->isNotEmpty())
             <hr class="my-4">
-            <h3 class="mb-3 text-glow">🎉 Últimos premiados</h3>
+            <h3 class="mb-3 ">🎉 Últimos premiados</h3>
             <div class="row g-3">
                 @foreach ($premios as $premio)
-                    <div class="col-12">
-                        <div class="glass p-4 h-100 animate__animated animate__fadeInUp">
+                    <div class="col-12 ">
+                        <div class=" p-4 h-100 animate__animated animate__fadeInUp card">
                             <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
                                 <div class="flex-grow-1">
-                                    <h6 class="fw-bold text-white mb-1">{{ $premio->titulo }}</h6>
+                                    <h6 class="fw-bold  mb-1">{{ $premio->titulo }}</h6>
                                     <p class="mb-2"><strong>Resposta:</strong> <span
                                             class="text-light">{{ $premio->resposta }}</span></p>
-                                    <p class="mb-2 small text-white">👤 <strong>Usuário:</strong> {{ $premio->username }}
+                                    <p class="mb-2 small ">👤 <strong>Usuário:</strong> {{ $premio->username }}
                                     </p>
                                     <p class="mb-2 small">
                                         <strong>Vencedor notificado?</strong>
@@ -59,10 +59,10 @@
                                     @php $isLink = filter_var($premio->premio, FILTER_VALIDATE_URL); @endphp
                                     @if ($isLink)
                                         <a href="{{ $premio->premio }}" target="_blank"
-                                            class="btn btn-sm btn-outline-primary rounded-pill px-3">🎁 Ver prêmio</a>
+                                            class="btn btn-sm btn-primary rounded-pill px-3">🎁 Ver prêmio</a>
                                     @endif
                                     <a href="{{ route('adivinhacoes.index', $premio->uuid) }}" target="_blank"
-                                        class="btn btn-sm btn-outline-success rounded-pill px-3">🔍 Ver Adivinhação</a>
+                                        class="btn btn-sm btn-primary rounded-pill px-3">🔍 Ver Adivinhação</a>
                                 </div>
                             </div>
                         </div>
@@ -73,7 +73,7 @@
 
         @if ($adivinhacoesExpiradas->isNotEmpty())
             <hr class="my-4">
-            <h3 class="mb-3 text-glow">🎯 Adivinhações expiradas</h3>
+            <h3 class="mb-3 ">🎯 Adivinhações expiradas</h3>
             <small class="text-light">Você poderá ver todas os palpites enviadas, não revelaremos a resposta da imagem pois
                 ela pode ser usada novamente no futuro.</small>
             <div class="row g-3 mt-3">
