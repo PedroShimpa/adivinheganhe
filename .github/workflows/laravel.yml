@@ -41,14 +41,6 @@ jobs:
       - name: Generate key
         run: php artisan key:generate
 
-      - name: Wait for MySQL
-        run: |
-          for i in {1..30}; do
-            mysqladmin ping -h mysql -uroot -proot && break
-            echo "Waiting for MySQL..."
-            sleep 1
-          done
-
       - name: Run migrations
         run: php artisan migrate --seed
 
