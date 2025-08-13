@@ -78,12 +78,15 @@ class AdivinhacoesController extends Controller
             $hash = Str::random(10);
             $fileName = $hash . '_' . time() . '.webp';
             if (!empty($imagem) && !$imagem->getClientOriginalExtension() != 'webp') {
+                $filePath = 'imagens_adivinhacoes/' . $fileName;
 
-                $image = Image::read($imagem)->encodeByExtension('webp', 85);
+                Storage::disk('s3')->put($filePath, (string) $imagem);
 
-                Storage::disk('public')->put('imagens_adivinhacoes/' . $fileName, (string) $image);
+                $urlImagem = Storage::disk('s3')->url($filePath);
 
-                $data['imagem'] = 'imagens_adivinhacoes/' . $fileName;
+                $data['imagem'] = $urlImagem;
+
+                $data['descricao'] = $request->input('descricao');
             }
 
             $data['descricao'] = $request->input('descricao');
@@ -115,9 +118,14 @@ class AdivinhacoesController extends Controller
 
             $image = Image::read($imagem)->encodeByExtension('webp', 85);
 
-            Storage::disk('public')->put('imagens_adivinhacoes/' . $fileName, (string) $image);
+            $filePath = 'imagens_adivinhacoes/' . $fileName;
 
-            $data['imagem'] = 'imagens_adivinhacoes/' . $fileName;
+            Storage::disk('s3')->put($filePath, (string) $image);
+
+            $urlImagem = Storage::disk('s3')->url($filePath);
+
+            $data['imagem'] = $urlImagem;
+
             $data['descricao'] = $request->input('descricao');
 
 
