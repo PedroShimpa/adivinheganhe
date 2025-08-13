@@ -67,9 +67,7 @@ jobs:
             git pull origin master
             composer install --optimize-autoloader
             php artisan migrate --force
-            php artisan config:clear
-            php artisan route:clear
+            php artisan route:cache
             php artisan cache:clear
-            php artisan config:cache
             systemctl restart octane
       
