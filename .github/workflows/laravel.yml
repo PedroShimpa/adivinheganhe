@@ -63,7 +63,7 @@ jobs:
           script: |
             cd /var/www/adivinheganhe
             git pull origin master
-            composer install --no-dev --optimize-autoloader
+            composer install --optimize-autoloader
             php artisan migrate --force
             php artisan config:clear
             php artisan route:clear
