@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Traits;
 
-use App\Jobs\IncrementarVisualizacaoAdivinhacao;
 use App\Models\Adivinhacoes;
 use App\Models\DicasCompras;
 use DateTime;
