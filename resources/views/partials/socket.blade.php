@@ -8,8 +8,8 @@
     window.Echo = new EchoCtor({
         broadcaster: 'pusher',
         key: '{{ env("REVERB_APP_KEY") }}',
-        wsHost: '{{ env("VITE_REVERB_HOST", "localhost") }}',
-        wsPort: '{{ env("VITE_REVERB_PORT", 8080) }}',
+        wsHost: '{{ env("VITE_REVERB_HOST", "adivinheganhe.com.br") }}',
+        wsPort: '{{ env("VITE_REVERB_PORT", 443) }}',
         forceTLS: false,
         disableStats: true,
         authEndpoint: '/broadcasting/auth-mixed',
