@@ -68,6 +68,7 @@ jobs:
             composer install --optimize-autoloader
             php artisan migrate --force
             php artisan route:cache
+            php artisan view:clear
             php artisan cache:clear
             systemctl restart octane
       
