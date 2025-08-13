@@ -5,7 +5,7 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PagamentosController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UsersController;
 use App\Http\Controllers\RespostaController;
 use App\Http\Controllers\SuporteController;
 use Illuminate\Http\Request;
@@ -19,9 +19,9 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/salvar_fingerprint', [HomeController::class, 'saveFingerprint'])->name('salvar_fingerprint');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile', [UsersController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [UsersController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [UsersController::class, 'destroy'])->name('profile.destroy');
 });
 
 Route::middleware('auth')->group(function () {

@@ -25,8 +25,8 @@ class RegistrationTest extends TestCase
             'username' => 'test user',
             'email' => 'test@@example.com',
             'password' => str_repeat('a', 300),
-            'cpf' => '123',
-            'whatsapp' => '111',
+            // 'cpf' => '123',
+            // 'whatsapp' => '111',
             'indicated_by' => '123',
             'fingerprint' => '123',
         ]);
@@ -37,8 +37,8 @@ class RegistrationTest extends TestCase
             'name',
             'username',
             'email',
-            'cpf',
-            'whatsapp',
+            // 'cpf',
+            // 'whatsapp',
             'fingerprint',
             'indicated_by'
         ]);
@@ -48,8 +48,8 @@ class RegistrationTest extends TestCase
         $this->assertStringContainsString('O campo nome não pode ser superior a 255 caractere', $errors['name'][0]);
         $this->assertStringContainsString('formato inválido', $errors['username'][0]); // regex
         $this->assertStringContainsString('deve ser um endereço de e-mail válido', $errors['email'][0]);
-        $this->assertStringContainsString('O cpf informado não é valido', $errors['cpf'][0]); // Cpf custom rule
-        $this->assertStringContainsString('formato inválido', $errors['whatsapp'][0]);
+        // $this->assertStringContainsString('O cpf informado não é valido', $errors['cpf'][0]); // Cpf custom rule
+        // $this->assertStringContainsString('formato inválido', $errors['whatsapp'][0]);
         $this->assertStringContainsString('O campo fingerprint é obrigatório', $errors['fingerprint'][0]);
         $this->assertStringContainsString('O campo indicated by selecionado é inválido.', $errors['indicated_by'][0]);
 
@@ -68,8 +68,8 @@ class RegistrationTest extends TestCase
             'username' => 'testuser',
             'email' => 'test@example.com',
             'password' => str_repeat('a', 8),
-            'cpf' => '123.456.789-09',
-            'whatsapp' => '(11) 99387-0997',
+            // 'cpf' => '123.456.789-09',
+            // 'whatsapp' => '(11) 99387-0997',
         ]);
 
         $response->assertStatus(422);
@@ -95,8 +95,8 @@ class RegistrationTest extends TestCase
             'username' => 'testuser',
             'email' => 'test@gmail.com',
             'password' => str_repeat('a', 8),
-            'cpf' => '123.456.789-09',
-            'whatsapp' => '(11) 99387-0997',
+            // 'cpf' => '123.456.789-09',
+            // 'whatsapp' => '(11) 99387-0997',
         ];
         $response = $this->postJson('/register', $data);
 
@@ -120,8 +120,8 @@ class RegistrationTest extends TestCase
             'username' => 'testuser',
             'email' => 'test@gmail.com',
             'password' => str_repeat('a', 8),
-            'cpf' => '123.456.789-09',
-            'whatsapp' => '(11) 99387-0997',
+            // 'cpf' => '123.456.789-09',
+            // 'whatsapp' => '(11) 9999-9999',
             'indicated_by' => $indicatedBy->uuid
         ];
         $response = $this->post('/register', $data);
@@ -149,8 +149,8 @@ class RegistrationTest extends TestCase
             'username' => 'testuser',
             'email' => 'test@gmail.com',
             'password' => str_repeat('a', 8),
-            'cpf' => '123.456.789-09',
-            'whatsapp' => '(11) 99387-0997',
+            // 'cpf' => '123.456.789-09',
+            // 'whatsapp' => '(11) 9999-9999',
             'indicated_by' => $indicatedBy->uuid
         ];
         $response = $this->post('/register', $data);

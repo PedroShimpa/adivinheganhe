@@ -24,7 +24,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/9.1.0/mdb.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
@@ -36,7 +36,7 @@
 
     <style>
         body {
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Poppins', sans-serif;
             background: linear-gradient(145deg, #0f0c29, #302b63, #24243e);
             color: #fff;
             min-height: 100vh;
@@ -58,11 +58,6 @@
         .btn-glow:hover {
             transform: scale(1.05);
             box-shadow: 0 0 20px #00f7ff, 0 0 30px #00f7ff;
-        }
-
-        . {
-            color: #00f7ff;
-            text-shadow: 0 0 5px #00f7ff, 0 0 10px #00f7ff;
         }
 
         .nav-link {
@@ -120,6 +115,7 @@
                             {{ Auth::user()->name }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Perfil</a></li>
                             <li><a class="dropdown-item" href="{{ route('meus_premios') }}">Meus Prêmios</a></li>
                             @if(auth()->user()->isAdmin())
                             <li><a class="dropdown-item" href="{{ route('adivinhacoes.create') }}">Nova Adivinhação</a></li>
@@ -198,7 +194,6 @@
             </div>
         </div>
     </div>
-
 
     <script src="https://code.jquery.com/jquery-3.7.0.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
