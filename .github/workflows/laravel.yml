@@ -62,11 +62,13 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /var/www/seu_projeto
-            git pull origin main
+            cd /var/www/adivinheganhe
+            git pull origin master
             composer install --no-dev --optimize-autoloader
             php artisan migrate --force
             php artisan config:clear
             php artisan route:clear
             php artisan cache:clear
             php artisan config:cache
+            systemctl restart octane
+      
