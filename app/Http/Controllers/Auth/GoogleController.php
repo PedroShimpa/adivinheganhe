@@ -23,15 +23,27 @@ class GoogleController extends Controller
         $user = User::where('email', $googleUser->getEmail())->first();
 
         if (!$user) {
-            session([
-                'social_user' => [
-                    'name' => $googleUser->getName(),
-                    'email' => $googleUser->getEmail(),
-                    'google_id' => $googleUser->getId(),
-                ]
-            ]);
+            if (!$user) {
+                $usernameBase = preg_replace('/\s+/', '', $googleUser->getName());
+                $username = $usernameBase . rand(1, 10); 
 
-            return redirect()->route('register.extra');
+                $user = User::create([
+                    'name' => $googleUser->getName(),
+                    'username' => $username,
+                    'email' => $googleUser->getEmail(),
+                    'password' => bcrypt(uniqid()),
+                    'email_verified_at' => now(),
+                    'indicated_by' => session('indicated_by')
+                ]);
+
+                Auth::login($user);
+
+                return redirect()->route('home');
+            }
+
+            Auth::login($user);
+
+            return redirect()->route('home');
         }
 
         Auth::login($user);
