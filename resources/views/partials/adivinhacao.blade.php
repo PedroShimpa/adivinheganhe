@@ -2,7 +2,7 @@
     <div class="row g-0 flex-wrap">
         <div class="col-12 col-md-5">
             <img
-                src="{{ str_contains($adivinhacao->imagem, env('AWS_URL')) ? $adivinhacao->imagem :  asset('storage/' . $adivinhacao->imagem) }}"
+                src="{{ str_starts_with($adivinhacao->imagem, 'http') ? $adivinhacao->imagem :  asset('/storage/' . $adivinhacao->imagem) }}"
                 class="img-fluid rounded-4 w-100"
                 alt="Imagem da adivinhação"
                 loading="lazy"
