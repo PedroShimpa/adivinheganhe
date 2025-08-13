@@ -10,12 +10,17 @@
     Os prêmios são inteiramente pagos por nós, incluindo fretes e afins <strong>(exceto impostos regionais)</strong>.
 </div>
 
-<!-- <div class="mb-4 p-3 card text-center animate__animated animate__fadeInDown">
-    <span class="d-inline-flex align-items-center justify-content-center gap-2  fs-5">
-        <i class="bi bi-people-fill fs-4"></i>
-        <span id="online-count">0</span> jogadores online agora
-    </span>
-</div> -->
+@if(Auth::check() && !auth()->user()->whatsapp)
+<div class="alert alert-warning text-center rounded-0 mb-3 animate__animated animate__fadeInDown">
+    <strong>📱 Você ainda não cadastrou seu WhatsApp!</strong><br>
+    Você precisa dele cadastrado para receber os prêmios em caso de acerto.<br>
+    Cadastre agora mesmo:
+    <a href="{{ route('profile.edit') }}" class="text-decoration-underline fw-bold">
+        {{ auth()->user()->name }} → Perfil
+    </a>
+</div>
+@endif
+
 
 @if(Auth::check())
 <div class="mb-4 p-4 card text-center animate__animated animate__fadeInUp">
@@ -40,7 +45,7 @@
     <div class="d-flex align-items-center gap-3 text-center text-md-start">
         <i class="bi bi-whatsapp fs-4 text-success"></i>
         <span class="fw-semibold">
-            Entre na nossa <strong>comunidade do WhatsApp!</strong> 
+            Entre na nossa <strong>comunidade do WhatsApp!</strong>
         </span>
     </div>
     <a href="{{ env('WHATSAPP_COMUNITY_URL') }}" target="_blank" class="btn btn-primary btn-sm rounded-pill px-4">
