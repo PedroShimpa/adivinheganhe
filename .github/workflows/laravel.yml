@@ -31,11 +31,12 @@ jobs:
           php-version: '8.4'
           extensions: mbstring, bcmath, intl, pdo_mysql
 
+      - name: Copy .env
+        run: cp .env.example .env
+        
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
 
-      - name: Copy .env
-        run: cp .env.example .env
 
       - name: Generate key
         run: php artisan key:generate
