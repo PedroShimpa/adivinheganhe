@@ -78,9 +78,12 @@ class AdivinhacoesController extends Controller
             $hash = Str::random(10);
             $fileName = $hash . '_' . time() . '.webp';
             if (!empty($imagem) && !$imagem->getClientOriginalExtension() != 'webp') {
+
+                $image = Image::read($imagem)->encodeByExtension('webp', 85);
+                
                 $filePath = 'imagens_adivinhacoes/' . $fileName;
 
-                Storage::disk('s3')->put($filePath, (string) $imagem);
+                Storage::disk('s3')->put($filePath, (string) $image);
 
                 $urlImagem = Storage::disk('s3')->url($filePath);
 
