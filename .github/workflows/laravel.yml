@@ -15,7 +15,7 @@ jobs:
           - 3306:3306
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: testing
+          MYSQL_DATABASE: adivinheganhe_test
         options: >-
           --health-cmd="mysqladmin ping -h localhost"
           --health-interval=10s
@@ -28,7 +28,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.4'
           extensions: mbstring, bcmath, intl, pdo_mysql
 
       - name: Install dependencies

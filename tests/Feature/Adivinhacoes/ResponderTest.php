@@ -72,7 +72,7 @@ class ResponderTest extends TestCase
         
         $response->assertStatus(200);
 
-        $response->assertJson(["info" => "Esta adivinhação já foi adivinhada, obrigado por tentar!"]);
+        $response->assertJson(["info" => "Esta adivinhação já foi adivinhada ou expirou. Obrigado por tentar!"]);
     }
 
     public function test_reply_expired_adivinhacao(): void
@@ -95,6 +95,6 @@ class ResponderTest extends TestCase
 
         $response->assertStatus(200);
 
-        $response->assertJson(["info" => "Esta adivinhação expirou! Obrigado por tentar!"]);
+        $response->assertJson(["info" => "Esta adivinhação já foi adivinhada ou expirou. Obrigado por tentar!"]);
     }
 }
