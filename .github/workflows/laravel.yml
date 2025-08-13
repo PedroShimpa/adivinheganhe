@@ -63,7 +63,7 @@ jobs:
           script: |
             cd /var/www/adivinheganhe
             rm composer.lock
-            git stash .
+            git stash
             git pull origin master
             composer install --optimize-autoloader
             php artisan migrate --force
