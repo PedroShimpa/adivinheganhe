@@ -32,8 +32,8 @@ jobs:
           extensions: mbstring, bcmath, intl, pdo_mysql
 
       - name: Copy .env
-        run: cp .env.example .env
-        
+        run: cp .env.example.testing .env
+
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
 
