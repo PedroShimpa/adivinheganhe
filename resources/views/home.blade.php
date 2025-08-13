@@ -79,7 +79,7 @@
             <div class="row g-3 mt-3">
                 @foreach ($adivinhacoesExpiradas as $adivinhacao)
                     <div class="col-12">
-                        <div class="glass p-4 h-100 animate__animated animate__fadeInUp">
+                        <div class="card p-4 h-100 animate__animated animate__fadeInUp">
                             <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
                                 <div class="flex-grow-1">
                                     <h6 class="fw-bold text-primary mb-1">{{ $adivinhacao->titulo }} - Expirada</h6>
