@@ -7,6 +7,4 @@ services:
     container_name: adivinheganhe_app
     volumes:
       - .:/var/www
-    ports:
-      - "8000:8000"
     restart: unless-stopped
