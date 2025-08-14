@@ -1,20 +1,18 @@
 FROM php:8.4-cli
 
-# Instalar dependências do sistema e extensões do PHP
+# Dependências do sistema
 RUN apt-get update && apt-get install -y \
     git unzip pkg-config libzip-dev libpng-dev libjpeg-dev libonig-dev libxml2-dev \
     libssl-dev libcurl4-openssl-dev libbrotli-dev \
-    && docker-php-ext-install zip pdo pdo_mysql gd bcmath \
-    && pecl install swoole \
-    && docker-php-ext-enable swoole \
+    && docker-php-ext-install zip pdo pdo_mysql gd bcmath pcntl \
+    && pecl install swoole redis \
+    && docker-php-ext-enable swoole redis \
     && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install pcntl
-
-# Instalar Composer
+# Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Configuração PHP customizada
+# PHP ini customizado
 COPY .docker/php.ini /usr/local/etc/php/php.ini
 
 WORKDIR /var/www
