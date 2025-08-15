@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class AdivinhacoesRespostas extends Model
 {
-    use Cachable;
+    // use Cachable;
     
     const UPDATED_AT = null;
 
