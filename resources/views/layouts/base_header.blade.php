@@ -5,11 +5,6 @@
 </div>
 @endif
 
-<div class="alert alert-info text-center rounded-0 mb-3 shadow-sm border-start border-4 border-primary animate__animated animate__fadeInDown">
-    <strong>🎁 Em caso de acerto, você não será cobrado de nada!</strong><br>
-    Os prêmios são inteiramente pagos por nós, incluindo fretes e afins <strong>(exceto impostos regionais)</strong>.
-</div>
-
 @if(Auth::check() && !auth()->user()->whatsapp)
 <div class="alert alert-warning text-center rounded-0 mb-3 animate__animated animate__fadeInDown">
     <strong>📱 Você ainda não cadastrou seu WhatsApp!</strong><br>

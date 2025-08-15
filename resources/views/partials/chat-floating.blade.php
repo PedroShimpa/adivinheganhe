@@ -13,7 +13,7 @@
 
     </div>
 
-    <div id="chatBody" class="flex-grow-1 overflow-auto px-3 pb-3 d-none"
+    <div id="chatBody" class="flex-grow-1 overflow-auto px-3 pb-3"
         style="background: rgba(0, 0, 0, 0.25); border-radius: 0 0 1rem 1rem;">
         <div id="chatMessages" class="mb-3" style="max-height: 320px; overflow-y: auto;">
         </div>
@@ -121,7 +121,6 @@
             }
         });
 
-
         @auth
         async function enviarMensagem(texto) {
             if (!texto.trim()) return;
@@ -171,7 +170,6 @@
                 $chatMessages.scrollTop($chatMessages[0].scrollHeight);
             }
         }
-
         carregarMensagens();
 
     });
