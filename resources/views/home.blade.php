@@ -28,7 +28,7 @@
                                 <div class="flex-grow-1">
                                     <h6 class="fw-bold  mb-1">{{ $premio->titulo }}</h6>
                                     <p class="mb-2"><strong>Resposta:</strong> <span
-                                            class="text-light">{{ $premio->resposta }}</span></p>
+                                            class="text-dark">{{ $premio->resposta }}</span></p>
                                     <p class="mb-2 small ">👤 <strong>Usuário:</strong> {{ $premio->username }}
                                     </p>
                                     <p class="mb-2 small">
@@ -74,7 +74,7 @@
         @if ($adivinhacoesExpiradas->isNotEmpty())
             <hr class="my-4">
             <h3 class="mb-3 ">🎯 Adivinhações expiradas</h3>
-            <small class="text-light">Você poderá ver todas os palpites enviadas, não revelaremos a resposta da imagem pois
+            <small class="text-dark">Você poderá ver todas os palpites enviados, não revelaremos a resposta da imagem pois
                 ela pode ser usada novamente no futuro.</small>
             <div class="row g-3 mt-3">
                 @foreach ($adivinhacoesExpiradas as $adivinhacao)
