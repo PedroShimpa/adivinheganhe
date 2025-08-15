@@ -24,6 +24,9 @@ trait CountTrys
             $limit = env('MAX_ADIVINHATIONS', 10) + $countFromIndications;
             $limitExceded = $countTrysToday >= env('MAX_ADIVINHATIONS', 10) && $countFromIndications == 0;
             $trys = $limit - $countTrysToday;
+            if($trys < 0) {
+                $trys = 0;
+            }
         }
     }
 }

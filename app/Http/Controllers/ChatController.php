@@ -20,7 +20,7 @@ class ChatController extends Controller
         }
         $messages = ChatMessages::select('users.username as usuario', 'message as mensagem')
             ->join('users', 'users.id', '=', 'chat_messages.user_id')
-            ->orderBy('chat_messages.id', 'desc')
+            ->orderBy('chat_messages.id', 'asc')
             ->limit(200)
             ->get()
             ->toArray();
@@ -42,7 +42,7 @@ class ChatController extends Controller
 
             dispatch(new IncluirMensagemChat([
                 'user_id' => auth()->user()->id,
-                'message' => $messageData['message'],
+                'message' => $request->input('message'),
                 'created_at' => now(),
             ]));
         } catch (Exception $e) {
