@@ -26,12 +26,13 @@ class UpdateAdivinhacoesRequest extends FormRequest
             'imagem' => ['file'],
             'descricao'  => ['string'],
             'premio'  => ['string'],
-            'resposta'=> ['string'],
+            'resposta' => ['string'],
             'dica' => ['string', 'nullable'],
             'dica_paga' => ['string', 'size:1'],
-            'dica_valor' => [ 'nullable'],
+            'dica_valor' => ['nullable'],
             'expire_at' => ['nullable'],
-            'regiao_id' => ['nullable', 'exists:regioes,id']
+            'regiao_id' => ['nullable', 'exists:regioes,id'],
+            'formato_resposta' => ['nullable']
         ];
     }
 }

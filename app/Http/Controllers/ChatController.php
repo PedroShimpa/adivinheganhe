@@ -5,19 +5,26 @@ namespace App\Http\Controllers;
 use App\Events\MensagemEnviada;
 use App\Http\Controllers\Controller;
 use App\Jobs\IncluirMensagemChat;
-use Illuminate\Support\Facades\Cache;
+use App\Models\ChatMessages;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Exception;
 
 class ChatController extends Controller
 {
+
     public function get_messages()
     {
         if (!env('ENABLE_CHAT', true)) {
             return;
         }
-        return response()->json(Cache::get('chat_messages', []));
+        $messages = ChatMessages::select('users.username as usuario', 'message as mensagem')
+            ->join('users', 'users.id', '=', 'chat_messages.user_id')
+            ->orderBy('chat_messages.id', 'desc')
+            ->limit(200)
+            ->get()
+            ->toArray();
+        return response()->json($messages);
     }
 
     public function store(Request $request)
@@ -31,19 +38,7 @@ class ChatController extends Controller
                 'message' => 'required|string'
             ]);
 
-            $messageData = [
-                'user' => auth()->user()->username,
-                'message' => $request->input('message'),
-                'created_at' => now(),
-            ];
-
-            event(new MensagemEnviada($messageData['user'], $messageData['message']));
-
-            $cachedMessages = Cache::get('chat_messages', []);
-            $cachedMessages = array_slice($cachedMessages, -199);
-            $cachedMessages[] = $messageData;
-
-            Cache::put('chat_messages', $cachedMessages, now()->addHours(5));
+            event(new MensagemEnviada(auth()->user()->username, $request->input('message')));
 
             dispatch(new IncluirMensagemChat([
                 'user_id' => auth()->user()->id,
