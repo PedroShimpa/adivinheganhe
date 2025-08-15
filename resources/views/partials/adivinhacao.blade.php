@@ -21,6 +21,11 @@
                     {{ $adivinhacao->titulo. (!empty($adivinhacao->expired_at_br) && $adivinhacao->expired ? ' - EXPIRADA' : '') }}
                 </h5>
 
+                @if(!empty($adivinhacao->formato_resposta))
+                <p class="text-info small mb-2">
+                    Formato da resposta: <strong>{{ $adivinhacao->formato_resposta }}</strong>
+                </p>
+                @else
                 @if(!empty($adivinhacao->expired_at_br))
                 <p class="text-info small mb-2">
                     Expira em <strong>{{ $adivinhacao->expired_at_br }}</strong>

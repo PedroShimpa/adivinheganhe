@@ -165,9 +165,7 @@
 
             if (Array.isArray(mensagens)) {
                 mensagens.forEach(msg => {
-                    adicionarMensagem(`${msg.user}: ${msg.message}`, 'message');
-
-                    ;
+                    adicionarMensagem(`${msg.usuario}: ${msg.mensagem}`, 'message');;
                 });
 
                 $chatMessages.scrollTop($chatMessages[0].scrollHeight);

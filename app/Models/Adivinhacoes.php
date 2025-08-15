@@ -5,7 +5,6 @@ namespace App\Models;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Adivinhacoes extends Model
@@ -25,7 +24,8 @@ class Adivinhacoes extends Model
         'dica_paga',
         'dica_valor',
         'regiao_id',
-        'visualizacoes'
+        'visualizacoes',
+        'formato_resposta'
     ];
 
     protected $dates = [
@@ -50,7 +50,8 @@ class Adivinhacoes extends Model
             'dica',
             'dica_paga',
             'dica_valor',
-            'created_at'
+            'created_at',
+            'formato_resposta'
         )
             ->whereNull('regiao_id')
             ->where('resolvida', 'N')
@@ -76,7 +77,8 @@ class Adivinhacoes extends Model
             'dica',
             'dica_paga',
             'dica_valor',
-            'created_at'
+            'created_at',
+            'formato_resposta'
         )
             ->where('regiao_id', $regiaoId)
             ->where('resolvida', 'N')
@@ -121,5 +123,4 @@ class Adivinhacoes extends Model
             }
         });
     }
-
 }

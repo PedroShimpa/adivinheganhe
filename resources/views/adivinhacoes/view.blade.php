@@ -64,6 +64,14 @@
                         </div>
 
                         <div class="mb-3">
+                            <label for="titulo" class="form-label">{{ __('Formato Resposta') }}</label>
+                            <input type="text" class="form-control @error('formato_resposta') is-invalid @enderror" id="formato_resposta" name="formato_resposta" value="{{ old('formato_resposta',  $adivinhacao->formato_resposta) }}">
+                            @error('titulo')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
                             <label for="imagem" class="form-label">{{ __('Imagem') }}</label>
                             <input class="form-control @error('imagem') is-invalid @enderror"
                                 type="file"
