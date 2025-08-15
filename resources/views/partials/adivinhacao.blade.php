@@ -25,7 +25,7 @@
                 <p class="text-info small mb-2">
                     Formato da resposta: <strong>{{ $adivinhacao->formato_resposta }}</strong>
                 </p>
-                @else
+                @endif
                 @if(!empty($adivinhacao->expired_at_br))
                 <p class="text-info small mb-2">
                     Expira em <strong>{{ $adivinhacao->expired_at_br }}</strong>
