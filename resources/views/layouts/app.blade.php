@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     @isset($enable_adsense)
-    <meta name="google-adsense-account" content="{{ env('GOOGLE_ADSENSE_TAG') }}" />
+    <meta name="google-adsense-account" content="{{ env('GOOGLE_ADSENSE_TAG', 'ca-pub-2128338486173774') }}" />
     @endisset
 
     <link rel="manifest" href="/manifest.json">
@@ -217,6 +217,11 @@
         gtag('config', "{{ env('GOOGLE_ANALYTICS_TAG') }}");
     </script>
     @endif
+
+     @isset($enable_adsense)
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{  env('GOOGLE_ADSENSE_TAG', 'ca-pub-2128338486173774')}}"
+     crossorigin="anonymous"></script>
+    @endisset
 
     @stack('scripts')
 </body>
