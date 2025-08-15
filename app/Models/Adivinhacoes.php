@@ -18,6 +18,7 @@ class Adivinhacoes extends Model
         'premio',
         'resposta',
         'resolvida',
+        'liberado_at',
         'expire_at',
         'exibir_home',
         'dica',
@@ -51,7 +52,7 @@ class Adivinhacoes extends Model
             'dica_paga',
             'dica_valor',
             'created_at',
-            'formato_resposta'
+            'formato_resposta',
         )
             ->whereNull('regiao_id')
             ->where('resolvida', 'N')
@@ -59,6 +60,10 @@ class Adivinhacoes extends Model
             ->where(function ($q) {
                 $q->where('expire_at', '>', now());
                 $q->orWhereNull('expire_at');
+            })
+            ->where(function ($q) {
+                $q->where('liberado_at', '>', now());
+                $q->orWhereNull('liberado_at');
             })
             ->orderBy('id', 'desc')
             ->get();
@@ -86,6 +91,10 @@ class Adivinhacoes extends Model
             ->where(function ($q) {
                 $q->where('expire_at', '>', now());
                 $q->orWhereNull('expire_at');
+            })
+            ->where(function ($q) {
+                $q->where('liberado_at', '>', now());
+                $q->orWhereNull('liberado_at');
             })
             ->orderBy('id', 'desc')
             ->get();

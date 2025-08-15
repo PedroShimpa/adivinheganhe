@@ -102,6 +102,14 @@
                         </div>
 
                         <div class="mb-3">
+                            <label for="liberado_at" class="form-label">{{ __('Liberar em') }}</label>
+                            <input type="datetime-local" class="form-control @error('liberado_at') is-invalid @enderror" id="liberado_at" name="liberado_at" value="{{ old('liberado_at', now()->addHours(6)->format('Y-m-d\TH:i')) }}">
+                            @error('liberado_at')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
                             <label for="expire_at" class="form-label">{{ __('Expira em') }}</label>
                             <input type="datetime-local" class="form-control @error('expire_at') is-invalid @enderror" id="expire_at" name="expire_at" value="{{ old('expire_at', now()->addHours(6)->format('Y-m-d\TH:i')) }}">
                             @error('expire_at')

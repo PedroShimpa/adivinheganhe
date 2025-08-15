@@ -136,6 +136,10 @@ class AdivinhacoesController extends Controller
                 $data['expire_at'] = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i', $data['expire_at'])->format('Y-m-d H:i:s');
             }
 
+            if (!empty($data['liberado_at'])) {
+                $data['liberado_at'] = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i', $data['liberado_at'])->format('Y-m-d H:i:s');
+            }
+
             $adivinhacao = Adivinhacoes::create($data);
             if ($request->input('enviar_alerta_global') == 'S') {
 
