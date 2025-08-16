@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Adivinhacoes extends Model
 {
-    use HasFactory;
+    use HasFactory, Cachable;
 
     protected $fillable = [
         'titulo',
@@ -61,7 +62,7 @@ class Adivinhacoes extends Model
                 $q->orWhereNull('expire_at');
             })
             ->where(function ($q) {
-                $q->where('liberado_at', '>', now());
+                $q->where('liberado_at', '<=', now());
                 $q->orWhereNull('liberado_at');
             })
             ->orderBy('id', 'desc')
@@ -92,7 +93,7 @@ class Adivinhacoes extends Model
                 $q->orWhereNull('expire_at');
             })
             ->where(function ($q) {
-                $q->where('liberado_at', '>', now());
+                $q->where('liberado_at', '<=', now());
                 $q->orWhereNull('liberado_at');
             })
             ->orderBy('id', 'desc')

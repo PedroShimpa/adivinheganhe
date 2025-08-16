@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class AdivinhacoesPremiacoes extends Model
 {
-
+    use Cachable;
 
     protected $table = 'adivinhacoes_premiacoes';
 
