@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Adivinhacoes extends Model
 {
-    use HasFactory, Cachable;
+    use HasFactory;
 
     protected $fillable = [
         'titulo',
