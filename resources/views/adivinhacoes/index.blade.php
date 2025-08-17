@@ -1,5 +1,18 @@
 @extends('layouts.app', ['enable_adsense' => true])
+@push('head-content')
+    <meta name="description" content="{{ Str::limit(strip_tags($adivinhacao->descricao), 150) }}">
 
+    <meta property="og:title" content="{{ $adivinhacao->titulo }}">
+    <meta property="og:description" content="{{ Str::limit(strip_tags($adivinhacao->descricao), 150) }}">
+    <meta property="og:image" content="{{ str_starts_with($adivinhacao->imagem, 'http') ? $adivinhacao->imagem : asset('/storage/' . $adivinhacao->imagem) }}">
+    <meta property="og:url" content="{{ route('adivinhacoes.index', $adivinhacao->uuid) }}">
+    <meta property="og:type" content="website">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $adivinhacao->titulo }}">
+    <meta name="twitter:description" content="{{ Str::limit(strip_tags($adivinhacao->descricao), 150) }}">
+    <meta name="twitter:image" content="{{ str_starts_with($adivinhacao->imagem, 'http') ? $adivinhacao->imagem : asset('/storage/' . $adivinhacao->imagem) }}">
+@endpush
 
 @section('content')
 <div class="container py-4">
