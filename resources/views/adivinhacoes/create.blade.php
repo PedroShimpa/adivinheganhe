@@ -111,7 +111,7 @@
 
                         <div class="mb-3">
                             <label for="expire_at" class="form-label">{{ __('Expira em') }}</label>
-                            <input type="datetime-local" class="form-control @error('expire_at') is-invalid @enderror" id="expire_at" name="expire_at" value="{{ old('expire_at', now()->addHours(6)->format('Y-m-d\TH:i')) }}">
+                            <input type="datetime-local" class="form-control @error('expire_at') is-invalid @enderror" id="expire_at" name="expire_at" value="{{ old('expire_at', now()->addDays(3)->format('Y-m-d\TH:i')) }}">
                             @error('expire_at')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
