@@ -17,9 +17,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-
+    
+    
     <title>{{ $title ?? env('APP_NAME', 'Adivinhe e Ganhe') }}</title>
-
+    
+    @stack('head-content')
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
