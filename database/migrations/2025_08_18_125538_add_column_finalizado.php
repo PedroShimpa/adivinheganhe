@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('adivinhe_o_milhao_inicio_jogo', function (Blueprint $table) {
+        Schema::table('adivinhe_o_milhao_inicio_jogo', function (Blueprint $table) {
             $table->boolean('finalizado')->default(0);
         });
     }
