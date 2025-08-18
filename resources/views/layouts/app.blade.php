@@ -17,10 +17,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-    
-    
+
+
     <title>{{ $title ?? env('APP_NAME', 'Adivinhe e Ganhe') }}</title>
-    
+
     @stack('head-content')
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -109,9 +109,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('hall_da_fama') }}">Hall</a>
                     </li>
-                    <!-- <li class="nav-item"> -->
-                        <!-- <a class="nav-link" href="{{ route('adivinhe_o_milhao.index') }}">Adivinhe o Milhão</a> -->
-                    <!-- </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('adivinhe_o_milhao.index') }}">Adivinhe o Milhão</a>
+                    </li>
 
                     @auth
                     <li class="nav-item dropdown">
@@ -224,9 +224,9 @@
     </script>
     @endif
 
-     @isset($enable_adsense)
+    @isset($enable_adsense)
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{  env('GOOGLE_ADSENSE_TAG', 'ca-pub-2128338486173774')}}"
-     crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>
     @endisset
 
     @stack('scripts')
