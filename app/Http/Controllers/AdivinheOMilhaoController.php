@@ -132,7 +132,7 @@ class AdivinheOMilhaoController extends Controller
             return redirect()->route('adivinhe_o_milhao.pergunta');
         }
 
-        $this->jogando()->update(['finalizado' => 1]);
+        $this->jogando($request)->update(['finalizado' => 1]);
 
         return redirect()->route('adivinhe_o_milhao.errou');
     }
