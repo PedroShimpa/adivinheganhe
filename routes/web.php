@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/adivinhe-o-milhao/voce-ganhou', [AdivinheOMilhaoController::class, 'voce_ganhou'])->name('adivinhe_o_milhao.voce_ganhou');
     Route::get('/adivinhe-o-milhao/create-pergunta', [AdivinheOMilhaoController::class, 'create'])->name('adivinhe_o_milhao.create_pergunta');
     Route::post('/adivinhe-o-milhao/create-pergunta', [AdivinheOMilhaoController::class, 'store'])->name('adivinhe_o_milhao.store_pergunta');
+    Route::get('/adivinhe-o-milhao/errou', [AdivinheOMilhaoController::class, 'errou'])->name('adivinhe_o_milhao.errou');
 });
 
 Route::get('/chat', [ChatController::class, 'get_messages'])->name('chat.buscar');
