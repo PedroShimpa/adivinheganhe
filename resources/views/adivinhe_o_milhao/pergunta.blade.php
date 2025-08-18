@@ -20,27 +20,27 @@
 
                     {{-- Exibir arquivo se existir --}}
                     @if(!empty($pergunta['arquivo']))
-                        <div class="text-center mb-4">
-                            @php
-                                $ext = pathinfo($pergunta['arquivo'], PATHINFO_EXTENSION);
-                            @endphp
+                    <div class="text-center mb-4">
+                        @php
+                        $ext = pathinfo($pergunta['arquivo'], PATHINFO_EXTENSION);
+                        @endphp
 
-                            @if(in_array(strtolower($ext), ['jpg','jpeg','png','gif','webp']))
-                                <img src="{{ asset('storage/'.$pergunta['arquivo']) }}" 
-                                     class="img-fluid rounded shadow" 
-                                     alt="Imagem da pergunta">
-                            @elseif(in_array(strtolower($ext), ['mp3','wav','ogg']))
-                                <audio controls class="w-100 mt-2">
-                                    <source src="{{ asset('storage/'.$pergunta['arquivo']) }}" type="audio/{{ $ext }}">
-                                    Seu navegador não suporta áudio.
-                                </audio>
-                            @elseif(in_array(strtolower($ext), ['mp4','webm','mov']))
-                                <video controls class="w-100 rounded mt-2">
-                                    <source src="{{ asset('storage/'.$pergunta['arquivo']) }}" type="video/{{ $ext }}">
-                                    Seu navegador não suporta vídeo.
-                                </video>
-                            @endif
-                        </div>
+                        @if(in_array(strtolower($ext), ['jpg','jpeg','png','gif','webp']))
+                        <img src="{{ asset('storage/'.$pergunta['arquivo']) }}"
+                            class="img-fluid rounded shadow"
+                            alt="Imagem da pergunta">
+                        @elseif(in_array(strtolower($ext), ['mp3','wav','ogg']))
+                        <audio controls class="w-100 mt-2">
+                            <source src="{{ asset('storage/'.$pergunta['arquivo']) }}" type="audio/{{ $ext }}">
+                            Seu navegador não suporta áudio.
+                        </audio>
+                        @elseif(in_array(strtolower($ext), ['mp4','webm','mov']))
+                        <video controls class="w-100 rounded mt-2">
+                            <source src="{{ asset('storage/'.$pergunta['arquivo']) }}" type="video/{{ $ext }}">
+                            Seu navegador não suporta vídeo.
+                        </video>
+                        @endif
+                    </div>
                     @endif
 
                     {{-- Formulário de resposta --}}
@@ -50,14 +50,16 @@
 
                         <div class="mb-4">
                             <label for="resposta" class="form-label fw-bold">Digite sua resposta:</label>
-                            <input type="text" name="resposta" id="resposta" 
-                                   class="form-control form-control-lg rounded-pill text-center"
-                                   placeholder="Sua resposta aqui..." required autofocus>
+                            <input type="text" name="resposta" id="resposta"
+                                class="form-control form-control-lg rounded-pill text-center"
+                                placeholder="Sua resposta aqui..." required autofocus
+                                onpaste="return false" oncopy="return false" oncut="return false">
+
                         </div>
 
                         <div class="text-center">
-                            <button type="submit" 
-                                    class="btn btn-lg btn-success px-5 py-2 rounded-pill shadow fw-bold">
+                            <button type="submit"
+                                class="btn btn-lg btn-success px-5 py-2 rounded-pill shadow fw-bold">
                                 ✅ Responder
                             </button>
                         </div>
@@ -84,5 +86,24 @@
             window.location.href = "{{ route('home') }}";
         }
     }, 1000);
+
+    const respostaInput = document.getElementById('resposta');
+
+    respostaInput.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'v') {
+            e.preventDefault();
+            alert('Colar não é permitido!');
+        }
+    });
+
+    respostaInput.addEventListener('paste', function(e) {
+        e.preventDefault();
+        alert('Colar não é permitido!');
+    });
+
+    respostaInput.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        alert('Colar não é permitido!');
+    });
 </script>
 @endsection
