@@ -17,8 +17,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-
-
     <title>{{ $title ?? env('APP_NAME', 'Adivinhe e Ganhe') }}</title>
 
     @stack('head-content')
@@ -37,11 +35,20 @@
     </noscript>
 
     <style>
+        html, body {
+            height: 100%;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(145deg, #0f0c29, #302b63, #24243e);
             color: #fff;
-            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1 0 auto;
             padding-top: 4.5rem;
         }
 
@@ -84,9 +91,9 @@
 
 <body class="bg-dark text-white d-flex flex-column min-vh-100">
 
-    <nav class="navbar navbar-expand-sm fixed-top bg-dark  shadow-lg py-3 px-4">
+    <nav class="navbar navbar-expand-sm fixed-top bg-dark shadow-lg py-3 px-4">
         <div class="container">
-            <a class="navbar-brand  text-white fs-4" href="{{ route('home') }}">
+            <a class="navbar-brand text-white fs-4" href="{{ route('home') }}">
                 🎮 {{ env('APP_NAME', 'Adivinhe e Ganhe') }}
             </a>
 
@@ -97,21 +104,11 @@
 
             <div class="collapse navbar-collapse" id="navbarContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 d-flex align-items-center gap-3">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('regioes.index') }}">Regiões</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('suporte.index') }}">Suporte</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('sobre') }}">Sobre</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('hall_da_fama') }}">Hall</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('adivinhe_o_milhao.index') }}">Adivinhe o Milhão</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('regioes.index') }}">Regiões</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('suporte.index') }}">Suporte</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('sobre') }}">Sobre</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('hall_da_fama') }}">Hall</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('adivinhe_o_milhao.index') }}">Adivinhe o Milhão</a></li>
 
                     @auth
                     <li class="nav-item dropdown">
@@ -126,9 +123,7 @@
                             <li><a class="dropdown-item" href="{{ route('adivinhacoes.create') }}">Nova Adivinhação</a></li>
                             <li><a class="dropdown-item" href="{{ route('adivinhe_o_milhao.create_pergunta') }}">Nova Pergunta Adivinhe o Milhão</a></li>
                             @endif
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
+                            <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
@@ -138,9 +133,7 @@
                         </ul>
                     </li>
                     @else
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('login') }}">Entrar</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Entrar</a></li>
                     @endauth
                 </ul>
             </div>
@@ -152,54 +145,15 @@
     </main>
 
     <footer class="text-center py-4 mt-auto bg-dark animate__animated animate__fadeInUp">
-        <h5 class="fw-bold ">Adivinhe e Ganhe</h5>
+        <h5 class="fw-bold">Adivinhe e Ganhe</h5>
         <p class="text-light mb-1">Projeto de código aberto criado e mantido por <span class="text-info">Pedro "Shimpa" Falconi</span></p>
         <a href="https://github.com/PedroShimpa/adivinheganhe" class="text-warning text-decoration-none" target="_blank">
             github.com/PedroShimpa/adivinheganhe
         </a>
     </footer>
 
-    <div class="modal fade" id="modalInformacoes" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 shadow-5">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title" id="modalLabel">
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body" id="modalDescricao"></div>
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Fechar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="modalSuasRespostas" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 shadow-5">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title" id="">Seus Palpites
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body" id="">
-                    <table class="table">
-                        <thead>
-                            Palpite
-                        </thead>
-                        <tbody id="tbodyRespostas">
-
-                        </tbody>
-                    </table>
-
-                </div>
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Fechar</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    {{-- Modais --}}
+    @include('partials.modals')
 
     <script src="https://code.jquery.com/jquery-3.7.0.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
@@ -210,15 +164,11 @@
     @include('partials.chat-floating')
     @endif
 
-
     @if(env('GOOGLE_ANALYTICS_TAG'))
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ env('GOOGLE_ANALYTICS_TAG') }}"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
+        function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', "{{ env('GOOGLE_ANALYTICS_TAG') }}");
     </script>
