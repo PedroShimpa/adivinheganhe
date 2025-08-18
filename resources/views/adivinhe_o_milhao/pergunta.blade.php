@@ -26,17 +26,17 @@
                         @endphp
 
                         @if(in_array(strtolower($ext), ['jpg','jpeg','png','gif','webp']))
-                        <img src="{{ asset('storage/'.$pergunta['arquivo']) }}"
+                        <img src="{{ str_starts_with($pergunta['arquivo'], 'http') ? $pergunta['arquivo'] :  asset('/storage/' . $pergunta['arquivo'])  }}"
                             class="img-fluid rounded shadow"
                             alt="Imagem da pergunta">
                         @elseif(in_array(strtolower($ext), ['mp3','wav','ogg']))
                         <audio controls class="w-100 mt-2">
-                            <source src="{{ asset('storage/'.$pergunta['arquivo']) }}" type="audio/{{ $ext }}">
+                            <source src="{{ str_starts_with($pergunta['arquivo'], 'http') ? $pergunta['arquivo'] :  asset('/storage/' . $pergunta['arquivo'])  }}" type="audio/{{ $ext }}">
                             Seu navegador não suporta áudio.
                         </audio>
                         @elseif(in_array(strtolower($ext), ['mp4','webm','mov']))
                         <video controls class="w-100 rounded mt-2">
-                            <source src="{{ asset('storage/'.$pergunta['arquivo']) }}" type="video/{{ $ext }}">
+                            <source src="{{ str_starts_with($pergunta['arquivo'], 'http') ? $pergunta['arquivo'] :  asset('/storage/' . $pergunta['arquivo'])  }}" type="video/{{ $ext }}">
                             Seu navegador não suporta vídeo.
                         </video>
                         @endif
