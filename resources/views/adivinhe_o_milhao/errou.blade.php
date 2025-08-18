@@ -14,37 +14,11 @@
 
                 <div class="card-body text-center p-5">
 
-                    @isset($pergunta)
-                    <h5 class="fw-bold mb-2">Pergunta</h5>
-                    <p class="fs-5 mb-4">
-                        {{ is_array($pergunta) ? ($pergunta['descricao'] ?? '') : ($pergunta->descricao ?? '') }}
-                    </p>
-                    @endisset
-
-                    @isset($resposta_correta)
-                    <div class="alert alert-success rounded-pill fw-semibold mx-auto" style="max-width: 640px;">
-                        ✅ Resposta correta: <span class="ms-1">{{ $resposta_correta }}</span>
-                    </div>
-                    @endisset
-
                     <div class="d-flex justify-content-center gap-3 flex-wrap mt-4">
                         <a href="{{ route('home') }}"
                             class="btn btn-lg btn-outline-primary px-5 py-3 rounded-pill shadow fw-bold">
                             🏠 Voltar para a Página Inicial
                         </a>
-
-                        @auth
-                        <a href="{{ route('jogo.iniciar') }}"
-                            class="btn btn-lg btn-primary px-5 py-3 rounded-pill shadow fw-bold">
-                            🔁 Tentar Novamente
-                        </a>
-                        @else
-                        <div class="w-100 text-muted">Você precisa estar logado para jogar.</div>
-                        <a href="{{ route('login') }}"
-                            class="btn btn-lg btn-primary px-5 py-3 rounded-pill shadow fw-bold">
-                            🔑 Entrar
-                        </a>
-                        @endauth
                     </div>
 
                 </div>
