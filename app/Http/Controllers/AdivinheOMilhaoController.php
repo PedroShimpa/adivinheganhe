@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePerguntaAdivinheOMilhaoRequest;
+use App\Models\AdivinheOMilhao\Adicionais;
 use App\Models\AdivinheOMilhao\InicioJogo;
 use App\Models\AdivinheOMilhao\Perguntas;
 use App\Models\AdivinheOMilhao\Respostas;
@@ -10,7 +11,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Intervention\Image\Laravel\Facades\Image;
 
 class AdivinheOMilhaoController extends Controller
 {
@@ -67,8 +67,11 @@ class AdivinheOMilhaoController extends Controller
     {
         $jogando = $this->jogando($request);
         if (!$jogando) {
-            if (!$this->inicio_jogo->where('user_id', $request->user()->id)->whereDate('created_at', today())->exists()) {
+            if (!$this->inicio_jogo->where('user_id', $request->user()->id)->whereDate('created_at', today())->exists() || Adicionais::where('user_uuid', auth()->user()->uuid)->value('value') > 0) {
 
+                if ($this->inicio_jogo->where('user_id', $request->user()->id)->whereDate('created_at', today())->exists()) {
+                    Adicionais::where('user_uuid', auth()->user()->uuid)->first()->decrement('value');
+                }
                 $this->inicio_jogo->create(['user_id' => $request->user()->id]);
                 return redirect()->route('adivinhe_o_milhao.pergunta');
             } else {
