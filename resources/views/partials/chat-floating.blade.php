@@ -108,16 +108,35 @@
         const $chatInput = $('#chatInput');
         const $sendBtn = $chatForm.find('button[type="submit"]');
 
+        const savedState = localStorage.getItem('chatState');
+        if (savedState === 'open') {
+            $chatBody.removeClass('d-none');
+            $chatToggleBtn.html('<i class="bi bi-x-lg"></i>');
+        } else {
+            $chatBody.addClass('d-none');
+            $chatToggleBtn.html(
+                '<i class="bi bi-chat-dots"></i>' +
+                '<span id="chatNotification" class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle d-none">' +
+                '<span class="visually-hidden">Nova mensagem</span></span>'
+            );
+        }
+
         $chatToggleBtn.on('click', () => {
             $chatBody.toggleClass('d-none');
             const isVisible = !$chatBody.hasClass('d-none');
+
             $chatToggleBtn.html(isVisible ?
                 '<i class="bi bi-x-lg"></i>' :
-                '<i class="bi bi-chat-dots"></i><span id="chatNotification" class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle d-none"><span class="visually-hidden">Nova mensagem</span></span>'
+                '<i class="bi bi-chat-dots"></i>' +
+                '<span id="chatNotification" class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle d-none">' +
+                '<span class="visually-hidden">Nova mensagem</span></span>'
             );
 
             if (isVisible) {
                 $('#chatNotification').addClass('d-none');
+                localStorage.setItem('chatState', 'open'); // 🔹 Salva como aberto
+            } else {
+                localStorage.setItem('chatState', 'closed'); // 🔹 Salva como fechado
             }
         });
 
@@ -164,13 +183,12 @@
 
             if (Array.isArray(mensagens)) {
                 mensagens.forEach(msg => {
-                    adicionarMensagem(`${msg.usuario}: ${msg.mensagem}`, 'message');;
+                    adicionarMensagem(`${msg.usuario}: ${msg.mensagem}`, 'message');
                 });
 
                 $chatMessages.scrollTop($chatMessages[0].scrollHeight);
             }
         }
         carregarMensagens();
-
     });
 </script>
