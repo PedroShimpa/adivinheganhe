@@ -107,8 +107,11 @@
                         <a class="nav-link" href="{{ route('sobre') }}">Sobre</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('hall_da_fama') }}">Hall da Fama</a>
+                        <a class="nav-link" href="{{ route('hall_da_fama') }}">Hall</a>
                     </li>
+                    <!-- <li class="nav-item"> -->
+                        <!-- <a class="nav-link" href="{{ route('adivinhe_o_milhao.index') }}">Adivinhe o Milhão</a> -->
+                    <!-- </li> -->
 
                     @auth
                     <li class="nav-item dropdown">
@@ -121,6 +124,7 @@
                             <li><a class="dropdown-item" href="{{ route('meus_premios') }}">Meus Prêmios</a></li>
                             @if(auth()->user()->isAdmin())
                             <li><a class="dropdown-item" href="{{ route('adivinhacoes.create') }}">Nova Adivinhação</a></li>
+                            <li><a class="dropdown-item" href="{{ route('adivinhe_o_milhao.create_pergunta') }}">Nova Pergunta Adivinhe o Milhão</a></li>
                             @endif
                             <li>
                                 <hr class="dropdown-divider">

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdivinhacoesController;
+use App\Http\Controllers\AdivinheOMilhaoController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\HomeController;
@@ -35,10 +36,17 @@ Route::middleware('auth')->group(function () {
     Route::post('/palpites/comprar', [PagamentosController::class, 'buy_attempts'])->name('tentativas.comprar');
     Route::get('/dicas/{adivinhacao}/comprar', [PagamentosController::class, 'index_buy_dica'])->name('dicas.index_buy');
     Route::post('/dicas/{adivinhacao}/comprar', [PagamentosController::class, 'buy_dica'])->name('dicas.comprar');
-
     Route::get('/meus_premios', [HomeController::class, 'meusPremios'])->name('meus_premios');
-
     Route::post('/chat', [ChatController::class, 'store'])->name('chat.enviar');
+
+
+
+    Route::get('/adivinhe-o-milhao/iniciar', [AdivinheOMilhaoController::class, 'iniciar'])->name('adivinhe_o_milhao.iniciar');
+    Route::get('/adivinhe-o-milhao/pergunta', [AdivinheOMilhaoController::class, 'pergunta'])->name('adivinhe_o_milhao.pergunta');
+    Route::post('/adivinhe-o-milhao/responder', [AdivinheOMilhaoController::class, 'responder'])->name('adivinhe_o_milhao.responder');
+    Route::get('/adivinhe-o-milhao/voce-ganhou', [AdivinheOMilhaoController::class, 'voce_ganhou'])->name('adivinhe_o_milhao.voce_ganhou');
+    Route::get('/adivinhe-o-milhao/create-pergunta', [AdivinheOMilhaoController::class, 'create'])->name('adivinhe_o_milhao.create_pergunta');
+    Route::post('/adivinhe-o-milhao/create-pergunta', [AdivinheOMilhaoController::class, 'store'])->name('adivinhe_o_milhao.store_pergunta');
 });
 
 Route::get('/chat', [ChatController::class, 'get_messages'])->name('chat.buscar');
@@ -86,6 +94,8 @@ Route::get('login/google', [GoogleController::class, 'redirectToGoogle'])->name(
 Route::get('login/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 Route::get('/register/extra', [GoogleController::class, 'showExtraForm'])->name('register.extra');
 Route::post('/register/extra', [GoogleController::class, 'storeExtraForm']);
+
+Route::get('/adivinhe-o-milhao', [AdivinheOMilhaoController::class, 'index'])->name('adivinhe_o_milhao.index');
 
 
 require __DIR__ . '/auth.php';
