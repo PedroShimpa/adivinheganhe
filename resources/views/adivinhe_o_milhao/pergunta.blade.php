@@ -6,9 +6,9 @@
         <div class="col-lg-8 col-md-10">
 
             {{-- Contador de tempo restante --}}
-            <div class="alert alert-warning text-center fw-bold fs-5 shadow-sm mb-4 rounded-pill">
-                ⏳ Tempo restante: <span id="contador">{{ $tempoRestante }}</span> segundos
-            </div>
+            <!-- <div class="alert alert-warning text-center fw-bold fs-5 shadow-sm mb-4 rounded-pill"> -->
+                <!-- ⏳ Tempo restante: <span id="contador">{{ $tempoRestante }}</span> segundos -->
+            <!-- </div> -->
 
             <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
                 <div class="card-body p-4">
