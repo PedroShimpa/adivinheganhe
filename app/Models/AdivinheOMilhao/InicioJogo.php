@@ -16,5 +16,6 @@ class InicioJogo extends Model
     protected $fillable = [
         'user_id',
         'respostas_corretas',
+        'finalizado'
     ];
 }

@@ -35,7 +35,7 @@ class AdivinheOMilhaoController extends Controller
             $hash = Str::random(10);
 
             $fileName = $hash . '_' . time() . '.' . $ext;
-            $filePath = 'imagens_adivinhacoes/' . $fileName;
+            $filePath = 'arquivos_adivinhe_o_milhao/' . $fileName;
 
             if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
                 $fileName = $hash . '_' . time() . '.webp';
@@ -67,7 +67,7 @@ class AdivinheOMilhaoController extends Controller
     {
         $jogando = $this->jogando($request);
         if (!$jogando) {
-            if (!$this->inicio_jogo->where('user_id', $request->user()->id)->whereDate('created_at', today())->exists() || Adicionais::where('user_uuid', auth()->user()->uuid)->value('value') > 0) {
+            if (!$this->inicio_jogo->where('user_id', $request->user()->id)->whereDate('created_at', today())->exists() || Adicionais::where('user_uuid', auth()->user()->uuid)->value('value') ?? 0 > 0) {
 
                 if ($this->inicio_jogo->where('user_id', $request->user()->id)->whereDate('created_at', today())->exists()) {
                     Adicionais::where('user_uuid', auth()->user()->uuid)->first()->decrement('value');
@@ -78,7 +78,7 @@ class AdivinheOMilhaoController extends Controller
                 return view('adivinhe_o_milhao.finalizado');
             }
         } else {
-            return redirect()->route('adivinhe_o_milhao_pergunta');
+            return redirect()->route('adivinhe_o_milhao.pergunta');
         }
     }
 
@@ -117,7 +117,7 @@ class AdivinheOMilhaoController extends Controller
             return view('adivinhe_o_milhao.finalizado');
         }
 
-        $correta = mb_strtolower(Perguntas::where('id', $request->input('pergunta_id'))->value('resposta')) ==  mb_strtolower($request->input('resposta'));
+        $correta = mb_strtolower($this->perguntas->where('id', $request->input('pergunta_id'))->value('resposta')) ==  mb_strtolower($request->input('resposta'));
 
         $this->respostas->create(['user_id' => $request->user()->id, 'resposta' => $request->input('resposta'), 'pergunta_id' => $request->input('pergunta_id'), 'correta' => $correta]);
 
@@ -129,15 +129,21 @@ class AdivinheOMilhaoController extends Controller
                 return redirect()->route('adivinhe_o_milhao.voce_ganhou');
             }
 
-
             return redirect()->route('adivinhe_o_milhao.pergunta');
         }
 
+        $this->jogando()->update(['finalizado' => 1]);
+
+        return redirect()->route('adivinhe_o_milhao.errou');
+    }
+
+    public function errou()
+    {
         return view('adivinhe_o_milhao.errou');
     }
 
     private function jogando(Request $request)
     {
-        return $this->inicio_jogo->where('user_id', $request->user()->id)->where('created_at', '>=', now()->subMinutes(10))->first();
+        return $this->inicio_jogo->where('user_id', $request->user()->id)->where('created_at', '>=', now()->subMinutes(10))->where('finalizado', 0)->first();
     }
 }
