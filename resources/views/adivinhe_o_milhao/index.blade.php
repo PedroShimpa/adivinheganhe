@@ -48,6 +48,9 @@
                         <li class="list-group-item">🎁 Você tem <strong>1 tentativa gratuita</strong> por dia.</li>
                         <li class="list-group-item">⏱️ Após clicar em <em>Jogar</em>, o tempo começa a contar. <strong>Não é possível pausar</strong> o jogo.</li>
                         <li class="list-group-item">🔄 Sempre que reiniciar, você começará da <strong>pergunta 1</strong>.</li>
+                        <li class="list-group-item">🔄 Você pode pesquisar onde achar melhor: Google, ChatGPT e afins</strong>.</li>
+                        <li class="list-group-item">🔄 Uso de trapaças que facilitem a digitação ou IA diretamente na pagina resultaram em banição  <span class="text-danger">Permanente</span></strong>.</li>
+                        <li class="list-group-item">🔄 Caso alguém consiga acertar as 100 respostas, iremos fazer um processo meticuloso de auditoria para validação.</li>
                     </ul>
 
                     <div class="text-center mt-5">
