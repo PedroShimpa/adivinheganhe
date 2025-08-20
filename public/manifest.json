@@ -10,25 +10,25 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "/icons/manifest-icon-192.maskable.png",
+      "src": "https://adivinheganhe.com.br/icons/manifest-icon-192.maskable.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/manifest-icon-192.maskable.png",
+      "src": "https://adivinheganhe.com.br/icons/manifest-icon-192.maskable.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/icons/manifest-icon-512.maskable.png",
+      "src": "https://adivinheganhe.com.br/icons/manifest-icon-512.maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/manifest-icon-512.maskable.png",
+      "src": "https://adivinheganhe.com.br/icons/manifest-icon-512.maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -50,9 +50,6 @@
     "nav_dark_color": "#6a1b9a",
     "nav_divider_color": "#6a1b9a",
     "nav_divider_dark_color": "#6a1b9a",
-    "icon_url": "https://adivinheganhe.com.br/icons/icon-512x512.png",
-    "maskable_icon_url": "https://adivinheganhe.com.br/icons/icon-maskable-512x512.png",
-    "monochrome_icon_url": "https://adivinheganhe.com.br/icons/icon-monochrome-512x512.png",
     "splash_fade_out_duration_ms": 300,
     "settings_shortcut": true,
     "display_mode": "standalone",
