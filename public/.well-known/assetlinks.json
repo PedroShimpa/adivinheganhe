@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.adivinheganhe.app",
+      "sha256_cert_fingerprints": [
+        "B9:49:5F:63:FD:09:C8:5F:FC:87:95:38:59:87:0C:D2:8D:71:43:14:BF:3E:06:8E:36:4A:21:24:FE:95:61:AC"
+      ]
+    }
+  }
+]
