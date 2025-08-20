@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\ChatMessages;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +15,6 @@ class IncluirMensagemChat implements ShouldQueue
 
     public function handle(): void
     {
-        DB::table('chat_messages')->insert($this->data);
+        ChatMessages::create($this->data);
     }
 }
