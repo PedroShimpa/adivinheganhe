@@ -16,7 +16,7 @@ class AdivinheOMilhaoController extends Controller
 {
     public function __construct(private Perguntas $perguntas, private Respostas $respostas, private InicioJogo $inicio_jogo) {}
 
-    public function create(Request $request)
+    public function create()
     {
         if (auth()->user()->isAdmin()) {
 

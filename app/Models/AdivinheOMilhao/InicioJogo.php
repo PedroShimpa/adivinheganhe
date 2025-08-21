@@ -3,11 +3,13 @@
 namespace App\Models\AdivinheOMilhao;
 
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class InicioJogo extends Model
 {
 
+    use HasFactory;
     use Cachable;
 
     const UPDATED_AT = NULL;
