@@ -14,7 +14,7 @@
                     {{-- Medalha destaque para top 3 --}}
                     @if($index < 3)
                         <span class="position-absolute top-0 start-50 translate-middle badge 
-                            {{ $index == 0 ? 'bg-warning text-dark' : ($index == 1 ? 'bg-secondary' : 'bg-orange') }} 
+                            {{ $index == 0 ? 'bg-warning text-dark' : ($index == 1 ? 'bg-secondary' : 'bg-primary') }} 
                             fs-6 px-3 py-2 rounded-pill shadow">
                             {{ $index + 1 }}º
                         </span>
