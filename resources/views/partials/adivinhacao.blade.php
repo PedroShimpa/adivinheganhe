@@ -8,7 +8,8 @@
                 loading="lazy"
                 style="aspect-ratio: 4/3; object-fit: contain; width: 100%; height: auto;"
                 width="600"
-                height="450">
+                height="450"
+                fetchpriority=high>
         </div>
 
         <div class="col-12 col-md-7 p-4 d-flex flex-column justify-content-between">
@@ -59,7 +60,7 @@
                 </div>
                 @endif
                 @endif
-            
+
                 <p class="mb-1 small text-dark"><strong>Código:</strong> {{ $adivinhacao->uuid }}</p>
 
                 @auth
