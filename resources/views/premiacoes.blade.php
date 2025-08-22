@@ -4,7 +4,7 @@
 <div class="container py-5">
     <div class="text-center mb-5">
         <h2 class="fw-bold display-6">🎁 Premiações</h2>
-        <p class="text-muted">Confira os prêmios conquistados pelos jogadores</p>
+        <p class="text-white">Confira os prêmios conquistados pelos jogadores</p>
     </div>
 
     <div class="row g-4">
