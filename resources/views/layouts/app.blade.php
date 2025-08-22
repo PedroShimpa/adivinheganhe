@@ -35,13 +35,20 @@
     </noscript>
 
     <style>
-        html, body {
+        html,
+        body {
             height: 100%;
+            min-height: 100vh;
+            /* Garante altura mínima da tela */
+            margin: 0;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(145deg, #0f0c29, #302b63, #24243e);
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-size: cover;
             color: #fff;
             display: flex;
             flex-direction: column;
@@ -124,7 +131,9 @@
                             <li><a class="dropdown-item" href="{{ route('adivinhacoes.create') }}">Nova Adivinhação</a></li>
                             <li><a class="dropdown-item" href="{{ route('adivinhe_o_milhao.create_pergunta') }}">Nova Pergunta Adivinhe o Milhão</a></li>
                             @endif
-                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
@@ -169,7 +178,10 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ env('GOOGLE_ANALYTICS_TAG') }}"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
         gtag('js', new Date());
         gtag('config', "{{ env('GOOGLE_ANALYTICS_TAG') }}");
     </script>
