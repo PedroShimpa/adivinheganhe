@@ -30,8 +30,8 @@
     <link rel="preload" href="{{ asset('vendor/mdb/mdb.min.css') }}" as="style">
     <link rel="stylesheet" href="{{ asset('vendor/mdb/mdb.min.css') }}">
 
-    <!-- <link rel="preload" href="{{ asset('vendor/animate/animate.min.css') }}" as="style"> -->
-    <!-- <link rel="stylesheet" href="{{ asset('vendor/animate/animate.min.css') }}" media="print" onload="this.media='all'"> -->
+    <link rel="preload" href="{{ asset('vendor/animate/animate.min.css') }}" as="style">
+    <link rel="stylesheet" href="{{ asset('vendor/animate/animate.min.css') }}" media="print" onload="this.media='all'">
 
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" media="print" onload="this.media='all'">
@@ -172,8 +172,8 @@
     {{-- Modais --}}
     @include('partials.modals')
 
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('vendor/bootstrap/bootstrap.bundle.min.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js" defer></script>
 
     @include('partials.socket')
