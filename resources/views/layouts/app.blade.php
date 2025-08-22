@@ -30,8 +30,8 @@
     <link rel="preload" href="{{ asset('vendor/mdb/mdb.min.css') }}" as="style">
     <link rel="stylesheet" href="{{ asset('vendor/mdb/mdb.min.css') }}">
 
-    <link rel="preload" href="{{ asset('vendor/animate/animate.min.css') }}" as="style">
-    <link rel="stylesheet" href="{{ asset('vendor/animate/animate.min.css') }}" media="print" onload="this.media='all'">
+    <!-- <link rel="preload" href="{{ asset('vendor/animate/animate.min.css') }}" as="style"> -->
+    <!-- <link rel="stylesheet" href="{{ asset('vendor/animate/animate.min.css') }}" media="print" onload="this.media='all'"> -->
 
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" media="print" onload="this.media='all'">
