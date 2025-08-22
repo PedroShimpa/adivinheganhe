@@ -7,8 +7,8 @@ use Illuminate\Support\Str;
 
 class Respostas extends Model
 {
-
     const UPDATED_AT = null;
+
     protected $table = 'adivinhe_o_milhao_respostas';
 
     protected $fillable = [

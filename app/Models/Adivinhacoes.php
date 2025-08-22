@@ -9,7 +9,9 @@ use Illuminate\Support\Str;
 
 class Adivinhacoes extends Model
 {
-    use HasFactory, Cachable;
+    use HasFactory;
+
+    protected $cacheCooldownSeconds = 60;
 
     protected $fillable = [
         'titulo',
