@@ -55,22 +55,16 @@ class AdivinhacoesPremiacoes extends Model
 
     public function getPremiosGanhos()
     {
-
         return $this->select(
-            'adivinhacoes_premiacoes.id',
             'adivinhacoes.uuid',
             'adivinhacoes.titulo',
             'adivinhacoes.resposta',
             'adivinhacoes.premio',
             'users.username',
-            'premio_enviado',
-            'previsao_envio_premio',
-            'vencedor_notificado'
         )
             ->join('adivinhacoes', 'adivinhacoes.id', '=', 'adivinhacoes_premiacoes.adivinhacao_id')
             ->join('users', 'users.id', '=', 'adivinhacoes_premiacoes.user_id')
             ->orderBy('adivinhacoes_premiacoes.id', 'desc')
-            ->limit(10)
             ->get();
     }
 

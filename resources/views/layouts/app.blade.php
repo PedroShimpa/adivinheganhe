@@ -107,7 +107,8 @@
                     <li class="nav-item"><a class="nav-link" href="{{ route('regioes.index') }}">Regiões</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('suporte.index') }}">Suporte</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('sobre') }}">Sobre</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('hall_da_fama') }}">Hall</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('premiacoes') }}">Premiações</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('hall_da_fama') }}">Ranking</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('adivinhe_o_milhao.index') }}">Adivinhe o Milhão</a></li>
 
                     @auth
