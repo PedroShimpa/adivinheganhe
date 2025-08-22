@@ -36,14 +36,14 @@
     <link rel="preload" href="{{ asset('vendor/animate/animate.min.css') }}" as="style">
     <link rel="stylesheet" href="{{ asset('vendor/animate/animate.min.css') }}" media="print" onload="this.media='all'">
 
-    <link rel="preload" href="{{ asset('vendor/bootstrap-icons/bootstrap-icons.css') }}" as="style">
-    <link rel="stylesheet" href="{{ asset('vendor/bootstrap-icons/bootstrap-icons.css') }}" media="print" onload="this.media='all'">
+    <link rel="preload" href="{{ asset('vendor/bootstrap/bootstrap-icons.css') }}" as="style">
+    <link rel="stylesheet" href="{{ asset('vendor/bootstrap/bootstrap-icons.css') }}" media="print" onload="this.media='all'">
 
     <!-- Fallback se JS estiver desativado -->
     <noscript>
         <link rel="stylesheet" href="{{ asset('vendor/mdb/mdb.min.css') }}">
         <link rel="stylesheet" href="{{ asset('vendor/animate/animate.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('vendor/bootstrap-icons/bootstrap-icons.css') }}">
+        <link rel="stylesheet" href="{{ asset('vendor/bootstrap/bootstrap-icons.css') }}">
     </noscript>
 
     <!-- Critical CSS inline -->

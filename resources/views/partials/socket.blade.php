@@ -1,5 +1,5 @@
-<script src="https://js.pusher.com/7.2/pusher.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.11.1/dist/echo.iife.min.js"></script>
+<script src="{{ asset('vendor/pusher/pusher.min.js') }}"></script>
+<script src="{{ asset('vendor/laravel-echo/echo.min.js') }}"></script>
 
 <script>
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
