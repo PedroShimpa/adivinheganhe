@@ -7,10 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class AdicionaisIndicacao extends Model
 {
+    use HasFactory;
 
     protected $table = 'adicionais_indicacao';
-
-    use HasFactory;
 
     protected $fillable = [
         'user_uuid',

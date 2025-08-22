@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class InicioJogo extends Model
 {
-
     use Cachable;
 
     const UPDATED_AT = NULL;

@@ -7,8 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ChatMessages extends Model
 {
-
-    use Cachable;
+    protected $cacheCooldownSeconds = 60;
     
     protected $table = 'chat_messages';
 

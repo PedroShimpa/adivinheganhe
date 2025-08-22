@@ -7,8 +7,6 @@ use Illuminate\Support\Str;
 
 class AdivinhacoesRespostas extends Model
 {
-    // use Cachable;
-    
     const UPDATED_AT = null;
 
     protected $table = 'adivinhacoes_respostas';
