@@ -34,13 +34,13 @@ class HomeController extends Controller
             $this->customize($a);
         });
 
+        return view('home')->with(compact('adivinhacoes', 'limitExceded', 'trys'));
+    }
 
-        $adivinhacoesExpiradas = $this->adivinhacoes->getExpiradas();
-
+    public function premiacoes()
+    {
         $premios = $this->adivinhacoesPremiacoes->getPremiosGanhos();
-
-
-        return view('home')->with(compact('adivinhacoes', 'limitExceded', 'premios', 'trys', 'adivinhacoesExpiradas'));
+        return view('premiacoes')->with('premios', $premios);
     }
 
     public function meusPremios(Request $request)

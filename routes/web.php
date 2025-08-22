@@ -9,10 +9,8 @@ use App\Http\Controllers\PagamentosController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\RespostaController;
 use App\Http\Controllers\SuporteController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
-use Pusher\Pusher;
 
 Broadcast::routes(['middleware' => ['web', 'auth']]);
 
@@ -59,34 +57,10 @@ Route::get('/sobre', [HomeController::class, 'sobre'])->name('sobre');
 Route::get('/adivinhacoes/{adivinhacao}', [AdivinhacoesController::class, 'index'])->name('adivinhacoes.index');
 Route::get('/adivinhacoes/{adivinhacao}/respostas-iframe', [AdivinhacoesController::class, 'respostas'])->name('adivinhacoes.respostas');
 
+Route::get('/premiacoes', [HomeController::class, 'premiacoes'])->name('premiacoes');
+
 Route::get('/suporte', [SuporteController::class, 'new_help'])->name('suporte.index');
 Route::post('/suporte', [SuporteController::class, 'store'])->name('suporte.store');
-
-
-Route::post('/broadcasting/auth-mixed', function (Request $request) {
-    $pusher = new Pusher(
-        env('REVERB_APP_KEY'),
-        env('REVERB_APP_SECRET'),
-        env('REVERB_APP_ID'),
-        ['cluster' => env('PUSHER_APP_CLUSTER')]
-    );
-
-    $user = auth()->user();
-    if ($user) {
-        $id   = 'user-' . $user->id;
-        $info = ['name' => $user->name];
-    } else {
-        $id   = 'guest-' . substr(md5($request->ip() . microtime()), 0, 8);
-        $info = ['name' => 'Visitante'];
-    }
-
-    return $pusher->presence_auth(
-        $request->channel_name,
-        $request->socket_id,
-        $id,
-        $info
-    );
-});
 
 Route::get('/r', [HomeController::class, 'getRegioes'])->name('regioes.index');
 Route::get('/r/{regiao}', [HomeController::class, 'get_by_region'])->name('adivinhacoes.buscar_por_regiao');
@@ -99,4 +73,6 @@ Route::post('/register/extra', [GoogleController::class, 'storeExtraForm']);
 Route::get('/adivinhe-o-milhao', [AdivinheOMilhaoController::class, 'index'])->name('adivinhe_o_milhao.index');
 
 
+
+require __DIR__ . '/socket.php';
 require __DIR__ . '/auth.php';
