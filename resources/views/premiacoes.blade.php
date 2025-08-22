@@ -8,7 +8,7 @@
     </div>
 
     <div class="row g-4">
-        @foreach($premiacoes as $premio)
+        @foreach($premios as $premio)
             <div class="col-md-6 col-lg-4">
                 <div class="card shadow-sm border-0 h-100 rounded-4">
                     <div class="card-body d-flex flex-column">
