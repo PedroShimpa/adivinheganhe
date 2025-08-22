@@ -4,7 +4,7 @@
 <div class="container py-5">
     <div class="text-center mb-5">
         <h2 class="fw-bold display-6">🏆 Hall da Fama</h2>
-        <p class="text-muted">Os jogadores mais premiados da plataforma</p>
+        <p class="text-white">Os jogadores mais premiados do Adivinhe e Ganhe</p>
     </div>
 
     <div class="row g-4">
