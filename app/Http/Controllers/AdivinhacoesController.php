@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Events\AlertaGlobal;
+use App\Events\NewCommentEvent;
 use App\Models\Adivinhacoes;
 use App\Http\Requests\StoreAdivinhacoesRequest;
 use App\Models\AdivinhacoesRespostas;
 use App\Http\Controllers\Traits\CountTrys;
 use App\Http\Controllers\Traits\AdivinhacaoTrait;
 use App\Http\Requests\UpdateAdivinhacoesRequest;
+use App\Http\Resources\GetCommentsResource;
 use App\Jobs\EnviarNotificacaoNovaAdivinhacao;
 use App\Models\Regioes;
 use DateTime;
@@ -33,7 +35,6 @@ class AdivinhacoesController extends Controller
 
         $respostas = collect([]);
         if (($adivinhacao->resolvida == 'S' || (!empty($adivinhacao->expire_at) && $adivinhacao->expired) || (Auth::check() && auth()->user()->isAdmin()))) {
-
             $respostas = AdivinhacoesRespostas::select('adivinhacoes_respostas.uuid', 'users.username', 'adivinhacoes_respostas.created_at', 'resposta')
                 ->join('users', 'users.id', '=', 'adivinhacoes_respostas.user_id')
                 ->where('adivinhacao_id', $adivinhacao->id)
@@ -80,7 +81,7 @@ class AdivinhacoesController extends Controller
             if (!empty($imagem) && !$imagem->getClientOriginalExtension() != 'webp') {
 
                 $image = Image::read($imagem)->encodeByExtension('webp', 85);
-                
+
                 $filePath = 'imagens_adivinhacoes/' . $fileName;
 
                 Storage::disk('s3')->put($filePath, (string) $image);
@@ -108,7 +109,6 @@ class AdivinhacoesController extends Controller
 
         return redirect()->route('home');
     }
-
 
     public function store(StoreAdivinhacoesRequest $request)
     {
@@ -162,5 +162,20 @@ class AdivinhacoesController extends Controller
     {
         $respostas = AdivinhacoesRespostas::select('resposta')->where('adivinhacao_id', $request->adivinhacao_id)->where('user_id', auth()->user()->id)->get();
         return response()->json($respostas);
+    }
+
+    public function comments(Adivinhacoes $adivinhacao)
+    {
+        return response()->json(GetCommentsResource::collection($adivinhacao->comments));
+    }
+
+    public function comment(Request $request, Adivinhacoes $adivinhacao)
+    {
+        $adivinhacao->comments()->create(['user_id' => auth()->user()->id, 'body' => $request->input('body')]);
+        broadcast(new NewCommentEvent(
+            auth()->user()->username,
+            $adivinhacao->id,
+            $request->input('body')
+        ));
     }
 }

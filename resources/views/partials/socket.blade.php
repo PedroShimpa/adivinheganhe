@@ -37,6 +37,15 @@
             Swal.fire(e.titulo, e.msg, e.tipo)
         });
 
+    window.Echo.channel('comments')
+        .listen('.novoComentario', e => {
+
+              comment = adicionarComentario(e);
+              $box = $(`#comentarios-${e.adivinhacaoId}`);
+              $list = $box.find('.comentarios-list');
+              $list.append(comment)
+        })
+
 
     @auth
     window.Echo.private(`user.{{ Auth::id() }}`)
@@ -65,6 +74,14 @@
         }
 
         $chatMessages.scrollTop($chatMessages[0].scrollHeight);
+    }
+
+    
+    function adicionarComentario(comentario) {
+      return `
+        <div class="mb-2 p-2 rounded-3 bg-white shadow-sm">
+            <strong>${comentario.usuario}:</strong> ${comentario.body}
+        </div>`;
     }
 
     window.Echo.channel('chat')

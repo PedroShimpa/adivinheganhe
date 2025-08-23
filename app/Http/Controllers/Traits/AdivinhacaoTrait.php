@@ -11,8 +11,6 @@ trait AdivinhacaoTrait
 {
     public function customize(Adivinhacoes &$adivinhacao)
     {
-        // removido pra preservar o cache
-        // dispatch(new IncrementarVisualizacaoAdivinhacao($adivinhacao->id));
         if (!empty($adivinhacao->expire_at)) {
             $adivinhacao->expired_at_br = (new DateTime($adivinhacao->expire_at))->format('d/m H:i');
         }

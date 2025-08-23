@@ -91,6 +91,37 @@
                     Você precisa <a href="{{ route('login') }}" class="text-decoration-underline fw-semibold">entrar</a> para responder. É <span class="text-primary fw-semibold">grátis</span>!
                 </div>
                 @endauth
+
+                <div class="mt-3">
+                    <button class="btn btn-outline-secondary btn-sm rounded-pill verComentarios"
+                        data-id="{{ $adivinhacao->id }}"
+                        data-route="{{ route('adivinhacoes.comments', $adivinhacao->uuid) }}">
+                        💬 Comentários
+                    </button>
+
+                    <div id="comentarios-{{ $adivinhacao->id }}" class="comentarios-box d-none mt-3 p-3 rounded-4 bg-light shadow-sm animate__animated">
+                        <div class="comentarios-list small mb-3 text-dark">
+                            <p class="text-muted">Carregando comentários...</p>
+                        </div>
+
+                        @auth
+                        <div class="input-group">
+                            <input type="text" id="comentario-input-{{ $adivinhacao->id }}" class="form-control rounded-start-pill" placeholder="💬 Escreva um comentário...">
+                            <button class="btn btn-primary rounded-end-pill sendComment"
+                                data-id="{{ $adivinhacao->id }}"
+                                data-route="{{ route('adivinhacoes.comment', $adivinhacao->uuid) }}">
+                                Enviar
+                            </button>
+                        </div>
+                        @else
+                        <div class="alert alert-warning small rounded-3 mt-2">
+                            Você precisa <a href="{{ route('login') }}" class="fw-semibold text-decoration-underline">entrar</a> para comentar.
+                        </div>
+                        @endauth
+                    </div>
+                </div>
+
+
             </div>
 
             @php $isLink = filter_var($adivinhacao->premio, FILTER_VALIDATE_URL); @endphp
