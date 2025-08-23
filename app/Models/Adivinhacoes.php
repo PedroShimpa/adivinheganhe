@@ -122,7 +122,6 @@ class Adivinhacoes extends Model
             'imagem',
             'descricao',
             'premio',
-            'expire_at',
             'dica',
             'dica_paga',
             'dica_valor',
