@@ -18,7 +18,7 @@ class RegisterUserRequest extends FormRequest
 
     public function prepareForValidation()
     {
-        $this->merge(['fingerprint' => session('fingerprint')]);
+        $this->merge(['fingerprint' => session('fingerprint'), 'email' => strtolower($this->email), 'username' => strtolower($this->username)]);
     }
 
     public function rules(): array

@@ -1,7 +1,80 @@
 <script>
+  $(document).ready(function() {
+    $('.verComentarios').on('click', async function() {
+      const adivinhacaoId = $(this).data('id');
+      const route = $(this).data('route');
+      const $box = $(`#comentarios-${adivinhacaoId}`);
+      const $list = $box.find('.comentarios-list');
 
-  $(document).ready(function () {
-    $('.sendResposta').on('click', async function () {
+      if ($box.hasClass('d-none')) {
+        $box.removeClass('d-none animate__fadeOut').addClass('animate__fadeIn');
+
+        try {
+          const res = await fetch(route, {
+            headers: {
+              'Accept': 'application/json'
+            }
+          });
+          const data = await res.json();
+
+          if (data.length > 0) {
+            let html = '';
+            data.forEach(c => {
+              html += adicionarComentario(c);
+            });
+            $list.html(html);
+          } else {
+            $list.html('<p class="text-muted">Nenhum comentário ainda. Seja o primeiro!</p>');
+          }
+        } catch (e) {
+          $list.html('<p class="text-danger">Erro ao carregar comentários.</p>');
+        }
+
+      } else {
+        $box.removeClass('animate__fadeIn').addClass('animate__fadeOut');
+        setTimeout(() => $box.addClass('d-none'), 300);
+      }
+    });
+
+    function adicionarComentario(comentario) {
+      return `
+        <div class="mb-2 p-2 rounded-3 bg-white shadow-sm">
+            <strong>${comentario.usuario}:</strong> ${comentario.body}
+        </div>`;
+    }
+
+    $('.sendComment').on('click', async function() {
+      const adivinhacaoId = $(this).data('id');
+      const route = $(this).data('route');
+      const $input = $(`#comentario-input-${adivinhacaoId}`);
+      const body = $input.val().trim();
+
+      if (!body) return;
+
+      $(this).attr('disabled', true)
+
+      try {
+        const res = await fetch(route, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            body
+          })
+        });
+
+        $input.val('');
+      } catch (e) {
+        alert('Erro ao enviar comentário');
+      } finally {
+              $(this).attr('disabled', false)
+      }
+    });
+
+    $('.sendResposta').on('click', async function() {
       const $btn = $(this);
       const $body = $btn.closest('.col-md-7');
       const id = $body.find('[name="adivinhacao_id"]').val();
@@ -39,12 +112,10 @@
         if (json.error) {
           $msg.addClass('text-danger').text(json.error);
           $btn.attr('disabled', false);
-        } 
-        else if(json.info) {
+        } else if (json.info) {
           $msg.addClass('text-warning').text(json.info);
-          $btn.attr('disabled', false);  
-        }
-        else {
+          $btn.attr('disabled', false);
+        } else {
           let codigoResposta = json.reply_code ? `<br><small class="text-white">Seu código de palpite: <strong>${json.reply_code}</strong></small>` : '';
 
           if (json.message === 'acertou') {
@@ -64,7 +135,7 @@
                   : 'Você não possui mais palpites. Se quiser, pode <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-primary ms-2">comprar mais</a> 😞'
               }${codigoResposta}`);
 
-              $('#trysRestantes').html(json.trys)
+            $('#trysRestantes').html(json.trys)
             $btn.attr('disabled', false);
           }
         }
@@ -77,7 +148,7 @@
       }
     });
 
-    $('#btnCopiarLink').on('click', function () {
+    $('#btnCopiarLink').on('click', function() {
       const $btn = $(this);
       const $input = $('#linkIndicacao');
       $input[0].select();
@@ -95,31 +166,33 @@
   });
 
   @auth
-  $(document).on('click', '.verRespostas', async function () {
-      const adivinhacaoId = $(this).attr('adivinhacao_id');
+  $(document).on('click', '.verRespostas', async function() {
+    const adivinhacaoId = $(this).attr('adivinhacao_id');
 
-      const res = await fetch("{{ route('adivinhacoes.respostas_do_usuario') }}", {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-              'Accept': 'application/json'
-          },
-          body: JSON.stringify({ adivinhacao_id: adivinhacaoId })
+    const res = await fetch("{{ route('adivinhacoes.respostas_do_usuario') }}", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        adivinhacao_id: adivinhacaoId
+      })
+    });
+
+    const respostas = await res.json();
+
+    const tbody = $('#tbodyRespostas');
+    tbody.empty();
+
+    if (!respostas.length) {
+      tbody.append(`<tr><td class="text-muted text-center">Nenhum palpite enviado ainda.</td></tr>`);
+    } else {
+      respostas.forEach(resposta => {
+        tbody.append(`<tr><td>${resposta.resposta}</td></tr>`);
       });
-
-      const respostas = await res.json();
-
-      const tbody = $('#tbodyRespostas');
-      tbody.empty(); // limpa antes
-
-      if (!respostas.length) {
-          tbody.append(`<tr><td class="text-muted text-center">Nenhum palpite enviado ainda.</td></tr>`);
-      } else {
-          respostas.forEach(resposta => {
-              tbody.append(`<tr><td>${resposta.resposta}</td></tr>`);
-          });
-      }
+    }
   });
   @endauth
 
