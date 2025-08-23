@@ -29,7 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/adivinhacoes/respostas-do-usuario', [AdivinhacoesController::class, 'findUserReply'])->name('adivinhacoes.respostas_do_usuario');
     Route::get('/adivinhacoes/view/{adivinhacao}', [AdivinhacoesController::class, 'view'])->name('adivinhacoes.view');
     Route::put('/adivinhacoes/{adivinhacaoId}', [AdivinhacoesController::class, 'update'])->name('adivinhacoes.update')->whereNumber('adivinhacaoId');
-    Route::post('/adivinhacoes-expiradas', [HomeController::class, 'expiradas'])->name('adivinhacoes.expiradas');
+    Route::get('/adivinhacoes-expiradas', [HomeController::class, 'expiradas'])->name('adivinhacoes.expiradas');
     Route::post('/adivinhacoes/{adivinhacao}/comment', [AdivinhacoesController::class, 'comment'])->name('adivinhacoes.comment');
     Route::post('/responder', [RespostaController::class, 'enviar'])->name('resposta.enviar');
     Route::get('/palpites/comprar', [PagamentosController::class, 'index_buy_attempts'])->name('tentativas.shop');
