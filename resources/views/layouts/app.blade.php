@@ -135,6 +135,7 @@
                             <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Perfil</a></li>
                             <li><a class="dropdown-item" href="{{ route('meus_premios') }}">Meus Prêmios</a></li>
                             @if(auth()->user()->isAdmin())
+                            <li><a class="dropdown-item" href="{{ route('adivinhacoes.expiradas') }}">Expiradas</a></li>
                             <li><a class="dropdown-item" href="{{ route('adivinhacoes.create') }}">Nova Adivinhação</a></li>
                             <li><a class="dropdown-item" href="{{ route('adivinhe_o_milhao.create_pergunta') }}">Nova Pergunta Adivinhe o Milhão</a></li>
                             @endif
