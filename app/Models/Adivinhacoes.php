@@ -115,7 +115,20 @@ class Adivinhacoes extends Model
 
     public function getExpiradas()
     {
-        return $this->select('uuid', 'titulo')
+        return $this->select(
+            'id',
+            'uuid',
+            'titulo',
+            'imagem',
+            'descricao',
+            'premio',
+            'expire_at',
+            'dica',
+            'dica_paga',
+            'dica_valor',
+            'created_at',
+            'formato_resposta',
+        )
             ->where('resolvida', 'N')
             ->whereNotNull('expire_at')
             ->where('expire_at', '<', now())
