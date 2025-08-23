@@ -37,6 +37,27 @@ class HomeController extends Controller
         return view('home')->with(compact('adivinhacoes', 'limitExceded', 'trys'));
     }
 
+    public function expiradas()
+    {
+        $trys = 0;
+        $limitExceded = true;
+
+        $this->count($trys, $limitExceded);
+
+        $adivinhacoes =  $this->adivinhacoes->getExpiradas();
+
+        $adivinhacoes = $adivinhacoes->filter(function ($a) {
+            return is_null($a->expire_at) || $a->expire_at > now();
+        })->values();
+
+
+        $adivinhacoes->each(function ($a) {
+            $this->customize($a);
+        });
+
+        return view('home')->with(compact('adivinhacoes', 'limitExceded', 'trys'));
+    }
+
     public function premiacoes()
     {
         $premios = $this->adivinhacoesPremiacoes->getPremiosGanhos();

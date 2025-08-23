@@ -120,7 +120,6 @@ class Adivinhacoes extends Model
             ->whereNotNull('expire_at')
             ->where('expire_at', '<', now())
             ->orderBy('expire_at', 'desc')
-            ->limit(10)
             ->get();
     }
 
