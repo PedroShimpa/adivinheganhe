@@ -16,7 +16,7 @@ class AdivinheOMilhaoController extends Controller
 {
     public function __construct(private Perguntas $perguntas, private Respostas $respostas, private InicioJogo $inicio_jogo) {}
 
-    public function create(Request $request)
+    public function create()
     {
         if (auth()->user()->isAdmin()) {
 
@@ -60,7 +60,8 @@ class AdivinheOMilhaoController extends Controller
 
     public function index()
     {
-        return view('adivinhe_o_milhao.index')->with(['title' => "Adivinhe o Milhão"]);
+        $recordista = InicioJogo::select('respostas_corretas', 'users.username')->join('users', 'users.id', '=', 'adivinhe_o_milhao_inicio_jogo.user_id')->orderBy('respostas_corretas', 'desc')->first();
+        return view('adivinhe_o_milhao.index')->with(['title' => "Adivinhe o Milhão - Adivinhe e Ganhe", 'recordista' => $recordista]);
     }
 
     public function iniciar(Request $request)
@@ -90,7 +91,8 @@ class AdivinheOMilhaoController extends Controller
             return view('adivinhe_o_milhao.finalizado');
         }
 
-        $tempoRestante = (int) max(0, 600 - now()->diffInSeconds($jogo->created_at));
+        $segundosPassados = $jogo->created_at->diffInSeconds(now());
+        $tempoRestante = max(0, 600 - $segundosPassados);
 
         $pergunta = Cache::get('pergunta_atual' . $request->user()->id);
 
@@ -147,6 +149,17 @@ class AdivinheOMilhaoController extends Controller
 
     private function jogando(Request $request)
     {
-        return $this->inicio_jogo->where('user_id', $request->user()->id)->where('created_at', '>=', now()->subMinutes(10))->where('finalizado', 0)->first();
+        $jogo = $this->inicio_jogo
+            ->where('user_id', $request->user()->id)
+            ->where('finalizado', 0)
+            ->latest()
+            ->first();
+
+        if ($jogo && $jogo->created_at->diffInMinutes(now()) >= 10) {
+            $jogo->update(['finalizado' => 1]);
+            return null;
+        }
+
+        return $jogo;
     }
 }

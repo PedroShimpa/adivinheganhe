@@ -6,9 +6,12 @@
         <div class="col-lg-8 col-md-10">
 
             {{-- Contador de tempo restante --}}
-            <!-- <div class="alert alert-warning text-center fw-bold fs-5 shadow-sm mb-4 rounded-pill"> -->
-                <!-- ⏳ Tempo restante: <span id="contador">{{ $tempoRestante }}</span> segundos -->
-            <!-- </div> -->
+            <div class="alert alert-warning text-center fw-bold fs-5 shadow-sm mb-4 rounded-pill">
+                ⏳ Tempo restante: <span id="contador">
+                    {{ str_pad(intval($tempoRestante / 60), 2, '0', STR_PAD_LEFT) }}:{{ str_pad($tempoRestante % 60, 2, '0', STR_PAD_LEFT) }}
+                </span>
+            </div>
+
 
             <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
                 <div class="card-body p-4">
@@ -71,39 +74,52 @@
         </div>
     </div>
 </div>
-
 <script>
-    let tempo = "{{ $tempoRestante }}";
-    const contador = document.getElementById('contador');
+    (function() {
+        const tempoInicial = Math.max(0, Math.min(600, Number(@json((int) $tempoRestante))));
+        const contador = document.getElementById('contador');
+        if (!contador) return;
 
-    const interval = setInterval(() => {
-        tempo--;
-        contador.textContent = tempo;
+        const target = Date.now() + tempoInicial * 1000;
 
-        if (tempo <= 0) {
-            clearInterval(interval);
-            alert("⏰ O tempo acabou!");
-            window.location.href = "{{ route('home') }}";
+        function formatar(seg) {
+            const m = String(Math.floor(seg / 60)).padStart(2, '0');
+            const s = String(seg % 60).padStart(2, '0');
+            return `${m}:${s}`;
         }
-    }, 1000);
 
-    const respostaInput = document.getElementById('resposta');
+        function tick() {
+            const restante = Math.max(0, Math.floor((target - Date.now()) / 1000));
+            contador.textContent = formatar(restante);
 
-    respostaInput.addEventListener('keydown', function(e) {
-        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'v') {
-            e.preventDefault();
-            alert('Colar não é permitido!');
+            if (restante <= 0) {
+                clearInterval(timer);
+                alert("⏰ O tempo acabou!");
+                window.location.replace("{{ route('home') }}");
+            }
         }
-    });
 
-    respostaInput.addEventListener('paste', function(e) {
-        e.preventDefault();
-        alert('Colar não é permitido!');
-    });
+        contador.textContent = formatar(tempoInicial);
+        const timer = setInterval(tick, 1000);
 
-    respostaInput.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-        alert('Colar não é permitido!');
-    });
+        const respostaInput = document.getElementById('resposta');
+        if (respostaInput) {
+            respostaInput.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'v') {
+                    e.preventDefault();
+                    alert('Colar não é permitido!');
+                }
+            });
+            respostaInput.addEventListener('paste', function(e) {
+                e.preventDefault();
+                alert('Colar não é permitido!');
+            });
+            respostaInput.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                alert('Colar não é permitido!');
+            });
+        }
+    })();
 </script>
+
 @endsection
