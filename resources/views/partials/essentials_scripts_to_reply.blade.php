@@ -135,7 +135,7 @@
                   : 'Você não possui mais palpites. Se quiser, pode <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-primary ms-2">comprar mais</a> 😞'
               }${codigoResposta}`);
 
-            $('#trysRestantes').html(json.trys)
+            $('#palpites_adivinhacao_'+id).html(json.trys)
             $btn.attr('disabled', false);
           }
         }

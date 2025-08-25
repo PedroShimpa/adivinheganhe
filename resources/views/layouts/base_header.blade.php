@@ -29,10 +29,9 @@
     </div>
 
     <p class="mb-2">
-        <strong>🎮 Você tem <span id="trysRestantes">{{ $trys }} </span> </strong> palpites.
-        <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-primary text-white ms-2">Comprar mais</a>
+        <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-primary text-white ms-2">Comprar Palpites</a>
     </p>
-    <p class="small text-dark">🕓 Você recebe {{ env('MAX_ADIVINHATIONS')}} palpites gratuitos todos os dias (não acumulativos).</p>
+    <p class="small text-dark">🕓 Você recebe {{ env('MAX_ADIVINHATIONS')}} palpites gratuitos por adivinhação todos os dias (não acumulativos).</p>
 </div>
 @endif
 
