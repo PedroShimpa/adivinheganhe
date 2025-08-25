@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Events\RespostaAprovada;
 use App\Events\RespostaPrivada;
-use App\Jobs\IncluirResposta;
 use App\Mail\AcertoAdminMail;
 use App\Mail\AcertoUsuarioMail;
 use App\Models\AdicionaisIndicacao;
@@ -152,7 +151,7 @@ class RespostaController extends Controller
             if (($count >= env('MAX_ADIVINHATIONS', 10)) && $bonus > 0) {
                 $indicacao = AdicionaisIndicacao::where('user_uuid', $userUuid)->first();
                 $indicacao?->decrement('value');
-                $trysRestantes = $limite - $indicacao;
+                $trysRestantes = $indicacao->value ?? 0;
             } else {
                 $trysRestantes = $limite - $count;
             }
