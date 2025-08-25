@@ -40,10 +40,10 @@
     window.Echo.channel('comments')
         .listen('.novoComentario', e => {
 
-              comment = adicionarComentario(e);
-              $box = $(`#comentarios-${e.adivinhacaoId}`);
-              $list = $box.find('.comentarios-list');
-              $list.append(comment)
+            comment = adicionarComentario(e);
+            $box = $(`#comentarios-${e.adivinhacaoId}`);
+            $list = $box.find('.comentarios-list');
+            $list.append(comment)
         })
 
 
@@ -76,19 +76,32 @@
         $chatMessages.scrollTop($chatMessages[0].scrollHeight);
     }
 
-    
+
     function adicionarComentario(comentario) {
-      return `
-        <div class="mb-2 p-2 rounded-3 bg-white shadow-sm">
-            <strong>${comentario.usuario}:</strong> ${comentario.body}
-        </div>`;
+        const foto = comentario.user_photo ?
+            comentario.user_photo :
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(comentario.usuario)}&background=random`;
+
+        return `
+        <div class="d-flex align-items-start gap-2 mb-3 p-3 rounded-3 bg-white shadow-sm">
+            <img src="${foto}" 
+                 alt="${comentario.usuario}" 
+                 class="rounded-circle shadow-sm" 
+                 width="48" height="48" 
+                 style="object-fit: cover;">
+            <div>
+                <div class="fw-bold">${comentario.usuario}</div>
+                <div class="text-muted">${comentario.body}</div>
+            </div>
+        </div>
+    `;
     }
 
     window.Echo.channel('chat')
         .listen('.MensagemEnviada', e => {
             var tipo = 'message'
             @auth
-            if("{{ auth()->user()->username }}" == e.usuario) {
+            if ("{{ auth()->user()->username }}" == e.usuario) {
                 tipo = 'user'
             }
             @endauth
@@ -99,6 +112,4 @@
                 $('#chatNotification').removeClass('d-none');
             }
         });
-
-   
 </script>

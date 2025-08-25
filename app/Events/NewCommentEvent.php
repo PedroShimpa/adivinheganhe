@@ -13,12 +13,14 @@ class NewCommentEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets;
 
+    public $user_photo;
     public $usuario;
     public $adivinhacaoId;
     public $body;
 
-    public function __construct(string $usuario, int $adivinhacaoId, string $body)
+    public function __construct($userPhoto = null, string $usuario, int $adivinhacaoId, string $body)
     {
+        $this->user_photo = $userPhoto;
         $this->usuario = $usuario;
         $this->adivinhacaoId = $adivinhacaoId;
         $this->body = $body;
@@ -34,4 +36,3 @@ class NewCommentEvent implements ShouldBroadcastNow
         return 'novoComentario';
     }
 }
-
