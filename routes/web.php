@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PagamentosController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\RespostaController;
 use App\Http\Controllers\SuporteController;
@@ -16,6 +17,9 @@ Broadcast::routes(['middleware' => ['web', 'auth']]);
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/salvar_fingerprint', [HomeController::class, 'saveFingerprint'])->name('salvar_fingerprint');
+
+Route::get('/jogadores', [UsersController::class, 'jogadores'])->name('jogadores');
+Route::get('/jogadores/{user}', [UsersController::class, 'view'])->name('profile.view');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [UsersController::class, 'edit'])->name('profile.edit');
@@ -46,6 +50,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/adivinhe-o-milhao/create-pergunta', [AdivinheOMilhaoController::class, 'create'])->name('adivinhe_o_milhao.create_pergunta');
     Route::post('/adivinhe-o-milhao/create-pergunta', [AdivinheOMilhaoController::class, 'store'])->name('adivinhe_o_milhao.store_pergunta');
     Route::get('/adivinhe-o-milhao/errou', [AdivinheOMilhaoController::class, 'errou'])->name('adivinhe_o_milhao.errou');
+
+    Route::get('/users/follow/{user}', [UsersController::class, 'follow'])->name('users.follow');
+    Route::get('/users/unfollow/{user}', [UsersController::class, 'unfollow'])->name('users.unfollow');
+
+    Route::post('posts/', [PostController::class, 'store'])->name('posts.store');
+    Route::post('posts/comment/{post}', [PostController::class, 'comment'])->name('posts.comment');
+    Route::get('posts/comments/{post}', [PostController::class, 'comments'])->name('posts.comments');
 });
 
 Route::get('/chat', [ChatController::class, 'get_messages'])->name('chat.buscar');

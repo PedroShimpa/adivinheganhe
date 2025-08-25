@@ -1,83 +1,223 @@
-@extends('layouts.app', ['enable_adsense' => false])
+@extends('layouts.app', ['enable_adsense' => true])
 
 @section('content')
-<div class="container py-5" style="max-width: 700px;">
-    <h1 class="mb-4 fw-bold">Editar Perfil</h1>
+<div class="container py-4" style="max-width: 900px;">
 
-    <form action="{{ route('profile.update') }}" method="POST" class="card shadow-sm p-4">
-        @csrf
-        @method('PATCH')
+    {{-- Header do perfil --}}
+    <div class="card shadow-sm border-0 overflow-hidden mb-4">
+        <div class="position-relative">
+            <div class="bg-primary" style="height: 200px;"></div>
 
-        <div class="mb-3">
-            <label for="name" class="form-label fw-semibold">Nome</label>
-            <input type="text" class="form-control @error('name') is-invalid @enderror"
-                id="name" name="name" value="{{ old('name', auth()->user()->name) }}" required>
-            @error('name')
-            <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
+            <div class="position-absolute top-100 start-50 translate-middle" style="margin-top: -80px;">
+                <img src="{{ $user->image ? $user->image : 'https://ui-avatars.com/api/?name='.urlencode($user->username).'&background=random' }}"
+                    alt="Foto de perfil"
+                    class="rounded-circle border border-3 border-white shadow"
+                    width="160" height="160" style="object-fit: cover;">
+            </div>
+        </div>
+        <div class="card-body text-center mt-5">
+            <h2 class="fw-bold mb-0">{{ $user->name }}</h2>
+            <p class="text-muted mb-1">{{ '@'.$user->username }} ({{ $user->followers()->count()}} Seguidores)</p>
+
+            {{-- Botão editar apenas se for o próprio perfil --}}
+            @if(auth()->id() === $user->id)
+            <a href="{{ route('profile.edit') }}" class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-pencil-square"></i> Editar Perfil
+            </a>
+            @endif
+
+            {{-- Se não for o próprio perfil --}}
+            @if(auth()->id() !== $user->id)
+            @if($user->followers()->where('user_id', auth()->user()->id)->exists())
+            <a href="{{ route('users.unfollow', $user->username) }}" class="btn btn-sm btn-danger">
+                <i class="bi bi-person-dash"></i> Deixar de seguir
+            </a>
+            @else
+            <a href="{{ route('users.follow', $user->username) }}" class="btn btn-sm btn-primary">
+                <i class="bi bi-person-plus"></i> Seguir
+            </a>
+            @endif
+            @endif
+
+        </div>
+    </div>
+
+    {{-- Sobre --}}
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <h5 class="fw-bold mb-3">Sobre</h5>
+            <p class="mb-3">
+                {{ $user->bio ?: 'Ainda não escreveu nada sobre si mesmo.' }}
+            </p>
+        </div>
+    </div>
+
+    {{-- Criar novo post (apenas dono do perfil) --}}
+    @if(auth()->id() === $user->id)
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+
+                <div class="mb-3">
+                    <textarea name="content" class="form-control @error('content') is-invalid @enderror"
+                        rows="3" placeholder="O que você está pensando?">{{ old('content') }}</textarea>
+                    @error('content') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                </div>
+
+                <div class="mb-3">
+                    <input type="file" name="file" class="form-control @error('file') is-invalid @enderror">
+                    @error('file') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                </div>
+
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary">
+                        Publicar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    @endif
+
+    {{-- Timeline de posts --}}
+    <h5 class="fw-bold mb-3">Publicações</h5>
+
+    @forelse($user->posts as $post)
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <div class="d-flex align-items-center mb-2">
+                <img src="{{ $user->image ? $user->image : 'https://ui-avatars.com/api/?name='.urlencode($user->username).'&background=random' }}"
+                    class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
+                <div>
+                    <strong>{{ $user->name }}</strong><br>
+                    <small class="text-white">{{ $post->created_at->diffForHumans() }}</small>
+                </div>
+            </div>
+
+            {{-- Conteúdo do post --}}
+            @if($post->content)
+            <p class="mb-2">{{ $post->content }}</p>
+            @endif
+
+            {{-- Arquivo/imagem do post --}}
+            @if($post->file)
+            <div class="mb-2">
+                <img src="{{$post->file }}" class="img-fluid rounded">
+            </div>
+            @endif
+
+            <div class="mt-3">
+                <button class="btn btn-secondary btn-sm rounded-pill verComentarios"
+                    data-id="{{ $post->id }}"
+                    data-route="{{ route('posts.comments', $post->id) }}">
+                    💬 Comentários
+                </button>
+
+                <div id="comentarios-{{ $post->id }}" class="comentarios-box d-none mt-3 p-3 rounded-4 bg-light shadow-sm animate__animated">
+                    <div class="comentarios-list small mb-3 text-dark">
+                        <p class="text-muted">Carregando comentários...</p>
+                    </div>
+
+                    @auth
+                    <div class="input-group">
+                        <input type="text" id="comentario-input-{{ $post->id }}" class="form-control rounded-start-pill" placeholder="💬 Escreva um comentário...">
+                        <button class="btn btn-primary rounded-end-pill sendComment"
+                            data-id="{{ $post->id }}"
+                            data-route="{{ route('posts.comment', $post->id) }}">
+                            Enviar
+                        </button>
+                    </div>
+                    @else
+                    <div class="alert alert-warning small rounded-3 mt-2">
+                        Você precisa <a href="{{ route('login') }}" class="fw-semibold text-decoration-underline">entrar</a> para comentar.
+                    </div>
+                    @endauth
+                </div>
+            </div>
         </div>
 
-        <div class="mb-3">
-            <label for="username" class="form-label fw-semibold">Usuário</label>
-            <input type="text" class="form-control @error('username') is-invalid @enderror"
-                id="username" name="username" value="{{ old('username', auth()->user()->username) }}" required>
-            @error('username')
-            <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
+    </div>
+    @empty
+    <p class="text-white">Nenhuma publicação ainda.</p>
+    @endforelse
 
-        <div class="mb-3">
-            <label for="email" class="form-label fw-semibold">Email</label>
-            <input type="email" class="form-control @error('email') is-invalid @enderror"
-                id="email" name="email" value="{{ old('email', auth()->user()->email) }}" required>
-            @error('email')
-            <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-3">
-            <label for="whatsapp" class="form-label fw-semibold">WhatsApp</label>
-            <input type="text" class="form-control @error('whatsapp') is-invalid @enderror"
-                id="whatsapp" name="whatsapp" value="{{ old('whatsapp', auth()->user()->whatsapp) }}"
-                placeholder="(99) 99999-9999">
-            <small class="form-text text-muted">
-                Nós usamos o WhatsApp para coletar informações de entrega de prêmios como chave Pix e outros.
-            </small>
-            @error('whatsapp')
-            <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="d-flex justify-content-between mt-4">
-            <button type="submit" class="btn btn-primary px-4">
-                Salvar Alterações
-            </button>
-
-            <button type="button" onclick="confirmDelete()" class="btn btn-danger px-4">
-                Excluir Conta
-            </button>
-        </div>
-    </form>
-
-    {{-- Formulário oculto para exclusão --}}
-    <form id="deleteForm" action="{{ route('profile.destroy') }}" method="POST" class="d-none">
-        @csrf
-        @method('DELETE')
-    </form>
 </div>
-
 @endsection
+
 @push('scripts')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.9/jquery.inputmask.min.js" integrity="sha512-F5Ul1uuyFlGnIT1dk2c4kB4DBdi5wnBJjVhL7gQlGh46Xn0VhvD8kgxLtjdZ5YN83gybk/aASUAlpdoWUjRR3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-    $(document).ready(function() {
-        $('#whatsapp').inputmask('(99) 99999-9999');
+    $('.verComentarios').on('click', async function() {
+        const postId = $(this).data('id');
+        const route = $(this).data('route');
+        const $box = $(`#comentarios-${postId}`);
+        const $list = $box.find('.comentarios-list');
 
+        if ($box.hasClass('d-none')) {
+            $box.removeClass('d-none animate__fadeOut').addClass('animate__fadeIn');
 
-        function confirmDelete() {
-            if (confirm('Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.')) {
-                document.getElementById('deleteForm').submit();
+            try {
+                const res = await fetch(route, {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                const data = await res.json();
+
+                if (data.length > 0) {
+                    let html = '';
+                    data.forEach(c => {
+                        html += adicionarComentario(c);
+                    });
+                    $list.html(html);
+                } else {
+                    $list.html('<p class="text-muted">Nenhum comentário ainda. Seja o primeiro!</p>');
+                }
+            } catch (e) {
+                $list.html('<p class="text-danger">Erro ao carregar comentários.</p>');
             }
+
+        } else {
+            $box.removeClass('animate__fadeIn').addClass('animate__fadeOut');
+            setTimeout(() => $box.addClass('d-none'), 300);
+        }
+    });
+
+    function adicionarComentario(comentario) {
+        return `
+        <div class="mb-2 p-2 rounded-3 bg-white shadow-sm">
+            <strong>${comentario.usuario}:</strong> ${comentario.body}
+        </div>`;
+    }
+
+    $('.sendComment').on('click', async function() {
+        const postId = $(this).data('id');
+        const route = $(this).data('route');
+        const $input = $(`#comentario-input-${postId}`);
+        const body = $input.val().trim();
+
+        if (!body) return;
+
+        $(this).attr('disabled', true)
+
+        try {
+            const res = await fetch(route, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    body
+                })
+            });
+
+            $input.val('');
+        } catch (e) {
+            alert('Erro ao enviar comentário');
+        } finally {
+            $(this).attr('disabled', false)
         }
     });
 </script>
