@@ -37,7 +37,7 @@ class RespostaController extends Controller
         $userId = $user->id;
         $userUuid = $user->uuid;
 
-        if ($this->ultrapassouLimite($userId, $userUuid)) {
+        if ($this->ultrapassouLimite($userId, $userUuid, $adivinhacaoId)) {
             return response()->json(['info' => "Você já ultilizou todos os seus palpites!"]);
         }
 
@@ -88,10 +88,11 @@ class RespostaController extends Controller
         ]);
     }
 
-    private function ultrapassouLimite($userId, $userUuid)
+    private function ultrapassouLimite(int $userId, string $userUuid, int $adivinhacaoId)
     {
         $count = AdivinhacoesRespostas::where('user_id', $userId)
             ->whereDate('created_at', today())
+            ->where('adivinhacao_id', $adivinhacaoId)
             ->count();
         $limite = env('MAX_ADIVINHATIONS', 10);
         $bonus = AdicionaisIndicacao::where('user_uuid', $userUuid)->value('value') ?? 0;
@@ -141,22 +142,23 @@ class RespostaController extends Controller
     {
         try {
             $count = AdivinhacoesRespostas::where('user_id', $user->id)
+                ->where('adivinhacao_id', $adivinhacao->id)
                 ->whereDate('created_at', today())
                 ->count();
 
             $bonus = AdicionaisIndicacao::where('user_uuid', $userUuid)->value('value') ?? 0;
+            $limite = env('MAX_ADIVINHATIONS', 10) + $bonus;
 
             if (($count >= env('MAX_ADIVINHATIONS', 10)) && $bonus > 0) {
                 $indicacao = AdicionaisIndicacao::where('user_uuid', $userUuid)->first();
                 $indicacao?->decrement('value');
+                $trysRestantes = $limite - $indicacao;
+            } else {
+                $trysRestantes = $limite - $count;
             }
 
-            $limite = env('MAX_ADIVINHATIONS', 10) + $bonus;
-            $trysRestantes = $limite - $count;
-
+            Cache::forget('resposta_do_usuario_hoje_' . auth()->user()->id);
             if ($acertou) {
-                Cache::forget('adivinhacoes_ativas');
-                Cache::forget('premios_ultimos');
 
                 AdivinhacoesPremiacoes::create([
                     'user_id' => $user->id,

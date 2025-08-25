@@ -35,11 +35,6 @@
                 <p class="text-info small mb-2">Esta adivinhação não expira.</p>
                 @endif
 
-                <button class="btn btn-outline-info btn-sm mb-3 rounded-pill px-3 abrirModalInformacoes" data-bs-toggle="modal" data-bs-target="#modalInformacoes" titulo="{{ $adivinhacao->titulo. (!empty($adivinhacao->expired_at_br) && $adivinhacao->expired ? ' - EXPIRADA' : '') }}"
-                    descricao="{{ $adivinhacao->descricao}}">
-                    ➕ Informações
-                </button>
-
                 @if(!empty($adivinhacao->dica) && ($adivinhacao->resolvida != 'S'))
                 @if($adivinhacao->dica_paga == 'S')
                 @if(!$adivinhacao->buyed)
@@ -68,11 +63,16 @@
                     <button type="button" class="btn btn-primary btn-sm rounded-pill verRespostas" adivinhacao_id="{{ $adivinhacao->id}}" data-bs-toggle="modal" data-bs-target="#modalSuasRespostas">
                         📜 Seus Palpites
                     </button>
+                    <button class="btn btn-info btn-sm mb-3 rounded-pill px-3 abrirModalInformacoes" data-bs-toggle="modal" data-bs-target="#modalInformacoes" titulo="{{ $adivinhacao->titulo. (!empty($adivinhacao->expired_at_br) && $adivinhacao->expired ? ' - EXPIRADA' : '') }}"
+                        descricao="{{ $adivinhacao->descricao}}">
+                        ➕ Informações
+                    </button>
                 </div>
-                @if($limitExceded)
-                <div class="alert alert-warning small py-2 px-3 rounded-pill">⚠️ Você atingiu o limite de palpites hoje!</div>
+                @if($adivinhacao->limitExceded)
+                <div class="alert alert-warning small py-2 px-3 rounded-pill">⚠️ Você atingiu o limite de palpites dessa adivinhação para hoje!</div>
                 @else
                 @if($adivinhacao->resolvida != 'S')
+                <div class="alert alert-success small py-2 px-3 rounded-pill">Palpites restantes: <span  id="palpites_adivinhacao_{{ $adivinhacao->id}}">{{ $adivinhacao->palpites_restantes }}</span></div>
                 <div class="mb-2">
                     <input type="text" id="resposta-{{ $adivinhacao->id }}" class="form-control border-primary fw-semibold rounded-3" name="resposta" placeholder="💬 Digite seu palpite">
                 </div>
@@ -93,7 +93,7 @@
                 @endauth
 
                 <div class="mt-3">
-                    <button class="btn btn-outline-secondary btn-sm rounded-pill verComentarios"
+                    <button class="btn btn-secondary btn-sm rounded-pill verComentarios"
                         data-id="{{ $adivinhacao->id }}"
                         data-route="{{ route('adivinhacoes.comments', $adivinhacao->uuid) }}">
                         💬 Comentários

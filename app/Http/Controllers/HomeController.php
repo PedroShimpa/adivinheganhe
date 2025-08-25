@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Traits\CountTrys;
+
 use App\Http\Controllers\Traits\AdivinhacaoTrait;
 use App\Models\Adivinhacoes;
 use App\Models\AdivinhacoesPremiacoes;
@@ -12,38 +12,26 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     use AdivinhacaoTrait;
-    use CountTrys;
 
     public function __construct(private AdivinhacoesPremiacoes $adivinhacoesPremiacoes, private Adivinhacoes $adivinhacoes, private Regioes $regioes) {}
 
     public function index(Request $request)
     {
-        $trys = 0;
-        $limitExceded = true;
-
-        $this->count($trys, $limitExceded);
-
         $adivinhacoes =  $this->adivinhacoes->getAtivas();
 
         $adivinhacoes = $adivinhacoes->filter(function ($a) {
             return is_null($a->expire_at) || $a->expire_at > now();
         })->values();
 
-
         $adivinhacoes->each(function ($a) {
             $this->customize($a);
         });
 
-        return view('home')->with(compact('adivinhacoes', 'limitExceded', 'trys'));
+        return view('home')->with(compact('adivinhacoes'));
     }
 
     public function expiradas()
     {
-        $trys = 0;
-        $limitExceded = true;
-
-        $this->count($trys, $limitExceded);
-
         $adivinhacoes =  $this->adivinhacoes->getExpiradas();
 
         $adivinhacoes = $adivinhacoes->filter(function ($a) {
@@ -55,7 +43,7 @@ class HomeController extends Controller
             $this->customize($a);
         });
 
-        return view('home')->with(compact('adivinhacoes', 'limitExceded', 'trys'));
+        return view('home')->with(compact('adivinhacoes'));
     }
 
     public function premiacoes()
@@ -72,11 +60,6 @@ class HomeController extends Controller
 
     public function get_by_region(Regioes $regiao)
     {
-        $trys = 0;
-        $limitExceded = true;
-
-        $this->count($trys, $limitExceded);
-
         $adivinhacoes = $this->adivinhacoes->getByRegion($regiao->id);
 
         $adivinhacoes = $adivinhacoes->filter(function ($a) {
@@ -87,12 +70,7 @@ class HomeController extends Controller
             $this->customize($a);
         });
 
-
-        $adivinhacoesExpiradas = $this->adivinhacoes->getExpiradasByRegion($regiao->id);
-
-        $premios = $this->adivinhacoesPremiacoes->getPremiosByRegiao($regiao->id);
-
-        return view('home')->with(compact('adivinhacoes', 'limitExceded', 'premios', 'trys', 'adivinhacoesExpiradas', 'regiao'));
+        return view('home')->with(compact('adivinhacoes', 'regiao'));
     }
 
     public function hallOfFame(Request $request)
