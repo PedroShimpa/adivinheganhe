@@ -23,7 +23,7 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
 
@@ -35,12 +35,12 @@
 
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" media="print" onload="this.media='all'">
-    
+
     <noscript>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     </noscript>
-    
+
     <style>
         html,
         body {
@@ -105,60 +105,57 @@
 
 <body class="bg-dark text-white d-flex flex-column min-vh-100">
 
-    <nav class="navbar navbar-expand-sm fixed-top bg-dark shadow-lg py-3 px-4">
-        <div class="container">
-            <a class="navbar-brand text-white fs-4" href="{{ route('home') }}">
+    {{-- Botão para abrir a barra lateral --}}
+    <nav class="navbar fixed-top bg-dark shadow-sm px-3">
+        <div class="d-flex w-100 justify-content-between align-items-center">
+            <a class="navbar-brand text-white fw-bold" href="{{ route('home') }}">
                 🎮 {{ env('APP_NAME', 'Adivinhe e Ganhe') }}
             </a>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
-                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon text-white"></span>
+            <button class="btn btn-outline-light d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+                <i class="bi bi-list fs-4"></i>
             </button>
-
-            <div class="collapse navbar-collapse" id="navbarContent">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 d-flex align-items-center gap-3">
-                    <li class="nav-item"><a class="nav-link" href="{{ route('regioes.index') }}">Regiões</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('suporte.index') }}">Suporte</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('sobre') }}">Sobre</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('premiacoes') }}">Premiações</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('hall_da_fama') }}">Ranking</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('adivinhe_o_milhao.index') }}">Adivinhe o Milhão</a></li>
-
-                    @auth
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ Auth::user()->name }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Perfil</a></li>
-                            <li><a class="dropdown-item" href="{{ route('meus_premios') }}">Meus Prêmios</a></li>
-                            @if(auth()->user()->isAdmin())
-                            <li><a class="dropdown-item" href="{{ route('adivinhacoes.expiradas') }}">Expiradas</a></li>
-                            <li><a class="dropdown-item" href="{{ route('adivinhacoes.create') }}">Nova Adivinhação</a></li>
-                            <li><a class="dropdown-item" href="{{ route('adivinhe_o_milhao.create_pergunta') }}">Nova Pergunta Adivinhe o Milhão</a></li>
-                            @endif
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="dropdown-item">Sair</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
-                    @else
-                    <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Entrar</a></li>
-                    @endauth
-                </ul>
-            </div>
         </div>
     </nav>
 
-    <main class="flex-grow-1">
+    {{-- Sidebar (desktop fixa, mobile offcanvas) --}}
+    <div class="offcanvas offcanvas-start bg-dark text-white sidebar-nav" tabindex="-1" id="sidebarMenu">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title fw-bold">🎮 Menu</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column gap-2">
+            <a href="{{ route('sobre') }}" class="nav-link text-white"><i class="bi bi-info-circle"></i> Sobre</a>
+            <a href="{{ route('jogadores') }}" class="nav-link text-white"><i class="bi bi-person"></i> Jogadores</a>
+            <a href="{{ route('regioes.index') }}" class="nav-link text-white"><i class="bi bi-geo-alt"></i> Regiões</a>
+            <a href="{{ route('suporte.index') }}" class="nav-link text-white"><i class="bi bi-life-preserver"></i> Suporte</a>
+            <a href="{{ route('premiacoes') }}" class="nav-link text-white"><i class="bi bi-trophy"></i> Premiações</a>
+            <a href="{{ route('hall_da_fama') }}" class="nav-link text-white"><i class="bi bi-award"></i> Ranking</a>
+            <a href="{{ route('adivinhe_o_milhao.index') }}" class="nav-link text-white"><i class="bi bi-cash-coin"></i> Adivinhe o Milhão</a>
+
+            <hr class="border-secondary">
+
+            @auth
+            <a href="{{ route('profile.view', auth()->user()->username) }}" class="nav-link text-white"><i class="bi bi-person-circle"></i> Perfil</a>
+            <a href="{{ route('meus_premios') }}" class="nav-link text-white"><i class="bi bi-gift"></i> Meus Prêmios</a>
+
+            @if(auth()->user()->isAdmin())
+            <a href="{{ route('adivinhacoes.expiradas') }}" class="nav-link text-white"><i class="bi bi-clock-history"></i> Expiradas</a>
+            <a href="{{ route('adivinhacoes.create') }}" class="nav-link text-white"><i class="bi bi-plus-circle"></i> Nova Adivinhação</a>
+            <a href="{{ route('adivinhe_o_milhao.create_pergunta') }}" class="nav-link text-white"><i class="bi bi-question-circle"></i> Nova Pergunta</a>
+            @endif
+
+            <form method="POST" action="{{ route('logout') }}" class="mt-2">
+                @csrf
+                <button type="submit" class="btn btn-outline-danger w-100"><i class="bi bi-box-arrow-right"></i> Sair</button>
+            </form>
+            @else
+            <a href="{{ route('login') }}" class="btn btn-outline-primary w-100"><i class="bi bi-box-arrow-in-right"></i> Entrar</a>
+            @endauth
+        </div>
+    </div>
+
+    {{-- Conteúdo principal --}}
+    <main class="flex-grow-1 pt-5 mt-3">
         @yield('content')
     </main>
 
@@ -169,6 +166,48 @@
             github.com/PedroShimpa/adivinheganhe
         </a>
     </footer>
+
+    <style>
+        .sidebar-nav .nav-link {
+            padding: 0.7rem 1rem;
+            border-radius: .5rem;
+            transition: background 0.2s;
+        }
+
+        .sidebar-nav .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #00f7ff !important;
+        }
+
+        @media (min-width: 992px) {
+            .offcanvas-header .btn-close {
+                display: none !important;
+            }
+        }
+
+        /* No desktop a sidebar fica fixa à esquerda */
+        @media (min-width: 992px) {
+            .offcanvas-start {
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                transform: none !important;
+                visibility: visible !important;
+                border-right: 1px solid rgba(255, 255, 255, 0.1);
+                width: 250px !important;
+            }
+
+            main {
+                margin-left: 250px;
+                /* desloca conteúdo pra direita */
+            }
+
+            .navbar {
+                display: none;
+                /* some o topo em desktop */
+            }
+        }
+    </style>
 
     {{-- Modais --}}
     @include('partials.modals')
@@ -202,5 +241,6 @@
 
     @stack('scripts')
 </body>
+
 
 </html>
