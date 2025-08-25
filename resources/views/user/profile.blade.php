@@ -114,7 +114,7 @@
                     💬 Comentários
                 </button>
 
-                <div id="comentarios-{{ $post->id }}" class="comentarios-box d-none mt-3 p-3 rounded-4 bg-light shadow-sm animate__animated">
+                <div id="comentarios-post-{{ $post->id }}" class="comentarios-box d-none mt-3 p-3 rounded-4 bg-light shadow-sm animate__animated">
                     <div class="comentarios-list small mb-3 text-dark">
                         <p class="text-muted">Carregando comentários...</p>
                     </div>
@@ -150,7 +150,7 @@
     $('.verComentarios').on('click', async function() {
         const postId = $(this).data('id');
         const route = $(this).data('route');
-        const $box = $(`#comentarios-${postId}`);
+        const $box = $(`#comentarios-post-${postId}`);
         const $list = $box.find('.comentarios-list');
 
         if ($box.hasClass('d-none')) {
@@ -167,7 +167,7 @@
                 if (data.length > 0) {
                     let html = '';
                     data.forEach(c => {
-                        html += adicionarComentario(c);
+                        html += adicionarComentario(c, true);
                     });
                     $list.html(html);
                 } else {
@@ -182,27 +182,6 @@
             setTimeout(() => $box.addClass('d-none'), 300);
         }
     });
-
-    function adicionarComentario(comentario) {
-        const foto = comentario.user_photo ?
-            comentario.user_photo :
-            `https://ui-avatars.com/api/?name=${encodeURIComponent(comentario.usuario)}&background=random`;
-
-        return `
-        <div class="d-flex align-items-start gap-2 mb-3 p-3 rounded-3 bg-white shadow-sm">
-            <img src="${foto}" 
-                 alt="${comentario.usuario}" 
-                 class="rounded-circle shadow-sm" 
-                 width="48" height="48" 
-                 style="object-fit: cover;">
-            <div>
-                <div class="fw-bold">${comentario.usuario}</div>
-                <div class="text-muted">${comentario.body}</div>
-            </div>
-        </div>
-    `;
-    }
-
 
     $('.sendComment').on('click', async function() {
         const postId = $(this).data('id');

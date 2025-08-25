@@ -17,13 +17,15 @@ class NewCommentEvent implements ShouldBroadcastNow
     public $usuario;
     public $adivinhacaoId;
     public $body;
+    public bool $isPost = false;
 
-    public function __construct($userPhoto = null, string $usuario, int $adivinhacaoId, string $body)
+    public function __construct($userPhoto = null, string $usuario, int $adivinhacaoId, string $body, bool $isPost = false)
     {
         $this->user_photo = $userPhoto;
         $this->usuario = $usuario;
         $this->adivinhacaoId = $adivinhacaoId;
         $this->body = $body;
+        $this->isPost = $isPost;
     }
 
     public function broadcastOn()
