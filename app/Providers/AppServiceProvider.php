@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Models\User;
-use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Auth;
@@ -32,13 +31,5 @@ class AppServiceProvider extends ServiceProvider
             return $user->isAdmin();
         });
 
-
-        if (app()->environment('production')) {
-            Debugbar::disable();
-
-            if (Auth::check() && Auth::user()->isAdmin()) {
-                Debugbar::enable();
-            }
-        }
     }
 }
