@@ -7,7 +7,6 @@ use App\Events\NewCommentEvent;
 use App\Models\Adivinhacoes;
 use App\Http\Requests\StoreAdivinhacoesRequest;
 use App\Models\AdivinhacoesRespostas;
-use App\Http\Controllers\Traits\CountTrys;
 use App\Http\Controllers\Traits\AdivinhacaoTrait;
 use App\Http\Requests\UpdateAdivinhacoesRequest;
 use App\Http\Resources\GetCommentsResource;
@@ -23,14 +22,8 @@ use Intervention\Image\Laravel\Facades\Image;
 class AdivinhacoesController extends Controller
 {
     use AdivinhacaoTrait;
-    use CountTrys;
-
     public function index(Adivinhacoes $adivinhacao)
     {
-        $trys = 0;
-        $limitExceded = true;
-
-        $this->count($trys, $limitExceded);
         $this->customize($adivinhacao);
 
         $respostas = collect([]);
@@ -48,7 +41,7 @@ class AdivinhacoesController extends Controller
         }
 
         $title = $adivinhacao->titulo . ' - ' . env('APP_NAME', 'Adivinhe e Ganhe');
-        return view('adivinhacoes.index', compact('adivinhacao', 'trys', 'limitExceded', 'respostas', 'title'));
+        return view('adivinhacoes.index', compact('adivinhacao', 'respostas', 'title'));
     }
 
     public function create()
