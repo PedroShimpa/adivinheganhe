@@ -41,7 +41,13 @@
         .listen('.novoComentario', e => {
 
             comment = adicionarComentario(e);
-            $box = $(`#comentarios-${e.adivinhacaoId}`);
+            if(e.isPost) {
+
+                $box = $(`#comentarios-post-${e.adivinhacaoId}`);
+            } else {
+
+                $box = $(`#comentarios-${e.adivinhacaoId}`);
+            }
             $list = $box.find('.comentarios-list');
             $list.append(comment)
         })

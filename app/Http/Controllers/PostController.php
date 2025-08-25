@@ -52,9 +52,11 @@ class PostController extends Controller
     {
         $post->comments()->create(['user_id' => auth()->user()->id, 'body' => $request->input('body')]);
         broadcast(new NewCommentEvent(
+            auth()->user()->image,
             auth()->user()->username,
             $post->id,
-            $request->input('body')
+            $request->input('body'),
+            true
         ));
     }
 }
