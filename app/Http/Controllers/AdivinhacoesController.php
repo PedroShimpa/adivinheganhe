@@ -166,6 +166,7 @@ class AdivinhacoesController extends Controller
     {
         $adivinhacao->comments()->create(['user_id' => auth()->user()->id, 'body' => $request->input('body')]);
         broadcast(new NewCommentEvent(
+            auth()->user()->image,
             auth()->user()->username,
             $adivinhacao->id,
             $request->input('body')
