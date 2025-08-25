@@ -43,7 +43,9 @@ class HomeController extends Controller
             $this->customize($a);
         });
 
-        return view('home')->with(compact('adivinhacoes'));
+        $title = 'Adivinhações Expiradas';
+
+        return view('home')->with(compact('adivinhacoes', 'title'));
     }
 
     public function premiacoes()

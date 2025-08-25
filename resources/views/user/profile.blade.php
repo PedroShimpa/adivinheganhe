@@ -19,14 +19,13 @@
             <h2 class="fw-bold mb-0">{{ $user->name }}</h2>
             <p class="text-muted mb-1">{{ '@'.$user->username }} ({{ $user->followers()->count()}} Seguidores)</p>
 
-            {{-- Botão editar apenas se for o próprio perfil --}}
-            @if(auth()->id() === $user->id)
+            @auth
+            @if(auth()->user()->id === $user->id)
             <a href="{{ route('profile.edit') }}" class="btn btn-sm btn-outline-primary">
                 <i class="bi bi-pencil-square"></i> Editar Perfil
             </a>
             @endif
 
-            {{-- Se não for o próprio perfil --}}
             @if(auth()->id() !== $user->id)
             @if($user->followers()->where('user_id', auth()->user()->id)->exists())
             <a href="{{ route('users.unfollow', $user->username) }}" class="btn btn-sm btn-danger">
@@ -38,6 +37,7 @@
             </a>
             @endif
             @endif
+            @endauth
 
         </div>
     </div>
@@ -53,6 +53,7 @@
     </div>
 
     {{-- Criar novo post (apenas dono do perfil) --}}
+    @auth
     @if(auth()->id() === $user->id)
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
@@ -79,6 +80,7 @@
         </div>
     </div>
     @endif
+    @endauth
 
     {{-- Timeline de posts --}}
     <h5 class="fw-bold mb-3">Publicações</h5>
