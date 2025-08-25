@@ -15,6 +15,7 @@ class GetCommentsResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'user_photo' => $this->user->image,
             'usuario' => $this->user->username,
             'body' => $this->body,
         ];

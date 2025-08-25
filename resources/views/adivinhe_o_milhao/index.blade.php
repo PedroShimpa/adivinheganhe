@@ -6,7 +6,7 @@
     @if(Auth::check())
     <div class="mb-4 p-4 card text-center animate__animated animate__fadeInUp">
         <h5 class="mb-3 ">
-            🎯 Indique e ganhe 1 tentativa extra por usuário registrado em seu link</strong>
+            🎯 Indique e ganhe 1 tentativa extra por adivinhador registrado em seu link</strong>
         </h5>
 
         <div class="input-group mb-3 mx-auto" style="max-width: 500px;">
