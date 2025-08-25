@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,7 +13,6 @@ use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
-
     use Cachable;
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, SoftDeletes;
@@ -33,8 +31,16 @@ class User extends Authenticatable
         'whatsapp',
         'indicated_by',
         'is_admin',
-        'fingerprint'
+        'fingerprint',
+        'perfil_privado',
+        'bio',
+        'image'
     ];
+
+    public function getRouteKeyName()
+    {
+        return 'username';
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -68,7 +74,18 @@ class User extends Authenticatable
         });
     }
 
-    public function isAdmin() {
+    public function isAdmin()
+    {
         return $this->is_admin == 'S';
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'user_id', 'id')->orderBy('id', 'desc');
+    }
+
+    public function followers()
+    {
+        return $this->morphMany(Follower::class, 'followable');
     }
 }
