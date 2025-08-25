@@ -37,10 +37,23 @@
     });
 
     function adicionarComentario(comentario) {
+      const foto = comentario.user_photo ?
+        comentario.user_photo :
+        `https://ui-avatars.com/api/?name=${encodeURIComponent(comentario.usuario)}&background=random`;
+
       return `
-        <div class="mb-2 p-2 rounded-3 bg-white shadow-sm">
-            <strong>${comentario.usuario}:</strong> ${comentario.body}
-        </div>`;
+        <div class="d-flex align-items-start gap-2 mb-3 p-3 rounded-3 bg-white shadow-sm">
+            <img src="${foto}" 
+                 alt="${comentario.usuario}" 
+                 class="rounded-circle shadow-sm" 
+                 width="48" height="48" 
+                 style="object-fit: cover;">
+            <div>
+                <div class="fw-bold">${comentario.usuario}</div>
+                <div class="text-muted">${comentario.body}</div>
+            </div>
+        </div>
+    `;
     }
 
     $('.sendComment').on('click', async function() {
@@ -70,7 +83,7 @@
       } catch (e) {
         alert('Erro ao enviar comentário');
       } finally {
-              $(this).attr('disabled', false)
+        $(this).attr('disabled', false)
       }
     });
 
@@ -135,7 +148,7 @@
                   : 'Você não possui mais palpites. Se quiser, pode <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-primary ms-2">comprar mais</a> 😞'
               }${codigoResposta}`);
 
-            $('#palpites_adivinhacao_'+id).html(json.trys)
+            $('#palpites_adivinhacao_' + id).html(json.trys)
             $btn.attr('disabled', false);
           }
         }

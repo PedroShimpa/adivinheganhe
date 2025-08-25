@@ -22,7 +22,7 @@
 
                                 <h5 class="fw-bold text-dark mb-1">{{ '@'.$player->username }}</h5>
                             </a>
-                            <p class="text-success small mb-3" style="min-height: 40px;">
+                            <p class="text-dark small mb-3" style="min-height: 40px;">
                                 {{ $player->bio ? Str::limit($player->bio, 80) : 'Ainda não escreveu nada...' }}
                             </p>
 
