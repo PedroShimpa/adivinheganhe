@@ -124,6 +124,7 @@
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
         </div>
         <div class="offcanvas-body d-flex flex-column gap-2">
+            <a href="{{ route('jogar') }}" class="nav-link text-white"><i class="bi bi-controller"></i> Jogar</a>
             <a href="{{ route('sobre') }}" class="nav-link text-white"><i class="bi bi-info-circle"></i> Sobre</a>
             <a href="{{ route('jogadores') }}" class="nav-link text-white"><i class="bi bi-person"></i> Jogadores</a>
             <a href="{{ route('regioes.index') }}" class="nav-link text-white"><i class="bi bi-geo-alt"></i> Regiões</a>
