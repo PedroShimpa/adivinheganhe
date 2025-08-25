@@ -120,7 +120,7 @@
     {{-- Sidebar (desktop fixa, mobile offcanvas) --}}
     <div class="offcanvas offcanvas-start bg-dark text-white sidebar-nav" tabindex="-1" id="sidebarMenu">
         <div class="offcanvas-header border-bottom">
-            <h5 class="offcanvas-title fw-bold">🎮 Menu</h5>
+            <h5 class="offcanvas-title fw-bold">Adivinhe e Ganhe</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
         </div>
         <div class="offcanvas-body d-flex flex-column gap-2">
