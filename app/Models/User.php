@@ -88,4 +88,60 @@ class User extends Authenticatable
     {
         return $this->morphMany(Follower::class, 'followable');
     }
+
+    public function sentFriendships()
+    {
+        return $this->hasMany(Friendship::class, 'sender_id');
+    }
+
+    public function receivedFriendships()
+    {
+        return $this->hasMany(Friendship::class, 'receiver_id');
+    }
+
+    public function friends()
+    {
+        return $this->sentFriendships()
+            ->where('status', 'accepted')
+            ->with('receiver')
+            ->get()
+            ->merge(
+                $this->receivedFriendships()
+                    ->where('status', 'accepted')
+                    ->with('sender')
+                    ->get()
+            );
+    }
+
+    public function notifications()
+    {
+        return $this->morphMany(\Illuminate\Notifications\DatabaseNotification::class, 'notifiable');
+    }
+
+    public function unreadNotifications()
+    {
+        return $this->notifications()->whereNull('read_at');
+    }
+
+    public function unreadNotificationsCount()
+    {
+        return $this->unreadNotifications()->count();
+    }
+
+    public function feedPosts()
+    {
+        $friendIds = $this->friends()->pluck('id')->toArray();
+
+        $followingIds = $this->followers()
+            ->where('follower_id', $this->id) 
+            ->pluck('followable_id')
+            ->toArray();
+
+        $userIds = array_merge($friendIds, $followingIds, [$this->id]); 
+
+        return Post::whereIn('user_id', $userIds)
+            ->latest()
+            ->with('user') 
+            ->paginate(20);
+    }
 }

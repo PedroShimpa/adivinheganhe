@@ -1,75 +1,65 @@
 @extends('layouts.app', ['enable_adsense' => true])
 
 @section('content')
-<div class="container " style="max-width: 900px;">
+<div class="container">
 
-    <div class="card shadow-sm border-0 overflow-hidden mb-4">
-        <div class="position-relative">
-            <div class="bg-primary" style="height: 200px;"></div>
-
-            <div class="position-absolute top-100 start-50 translate-middle" style="margin-top: -80px;">
-                <img src="{{ $user->image ? $user->image : 'https://ui-avatars.com/api/?name='.urlencode($user->username).'&background=random' }}"
-                    alt="Foto de perfil"
-                    class="rounded-circle border border-3 border-white shadow"
-                    width="160" height="160" style="object-fit: cover;">
-            </div>
-        </div>
-        <div class="card-body text-center mt-5">
-            <h2 class="fw-bold mb-0">{{ $user->name }}</h2>
-            <p class="text-muted mb-1">{{ '@'.$user->username }} ({{ $user->followers()->count()}} Seguidores)</p>
-
-            @auth
-            @if(auth()->user()->id === $user->id)
-            <a href="{{ route('profile.edit') }}" class="btn btn-sm btn-outline-primary">
-                <i class="bi bi-pencil-square"></i> Editar Perfil
-            </a>
-            @endif
-
-            @if(auth()->id() !== $user->id)
-            @if($user->followers()->where('user_id', auth()->user()->id)->exists())
-            <a href="{{ route('users.unfollow', $user->username) }}" class="btn btn-sm btn-danger">
-                <i class="bi bi-person-dash"></i> Deixar de seguir
-            </a>
-            @else
-            <a href="{{ route('users.follow', $user->username) }}" class="btn btn-sm btn-primary">
-                <i class="bi bi-person-plus"></i> Seguir
-            </a>
-            @endif
-            @endif
-            @endauth
-
-        </div>
-    </div>
-
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-body">
-            <h5 class="fw-bold mb-3">Sobre</h5>
-            <p class="mb-3">
-                {{ $user->bio ?: 'Ainda não escreveu nada sobre si mesmo.' }}
-            </p>
-        </div>
-    </div>
-
-    @auth
-    @if(auth()->id() === $user->id)
     @include('partials.post_store')
+
+    <div class="timeline position-relative" id="timeline">
+        <div class="timeline-line position-absolute top-0 start-50 translate-middle-x bg-secondary" style="width:4px; height:100%;"></div>
+
+        @forelse($posts as $post)
+        @include('partials.post')
+        @empty
+        <p class="text-white text-center">Nenhuma publicação ainda.</p>
+        @endforelse
+    </div>
+
+    @if($posts->hasMorePages())
+    <div class="text-center my-4">
+        <button id="loadMorePosts" class="btn btn-outline-primary px-4" data-next-page="{{ $posts->nextPageUrl() }}">
+            Ver mais
+        </button>
+    </div>
     @endif
-    @endauth
-
-    {{-- Timeline de posts --}}
-    <h5 class="fw-bold mb-3">Publicações</h5>
-
-    @forelse($user->posts as $post)
-    @include('partials.post')
-    @empty
-    <p class="text-white">Nenhuma publicação ainda.</p>
-    @endforelse
 
 </div>
 @endsection
 
 @push('scripts')
 <script>
+    $('#loadMorePosts').on('click', async function() {
+        const $btn = $(this);
+        const nextPageUrl = $btn.data('next-page');
+
+        if (!nextPageUrl) return;
+
+        $btn.attr('disabled', true).text('Carregando...');
+
+        try {
+            const res = await fetch(nextPageUrl, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+            const data = await res.json();
+
+            if (data.html) {
+                $('#timeline').append(data.html);
+
+                if (data.next_page_url) {
+                    $btn.data('next-page', data.next_page_url).attr('disabled', false).text('Ver mais');
+                } else {
+                    $btn.remove(); 
+                }
+            }
+        } catch (e) {
+            console.error(e);
+            $btn.attr('disabled', false).text('Ver mais');
+        }
+    });
+
+
     $('.verComentarios').on('click', async function() {
         const postId = $(this).data('id');
         const route = $(this).data('route');

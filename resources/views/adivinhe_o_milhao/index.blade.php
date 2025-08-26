@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container py-5">
+<div class="container ">
     @if(Auth::check())
     <div class="mb-4 p-4 card text-center animate__animated animate__fadeInUp">
         <h5 class="mb-3 ">

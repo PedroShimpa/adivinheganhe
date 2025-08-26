@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-5">
+<div class="container ">
     <div class="text-center mb-5">
         <h1 class="display-4 fw-bold">🎯 Bem-vindo ao <span class="text-primary">Adivinhe e Ganhe!</span></h1>
         <p class="fs-5 text-white">O jogo brasileiro mais justo, divertido e premiado da internet!</p>
