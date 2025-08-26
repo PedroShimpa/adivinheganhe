@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificacaoEvent;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Friendship;
 use App\Models\User;
+use App\Notifications\FriendRequestAcceptedNotification;
+use App\Notifications\FriendRequestNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,10 +21,23 @@ class UsersController extends Controller
 {
     public function jogadores()
     {
-
         $players = User::select('username', 'image', 'bio')->where('perfil_privado', 'N')->paginate();
 
         return view('jogadores')->with('players', $players);
+    }
+
+    public function para_voce(Request $request)
+    {
+        $posts = auth()->user()->feedPosts();
+
+        if ($request->ajax()) {
+            $html = view('partials.posts', compact('posts'))->render();
+            return response()->json([
+                'html' => $html,
+                'next_page_url' => $posts->nextPageUrl(),
+            ]);
+        }
+        return view('para_voce')->with(compact('posts'));
     }
 
     public function view(User $user)
@@ -35,9 +52,7 @@ class UsersController extends Controller
             }
         }
     }
-    /**
-     * Display the user's profile form.
-     */
+
     public function edit(Request $request): View
     {
         return view('user.edit_profile', [
@@ -45,9 +60,6 @@ class UsersController extends Controller
         ]);
     }
 
-    /**
-     * Update the user's profile information.
-     */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $request->user()->fill($request->validated());
@@ -73,9 +85,6 @@ class UsersController extends Controller
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
-    /**
-     * Delete the user's account.
-     */
     public function destroy(Request $request): RedirectResponse
     {
         $request->validateWithBag('userDeletion', [
@@ -104,5 +113,52 @@ class UsersController extends Controller
     {
         $user->followers()->where(['user_id' => auth()->user()->id])->delete();
         return redirect()->back();
+    }
+
+    public function sendFriendRequest(User $user)
+    {
+        $request = Friendship::create([
+            'sender_id' => auth()->id(),
+            'receiver_id' => $user->id,
+        ]);
+
+        $user->notify(new FriendRequestNotification());
+        broadcast(new NotificacaoEvent($user->id, auth()->user()->name . ' enviou um pedido de amizade.'));
+        return $request;
+    }
+
+    public function getUnreadNotifications()
+    {
+        $notifications =  auth()->user()->unreadNotifications;
+        auth()->user()->unreadNotifications->markAsRead();
+
+        return $notifications;
+    }
+
+    public function acceptFriendRequest($userId)
+    {
+        $friendship = Friendship::where('sender_id', $userId)
+            ->where('receiver_id', auth()->id())
+            ->first();
+
+        $accept = $friendship->update(['status' => 'accepted']);
+        User::find($userId)->notify(new FriendRequestAcceptedNotification());
+        broadcast(new NotificacaoEvent($userId, auth()->user()->name . ' aceitou seu pedido de amizade.'));
+
+        return $accept;
+    }
+
+    public function recuseFriendRequest($userId)
+    {
+        return Friendship::where('sender_id', $userId)
+            ->where('receiver_id', auth()->id())
+            ->delete();
+    }
+
+    public function meusAmigos()
+    {
+        $friends = auth()->user()->friends();
+
+        return view('amigos')->with(compact('friends'));
     }
 }

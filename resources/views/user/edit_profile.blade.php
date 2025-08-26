@@ -1,7 +1,7 @@
 @extends('layouts.app', ['enable_adsense' => false])
 
 @section('content')
-<div class="container py-5" style="max-width: 700px;">
+<div class="container " style="max-width: 700px;">
     <h1 class="mb-4 fw-bold">Editar Perfil</h1>
 
     <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="card shadow-sm p-4">

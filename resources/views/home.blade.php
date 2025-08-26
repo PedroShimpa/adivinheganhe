@@ -1,7 +1,7 @@
 @extends('layouts.app', ['enable_adsense' => true])
 
 @section('content')
-    <div class="container py-4">
+    <div class="container">
         @if (!empty($regiao))
             <div class="mb-4 mt-4">
                 <h1 class="text-white text-center">{{ $regiao->nome }}</h1>
