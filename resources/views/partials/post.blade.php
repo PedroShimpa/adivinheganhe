@@ -21,14 +21,14 @@
                     @endif
 
                     <div class="d-flex justify-content-between mt-3">
-                        <button class="btn btn-outline-secondary btn-sm rounded-pill verComentarios"
+                        <button class="btn btn-secondary btn-sm rounded-pill verComentarios"
                             data-id="{{ $post->id }}"
                             data-route="{{ route('posts.comments', $post->id) }}">
                             💬 Comentários
                         </button>
                         <!-- <div>
-                            <button class="btn btn-outline-danger btn-sm rounded-pill me-1">❤️ Curtir</button>
-                            <button class="btn btn-outline-primary btn-sm rounded-pill">🔗 Compartilhar</button>
+                            <button class="btn btn-danger btn-sm rounded-pill me-1">❤️ Curtir</button>
+                            <button class="btn btn-primary btn-sm rounded-pill">🔗 Compartilhar</button>
                         </div> -->
                     </div>
 

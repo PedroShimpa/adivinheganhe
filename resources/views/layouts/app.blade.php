@@ -115,7 +115,7 @@
 
             @auth
             <div class="dropdown">
-                <button id="notificationButton" class="btn btn-outline-light position-relative" data-bs-toggle="dropdown">
+                <button id="notificationButton" class="btn btn-light position-relative" data-bs-toggle="dropdown">
                     <i class="bi bi-bell fs-4"></i>
                     <span id="notificationCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         {{ auth()->user()->unreadNotificationsCount()}}
@@ -128,7 +128,7 @@
             @endauth
 
             {{-- Mobile toggle --}}
-            <button class="btn btn-outline-light d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+            <button class="btn btn-light d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
                 <i class="bi bi-list fs-4"></i>
             </button>
         </div>
@@ -188,10 +188,10 @@
             <a href="{{ route('meus_premios') }}" class="nav-link text-white"><i class="bi bi-gift"></i> Meus Prêmios</a>
             <form method="POST" action="{{ route('logout') }}" class="mt-2">
                 @csrf
-                <button type="submit" class="btn btn-outline-danger w-100"><i class="bi bi-box-arrow-right"></i> Sair</button>
+                <button type="submit" class="btn btn-danger w-100"><i class="bi bi-box-arrow-right"></i> Sair</button>
             </form>
             @else
-            <a href="{{ route('login') }}" class="btn btn-outline-primary w-100"><i class="bi bi-box-arrow-in-right"></i> Entrar</a>
+            <a href="{{ route('login') }}" class="btn btn-primary w-100"><i class="bi bi-box-arrow-in-right"></i> Entrar</a>
             @endauth
         </div>
     </div>

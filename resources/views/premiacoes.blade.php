@@ -28,9 +28,8 @@
                                     <a href="{{ $premio->premio }}" target="_blank">
                                         <img src="{{ $premio->premio }}" alt="Prêmio" class="img-fluid rounded shadow-sm">
                                     </a>
-                                {{-- Se for apenas um link comum --}}
                                 @else
-                                    <a href="{{ $premio->premio }}" target="_blank" class="btn btn-outline-primary w-100">
+                                    <a href="{{ $premio->premio }}" target="_blank" class="btn btn-primary w-100">
                                         🔗 Ver prêmio
                                     </a>
                                 @endif
