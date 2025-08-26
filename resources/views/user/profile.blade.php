@@ -20,7 +20,7 @@
 
             @auth
             @if(auth()->user()->id === $user->id)
-            <a href="{{ route('profile.edit') }}" class="btn btn-sm btn-outline-primary">
+            <a href="{{ route('profile.edit') }}" class="btn btn-sm btn-primary">
                 <i class="bi bi-pencil-square"></i> Editar Perfil
             </a>
             @endif

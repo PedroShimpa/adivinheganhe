@@ -7,7 +7,7 @@
 
             {{-- Login com Google destacado --}}
             <div class="text-center mb-4">
-                <a href="{{ route('login.google') }}" class="btn btn-outline-light bg-white border d-flex align-items-center justify-content-center gap-2 shadow-sm py-2 rounded-3">
+                <a href="{{ route('login.google') }}" class="btn btn-light bg-white border d-flex align-items-center justify-content-center gap-2 shadow-sm py-2 rounded-3">
                     <i class="bi bi-google fs-5 text-danger"></i>
                     <span class="fw-semibold text-dark">Registrar com Google</span>
                 </a>

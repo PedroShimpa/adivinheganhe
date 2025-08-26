@@ -16,7 +16,7 @@
 
                     <div class="d-flex justify-content-center gap-3 flex-wrap mt-4">
                         <a href="{{ route('home') }}"
-                            class="btn btn-lg btn-outline-primary px-5 py-3 rounded-pill shadow fw-bold">
+                            class="btn btn-lg btn-primary px-5 py-3 rounded-pill shadow fw-bold">
                             🏠 Voltar para a Página Inicial
                         </a>
                     </div>

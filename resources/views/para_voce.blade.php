@@ -17,7 +17,7 @@
 
     @if($posts->hasMorePages())
     <div class="text-center my-4">
-        <button id="loadMorePosts" class="btn btn-outline-primary px-4" data-next-page="{{ $posts->nextPageUrl() }}">
+        <button id="loadMorePosts" class="btn btn-primary px-4" data-next-page="{{ $posts->nextPageUrl() }}">
             Ver mais
         </button>
     </div>
