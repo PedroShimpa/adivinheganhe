@@ -36,8 +36,6 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'username' => $request->username,
             'password' => Hash::make($request->password),
-            // 'cpf' => $request->cpf,
-            // 'whatsapp' => $request->whatsapp,
             'indicated_by' => $request->input('indicated_by'),
             'fingerprint' =>  $request->input('fingerprint')
         ]);
