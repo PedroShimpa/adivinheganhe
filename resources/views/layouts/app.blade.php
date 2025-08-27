@@ -180,7 +180,7 @@
         @yield('content')
     </main>
 
-    <footer class="text-center  mt-auto bg-dark animate__animated animate__fadeInUp">
+    <footer class="text-center  mt-auto bg-dark ">
         <h5 class="fw-bold">Adivinhe e Ganhe</h5>
         <p class="text-light mb-1">Projeto de código aberto criado e mantido por <span class="text-info">Pedro "Shimpa" Falconi</span></p>
         <a href="https://github.com/PedroShimpa/adivinheganhe" class="text-warning text-decoration-none" target="_blank">
