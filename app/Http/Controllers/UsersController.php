@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Events\NotificacaoEvent;
 use App\Http\Requests\ProfileUpdateRequest;
-use App\Jobs\UploadUserImage;
 use App\Mail\FriendrequestMail;
 use App\Models\Friendship;
 use App\Models\User;
@@ -71,22 +70,28 @@ class UsersController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $request->user()->fill($request->validated());
-        $request->user()->save();
 
         if ($request->file('image')) {
-            $tempPath = $request->file('image')->store('temp');
-            UploadUserImage::dispatch($request->user(), storage_path('app/' . $tempPath));
+            $imagem = $request->file('image');
+            $hash = Str::random(10);
+            $fileName = $hash . '_' . time() . '.webp';
 
-            // Mensagem indicando que o upload da imagem será feito em background
-            return Redirect::route('profile.edit')
-                ->with('status', 'Dados atualizados com sucesso!')
-                ->with('image_upload_notice', 'Sua imagem será enviada em instantes.');
+            $image = Image::read($imagem)->encodeByExtension('webp', 55);
+
+            $filePath = 'usuarios/imagens/' . $fileName;
+
+            Storage::disk('s3')->put($filePath, (string) $image);
+
+            $urlImagem = Storage::disk('s3')->url($filePath);
+
+            $request->user()->image = $urlImagem;
         }
+
+        $request->user()->save();
 
         return Redirect::route('profile.edit')
             ->with('status', 'Perfil atualizado com sucesso!');
     }
-
 
     public function destroy(Request $request): RedirectResponse
     {
