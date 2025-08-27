@@ -38,6 +38,59 @@
             @endif
             @endauth
 
+            @auth
+            @if(auth()->id() !== $user->id)
+            @php
+            $isFriend = auth()->user()->friends()->contains(fn($f) => $f->id === $user->id);
+
+            // Verifica se existe pedido pendente enviado pelo usuário logado
+            $pendingRequest = auth()->user()->sentFriendships()
+            ->where('receiver_id', $user->id)
+            ->where('status', 'pending')
+            ->exists();
+            @endphp
+
+            @if($isFriend)
+            <button class="btn btn-sm btn-success">
+                <i class="bi bi-check2"></i> Amigo
+            </button>
+            @elseif($pendingRequest)
+            <button class="btn btn-sm btn-warning" disabled>
+                <i class="bi bi-clock"></i> Pedido enviado
+            </button>
+            @else
+            <button
+                class="btn btn-sm btn-primary sendFriendRequest"
+                data-route="{{ route('users.friend_request', $user->username) }}">
+                <i class="bi bi-person-plus"></i> Adicionar amigo
+            </button>
+            @endif
+            @endif
+            @endauth
+
+            @auth
+            @if(auth()->id() === $user->id)
+            @php
+            // Contar pedidos pendentes recebidos
+            $pendingRequestsCount = $user->receivedFriendships()
+            ->where('status', 'pending')
+            ->count();
+            @endphp
+
+            <a href="{{ route('users.friend_requests') }}" class="btn btn-sm btn-warning position-relative">
+                <i class="bi bi-person-plus"></i> Pedidos de amizade
+                @if($pendingRequestsCount > 0)
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{ $pendingRequestsCount }}
+                </span>
+                @endif
+            </a>
+            @endif
+            @endauth
+
+
+
+
         </div>
     </div>
 
@@ -70,6 +123,41 @@
 
 @push('scripts')
 <script>
+    $(document).ready(function() {
+        $('.sendFriendRequest').on('click', async function() {
+            const $btn = $(this);
+            const route = $btn.data('route');
+
+            $btn.prop('disabled', true);
+
+            try {
+                const res = await fetch(route, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                });
+
+                if (res.ok) {
+                    // Alterar botão para "Pedido enviado" em amarelo
+                    $btn.removeClass('btn-primary')
+                        .addClass('btn-warning')
+                        .html('<i class="bi bi-clock"></i> Pedido enviado');
+                } else {
+                    alert('Erro ao enviar pedido de amizade.');
+                    $btn.prop('disabled', false);
+                }
+            } catch (e) {
+                console.error(e);
+                alert('Erro ao enviar pedido de amizade.');
+                $btn.prop('disabled', false);
+            }
+        });
+    });
+
     $('.verComentarios').on('click', async function() {
         const postId = $(this).data('id');
         const route = $(this).data('route');

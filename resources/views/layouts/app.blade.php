@@ -134,9 +134,7 @@
                 </div>
                 @endauth
 
-                <button class="btn btn-light d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
-                    <i class="bi bi-list fs-4"></i>
-                </button>
+              
             </div>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
         </div>
@@ -264,9 +262,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js" defer></script>
 
     @include('partials.socket')
-    @if(env('ENABLE_CHAT', true))
-    @include('partials.chat-floating')
-    @endif
+    @include('partials.friends_bar')
 
     @if(env('GOOGLE_ANALYTICS_TAG'))
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ env('GOOGLE_ANALYTICS_TAG') }}"></script>
@@ -300,7 +296,7 @@
                                 $notifList.append(`
                             <li class="dropdown-item">
                                 ${n.data.message}
-                                <br><small class="text-muted">${n.created_at}</small>
+                                <br><small class="text-muted">${n.created_at_br}</small>
                             </li>
                         `);
                             });
