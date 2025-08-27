@@ -110,17 +110,21 @@
             <h5 class="offcanvas-title fw-bold">Adivinhe e Ganhe</h5>
              <div class="d-flex align-items-center gap-3">
 
-            @auth
-            <div class="dropdown">
-                <button id="notificationButton" class="btn btn-light " data-bs-toggle="dropdown">
-                    <i class="bi bi-bell fs-4"></i>
-                    <span id="notificationCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {{ auth()->user()->unreadNotificationsCount()}}
-                    </span>
-                </button>
-                <ul id="notificationList" class="dropdown-menu dropdown-menu-end p-2" style="min-width: 300px;">
-                    <li class="text-center text-muted">Carregando...</li>
-                </ul>
+                @auth
+                <div class="dropdown">
+                    <button id="notificationButton" class="btn btn-light " data-bs-toggle="dropdown">
+                        <i class="bi bi-bell fs-4"></i>
+                        <span id="notificationCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {{ auth()->user()->unreadNotificationsCount()}}
+                        </span>
+                    </button>
+                    <ul id="notificationList" class="dropdown-menu dropdown-menu-end p-2" style="min-width: 300px;">
+                        <li class="text-center text-muted">Carregando...</li>
+                    </ul>
+                </div>
+                @endauth
+
+              
             </div>
             @endauth
 
