@@ -40,11 +40,11 @@ class ChatController extends Controller
 
             event(new MensagemEnviada(auth()->user()->username, $request->input('message')));
 
-            dispatch(new IncluirMensagemChat([
+           ChatMessages::create([
                 'user_id' => auth()->user()->id,
                 'message' => $request->input('message'),
                 'created_at' => now(),
-            ]));
+            ]);
         } catch (Exception $e) {
             Log::error('Erro ao adicionar mensagem no chat: ' . $e->getMessage());
         }

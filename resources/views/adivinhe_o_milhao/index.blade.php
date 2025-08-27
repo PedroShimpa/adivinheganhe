@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container py-5">
+<div class="container  ">
     @if(Auth::check())
     <div class="mb-4 p-4 card text-center animate__animated animate__fadeInUp">
         <h5 class="mb-3 ">
@@ -79,7 +79,7 @@
 </div>
 
 @if($recordista)
-<div class="container mt-5 mb-4">
+<div class="container  mt-5 mb-4">
     <div class="card border-0 shadow-lg rounded-4 overflow-hidden animate__animated animate__fadeInUp">
         <div class="card-body text-center p-5"
             style="background: linear-gradient(135deg, #ff512f, #dd2476); color: white;">
@@ -116,7 +116,7 @@
         $input[0].setSelectionRange(0, 99999);
 
         navigator.clipboard.writeText($input.val()).then(() => {
-            $btn.text('Copiado!').removeClass('btn-outline-primary').addClass('btn-primary');
+            $btn.text('Copiado!').removeClass('btn-primary').addClass('btn-primary');
             setTimeout(() => {
                 $btn.text('Copiar link').removeClass('btn-primary').addClass('btn-primary');
             }, 2000);

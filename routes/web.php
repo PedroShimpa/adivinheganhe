@@ -28,6 +28,8 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('/para_voce', [UsersController::class, 'para_voce'])->name('para_voce');
+
     Route::get('/adivinhacoes/create', [AdivinhacoesController::class, 'create'])->name('adivinhacoes.create');
     Route::post('/adivinhacoes/create', [AdivinhacoesController::class, 'store'])->name('adivinhacoes.store');
     Route::post('/adivinhacoes/respostas-do-usuario', [AdivinhacoesController::class, 'findUserReply'])->name('adivinhacoes.respostas_do_usuario');
@@ -54,9 +56,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/users/follow/{user}', [UsersController::class, 'follow'])->name('users.follow');
     Route::get('/users/unfollow/{user}', [UsersController::class, 'unfollow'])->name('users.unfollow');
 
+    Route::post('/users/friend-request/{user}', [UsersController::class, 'sendFriendRequest'])->name('users.friend_request');
+    Route::post('/users/friend-request/accept/{userId}', [UsersController::class, 'acceptFriendRequest'])->name('users.friend_request.accept')->whereNumber('userId');
+    Route::post('/users/friend-request/recuse/{userId}', [UsersController::class, 'recuseFriendRequest'])->name('users.friend_request.recuse')->whereNumber('userId');
+
     Route::post('posts/', [PostController::class, 'store'])->name('posts.store');
     Route::post('posts/comment/{post}', [PostController::class, 'comment'])->name('posts.comment');
     Route::get('posts/comments/{post}', [PostController::class, 'comments'])->name('posts.comments');
+
+    Route::get('/notificacoes', [UsersController::class, 'getUnreadNotifications'])->name('user.notificacoes');
 });
 
 Route::get('/chat', [ChatController::class, 'get_messages'])->name('chat.buscar');

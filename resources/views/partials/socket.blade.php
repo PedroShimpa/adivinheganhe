@@ -61,7 +61,30 @@
                 $(`#resposta-${id}`).prop('disabled', true);
                 $(`#btn-resposta-${id}`).prop('disabled', true);
             });
-        });
+        })
+        .listen('.notificacao.recebida', e => {
+                const toast = $(`
+                    <div class="toast align-items-center text-white bg-dark border-0 show" role="alert" aria-live="assertive" aria-atomic="true" style="position: fixed; top: 1rem; right: 1rem; z-index: 9999; min-width: 250px;">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                ${e.message || 'Nova notificação!'}
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                        </div>
+                    </div>
+                `);
+
+                $('body').append(toast);
+
+                setTimeout(() => { toast.remove(); }, 15000);
+
+                const $count = $('#notificationCount');
+                let current = parseInt($count.text()) || 0;
+                $count.text(current + 1);
+
+                // 4️⃣ (Opcional) tocar som
+                // new Audio('/sounds/notify.mp3').play();
+            });
     @endauth
 
     function adicionarMensagem(texto, tipo = 'message') {

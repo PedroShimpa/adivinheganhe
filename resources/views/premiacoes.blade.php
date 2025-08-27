@@ -1,7 +1,7 @@
 @extends('layouts.app', ['enable_adsense' => true])
 
 @section('content')
-<div class="container py-5">
+<div class="container  ">
     <div class="text-center mb-5">
         <h2 class="fw-bold display-6">🎁 Premiações</h2>
         <p class="text-white">Confira os prêmios conquistados pelos jogadores</p>
@@ -28,9 +28,8 @@
                                     <a href="{{ $premio->premio }}" target="_blank">
                                         <img src="{{ $premio->premio }}" alt="Prêmio" class="img-fluid rounded shadow-sm">
                                     </a>
-                                {{-- Se for apenas um link comum --}}
                                 @else
-                                    <a href="{{ $premio->premio }}" target="_blank" class="btn btn-outline-primary w-100">
+                                    <a href="{{ $premio->premio }}" target="_blank" class="btn btn-primary w-100">
                                         🔗 Ver prêmio
                                     </a>
                                 @endif

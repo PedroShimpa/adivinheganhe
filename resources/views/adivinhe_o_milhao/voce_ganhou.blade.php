@@ -1,7 +1,7 @@
 @extends('layouts.app', ['enable_adsense' => true])
 
 @section('content')
-<div class="container py-5">
+<div class="container  ">
     <div class="row justify-content-center">
         <div class="col-lg-8">
 
@@ -28,7 +28,7 @@
 
                     <div class="d-flex justify-content-center gap-3 flex-wrap mt-4">
                         <a href="{{ route('home') }}"
-                            class="btn btn-lg btn-outline-primary px-5 py-3 rounded-pill shadow fw-bold">
+                            class="btn btn-lg btn-primary px-5 py-3 rounded-pill shadow fw-bold">
                             🏠 Página Inicial
                         </a>
 

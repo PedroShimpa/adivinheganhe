@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mt-5">
+<div class="container  mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
@@ -79,7 +79,7 @@
                             @enderror
                         </div>
 
-                        <div class="mb-3" id="dica_valor_container" style="display: none;">
+                        <div class="mb-3" id="dica_valor_container " style="display: none;">
                             <label for="dica_valor" class="form-label">{{ __('Valor da Dica (R$)') }}</label>
                             <input type="number" step="0.01" class="form-control @error('dica_valor') is-invalid @enderror" id="dica_valor" name="dica_valor" value="{{ old('dica_valor') }}">
                             @error('dica_valor')
@@ -155,13 +155,13 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         const dicaPagaSelect = document.getElementById('dica_paga');
-        const dicaValorContainer = document.getElementById('dica_valor_container');
+        const dicaValorcontainer  = document.getElementById('dica_valor_container ');
 
         function toggleDicaValor() {
             if (dicaPagaSelect.value === 'S') {
-                dicaValorContainer.style.display = 'block';
+                dicaValorcontainer .style.display = 'block';
             } else {
-                dicaValorContainer.style.display = 'none';
+                dicaValorcontainer .style.display = 'none';
             }
         }
 

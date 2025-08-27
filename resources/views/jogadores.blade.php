@@ -1,7 +1,7 @@
 @extends('layouts.app', ['enable_adsense' => true])
 
 @section('content')
-<div class="container py-4" style="max-width: 1000px;">
+<div class="container  " style="max-width: 1000px;">
 
     <h2 class="fw-bold mb-4 text-center">
         <i class="bi bi-people"></i> Jogadores
@@ -26,7 +26,7 @@
                                 {{ $player->bio ? Str::limit($player->bio, 80) : 'Ainda não escreveu nada...' }}
                             </p>
 
-                            <a href="{{ route('profile.view', $player->username) }}" class="btn btn-outline-primary btn-sm rounded-pill">
+                            <a href="{{ route('profile.view', $player->username) }}" class="btn btn-primary btn-sm rounded-pill">
                                 Ver Perfil
                             </a>
                         </div>

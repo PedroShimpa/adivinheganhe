@@ -105,62 +105,82 @@
 
 <body class="bg-dark text-white d-flex flex-column min-vh-100">
 
-    {{-- Botão para abrir a barra lateral --}}
-    <nav class="navbar fixed-top bg-dark shadow-sm px-3">
-        <div class="d-flex w-100 justify-content-between align-items-center">
-            <a class="navbar-brand text-white fw-bold" href="{{ route('home') }}">
-                🎮 {{ env('APP_NAME', 'Adivinhe e Ganhe') }}
-            </a>
-            <button class="btn btn-outline-light d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
-                <i class="bi bi-list fs-4"></i>
-            </button>
-        </div>
-    </nav>
-
-    {{-- Sidebar (desktop fixa, mobile offcanvas) --}}
     <div class="offcanvas offcanvas-start bg-dark text-white sidebar-nav" tabindex="-1" id="sidebarMenu">
         <div class="offcanvas-header border-bottom">
             <h5 class="offcanvas-title fw-bold">Adivinhe e Ganhe</h5>
+             <div class="d-flex align-items-center gap-3">
+
+            @auth
+            <div class="dropdown">
+                <button id="notificationButton" class="btn btn-light " data-bs-toggle="dropdown">
+                    <i class="bi bi-bell fs-4"></i>
+                    <span id="notificationCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{ auth()->user()->unreadNotificationsCount()}}
+                    </span>
+                </button>
+                <ul id="notificationList" class="dropdown-menu dropdown-menu-end p-2" style="min-width: 300px;">
+                    <li class="text-center text-muted">Carregando...</li>
+                </ul>
+            </div>
+            @endauth
+
+            <button class="btn btn-light d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+                <i class="bi bi-list fs-4"></i>
+            </button>
+        </div>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
         </div>
         <div class="offcanvas-body d-flex flex-column gap-2">
-            <a href="{{ route('home') }}" class="nav-link text-white"><i class="bi bi-controller"></i> Jogar</a>
+
+            <a href="{{ route('sobre') }}" class="nav-link text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePlay"><i class="bi bi-controller me-2"></i> Jogar</a>
+            <div class="accordion" id="playAccordion">
+                <div class="accordion-item bg-dark border-0">
+
+                    <div id="collapsePlay" class="accordion-collapse collapse" data-bs-parent="#playAccordion">
+                            <a href="{{ route('home') }}" class="nav-link text-white">Clássico</a>
+                            <a href="{{ route('regioes.index') }}" class="nav-link text-white">Clássico por região</a>
+                            <a href="{{ route('adivinhe_o_milhao.index') }}" class="nav-link text-white">Adivinhe o Milhão</a>
+                    </div>
+                </div>
+            </div>
+            <a href="{{ route('sobre') }}" class="nav-link text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseComunidade"> <i class="bi bi-people"></i> Comunidade</a>
+            <div class="accordion" id="playersAccordion">
+                <div class="accordion-item bg-dark border-0">
+
+                    <div id="collapseComunidade" class="accordion-collapse collapse" data-bs-parent="#playersAccordion">
+                            @auth
+                            <a href="{{ route('para_voce') }}" class="nav-link text-white">Para Você</a>
+                            @endauth
+                            <a href="{{ route('jogadores') }}" class="nav-link text-white">Jogadores</a>
+                            <a href="{{ route('premiacoes') }}" class="nav-link text-white">Prêmios</a>
+                            <a href="{{ route('hall_da_fama') }}" class="nav-link text-white">Ranking</a>
+                    </div>
+                </div>
+            </div>
+
             <a href="{{ route('sobre') }}" class="nav-link text-white"><i class="bi bi-info-circle"></i> Sobre</a>
-            <a href="{{ route('jogadores') }}" class="nav-link text-white"><i class="bi bi-person"></i> Jogadores</a>
-            <a href="{{ route('regioes.index') }}" class="nav-link text-white"><i class="bi bi-geo-alt"></i> Regiões</a>
+
             <a href="{{ route('suporte.index') }}" class="nav-link text-white"><i class="bi bi-life-preserver"></i> Suporte</a>
-            <a href="{{ route('premiacoes') }}" class="nav-link text-white"><i class="bi bi-trophy"></i> Premiações</a>
-            <a href="{{ route('hall_da_fama') }}" class="nav-link text-white"><i class="bi bi-award"></i> Ranking</a>
-            <a href="{{ route('adivinhe_o_milhao.index') }}" class="nav-link text-white"><i class="bi bi-cash-coin"></i> Adivinhe o Milhão</a>
 
             <hr class="border-secondary">
 
             @auth
             <a href="{{ route('profile.view', auth()->user()->username) }}" class="nav-link text-white"><i class="bi bi-person-circle"></i> Perfil</a>
             <a href="{{ route('meus_premios') }}" class="nav-link text-white"><i class="bi bi-gift"></i> Meus Prêmios</a>
-
-            @if(auth()->user()->isAdmin())
-            <a href="{{ route('adivinhacoes.expiradas') }}" class="nav-link text-white"><i class="bi bi-clock-history"></i> Expiradas</a>
-            <a href="{{ route('adivinhacoes.create') }}" class="nav-link text-white"><i class="bi bi-plus-circle"></i> Nova Adivinhação</a>
-            <a href="{{ route('adivinhe_o_milhao.create_pergunta') }}" class="nav-link text-white"><i class="bi bi-question-circle"></i> Nova Pergunta</a>
-            @endif
-
             <form method="POST" action="{{ route('logout') }}" class="mt-2">
                 @csrf
-                <button type="submit" class="btn btn-outline-danger w-100"><i class="bi bi-box-arrow-right"></i> Sair</button>
+                <button type="submit" class="btn btn-danger w-100"><i class="bi bi-box-arrow-right"></i> Sair</button>
             </form>
             @else
-            <a href="{{ route('login') }}" class="btn btn-outline-primary w-100"><i class="bi bi-box-arrow-in-right"></i> Entrar</a>
+            <a href="{{ route('login') }}" class="btn btn-primary w-100"><i class="bi bi-box-arrow-in-right"></i> Entrar</a>
             @endauth
         </div>
     </div>
-
-    {{-- Conteúdo principal --}}
     <main class="flex-grow-1 pt-5 mt-3">
         @yield('content')
     </main>
 
-    <footer class="text-center py-4 mt-auto bg-dark animate__animated animate__fadeInUp">
+    <footer class="text-center  mt-auto bg-dark animate__animated animate__fadeInUp">
         <h5 class="fw-bold">Adivinhe e Ganhe</h5>
         <p class="text-light mb-1">Projeto de código aberto criado e mantido por <span class="text-info">Pedro "Shimpa" Falconi</span></p>
         <a href="https://github.com/PedroShimpa/adivinheganhe" class="text-warning text-decoration-none" target="_blank">
@@ -234,6 +254,41 @@
         gtag('config', "{{ env('GOOGLE_ANALYTICS_TAG') }}");
     </script>
     @endif
+    @auth
+    <script>
+        $(document).ready(function() {
+            const $notifButton = $('#notificationButton');
+            const $notifList = $('#notificationList');
+            const $notifCount = $('#notificationCount');
+
+            $notifButton.on('click', function() {
+                $.ajax({
+                    url: "{{ route('user.notificacoes') }}",
+                    method: 'GET',
+                    success: function(res) {
+                        $notifList.empty();
+                        if (res.length === 0) {
+                            $notifList.append('<li class="text-center text-muted">Sem notificações</li>');
+                        } else {
+                            res.forEach(n => {
+                                $notifList.append(`
+                            <li class="dropdown-item">
+                                ${n.data.message}
+                                <br><small class="text-muted">${n.created_at}</small>
+                            </li>
+                        `);
+                            });
+                        }
+                        $notifCount.text(0); // marca visualmente como lida
+                    },
+                    error: function() {
+                        $notifList.html('<li class="text-center text-danger">Erro ao carregar</li>');
+                    }
+                });
+            });
+        });
+    </script>
+    @endauth
 
     @isset($enable_adsense)
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{  env('GOOGLE_ADSENSE_TAG', 'ca-pub-2128338486173774')}}"

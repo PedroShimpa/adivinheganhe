@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-5">
+<div class="container  ">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
 
             {{-- Login com Google destacado --}}
             <div class="text-center mb-4">
-                <a href="{{ route('login.google') }}" class="btn btn-outline-light bg-white border d-flex align-items-center justify-content-center gap-2 shadow-sm py-2 rounded-3">
+                <a href="{{ route('login.google') }}" class="btn btn-light bg-white border d-flex align-items-center justify-content-center gap-2 shadow-sm py-2 rounded-3">
                     <i class="bi bi-google fs-5 text-danger"></i>
                     <span class="fw-semibold text-dark">Registrar com Google</span>
                 </a>
