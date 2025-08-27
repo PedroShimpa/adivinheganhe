@@ -14,14 +14,20 @@
             <li class="d-flex align-items-center gap-2 py-2 px-2 friend-item rounded hover-glow"
                 style="cursor: pointer;"
                 data-id="{{ $friend->id }}"
-                data-username="{{ $friend->username}}"
+                data-username="{{ $friend->username }}"
                 data-name="{{ $friend->name }}">
+
                 <img src="{{ $friend->image ?? 'https://ui-avatars.com/api/?name='.urlencode($friend->username).'&background=random' }}"
                     alt="{{ $friend->username }}"
                     class="rounded-circle" width="40" height="40" style="object-fit: cover;">
+
                 <span class="flex-grow-1">{{ $friend->username }}</span>
+
+                <span class="badge bg-danger unread-badge" style="display: none;"></span>
+
                 <span class="badge bg-success rounded-circle" title="Online" style="width:10px;height:10px;"></span>
             </li>
+
             @endforeach
         </ul>
         @else
@@ -139,11 +145,11 @@
             const balloonLeft = offset.left - $balloon.outerWidth() - 10;
 
             $balloon.css({
-                top: balloonTop + 'px',
-                left: balloonLeft + 'px'
-            }).removeClass('d-none')
-              .data('username', friendUsername)
-              .data('id', friendId);
+                    top: balloonTop + 'px',
+                    left: balloonLeft + 'px'
+                }).removeClass('d-none')
+                .data('username', friendUsername)
+                .data('id', friendId);
         });
 
         // Ações do balão
