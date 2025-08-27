@@ -181,6 +181,17 @@
             @endauth
         </div>
     </div>
+
+    <nav class="navbar navbar-dark bg-dark fixed-top d-lg-none px-3">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <a class="navbar-brand fw-bold text-white" href="{{ route('home') }}">
+                🎮 {{ env('APP_NAME', 'Adivinhe e Ganhe') }}
+            </a>
+            <button class="btn btn-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+                <i class="bi bi-list fs-3"></i>
+            </button>
+        </div>
+    </nav>
     <main class="flex-grow-1 pt-5 mt-3">
         @yield('content')
     </main>
