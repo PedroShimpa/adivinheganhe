@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Laravel\Scout\Searchable;
 
@@ -101,15 +103,33 @@ class User extends Authenticatable
 
     public function friends()
     {
-        return $this->sentFriendships()
-            ->where('status', 'accepted')
+        $sent = $this->sentFriendships()->where('status', 'accepted')->with('receiver')->get()->pluck('receiver');
+        $received = $this->receivedFriendships()->where('status', 'accepted')->with('sender')->get()->pluck('sender');
+        return $sent->merge($received);
+    }
+
+    public function onlineFriends()
+    {
+        $friends = $this->friends();
+
+        $friendIds = $friends->pluck('id')->toArray();
+
+        $onlineIds = DB::table('sessions')
+            ->whereIn('user_id', $friendIds)
+            ->pluck('user_id')
+            ->unique()
+            ->toArray();
+
+        return $friends->filter(fn($friend) => in_array($friend->id, $onlineIds));
+    }
+
+    public function friendsRelation()
+    {
+        return $this->sentFriendships()->where('status', 'accepted')
             ->with('receiver')
-            ->get()
-            ->merge(
-                $this->receivedFriendships()
-                    ->where('status', 'accepted')
-                    ->with('sender')
-                    ->get()
+            ->union(
+                $this->receivedFriendships()->where('status', 'accepted')
+                    ->select('receiver_id as sender_id', 'sender_id as receiver_id', 'status', 'created_at', 'updated_at') // necessário para union
             );
     }
 
