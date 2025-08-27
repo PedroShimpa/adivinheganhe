@@ -1,7 +1,7 @@
 @extends('layouts.app', ['enable_adsense' => true])
 
 @section('content')
-<div class="container ">
+<div class="container  ">
     <h2 class="mb-2 text-center">Escolha a região</h2>
     <p class="text-center mb-5">Cada região tem adivinhações exclusivas, o frete só é pago dentro da região e alguns prêmios só podem ser enviados nela!</p>
 

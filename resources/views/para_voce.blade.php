@@ -1,12 +1,11 @@
 @extends('layouts.app', ['enable_adsense' => true])
 
 @section('content')
-<div class="container">
+<div class="container  mt-5">
 
     @include('partials.post_store')
 
-    <div class="timeline position-relative" id="timeline">
-        <div class="timeline-line position-absolute top-0 start-50 translate-middle-x bg-secondary" style="width:4px; height:100%;"></div>
+    <div class="timeline " id="timeline">
 
         @forelse($posts as $post)
         @include('partials.post')
@@ -16,7 +15,7 @@
     </div>
 
     @if($posts->hasMorePages())
-    <div class="text-center my-4">
+    <div class="text-center">
         <button id="loadMorePosts" class="btn btn-primary px-4" data-next-page="{{ $posts->nextPageUrl() }}">
             Ver mais
         </button>

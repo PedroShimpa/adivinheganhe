@@ -1,7 +1,7 @@
 @extends('layouts.app', ['enable_adsense' => true])
 
 @section('content')
-<div class="container " style="max-width: 900px;">
+<div class="container  " style="max-width: 900px;">
 
     <div class="card shadow-sm border-0 overflow-hidden mb-4">
         <div class="position-relative">

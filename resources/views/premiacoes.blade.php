@@ -1,7 +1,7 @@
 @extends('layouts.app', ['enable_adsense' => true])
 
 @section('content')
-<div class="container ">
+<div class="container  ">
     <div class="text-center mb-5">
         <h2 class="fw-bold display-6">🎁 Premiações</h2>
         <p class="text-white">Confira os prêmios conquistados pelos jogadores</p>

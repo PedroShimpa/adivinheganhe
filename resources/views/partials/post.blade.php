@@ -2,10 +2,10 @@
             <div class="card shadow-lg border-0 timeline-card mx-auto" style="max-width:700px;">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-3">
-                        <img src="{{ $user->image ?? 'https://ui-avatars.com/api/?name='.urlencode($user->username).'&background=random' }}"
+                        <img src="{{ $post->user->image ?? 'https://ui-avatars.com/api/?name='.urlencode($post->user->username).'&background=random' }}"
                             class="rounded-circle me-3 border border-white shadow-sm" width="50" height="50" style="object-fit: cover;">
                         <div>
-                            <strong>{{ $user->name }}</strong><br>
+                            <strong>{{ $post->user->name }}</strong><br>
                             <small class="text-muted">{{ $post->created_at->diffForHumans() }}</small>
                         </div>
                     </div>

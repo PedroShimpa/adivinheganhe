@@ -8,6 +8,7 @@ use App\Models\Friendship;
 use App\Models\User;
 use App\Notifications\FriendRequestAcceptedNotification;
 use App\Notifications\FriendRequestNotification;
+use App\Notifications\NewFollowerNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -106,6 +107,7 @@ class UsersController extends Controller
     public function follow(User $user)
     {
         $user->followers()->create(['user_id' => auth()->user()->id]);
+        $user->notify(new NewFollowerNotification());
         return redirect()->back();
     }
 
@@ -130,8 +132,6 @@ class UsersController extends Controller
     public function getUnreadNotifications()
     {
         $notifications =  auth()->user()->unreadNotifications;
-        auth()->user()->unreadNotifications->markAsRead();
-
         return $notifications;
     }
 

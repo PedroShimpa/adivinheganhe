@@ -105,17 +105,14 @@
 
 <body class="bg-dark text-white d-flex flex-column min-vh-100">
 
-    {{-- Botão para abrir a barra lateral --}}
-    <nav class="navbar fixed-top bg-dark shadow-sm px-3 d-flex justify-content-between align-items-center">
-        <a class="navbar-brand text-white fw-bold" href="{{ route('home') }}">
-            🎮 {{ env('APP_NAME', 'Adivinhe e Ganhe') }}
-        </a>
-
-        <div class="d-flex align-items-center gap-3">
+    <div class="offcanvas offcanvas-start bg-dark text-white sidebar-nav" tabindex="-1" id="sidebarMenu">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title fw-bold">Adivinhe e Ganhe</h5>
+             <div class="d-flex align-items-center gap-3">
 
             @auth
             <div class="dropdown">
-                <button id="notificationButton" class="btn btn-light position-relative" data-bs-toggle="dropdown">
+                <button id="notificationButton" class="btn btn-light " data-bs-toggle="dropdown">
                     <i class="bi bi-bell fs-4"></i>
                     <span id="notificationCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         {{ auth()->user()->unreadNotificationsCount()}}
@@ -127,52 +124,36 @@
             </div>
             @endauth
 
-            {{-- Mobile toggle --}}
             <button class="btn btn-light d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
                 <i class="bi bi-list fs-4"></i>
             </button>
         </div>
-    </nav>
-
-    <div class="offcanvas offcanvas-start bg-dark text-white sidebar-nav" tabindex="-1" id="sidebarMenu">
-        <div class="offcanvas-header border-bottom">
-            <h5 class="offcanvas-title fw-bold">Adivinhe e Ganhe</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
         </div>
         <div class="offcanvas-body d-flex flex-column gap-2">
 
+            <a href="{{ route('sobre') }}" class="nav-link text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePlay"><i class="bi bi-controller me-2"></i> Jogar</a>
             <div class="accordion" id="playAccordion">
                 <div class="accordion-item bg-dark border-0">
-                    <h2 class="accordion-header" id="headingPlay">
-                        <button class="accordion-button collapsed bg-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePlay">
-                            <i class="bi bi-controller me-2"></i> Jogar
-                        </button>
-                    </h2>
+
                     <div id="collapsePlay" class="accordion-collapse collapse" data-bs-parent="#playAccordion">
-                        <div class="accordion-body d-flex flex-column gap-1 ps-4">
                             <a href="{{ route('home') }}" class="nav-link text-white">Clássico</a>
                             <a href="{{ route('regioes.index') }}" class="nav-link text-white">Clássico por região</a>
                             <a href="{{ route('adivinhe_o_milhao.index') }}" class="nav-link text-white">Adivinhe o Milhão</a>
-                        </div>
                     </div>
                 </div>
             </div>
+            <a href="{{ route('sobre') }}" class="nav-link text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseComunidade"> <i class="bi bi-people"></i> Comunidade</a>
             <div class="accordion" id="playersAccordion">
                 <div class="accordion-item bg-dark border-0">
-                    <h2 class="accordion-header" id="headingComunidade">
-                        <button class="accordion-button collapsed bg-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseComunidade">
-                           <i class="bi bi-people"></i> Comunidade
-                        </button>
-                    </h2>
+
                     <div id="collapseComunidade" class="accordion-collapse collapse" data-bs-parent="#playersAccordion">
-                        <div class="accordion-body d-flex flex-column gap-1 ps-4">
                             @auth
                             <a href="{{ route('para_voce') }}" class="nav-link text-white">Para Você</a>
                             @endauth
                             <a href="{{ route('jogadores') }}" class="nav-link text-white">Jogadores</a>
                             <a href="{{ route('premiacoes') }}" class="nav-link text-white">Prêmios</a>
                             <a href="{{ route('hall_da_fama') }}" class="nav-link text-white">Ranking</a>
-                        </div>
                     </div>
                 </div>
             </div>
