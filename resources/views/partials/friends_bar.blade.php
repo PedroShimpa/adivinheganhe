@@ -23,7 +23,7 @@
 
                 <span class="flex-grow-1">{{ $friend->username }}</span>
 
-                <span class="badge bg-danger unread-badge" style="display: none;"></span>
+                <span class="badge bg-danger unread-badge d-none" id="mensagem-recebida-{{ $friend->id }}" ></span>
 
                 <span class="badge bg-success rounded-circle" title="Online" style="width:10px;height:10px;"></span>
             </li>
