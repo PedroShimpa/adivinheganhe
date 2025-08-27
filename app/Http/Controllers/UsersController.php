@@ -131,7 +131,8 @@ class UsersController extends Controller
 
     public function getUnreadNotifications()
     {
-        $notifications =  auth()->user()->unreadNotifications;
+        auth()->user()->unreadNotifications->markAsRead();
+        $notifications =  auth()->user()->notifications;
         return $notifications;
     }
 
