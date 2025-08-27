@@ -113,7 +113,7 @@ class UsersController extends Controller
     {
         $user->followers()->create(['user_id' => auth()->user()->id]);
         $user->notify(new NewFollowerNotification());
-        broadcast(new NotificacaoEvent($user->id, auth()->user()->name . ' agora está te seguindo.'));
+        broadcast(new NotificacaoEvent($user->id, auth()->user()->username . ' agora está te seguindo.'));
         return redirect()->back();
     }
 
@@ -144,7 +144,7 @@ class UsersController extends Controller
         ]);
 
         $user->notify(new FriendRequestNotification());
-        broadcast(new NotificacaoEvent($user->id, auth()->user()->name . ' enviou um pedido de amizade.'));
+        broadcast(new NotificacaoEvent($user->id, auth()->user()->username . ' enviou um pedido de amizade.'));
         return $request;
     }
 
@@ -166,7 +166,7 @@ class UsersController extends Controller
 
         $accept = $friendship->update(['status' => 'accepted']);
         User::find($userId)->notify(new FriendRequestAcceptedNotification());
-        broadcast(new NotificacaoEvent($userId, auth()->user()->name . ' aceitou seu pedido de amizade.'));
+        broadcast(new NotificacaoEvent($userId, auth()->user()->username . ' aceitou seu pedido de amizade.'));
 
         return $accept;
     }

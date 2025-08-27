@@ -4,7 +4,7 @@
 <div class="container py-3" style="max-width: 700px;">
     <div class="card shadow-sm rounded-3">
         <div class="card-header d-flex align-items-center justify-content-between bg-primary text-white">
-            <h5 class="m-0">Chat com {{ $user->name }}</h5>
+            <h5 class="m-0">Chat com {{ $user->username }}</h5>
         </div>
 
         <div id="chatMessages" class="card-body overflow-auto" style="height:400px; background:#f1f3f5;">
