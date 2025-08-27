@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\NotificacaoEvent;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Mail\FriendrequestMail;
 use App\Models\Friendship;
 use App\Models\User;
 use App\Notifications\FriendRequestAcceptedNotification;
@@ -12,6 +13,7 @@ use App\Notifications\NewFollowerNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -129,12 +131,11 @@ class UsersController extends Controller
 
         $pendingRequests = $user->receivedFriendships()
             ->where('status', 'pending')
-            ->with('sender') 
+            ->with('sender')
             ->get();
 
-    return view('user.pedidos_de_amizade', compact('pendingRequests'));
+        return view('user.pedidos_de_amizade', compact('pendingRequests'));
     }
-
 
     public function sendFriendRequest(User $user)
     {
@@ -144,6 +145,7 @@ class UsersController extends Controller
         ]);
 
         $user->notify(new FriendRequestNotification());
+        Mail::to($user->email)->queue(new FriendrequestMail(auth()->user()->username, $user->name));
         broadcast(new NotificacaoEvent($user->id, auth()->user()->username . ' enviou um pedido de amizade.'));
         return $request;
     }
@@ -152,7 +154,7 @@ class UsersController extends Controller
     {
         auth()->user()->unreadNotifications->markAsRead();
         $notifications =  auth()->user()->notifications;
-        $notifications->filter(function($q) {
+        $notifications->filter(function ($q) {
             $q->created_at_br = $q->created_at->format('d/m/Y H:i');
         });
         return $notifications;
