@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/users/follow/{user}', [UsersController::class, 'follow'])->name('users.follow');
     Route::get('/users/unfollow/{user}', [UsersController::class, 'unfollow'])->name('users.unfollow');
 
+    Route::get('/users/friend-requests', [UsersController::class, 'friendRequests'])->name('users.friend_requests');
     Route::post('/users/friend-request/{user}', [UsersController::class, 'sendFriendRequest'])->name('users.friend_request');
     Route::post('/users/friend-request/accept/{userId}', [UsersController::class, 'acceptFriendRequest'])->name('users.friend_request.accept')->whereNumber('userId');
     Route::post('/users/friend-request/recuse/{userId}', [UsersController::class, 'recuseFriendRequest'])->name('users.friend_request.recuse')->whereNumber('userId');
