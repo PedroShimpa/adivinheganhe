@@ -26,7 +26,7 @@ class UsersController extends Controller
             $players = User::search($request->input('search'))->where('perfil_privado', 'N')->get();
         } else {
 
-            $players = User::select('username', 'image', 'bio')->where('perfil_privado', 'N')->inRandomOrder()->limit(10)->get();
+            $players = User::select('username', 'image', 'bio')->where('perfil_privado', 'N')->inRandomOrder()->limit(9)->get();
         }
 
         return view('jogadores')->with('players', $players);
