@@ -116,6 +116,9 @@
                         // Incrementa contagem
                         let count = parseInt($badge.text() || 0);
                         $badge.text(count + 1);
+
+                          new Audio("{{ asset('sounds/notification-sound.mp3')}}").play();
+
                     }
                 });
     @endauth
