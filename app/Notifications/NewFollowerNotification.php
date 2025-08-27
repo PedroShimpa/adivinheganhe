@@ -19,7 +19,7 @@ class NewFollowerNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'message'   => auth()->user()->name . ' agora está te seguindo.',
+            'message'   => auth()->user()->username . ' agora está te seguindo.',
             'sender_id' => auth()->id(),
             'url' => route('profile.view', auth()->user()->username)
         ];
