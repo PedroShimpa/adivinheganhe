@@ -17,8 +17,8 @@
                 data-username="{{ $friend->username}}"
                 data-name="{{ $friend->name }}">
                 <img src="{{ $friend->image ?? 'https://ui-avatars.com/api/?name='.urlencode($friend->username).'&background=random' }}"
-                     alt="{{ $friend->username }}"
-                     class="rounded-circle" width="40" height="40" style="object-fit: cover;">
+                    alt="{{ $friend->username }}"
+                    class="rounded-circle" width="40" height="40" style="object-fit: cover;">
                 <span class="flex-grow-1">{{ $friend->username }}</span>
                 <span class="badge bg-success rounded-circle" title="Online" style="width:10px;height:10px;"></span>
             </li>
@@ -59,7 +59,7 @@
         z-index: 1050;
         display: flex;
         flex-direction: column;
-        border-left: 1px solid rgba(255,255,255,0.1);
+        border-left: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     /* Botão flutuante */
@@ -98,60 +98,71 @@
         }
     }
 </style>
-
 <script>
-$(function() {
-    const $sidebar = $('#friendsSidebar');
-    const $toggleBtn = $('#friendsToggleBtn');
-    const $mobileBtn = $('#friendsMobileBtn');
-    const $friendsBody = $('#friendsBody');
-    const $balloon = $('#friendBalloon');
+    $(function() {
+        const $sidebar = $('#friendsSidebar');
+        const $toggleBtn = $('#friendsToggleBtn');
+        const $mobileBtn = $('#friendsMobileBtn');
+        const $friendsBody = $('#friendsBody');
+        const $balloon = $('#friendBalloon');
 
-    // Toggle desktop
-    $toggleBtn.on('click', function() {
-        $friendsBody.toggle();
-        localStorage.setItem('friendsSidebarState', $friendsBody.is(':visible') ? 'open' : 'closed');
-    });
-
-    // Toggle mobile
-    $mobileBtn.on('click', function() {
-        $sidebar.toggleClass('open');
-    });
-
-    // Clique em amigo => abre balão
-    $('.friend-item').on('click', function(e) {
-        e.stopPropagation();
-
-        const friendId = $(this).data('id');
-        const friendUsername = $(this).data('username');
-
-        const offset = $(this).offset();
-        const balloonTop = offset.top - 10;
-        const balloonLeft = offset.left - $balloon.outerWidth() - 10;
-
-        $balloon.css({
-            top: balloonTop + 'px',
-            left: balloonLeft + 'px'
-        }).removeClass('d-none').data('username', friendUsername).data('id', friendId);
-    });
-
-    // Ações do balão
-$balloon.find('.open-profile').on('click', function() {
-    const username = $balloon.data('username');
-    window.location.href = `/jogadores/${username}`; // monta a rota dinamicamente
-});
-
-    $balloon.find('.open-chat').on('click', function() {
-        const username = $balloon.data('username');
-        window.location.href = `/chat/${username}`;
-    });
-
-    // Fecha balão ao clicar fora
-    $(document).on('click', function(e) {
-        if (!$(e.target).closest('.friend-item, #friendBalloon').length) {
-            $balloon.addClass('d-none');
+        // === Restaurar estado salvo no localStorage (apenas desktop) ===
+        const savedState = localStorage.getItem('friendsSidebarState');
+        if (savedState === 'closed') {
+            $friendsBody.hide();
+        } else {
+            $friendsBody.show();
         }
+
+        // Toggle desktop
+        $toggleBtn.on('click', function() {
+            $friendsBody.toggle();
+            localStorage.setItem(
+                'friendsSidebarState',
+                $friendsBody.is(':visible') ? 'open' : 'closed'
+            );
+        });
+
+        $mobileBtn.on('click', function() {
+            $sidebar.toggleClass('open');
+        });
+
+        // Clique em amigo => abre balão
+        $('.friend-item').on('click', function(e) {
+            e.stopPropagation();
+
+            const friendId = $(this).data('id');
+            const friendUsername = $(this).data('username');
+
+            const offset = $(this).offset();
+            const balloonTop = offset.top - 10;
+            const balloonLeft = offset.left - $balloon.outerWidth() - 10;
+
+            $balloon.css({
+                top: balloonTop + 'px',
+                left: balloonLeft + 'px'
+            }).removeClass('d-none')
+              .data('username', friendUsername)
+              .data('id', friendId);
+        });
+
+        // Ações do balão
+        $balloon.find('.open-profile').on('click', function() {
+            const username = $balloon.data('username');
+            window.location.href = `/jogadores/${username}`;
+        });
+
+        $balloon.find('.open-chat').on('click', function() {
+            const username = $balloon.data('username');
+            window.location.href = `/chat/${username}`;
+        });
+
+        // Fecha balão ao clicar fora
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('.friend-item, #friendBalloon').length) {
+                $balloon.addClass('d-none');
+            }
+        });
     });
-});
 </script>
 @endauth
