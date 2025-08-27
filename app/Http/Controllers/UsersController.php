@@ -145,8 +145,8 @@ class UsersController extends Controller
         ]);
 
         $user->notify(new FriendRequestNotification());
-        Mail::to($user->email)->queue(new FriendrequestMail(auth()->user()->username, $user->name));
         broadcast(new NotificacaoEvent($user->id, auth()->user()->username . ' enviou um pedido de amizade.'));
+        Mail::to($user->email)->queue(new FriendrequestMail(auth()->user()->username, $user->name));
         return $request;
     }
 

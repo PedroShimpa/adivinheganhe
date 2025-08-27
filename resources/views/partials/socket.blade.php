@@ -63,10 +63,19 @@
             });
         })
         .listen('mensagem.recebida_enviada', $e => {
+              const toast = $(`
+                    <div class="toast align-items-center text-white bg-dark border-0 show" role="alert" aria-live="assertive" aria-atomic="true" style="position: fixed; top: 1rem; right: 1rem; z-index: 9999; min-width: 250px;">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                ${e.message || 'Nova notificação!'}
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                        </div>
+                    </div>
+                `);
             
         })
         .listen('.notificacao.recebida', e => {
-            console.log(e)
                 const toast = $(`
                     <div class="toast align-items-center text-white bg-dark border-0 show" role="alert" aria-live="assertive" aria-atomic="true" style="position: fixed; top: 1rem; right: 1rem; z-index: 9999; min-width: 250px;">
                         <div class="d-flex">

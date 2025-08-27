@@ -3,22 +3,19 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class FriendrequestMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public string $fromUser;
-    public string $toUser;
+    private $fromUser;
+    private $toUser;
 
-    /**
-     * Create a new message instance.
-     */
     public function __construct(string $fromUser, string $toUser)
     {
         $this->fromUser = $fromUser;
@@ -47,15 +44,5 @@ class FriendrequestMail extends Mailable implements ShouldQueue
                 'toUser' => $this->toUser,
             ]
         );
-    }
-
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
-    public function attachments(): array
-    {
-        return [];
     }
 }

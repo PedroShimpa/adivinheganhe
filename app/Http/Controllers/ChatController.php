@@ -48,7 +48,6 @@ class ChatController extends Controller
         ]);
 
         event(new \App\Events\ChatMessageSent($message->message, auth()->user()->id, $message->receiver_id));
-        broadcast(new NotificacaoEvent($request->receiver_id, auth()->user()->username . ' te enviou uma mensagem.'));
         return response()->json(['status' => 'success', 'message' => $message]);
     }
 }
