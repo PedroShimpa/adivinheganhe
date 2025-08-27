@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container  ">
+<div class="container mb-5 mt-2">
 
     <!-- Seção de convite para registro -->
     <div class="text-center mb-5">

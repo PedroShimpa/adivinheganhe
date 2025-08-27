@@ -1,11 +1,18 @@
 @extends('layouts.app', ['enable_adsense' => true])
 
 @section('content')
-<div class="container  " style="max-width: 1000px;">
+<div class="container mb-5 mt-2" style="max-width: 1000px;">
 
     <h2 class="fw-bold mb-4 text-center">
         <i class="bi bi-people"></i> Jogadores
     </h2>
+
+    <form method="GET" action="{{ route('jogadores') }}" class="mb-4 d-flex justify-content-center">
+        <input type="text" name="search" value="{{ request('search') }}"
+               class="form-control rounded-pill w-50 me-2"
+               placeholder="🔍 Buscar jogador...">
+        <button class="btn btn-primary rounded-pill">Buscar</button>
+    </form>
 
     @if($players->count())
         <div class="row g-4">
@@ -15,10 +22,10 @@
                         <div class="card-body text-center p-4">
                             <a href="{{ route('profile.view', $player->username) }}" class="text-decoration-none">
                                 <img src="{{ $player->image ? $player->image : 'https://ui-avatars.com/api/?name='.urlencode($player->username).'&background=random' }}"
-                                    alt="{{ $player->username }}"
-                                    class="rounded-circle shadow mb-3"
-                                    width="100" height="100"
-                                    style="object-fit: cover;">
+                                     alt="{{ $player->username }}"
+                                     class="rounded-circle shadow mb-3"
+                                     width="100" height="100"
+                                     style="object-fit: cover;">
 
                                 <h5 class="fw-bold text-dark mb-1">{{ '@'.$player->username }}</h5>
                             </a>
@@ -35,9 +42,6 @@
             @endforeach
         </div>
 
-        <div class="d-flex justify-content-center mt-4 text-white">
-            {{ $players->links() }}
-        </div>
     @else
         <p class="text-center text-white">Nenhum jogador disponível no momento.</p>
     @endif

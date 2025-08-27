@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Events\NewCommentEvent;
+use App\Events\NotificacaoEvent;
 use App\Http\Requests\CreatePostRequest;
-use App\Http\Requests\PostRequest;
 use App\Http\Resources\GetCommentsResource;
 use App\Models\Post;
+use App\Notifications\NewCommnetNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -58,5 +59,9 @@ class PostController extends Controller
             $request->input('body'),
             true
         ));
+        if (auth()->user()->id !=  $post->user_id) {
+            $post->user->notify(new NewCommnetNotification($request->input('body')));
+            broadcast(new NotificacaoEvent($post->user->id, auth()->user()->name . ' comentou: ' . $request->input('body')));
+        }
     }
 }

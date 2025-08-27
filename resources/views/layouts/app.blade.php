@@ -40,8 +40,17 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     </noscript>
-
     <style>
+        img {
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+            pointer-events: none;
+            /* impede clique */
+        }
+
         html,
         body {
             height: 100%;
@@ -105,10 +114,11 @@
 
 <body class="bg-dark text-white d-flex flex-column min-vh-100">
 
+
     <div class="offcanvas offcanvas-start bg-dark text-white sidebar-nav" tabindex="-1" id="sidebarMenu">
         <div class="offcanvas-header border-bottom">
             <h5 class="offcanvas-title fw-bold">Adivinhe e Ganhe</h5>
-             <div class="d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center gap-3">
 
                 @auth
                 <div class="dropdown">
@@ -126,12 +136,6 @@
 
               
             </div>
-            @endauth
-
-            <button class="btn btn-light d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
-                <i class="bi bi-list fs-4"></i>
-            </button>
-        </div>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
         </div>
         <div class="offcanvas-body d-flex flex-column gap-2">
@@ -141,9 +145,9 @@
                 <div class="accordion-item bg-dark border-0">
 
                     <div id="collapsePlay" class="accordion-collapse collapse" data-bs-parent="#playAccordion">
-                            <a href="{{ route('home') }}" class="nav-link text-white">Clássico</a>
-                            <a href="{{ route('regioes.index') }}" class="nav-link text-white">Clássico por região</a>
-                            <a href="{{ route('adivinhe_o_milhao.index') }}" class="nav-link text-white">Adivinhe o Milhão</a>
+                        <a href="{{ route('home') }}" class="nav-link text-white">Clássico</a>
+                        <a href="{{ route('regioes.index') }}" class="nav-link text-white">Clássico por região</a>
+                        <a href="{{ route('adivinhe_o_milhao.index') }}" class="nav-link text-white">Adivinhe o Milhão</a>
                     </div>
                 </div>
             </div>
@@ -152,12 +156,12 @@
                 <div class="accordion-item bg-dark border-0">
 
                     <div id="collapseComunidade" class="accordion-collapse collapse" data-bs-parent="#playersAccordion">
-                            @auth
-                            <a href="{{ route('para_voce') }}" class="nav-link text-white">Para Você</a>
-                            @endauth
-                            <a href="{{ route('jogadores') }}" class="nav-link text-white">Jogadores</a>
-                            <a href="{{ route('premiacoes') }}" class="nav-link text-white">Prêmios</a>
-                            <a href="{{ route('hall_da_fama') }}" class="nav-link text-white">Ranking</a>
+                        @auth
+                        <a href="{{ route('para_voce') }}" class="nav-link text-white">Para Você</a>
+                        @endauth
+                        <a href="{{ route('jogadores') }}" class="nav-link text-white">Jogadores</a>
+                        <a href="{{ route('premiacoes') }}" class="nav-link text-white">Prêmios</a>
+                        <a href="{{ route('hall_da_fama') }}" class="nav-link text-white">Ranking</a>
                     </div>
                 </div>
             </div>
@@ -169,8 +173,13 @@
             <hr class="border-secondary">
 
             @auth
-            <a href="{{ route('profile.view', auth()->user()->username) }}" class="nav-link text-white"><i class="bi bi-person-circle"></i> Perfil</a>
+            <a href="{{ route('profile.view', auth()->user()->username) }}" class="nav-link text-white"><i class="bi bi-person-circle"></i> Meu Perfil</a>
             <a href="{{ route('meus_premios') }}" class="nav-link text-white"><i class="bi bi-gift"></i> Meus Prêmios</a>
+            @if(auth()->user()->isAdmin())
+            <a href="{{ route('adivinhacoes.expiradas') }}" class="nav-link text-white"><i class="bi bi-clock-history"></i> Expiradas</a>
+            <a href="{{ route('adivinhacoes.create') }}" class="nav-link text-white"><i class="bi bi-plus-circle"></i> Nova Adivinhação</a>
+            <a href="{{ route('adivinhe_o_milhao.create_pergunta') }}" class="nav-link text-white"><i class="bi bi-question-circle"></i> Nova Pergunta</a>
+            @endif
             <form method="POST" action="{{ route('logout') }}" class="mt-2">
                 @csrf
                 <button type="submit" class="btn btn-danger w-100"><i class="bi bi-box-arrow-right"></i> Sair</button>
@@ -180,12 +189,23 @@
             @endauth
         </div>
     </div>
+
+    <nav class="navbar navbar-dark bg-dark fixed-top d-lg-none px-3">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <a class="navbar-brand fw-bold text-white" href="{{ route('home') }}">
+                🎮 {{ env('APP_NAME', 'Adivinhe e Ganhe') }}
+            </a>
+            <button class="btn btn-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+                <i class="bi bi-list fs-3"></i>
+            </button>
+        </div>
+    </nav>
     <main class="flex-grow-1 pt-5 mt-3">
         @yield('content')
     </main>
 
-    <footer class="text-center  mt-auto bg-dark animate__animated animate__fadeInUp">
-        <h5 class="fw-bold">Adivinhe e Ganhe</h5>
+    <footer class="text-center  mt-auto bg-dark ">
+        <h5 class="fw-bold mt-2">Adivinhe e Ganhe</h5>
         <p class="text-light mb-1">Projeto de código aberto criado e mantido por <span class="text-info">Pedro "Shimpa" Falconi</span></p>
         <a href="https://github.com/PedroShimpa/adivinheganhe" class="text-warning text-decoration-none" target="_blank">
             github.com/PedroShimpa/adivinheganhe
@@ -292,6 +312,12 @@
             });
         });
     </script>
+    <script>
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+    </script>
+
     @endauth
 
     @isset($enable_adsense)

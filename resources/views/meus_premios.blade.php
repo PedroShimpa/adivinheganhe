@@ -1,7 +1,7 @@
 @extends('layouts.app', ['enable_adsense' => true])
 
 @section('content')
-<div class="container  ">
+<div class="container mb-5 mt-2">
     <h2 class="mb-4">Meus Prêmios</h2>
 
     @if($meusPremios->isEmpty())

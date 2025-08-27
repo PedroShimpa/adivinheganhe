@@ -173,7 +173,6 @@
                     const div = $('<div>').addClass('message').text(`${msg.usuario}: ${msg.mensagem}`);
                     $chatMessages.append(div);
                 });
-                $chatMessages.scrollTop($chatMessages[0].scrollHeight);
             }
         }
         carregarMensagens();

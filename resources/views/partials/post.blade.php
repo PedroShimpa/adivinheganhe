@@ -1,5 +1,5 @@
         <div class="timeline-item position-relative mb-5" style="z-index:1;">
-            <div class="card shadow-lg border-0 timeline-card mx-auto" style="max-width:700px;">
+            <div class="card shadow-lg border-0 timeline-card " style="min-width: 100%; max-width:100%;">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-3">
                         <img src="{{ $post->user->image ?? 'https://ui-avatars.com/api/?name='.urlencode($post->user->username).'&background=random' }}"

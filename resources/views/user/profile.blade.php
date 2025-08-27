@@ -1,7 +1,7 @@
 @extends('layouts.app', ['enable_adsense' => true])
 
 @section('content')
-<div class="container  " style="max-width: 900px;">
+<div class="container mb-5 mt-2" style="max-width: 900px;">
 
     <div class="card shadow-sm border-0 overflow-hidden mb-4">
         <div class="position-relative">
@@ -94,7 +94,7 @@
                     });
                     $list.html(html);
                 } else {
-                    $list.html('<p class="text-muted">Nenhum comentário ainda. Seja o primeiro!</p>');
+                    // $list.html('<p class="text-muted">Nenhum comentário ainda. Seja o primeiro!</p>');
                 }
             } catch (e) {
                 $list.html('<p class="text-danger">Erro ao carregar comentários.</p>');

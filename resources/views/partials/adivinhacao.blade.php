@@ -63,7 +63,7 @@
                     <button type="button" class="btn btn-primary btn-sm rounded-pill verRespostas" adivinhacao_id="{{ $adivinhacao->id}}" data-bs-toggle="modal" data-bs-target="#modalSuasRespostas">
                         📜 Seus Palpites
                     </button>
-                    <button class="btn btn-info btn-sm mb-3 rounded-pill px-3 abrirModalInformacoes" data-bs-toggle="modal" data-bs-target="#modalInformacoes" titulo="{{ $adivinhacao->titulo. (!empty($adivinhacao->expired_at_br) && $adivinhacao->expired ? ' - EXPIRADA' : '') }}"
+                    <button class="btn btn-info btn-sm mb-3 rounded-pill abrirModalInformacoes" data-bs-toggle="modal" data-bs-target="#modalInformacoes" titulo="{{ $adivinhacao->titulo. (!empty($adivinhacao->expired_at_br) && $adivinhacao->expired ? ' - EXPIRADA' : '') }}"
                         descricao="{{ $adivinhacao->descricao}}">
                         ➕ Informações
                     </button>
@@ -95,21 +95,8 @@
                 <div class="mt-3">
                     <div class="mt-2 d-flex gap-2 flex-wrap">
                         <span class="fw-semibold small">Compartilhar:</span>
-
-                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('adivinhacoes.index', $adivinhacao->uuid)) }}" target="_blank" class="btn btn-sm btn-primary rounded-pill">
-                            Facebook
-                        </a>
-
-                        <a href="https://twitter.com/intent/tweet?url={{ urlencode(route('adivinhacoes.index', $adivinhacao->uuid)) }}&text={{ urlencode($adivinhacao->titulo) }}" target="_blank" class="btn btn-sm btn-info rounded-pill text-white">
-                            Twitter
-                        </a>
-
                         <a href="https://api.whatsapp.com/send?text={{ urlencode($adivinhacao->titulo . ' ' . route('adivinhacoes.index', $adivinhacao->uuid)) }}" target="_blank" class="btn btn-sm btn-success rounded-pill">
                             WhatsApp
-                        </a>
-
-                        <a href="https://t.me/share/url?url={{ urlencode(route('adivinhacoes.index', $adivinhacao->uuid)) }}&text={{ urlencode($adivinhacao->titulo) }}" target="_blank" class="btn btn-sm btn-primary rounded-pill">
-                            Telegram
                         </a>
                     </div>
                     <button class="btn btn-secondary btn-sm rounded-pill verComentarios"

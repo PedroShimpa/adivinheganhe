@@ -20,9 +20,14 @@ use Intervention\Image\Laravel\Facades\Image;
 
 class UsersController extends Controller
 {
-    public function jogadores()
+    public function jogadores(Request $request)
     {
-        $players = User::select('username', 'image', 'bio')->where('perfil_privado', 'N')->paginate();
+        if ($request->input('search')) {
+            $players = User::search($request->input('search'))->where('perfil_privado', 'N')->get();
+        } else {
+
+            $players = User::select('username', 'image', 'bio')->where('perfil_privado', 'N')->inRandomOrder()->limit(9)->get();
+        }
 
         return view('jogadores')->with('players', $players);
     }
@@ -108,6 +113,7 @@ class UsersController extends Controller
     {
         $user->followers()->create(['user_id' => auth()->user()->id]);
         $user->notify(new NewFollowerNotification());
+        broadcast(new NotificacaoEvent($user->id, auth()->user()->name . ' agora está te seguindo.'));
         return redirect()->back();
     }
 
@@ -131,7 +137,8 @@ class UsersController extends Controller
 
     public function getUnreadNotifications()
     {
-        $notifications =  auth()->user()->unreadNotifications;
+        auth()->user()->unreadNotifications->markAsRead();
+        $notifications =  auth()->user()->notifications;
         return $notifications;
     }
 

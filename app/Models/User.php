@@ -9,11 +9,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
-
+use Laravel\Scout\Searchable;
 
 class User extends Authenticatable
 {
-    use Cachable;
+    use Cachable, Searchable;
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, SoftDeletes;
 
@@ -132,16 +132,23 @@ class User extends Authenticatable
     {
         $friendIds = $this->friends()->pluck('id')->toArray();
 
-        $followingIds = $this->followers()
-            ->where('user_id', $this->id) 
-            ->pluck('followable_id')
-            ->toArray();
+        $followingIds = Follower::where('user_id', $this->id)->where('followable_type', 'App\Models\User')->pluck('followable_id')->toArray();
 
-        $userIds = array_merge($friendIds, $followingIds, [$this->id]); 
+        $userIds = array_merge($friendIds, $followingIds, [$this->id]);
 
         return Post::whereIn('user_id', $userIds)
             ->latest()
-            ->with('user') 
+            ->with('user')
             ->paginate(20);
+    }
+
+    public function toSearchableArray()
+    {
+        return [
+            'name' => $this->name,
+            'username' => $this->username,
+            'bio' => $this->bio,
+            'perfil_privado' => $this->perfil_privado
+        ];
     }
 }
