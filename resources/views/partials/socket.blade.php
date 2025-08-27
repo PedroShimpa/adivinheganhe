@@ -106,10 +106,11 @@
                     new Audio("{{ asset('sounds/notification-sound.mp3')}}").play();
 
 
-                    $badge = $('mensagem-recebida-'+e.senderId)
-                    let count = parseInt($badge.text() || 0);
-                    $badge.text(count + 1);
-                    $badge.removeClass('d-none').text(count + 1)
+                    let $badge = $('#mensagem-recebida-' + e.senderId); // <-- note o #
+                let count = parseInt($badge.text() || 0);
+                $badge.text(count + 1);
+                $badge.removeClass('d-none'); // já atualiza o badge
+
 
 
                 });
