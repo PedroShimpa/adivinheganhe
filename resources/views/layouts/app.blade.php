@@ -40,8 +40,17 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     </noscript>
-
     <style>
+        img {
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+            pointer-events: none;
+            /* impede clique */
+        }
+
         html,
         body {
             height: 100%;
@@ -104,6 +113,46 @@
 </head>
 
 <body class="bg-dark text-white d-flex flex-column min-vh-100">
+    <div id="adblock-detected"
+        style="display:none; 
+            position:fixed; 
+            top:0; left:0; 
+            width:100%; 
+            height:100%; 
+            background:rgba(0,0,0,0.85); 
+            color:white; 
+            z-index:9999; 
+            display:flex; 
+            flex-direction:column; 
+            align-items:center; 
+            justify-content:center; 
+            text-align:center;
+            padding:20px;">
+        <div style="max-width:500px;">
+            <h2>🚫 Bloqueio de anúncios detectado</h2>
+            <p>Adivinhe e Ganhe é um projeto gratuito e de código aberto, os anúncios nos ajudam a manter os servidores e os bancos de dados ativos.</p>
+            <p>Se estiver vendo esta mensagem, provavelmente está bloqueando anúncios.
+                Exclua nosso site em seu bloqueador de anúncios para apoiar o desenvolvimento.</p>
+            <p><strong>Obrigado!</strong></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Cria um elemento "isca" que normalmente adblock bloqueia
+            let bait = document.createElement('div');
+            bait.className = "adsbox";
+            bait.style.height = "1px";
+            document.body.appendChild(bait);
+
+            setTimeout(function() {
+                if (bait.offsetHeight === 0 || bait.clientHeight === 0) {
+                    document.getElementById("adblock-detected").style.display = "flex";
+                }
+                bait.remove();
+            }, 200);
+        });
+    </script>
 
     <div class="offcanvas offcanvas-start bg-dark text-white sidebar-nav" tabindex="-1" id="sidebarMenu">
         <div class="offcanvas-header border-bottom">
@@ -304,6 +353,12 @@
             });
         });
     </script>
+    <script>
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+    </script>
+
     @endauth
 
     @isset($enable_adsense)
