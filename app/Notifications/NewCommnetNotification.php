@@ -23,7 +23,7 @@ class NewCommnetNotification extends Notification
         return [
             'message' => auth()->user()->name . ' comentou em seu post',
             'sender_id' => auth()->id(),
-            'url' => route('posts.single.',  $this->postId)
+            'url' => route('posts.single',  $this->postId)
         ];
     }
 }
