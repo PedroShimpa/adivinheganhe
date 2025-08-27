@@ -17,6 +17,12 @@ class PostController extends Controller
 {
     public function __construct(private Post $posts) {}
 
+    public function single_post(Post $post)
+    {
+
+        return view('post.single')->with('post', $post);
+    }
+
     public function store(CreatePostRequest $request)
     {
         $data = $request->validated();
@@ -60,7 +66,7 @@ class PostController extends Controller
             true
         ));
         if (auth()->user()->id !=  $post->user_id) {
-            $post->user->notify(new NewCommnetNotification($request->input('body')));
+            $post->user->notify(new NewCommnetNotification($request->input('body'), $post->id));
             broadcast(new NotificacaoEvent($post->user->id, auth()->user()->name . ' comentou: ' . $request->input('body')));
         }
     }

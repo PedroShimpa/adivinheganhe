@@ -21,7 +21,7 @@ class FriendRequestAcceptedNotification extends Notification
         return [
             'message'   => auth()->user()->name . ' aceitou seu pedido de amizade.',
             'sender_id' => auth()->id(),
+            'url' => route('profile.view', auth()->user()->username)
         ];
     }
 }
-

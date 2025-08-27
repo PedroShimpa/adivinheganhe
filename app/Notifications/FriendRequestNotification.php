@@ -21,7 +21,7 @@ class FriendRequestNotification extends Notification
         return [
             'message'   => auth()->user()->name . ' enviou um pedido de amizade.',
             'sender_id' => auth()->id(),
+            'url' => route('users.friend_requests')
         ];
     }
 }
-
