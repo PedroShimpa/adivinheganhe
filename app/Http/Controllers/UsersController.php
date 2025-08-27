@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\NotificacaoEvent;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Jobs\UploadUserImage;
 use App\Mail\FriendrequestMail;
 use App\Models\Friendship;
 use App\Models\User;
@@ -27,7 +28,6 @@ class UsersController extends Controller
         if ($request->input('search')) {
             $players = User::search($request->input('search'))->where('perfil_privado', 'N')->get();
         } else {
-
             $players = User::select('username', 'image', 'bio')->where('perfil_privado', 'N')->inRandomOrder()->limit(9)->get();
         }
 
@@ -71,21 +71,8 @@ class UsersController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $request->user()->fill($request->validated());
-
         if ($request->file('image')) {
-            $imagem = $request->file('image');
-            $hash = Str::random(10);
-            $fileName = $hash . '_' . time() . '.webp';
-
-            $image = Image::read($imagem)->encodeByExtension('webp', 85);
-
-            $filePath = 'usuarios/imagens/' . $fileName;
-
-            Storage::disk('s3')->put($filePath, (string) $image);
-
-            $urlImagem = Storage::disk('s3')->url($filePath);
-
-            $request->user()->image = $urlImagem;
+            UploadUserImage::dispatch($request->user(), $request->file('image'));
         }
 
         $request->user()->save();
