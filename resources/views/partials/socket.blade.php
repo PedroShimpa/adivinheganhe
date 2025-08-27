@@ -107,8 +107,8 @@
 
 
                     $badge = $('mensagem-recebida-'+e.senderId)
-                    $badge.text(count + 1);
                     let count = parseInt($badge.text() || 0);
+                    $badge.text(count + 1);
                     $badge.removeClass('d-none').text(count + 1)
 
 
