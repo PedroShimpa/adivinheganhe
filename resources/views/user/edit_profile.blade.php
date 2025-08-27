@@ -3,6 +3,15 @@
 @section('content')
 <div class="container mb-5 mt-2" style="max-width: 700px;">
     <h1 class="mb-4 fw-bold">Editar Perfil</h1>
+    @if(session('status'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('status') }}
+        @if(session('image_upload_notice'))
+        <br><small class="text-muted">{{ session('image_upload_notice') }}</small>
+        @endif
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @endif
 
     <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="card shadow-sm p-4">
         @csrf

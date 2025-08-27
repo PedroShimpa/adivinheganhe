@@ -71,14 +71,22 @@ class UsersController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $request->user()->fill($request->validated());
-        if ($request->file('image')) {
-            UploadUserImage::dispatch($request->user(), $request->file('image'));
-        }
-
         $request->user()->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        if ($request->file('image')) {
+            $tempPath = $request->file('image')->store('temp');
+            UploadUserImage::dispatch($request->user(), storage_path('app/' . $tempPath));
+
+            // Mensagem indicando que o upload da imagem será feito em background
+            return Redirect::route('profile.edit')
+                ->with('status', 'Dados atualizados com sucesso!')
+                ->with('image_upload_notice', 'Sua imagem será enviada em instantes.');
+        }
+
+        return Redirect::route('profile.edit')
+            ->with('status', 'Perfil atualizado com sucesso!');
     }
+
 
     public function destroy(Request $request): RedirectResponse
     {
