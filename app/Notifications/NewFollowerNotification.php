@@ -21,6 +21,7 @@ class NewFollowerNotification extends Notification
         return [
             'message'   => auth()->user()->name . ' agora está te seguindo.',
             'sender_id' => auth()->id(),
+            'url' => route('profile.view', auth()->user()->username)
         ];
     }
 }

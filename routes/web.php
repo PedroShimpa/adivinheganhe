@@ -67,6 +67,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/users/friend-request/recuse/{userId}', [UsersController::class, 'recuseFriendRequest'])->name('users.friend_request.recuse')->whereNumber('userId');
 
     Route::post('posts/', [PostController::class, 'store'])->name('posts.store');
+    Route::get('posts/{post}', [PostController::class, 'single_post'])->name('posts.single');
     Route::post('posts/comment/{post}', [PostController::class, 'comment'])->name('posts.comment');
     Route::get('posts/comments/{post}', [PostController::class, 'comments'])->name('posts.comments');
 

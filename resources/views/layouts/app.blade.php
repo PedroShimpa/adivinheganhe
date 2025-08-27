@@ -134,7 +134,7 @@
                 </div>
                 @endauth
 
-              
+
             </div>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
         </div>
@@ -289,24 +289,40 @@
                     method: 'GET',
                     success: function(res) {
                         $notifList.empty();
+
                         if (res.length === 0) {
                             $notifList.append('<li class="text-center text-muted">Sem notificações</li>');
                         } else {
                             res.forEach(n => {
-                                $notifList.append(`
-                            <li class="dropdown-item">
-                                ${n.data.message}
-                                <br><small class="text-muted">${n.created_at_br}</small>
-                            </li>
-                        `);
+                                let content = '';
+
+                                if (n.data.url) {
+                                    content = `
+                        <a href="${n.data.url}" class="dropdown-item d-block">
+                            ${n.data.message}
+                            <br><small class="text-muted">${n.created_at_br}</small>
+                        </a>
+                    `;
+                                } else {
+                                    content = `
+                        <li class="dropdown-item">
+                            ${n.data.message}
+                            <br><small class="text-muted">${n.created_at_br}</small>
+                        </li>
+                    `;
+                                }
+
+                                $notifList.append(content);
                             });
                         }
-                        $notifCount.text(0); // marca visualmente como lida
+
+                        $notifCount.text(0);
                     },
                     error: function() {
                         $notifList.html('<li class="text-center text-danger">Erro ao carregar</li>');
                     }
                 });
+
             });
         });
     </script>
