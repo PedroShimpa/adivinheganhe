@@ -122,7 +122,7 @@
 
                 @auth
                 <div class="dropdown">
-                    <button id="notificationButton" class="btn btn-light " data-bs-toggle="dropdown">
+                    <button id="notificationButton" class="btn btn-light ml-2" data-bs-toggle="dropdown">
                         <i class="bi bi-bell fs-4"></i>
                         <span id="notificationCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             {{ auth()->user()->unreadNotificationsCount()}}
