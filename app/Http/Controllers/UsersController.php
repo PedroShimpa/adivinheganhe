@@ -20,9 +20,14 @@ use Intervention\Image\Laravel\Facades\Image;
 
 class UsersController extends Controller
 {
-    public function jogadores()
+    public function jogadores(Request $request)
     {
-        $players = User::select('username', 'image', 'bio')->where('perfil_privado', 'N')->paginate();
+        if ($request->input('search')) {
+            $players = User::search($request->input('search'))->where('perfil_privado', 'N')->get();
+        } else {
+
+            $players = User::select('username', 'image', 'bio')->where('perfil_privado', 'N')->inRandomOrder()->limit(10)->get();
+        }
 
         return view('jogadores')->with('players', $players);
     }
