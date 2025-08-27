@@ -133,7 +133,7 @@ class User extends Authenticatable
         $friendIds = $this->friends()->pluck('id')->toArray();
 
         $followingIds = $this->followers()
-            ->where('follower_id', $this->id) 
+            ->where('user_id', $this->id) 
             ->pluck('followable_id')
             ->toArray();
 

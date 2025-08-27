@@ -15,14 +15,14 @@
 @endpush
 
 @section('content')
-<div class="container ">
+<div class="container  ">
     @include('layouts.base_header')
     @include('partials.adivinhacao', ['adivinhacao' => $adivinhacao])
 </div>
 
 @if($respostas->isNotEmpty())
 
-<div class="container ">
+<div class="container  ">
     <div class="text-center mb-4">
         <p class="text-white">Confira abaixo quem respondeu e quando</p>
         <hr class="w-25 mx-auto">
@@ -40,7 +40,7 @@
                             <th class="text-center">Hora</th>
                         </tr>
                     </thead>
-                    <tbody id="respostas-container">
+                    <tbody id="respostas-container ">
                         @forelse($respostas as $resposta)
                         <tr>
                             <td class="fw-semibold text-center">{{ $resposta->uuid }}</td>
