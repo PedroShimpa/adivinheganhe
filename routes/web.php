@@ -43,6 +43,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/dicas/{adivinhacao}/comprar', [PagamentosController::class, 'index_buy_dica'])->name('dicas.index_buy');
     Route::post('/dicas/{adivinhacao}/comprar', [PagamentosController::class, 'buy_dica'])->name('dicas.comprar');
     Route::get('/meus_premios', [HomeController::class, 'meusPremios'])->name('meus_premios');
+
+
+
+    Route::get('/chat/{user}', [ChatController::class, 'private_chat'])->name('chat.chat_privado');
+    Route::get('/chat/buscar/{userId}', [ChatController::class, 'get_messages'])->name('chat.buscar');
     Route::post('/chat', [ChatController::class, 'store'])->name('chat.enviar');
 
     Route::get('/adivinhe-o-milhao/iniciar', [AdivinheOMilhaoController::class, 'iniciar'])->name('adivinhe_o_milhao.iniciar');
@@ -68,7 +73,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/notificacoes', [UsersController::class, 'getUnreadNotifications'])->name('user.notificacoes');
 });
 
-Route::get('/chat', [ChatController::class, 'get_messages'])->name('chat.buscar');
 Route::post('/webhook/mercadopago', [PagamentosController::class, 'webhook']);
 Route::get('/hall-da-fama', [HomeController::class, 'hallOfFame'])->name('hall_da_fama');
 Route::get('/sobre', [HomeController::class, 'sobre'])->name('sobre');
