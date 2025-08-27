@@ -1,7 +1,7 @@
 @extends('layouts.app', ['enable_adsense' => true])
 
 @section('content')
-<div class="container  ">
+<div class="container mb-5 mt-2">
     <div class="text-center mb-5">
         <h2 class="fw-bold display-6">🏆 Hall da Fama</h2>
         <p class="text-white">Os jogadores mais premiados do Adivinhe e Ganhe</p>

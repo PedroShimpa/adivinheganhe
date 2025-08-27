@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container  mt-5">
+<div class="container mb-5 mt-2">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
@@ -155,7 +155,7 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         const dicaPagaSelect = document.getElementById('dica_paga');
-        const dicaValorcontainer  = document.getElementById('dica_valor_container ');
+        const dicaValorcontainer mb-5 mt-2= document.getElementById('dica_valor_container ');
 
         function toggleDicaValor() {
             if (dicaPagaSelect.value === 'S') {

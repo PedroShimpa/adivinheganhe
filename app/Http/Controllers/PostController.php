@@ -60,8 +60,8 @@ class PostController extends Controller
             true
         ));
         if (auth()->user()->id !=  $post->user_id) {
-            $post->user->notify(new NewCommnetNotification());
-            broadcast(new NotificacaoEvent($post->user->id, auth()->user()->name . ' comentou:' . $request->input('body')));
+            $post->user->notify(new NewCommnetNotification($request->input('body')));
+            broadcast(new NotificacaoEvent($post->user->id, auth()->user()->name . ' comentou: ' . $request->input('body')));
         }
     }
 }

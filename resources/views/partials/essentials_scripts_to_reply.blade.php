@@ -24,7 +24,7 @@
             });
             $list.html(html);
           } else {
-            $list.html('<p class="text-muted">Nenhum comentário ainda. Seja o primeiro!</p>');
+            // $list.html('<p class="text-muted">Nenhum comentário ainda. Seja o primeiro!</p>');
           }
         } catch (e) {
           $list.html('<p class="text-danger">Erro ao carregar comentários.</p>');

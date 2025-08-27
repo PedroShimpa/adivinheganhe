@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container  ">
+<div class="container mb-5 mt-2">
     <h2 class="mb-4">🛠️ Nós vamos te ajudar!</h2>
 
     @if(session('success'))

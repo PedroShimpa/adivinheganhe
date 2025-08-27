@@ -3,7 +3,7 @@
 @section('title', "Erro $code")
 
 @section('content')
-<div class="container  text-center mt-5">
+<div class="container mb-5 mt-2text-center mt-5">
     <h1>Erro {{ $code }}</h1>
     <p>Oops! Algo deu errado.</p>
     <a href="{{ route('home') }}" class="btn btn-primary">Voltar para a página inicial</a>

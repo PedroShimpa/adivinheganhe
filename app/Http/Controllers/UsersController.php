@@ -108,6 +108,7 @@ class UsersController extends Controller
     {
         $user->followers()->create(['user_id' => auth()->user()->id]);
         $user->notify(new NewFollowerNotification());
+        broadcast(new NotificacaoEvent($user->id, auth()->user()->name . ' agora está te seguindo.'));
         return redirect()->back();
     }
 
