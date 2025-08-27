@@ -135,7 +135,7 @@ class User extends Authenticatable
 
     public function notifications()
     {
-        return $this->morphMany(\Illuminate\Notifications\DatabaseNotification::class, 'notifiable');
+        return $this->morphMany(\Illuminate\Notifications\DatabaseNotification::class, 'notifiable')->latest();
     }
 
     public function unreadNotifications()
