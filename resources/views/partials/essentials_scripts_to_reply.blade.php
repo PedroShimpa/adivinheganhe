@@ -168,7 +168,7 @@
       $input[0].setSelectionRange(0, 99999);
 
       navigator.clipboard.writeText($input.val()).then(() => {
-        $btn.text('Copiado!').removeClass('btn-outline-primary').addClass('btn-primary');
+        $btn.text('Copiado!').removeClass('btn-primary').addClass('btn-primary');
         setTimeout(() => {
           $btn.text('Copiar link').removeClass('btn-primary').addClass('btn-primary');
         }, 2000);

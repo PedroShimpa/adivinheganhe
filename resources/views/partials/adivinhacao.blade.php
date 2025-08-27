@@ -72,7 +72,7 @@
                 <div class="alert alert-warning small py-2 px-3 rounded-pill">⚠️ Você atingiu o limite de palpites dessa adivinhação para hoje!</div>
                 @else
                 @if($adivinhacao->resolvida != 'S')
-                <div class="alert alert-success small py-2 px-3 rounded-pill">Palpites restantes: <span  id="palpites_adivinhacao_{{ $adivinhacao->id}}">{{ $adivinhacao->palpites_restantes }}</span></div>
+                <div class="alert alert-success small py-2 px-3 rounded-pill">Palpites restantes: <span id="palpites_adivinhacao_{{ $adivinhacao->id}}">{{ $adivinhacao->palpites_restantes }}</span></div>
                 <div class="mb-2">
                     <input type="text" id="resposta-{{ $adivinhacao->id }}" class="form-control border-primary fw-semibold rounded-3" name="resposta" placeholder="💬 Digite seu palpite">
                 </div>
@@ -93,6 +93,25 @@
                 @endauth
 
                 <div class="mt-3">
+                    <div class="mt-2 d-flex gap-2 flex-wrap">
+                        <span class="fw-semibold small">Compartilhar:</span>
+
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('adivinhacoes.index', $adivinhacao->uuid)) }}" target="_blank" class="btn btn-sm btn-primary rounded-pill">
+                            Facebook
+                        </a>
+
+                        <a href="https://twitter.com/intent/tweet?url={{ urlencode(route('adivinhacoes.index', $adivinhacao->uuid)) }}&text={{ urlencode($adivinhacao->titulo) }}" target="_blank" class="btn btn-sm btn-info rounded-pill text-white">
+                            Twitter
+                        </a>
+
+                        <a href="https://api.whatsapp.com/send?text={{ urlencode($adivinhacao->titulo . ' ' . route('adivinhacoes.index', $adivinhacao->uuid)) }}" target="_blank" class="btn btn-sm btn-success rounded-pill">
+                            WhatsApp
+                        </a>
+
+                        <a href="https://t.me/share/url?url={{ urlencode(route('adivinhacoes.index', $adivinhacao->uuid)) }}&text={{ urlencode($adivinhacao->titulo) }}" target="_blank" class="btn btn-sm btn-primary rounded-pill">
+                            Telegram
+                        </a>
+                    </div>
                     <button class="btn btn-secondary btn-sm rounded-pill verComentarios"
                         data-id="{{ $adivinhacao->id }}"
                         data-route="{{ route('adivinhacoes.comments', $adivinhacao->uuid) }}">
@@ -120,14 +139,12 @@
                         @endauth
                     </div>
                 </div>
-
-
             </div>
 
             @php $isLink = filter_var($adivinhacao->premio, FILTER_VALIDATE_URL); @endphp
             @if($isLink)
             <div class="mt-3 text-end">
-                <a href="{{ $adivinhacao->premio }}" class="btn btn-outline-primary btn-sm rounded-pill" target="_blank">🎁 Ver prêmio</a>
+                <a href="{{ $adivinhacao->premio }}" class="btn btn-primary btn-sm rounded-pill" target="_blank">🎁 Ver prêmio</a>
             </div>
             @endif
         </div>
