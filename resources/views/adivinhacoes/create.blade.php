@@ -42,10 +42,10 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="titulo" class="form-label">{{ __('Formato Resposta') }}</label>
-                            <input type="text" class="form-control @error('formato_resposta') is-invalid @enderror" id="formato_resposta" name="formato_resposta" value="{{ old('formato_resposta') }}" >
+                            <input type="text" class="form-control @error('formato_resposta') is-invalid @enderror" id="formato_resposta" name="formato_resposta" value="{{ old('formato_resposta') }}">
                             @error('titulo')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -79,7 +79,7 @@
                             @enderror
                         </div>
 
-                        <div class="mb-3" id="dica_valor_container " style="display: none;">
+                        <div class="mb-3" id="dica_valor_container" style="display: none;">
                             <label for="dica_valor" class="form-label">{{ __('Valor da Dica (R$)') }}</label>
                             <input type="number" step="0.01" class="form-control @error('dica_valor') is-invalid @enderror" id="dica_valor" name="dica_valor" value="{{ old('dica_valor') }}">
                             @error('dica_valor')
@@ -155,13 +155,13 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         const dicaPagaSelect = document.getElementById('dica_paga');
-        const dicaValorcontainer mb-5 mt-2= document.getElementById('dica_valor_container ');
+        const dicaValor = document.getElementById('dica_valor_container');
 
         function toggleDicaValor() {
             if (dicaPagaSelect.value === 'S') {
-                dicaValorcontainer .style.display = 'block';
+                dicaValor.style.display = 'block';
             } else {
-                dicaValorcontainer .style.display = 'none';
+                dicaValor.style.display = 'none';
             }
         }
 
