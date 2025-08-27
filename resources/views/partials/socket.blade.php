@@ -103,6 +103,7 @@
                     $('body').append(toast);
 
                     setTimeout(() => toast.remove(), 15000);
+                    new Audio("{{ asset('sounds/notification-sound.mp3')}}").play();
 
 
                     $badge = $('mensagem-recebida-'+e.senderId)
@@ -110,7 +111,6 @@
                     let count = parseInt($badge.text() || 0);
                     $badge.removeClass('d-none').text(count + 1)
 
-                     new Audio("{{ asset('sounds/notification-sound.mp3')}}").play();
 
                 });
     @endauth
