@@ -123,6 +123,19 @@ class UsersController extends Controller
         return redirect()->back();
     }
 
+    public function friendRequests()
+    {
+        $user = auth()->user();
+
+        $pendingRequests = $user->receivedFriendships()
+            ->where('status', 'pending')
+            ->with('sender') 
+            ->get();
+
+    return view('user.pedidos_de_amizade', compact('pendingRequests'));
+    }
+
+
     public function sendFriendRequest(User $user)
     {
         $request = Friendship::create([
@@ -139,6 +152,9 @@ class UsersController extends Controller
     {
         auth()->user()->unreadNotifications->markAsRead();
         $notifications =  auth()->user()->notifications;
+        $notifications->filter(function($q) {
+            $q->created_at_br = $q->created_at->format('d/m/Y H:i');
+        });
         return $notifications;
     }
 
