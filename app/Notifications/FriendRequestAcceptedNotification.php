@@ -19,7 +19,7 @@ class FriendRequestAcceptedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'message'   => auth()->user()->name . ' aceitou seu pedido de amizade.',
+            'message'   => auth()->user()->username . ' aceitou seu pedido de amizade.',
             'sender_id' => auth()->id(),
             'url' => route('profile.view', auth()->user()->username)
         ];
