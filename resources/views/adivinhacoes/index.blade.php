@@ -15,14 +15,14 @@
 @endpush
 
 @section('content')
-<div class="container  ">
+<div class="container mb-5 mt-2">
     @include('layouts.base_header')
     @include('partials.adivinhacao', ['adivinhacao' => $adivinhacao])
 </div>
 
 @if($respostas->isNotEmpty())
 
-<div class="container  ">
+<div class="container mb-5 mt-2">
     <div class="text-center mb-4">
         <p class="text-white">Confira abaixo quem respondeu e quando</p>
         <hr class="w-25 mx-auto">

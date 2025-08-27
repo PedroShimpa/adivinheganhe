@@ -1,7 +1,7 @@
 @extends('layouts.app', ['enable_adsense' => true])
 
 @section('content')
-<div class="container  mt-5">
+<div class="container mb-3 mt-5">
 
     @include('partials.post_store')
 
@@ -83,7 +83,7 @@
                     });
                     $list.html(html);
                 } else {
-                    $list.html('<p class="text-muted">Nenhum comentário ainda. Seja o primeiro!</p>');
+                    // $list.html('<p class="text-muted">Nenhum comentário ainda. Seja o primeiro!</p>');
                 }
             } catch (e) {
                 $list.html('<p class="text-danger">Erro ao carregar comentários.</p>');

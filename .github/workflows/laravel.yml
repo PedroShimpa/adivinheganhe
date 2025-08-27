@@ -22,6 +22,18 @@ jobs:
           --health-timeout=5s
           --health-retries=3
 
+      meilisearch:
+        image: getmeili/meilisearch:v1.11
+        ports:
+          - 7700:7700
+        options: >-
+          --health-cmd="curl -s http://localhost:7700/health | grep available"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+        env:
+          MEILI_MASTER_KEY: masterKey123
+
     steps:
       - uses: actions/checkout@v4
 
@@ -37,13 +49,14 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
 
-
       - name: Generate key
         run: php artisan key:generate
 
       - name: Run migrations
         run: php artisan migrate --seed
 
+      - name: Reindex users in Meilisearch
+        run: php artisan scout:import "App\Models\User"
 
       - name: Run tests
         run: php artisan test
@@ -71,4 +84,3 @@ jobs:
             php artisan view:clear
             php artisan cache:clear
             systemctl restart octane
-      

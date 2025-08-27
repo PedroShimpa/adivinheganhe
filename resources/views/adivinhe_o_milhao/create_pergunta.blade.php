@@ -1,7 +1,7 @@
 @extends('layouts.app', ['enable_adsense' => true])
 
 @section('content')
-<div class="container  ">
+<div class="container mb-5 mt-2">
     <div class="row justify-content-center">
         <div class="col-lg-8 col-md-10">
 

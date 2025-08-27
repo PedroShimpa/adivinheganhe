@@ -28,7 +28,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/para_voce', [UsersController::class, 'para_voce'])->name('para_voce');
+    Route::get('/para-voce', [UsersController::class, 'para_voce'])->name('para_voce');
 
     Route::get('/adivinhacoes/create', [AdivinhacoesController::class, 'create'])->name('adivinhacoes.create');
     Route::post('/adivinhacoes/create', [AdivinhacoesController::class, 'store'])->name('adivinhacoes.store');
