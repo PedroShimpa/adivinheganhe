@@ -11,10 +11,11 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class FriendrequestMail extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
 
-    private $fromUser;
-    private $toUser;
+    use Queueable, SerializesModels;
+    
+    public  string $fromUser;
+    public  string $toUser;
 
     public function __construct(string $fromUser, string $toUser)
     {
