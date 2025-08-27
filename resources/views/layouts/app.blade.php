@@ -108,26 +108,26 @@
     <div class="offcanvas offcanvas-start bg-dark text-white sidebar-nav" tabindex="-1" id="sidebarMenu">
         <div class="offcanvas-header border-bottom">
             <h5 class="offcanvas-title fw-bold">Adivinhe e Ganhe</h5>
-             <div class="d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center gap-3">
 
-            @auth
-            <div class="dropdown">
-                <button id="notificationButton" class="btn btn-light " data-bs-toggle="dropdown">
-                    <i class="bi bi-bell fs-4"></i>
-                    <span id="notificationCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {{ auth()->user()->unreadNotificationsCount()}}
-                    </span>
+                @auth
+                <div class="dropdown">
+                    <button id="notificationButton" class="btn btn-light " data-bs-toggle="dropdown">
+                        <i class="bi bi-bell fs-4"></i>
+                        <span id="notificationCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {{ auth()->user()->unreadNotificationsCount()}}
+                        </span>
+                    </button>
+                    <ul id="notificationList" class="dropdown-menu dropdown-menu-end p-2" style="min-width: 300px;">
+                        <li class="text-center text-muted">Carregando...</li>
+                    </ul>
+                </div>
+                @endauth
+
+                <button class="btn btn-light d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+                    <i class="bi bi-list fs-4"></i>
                 </button>
-                <ul id="notificationList" class="dropdown-menu dropdown-menu-end p-2" style="min-width: 300px;">
-                    <li class="text-center text-muted">Carregando...</li>
-                </ul>
             </div>
-            @endauth
-
-            <button class="btn btn-light d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
-                <i class="bi bi-list fs-4"></i>
-            </button>
-        </div>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
         </div>
         <div class="offcanvas-body d-flex flex-column gap-2">
@@ -137,9 +137,9 @@
                 <div class="accordion-item bg-dark border-0">
 
                     <div id="collapsePlay" class="accordion-collapse collapse" data-bs-parent="#playAccordion">
-                            <a href="{{ route('home') }}" class="nav-link text-white">Clássico</a>
-                            <a href="{{ route('regioes.index') }}" class="nav-link text-white">Clássico por região</a>
-                            <a href="{{ route('adivinhe_o_milhao.index') }}" class="nav-link text-white">Adivinhe o Milhão</a>
+                        <a href="{{ route('home') }}" class="nav-link text-white">Clássico</a>
+                        <a href="{{ route('regioes.index') }}" class="nav-link text-white">Clássico por região</a>
+                        <a href="{{ route('adivinhe_o_milhao.index') }}" class="nav-link text-white">Adivinhe o Milhão</a>
                     </div>
                 </div>
             </div>
@@ -148,12 +148,12 @@
                 <div class="accordion-item bg-dark border-0">
 
                     <div id="collapseComunidade" class="accordion-collapse collapse" data-bs-parent="#playersAccordion">
-                            @auth
-                            <a href="{{ route('para_voce') }}" class="nav-link text-white">Para Você</a>
-                            @endauth
-                            <a href="{{ route('jogadores') }}" class="nav-link text-white">Jogadores</a>
-                            <a href="{{ route('premiacoes') }}" class="nav-link text-white">Prêmios</a>
-                            <a href="{{ route('hall_da_fama') }}" class="nav-link text-white">Ranking</a>
+                        @auth
+                        <a href="{{ route('para_voce') }}" class="nav-link text-white">Para Você</a>
+                        @endauth
+                        <a href="{{ route('jogadores') }}" class="nav-link text-white">Jogadores</a>
+                        <a href="{{ route('premiacoes') }}" class="nav-link text-white">Prêmios</a>
+                        <a href="{{ route('hall_da_fama') }}" class="nav-link text-white">Ranking</a>
                     </div>
                 </div>
             </div>
@@ -165,8 +165,13 @@
             <hr class="border-secondary">
 
             @auth
-            <a href="{{ route('profile.view', auth()->user()->username) }}" class="nav-link text-white"><i class="bi bi-person-circle"></i> Perfil</a>
+            <a href="{{ route('profile.view', auth()->user()->username) }}" class="nav-link text-white"><i class="bi bi-person-circle"></i> Meu Perfil</a>
             <a href="{{ route('meus_premios') }}" class="nav-link text-white"><i class="bi bi-gift"></i> Meus Prêmios</a>
+            @if(auth()->user()->isAdmin())
+            <a href="{{ route('adivinhacoes.expiradas') }}" class="nav-link text-white"><i class="bi bi-clock-history"></i> Expiradas</a>
+            <a href="{{ route('adivinhacoes.create') }}" class="nav-link text-white"><i class="bi bi-plus-circle"></i> Nova Adivinhação</a>
+            <a href="{{ route('adivinhe_o_milhao.create_pergunta') }}" class="nav-link text-white"><i class="bi bi-question-circle"></i> Nova Pergunta</a>
+            @endif
             <form method="POST" action="{{ route('logout') }}" class="mt-2">
                 @csrf
                 <button type="submit" class="btn btn-danger w-100"><i class="bi bi-box-arrow-right"></i> Sair</button>
