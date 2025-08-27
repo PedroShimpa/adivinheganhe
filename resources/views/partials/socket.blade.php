@@ -62,38 +62,6 @@
                 $(`#btn-resposta-${id}`).prop('disabled', true);
             });
         })
-        .listen('mensagem.recebida_enviada', e => {
-            // Toast
-            const toast = $(`
-                <div class="toast align-items-center text-white bg-dark border-0 show" role="alert" aria-live="assertive" aria-atomic="true"
-                    style="position: fixed; top: 1rem; right: 1rem; z-index: 9999; min-width: 250px;">
-                    <div class="d-flex">
-                        <div class="toast-body">
-                            ${e.senderName} te enviou uma mensagem!
-                        </div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                    </div>
-                </div>
-            `);
-
-            $('body').append(toast);
-
-            setTimeout(() => toast.remove(), 5000);
-
-            const $friendItem = $(`.friend-item[data-id='${e.senderId}']`);
-            if ($friendItem.length) {
-                let $badge = $friendItem.find('.unread-badge');
-                if (!$badge.length) {
-                    // Cria badge se não existir
-                    $badge = $('<span class="badge bg-danger unread-badge"></span>');
-                    $friendItem.append($badge);
-                }
-
-                // Incrementa contagem
-                let count = parseInt($badge.text() || 0);
-                $badge.text(count + 1);
-            }
-        })
         .listen('.notificacao.recebida', e => {
                 const toast = $(`
                     <div class="toast align-items-center text-white bg-dark border-0 show" role="alert" aria-live="assertive" aria-atomic="true" style="position: fixed; top: 1rem; right: 1rem; z-index: 9999; min-width: 250px;">
@@ -117,6 +85,39 @@
 
                 new Audio("{{ asset('sounds/notification-sound.mp3')}}").play();
             });
+
+             window.Echo.private('chat.' + {{ auth()->user()->id }})
+                .listen('.mensagem.recebida_enviada', (e) => {
+                    const toast = $(`
+                        <div class="toast align-items-center text-white bg-dark border-0 show" role="alert" aria-live="assertive" aria-atomic="true"
+                            style="position: fixed; top: 1rem; right: 1rem; z-index: 9999; min-width: 250px;">
+                            <div class="d-flex">
+                                <div class="toast-body">
+                                    ${e.senderName} te enviou uma mensagem!
+                                </div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                            </div>
+                        </div>
+                    `);
+
+                    $('body').append(toast);
+
+                    setTimeout(() => toast.remove(), 5000);
+
+                    const $friendItem = $(`.friend-item[data-id='${e.senderId}']`);
+                    if ($friendItem.length) {
+                        let $badge = $friendItem.find('.unread-badge');
+                        if (!$badge.length) {
+                            // Cria badge se não existir
+                            $badge = $('<span class="badge bg-danger unread-badge"></span>');
+                            $friendItem.append($badge);
+                        }
+
+                        // Incrementa contagem
+                        let count = parseInt($badge.text() || 0);
+                        $badge.text(count + 1);
+                    }
+                });
     @endauth
 
     function adicionarComentario(comentario) {
