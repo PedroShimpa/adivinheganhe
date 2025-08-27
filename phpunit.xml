@@ -38,5 +38,5 @@
         <env name="NIGHTWATCH_ENABLED" value="false"/>
         <env name="BROADCAST_DRIVER" value="log"/>
         <env name="MAX_REG_PER_FINGERPOINT" value="5"/>
-    </php>
+</php>
 </phpunit>
