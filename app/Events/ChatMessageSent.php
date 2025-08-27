@@ -15,10 +15,12 @@ class ChatMessageSent implements ShouldBroadcastNow
     public $message;
     public $senderId;
     public $receiverId;
+    public $senderName;
 
-    public function __construct($message, $senderId, $receiverId)
+    public function __construct($message, $senderName, $senderId, $receiverId)
     {
         $this->message = $message;
+        $this->senderName = $senderName;
         $this->senderId = $senderId;
         $this->receiverId = $receiverId;
     }
