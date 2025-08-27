@@ -52,23 +52,31 @@
 </div>
 
 <style>
-/* Sidebar */
+/* Sidebar (desktop e mobile) */
 .friends-sidebar {
-    top: 1rem;
-    right: 0;
-    width: 250px;
-    max-height: 90vh;
+    position: fixed;
+    top: 0;
+    right: -100%; /* começa escondida */
+    width: 80vw;
+    max-width: 300px;
+    height: 100vh;
     background: rgba(0, 0, 0, 0.45);
     backdrop-filter: blur(10px);
-    transition: transform 0.3s ease;
-    z-index: 1050;
+    border-left: 1px solid rgba(255,255,255,0.1);
     display: flex;
     flex-direction: column;
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    transition: right 0.3s ease;
+    z-index: 1050;
 }
 
-/* Botão flutuante mobile */
-.friends-mobile-btn {
+/* Quando aberta */
+.friends-sidebar.open {
+    right: 0;
+}
+
+/* Botão flutuante */
+.friends-mobile-btn,
+#friendsToggleBtn {
     position: fixed;
     bottom: 1rem;
     right: 1rem;
@@ -90,21 +98,6 @@
     background: #fff;
 }
 
-/* Mobile */
-@media (max-width: 768px) {
-    .friends-sidebar {
-        transform: translateX(100%);
-        position: fixed;
-        width: 80vw;
-        top: 0;
-        bottom: 0;
-        max-height: 100vh;
-    }
-
-    .friends-sidebar.open {
-        transform: translateX(0);
-    }
-}
 </style>
 
 <script>
@@ -115,24 +108,12 @@ $(function() {
     const $friendsBody = $('#friendsBody');
     const $balloon = $('#friendBalloon');
 
-    // Estado da sidebar no desktop
-    const savedState = localStorage.getItem('friendsSidebarState');
-    if (savedState === 'closed') {
-        $friendsBody.hide();
-    } else {
-        $friendsBody.show();
-    }
+    // Sempre mostrar lista dentro da sidebar
+    $friendsBody.show();
 
-    // Toggle desktop
-    $toggleBtn.on('click', function() {
-        $friendsBody.toggle();
-        localStorage.setItem('friendsSidebarState', $friendsBody.is(':visible') ? 'open' : 'closed');
-    });
-
-    // Toggle mobile
-    $mobileBtn.on('click', function() {
+    // Toggle sidebar (desktop e mobile)
+    $toggleBtn.add($mobileBtn).on('click', function() {
         $sidebar.toggleClass('open');
-        $friendsBody.show(); // garante que a lista apareça
         if ($sidebar.hasClass('open')) {
             $('body').css('overflow', 'hidden');
         } else {
@@ -150,8 +131,8 @@ $(function() {
         let balloonTop = offset.top;
         let balloonLeft = offset.left - $balloon.outerWidth() - 10;
 
-        // Se mobile, centraliza na tela
-        if ($(window).width() <= 768) {
+        // Centraliza no mobile ou desktop quando sidebar aberta
+        if ($(window).width() <= 1024 || $sidebar.hasClass('open')) {
             balloonTop = $(window).scrollTop() + 100;
             balloonLeft = ($(window).width() - $balloon.outerWidth()) / 2;
         }
@@ -174,14 +155,15 @@ $(function() {
         window.location.href = `/chat/${username}`;
     });
 
-    // Fecha balão ao clicar fora
+    // Fecha balão e sidebar ao clicar fora
     $(document).on('click', function(e) {
-        if (!$(e.target).closest('.friend-item, #friendBalloon, #friendsMobileBtn').length) {
+        if (!$(e.target).closest('.friend-item, #friendBalloon, #friendsToggleBtn, #friendsMobileBtn').length) {
             $balloon.addClass('d-none');
             $sidebar.removeClass('open');
             $('body').css('overflow', '');
         }
     });
 });
+
 </script>
 @endauth
