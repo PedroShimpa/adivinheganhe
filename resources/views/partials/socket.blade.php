@@ -104,9 +104,8 @@
 
                     setTimeout(() => toast.remove(), 15000);
 
-                    const $friendItem = $(`.friend-item[data-id='${e.senderId}']`);
 
-                    $badge = $('mensagem-recebida-'+e.senderI)
+                    $badge = $('mensagem-recebida-'+e.senderId)
                     $badge.text(count + 1);
                     let count = parseInt($badge.text() || 0);
                     $badge.removeClass('d-none').text(count + 1)
