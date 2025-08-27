@@ -1,7 +1,7 @@
 @extends('layouts.app', ['enable_adsense' => true])
 
 @section('content')
-<div class="container  " style="max-width: 1000px;">
+<div class="container mb-5 mt-2" style="max-width: 1000px;">
 
     <h2 class="fw-bold mb-4 text-center">
         <i class="bi bi-people"></i> Jogadores

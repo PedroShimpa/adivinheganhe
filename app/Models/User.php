@@ -132,16 +132,13 @@ class User extends Authenticatable
     {
         $friendIds = $this->friends()->pluck('id')->toArray();
 
-        $followingIds = $this->followers()
-            ->where('user_id', $this->id) 
-            ->pluck('followable_id')
-            ->toArray();
+        $followingIds = Follower::where('user_id', $this->id)->where('followable_type', 'App\Models\User')->pluck('followable_id')->toArray();
 
-        $userIds = array_merge($friendIds, $followingIds, [$this->id]); 
+        $userIds = array_merge($friendIds, $followingIds, [$this->id]);
 
         return Post::whereIn('user_id', $userIds)
             ->latest()
-            ->with('user') 
+            ->with('user')
             ->paginate(20);
     }
 }
