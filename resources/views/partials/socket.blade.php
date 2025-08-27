@@ -102,24 +102,17 @@
 
                     $('body').append(toast);
 
-                    setTimeout(() => toast.remove(), 5000);
+                    setTimeout(() => toast.remove(), 15000);
 
                     const $friendItem = $(`.friend-item[data-id='${e.senderId}']`);
-                    if ($friendItem.length) {
-                        let $badge = $friendItem.find('.unread-badge');
-                        if (!$badge.length) {
-                            // Cria badge se não existir
-                            $badge = $('<span class="badge bg-danger unread-badge"></span>');
-                            $friendItem.append($badge);
-                        }
 
-                        // Incrementa contagem
-                        let count = parseInt($badge.text() || 0);
-                        $badge.text(count + 1);
+                    $badge = $('mensagem-recebida-'+e.senderI)
+                    $badge.text(count + 1);
+                    let count = parseInt($badge.text() || 0);
+                    $badge.removeClass('d-none').text(count + 1)
 
-                          new Audio("{{ asset('sounds/notification-sound.mp3')}}").play();
+                     new Audio("{{ asset('sounds/notification-sound.mp3')}}").play();
 
-                    }
                 });
     @endauth
 
