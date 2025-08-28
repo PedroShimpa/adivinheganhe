@@ -2,9 +2,21 @@
 
 @section('content')
 <div class="container mt-5">
+
+    <div style="position: fixed; top: 100px; right: 20px; width: 220px; background: #f8f9fa; border: 1px solid #ddd; padding: 15px; border-radius: 10px;">
+        <h5 class="text-center mb-3">Jogadores</h5>
+        @foreach($partida->jogadores as $jogador)
+            <div class="d-flex justify-content-between mb-2">
+                <span>{{ $jogador->user->username }}</span>
+                <span>{{ $jogador->user->rank->elo ?? 0 }}</span>
+            </div>
+        @endforeach
+        <hr>
+        <p class="text-center mb-0"><strong>VS</strong></p>
+    </div>
+
     <div class="row justify-content-center">
         <div class="col-lg-8">
-
             <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
                 <div class="card-header text-center bg-primary text-white p-4">
                     <h3 class="fw-bold">⚔️ Partida Competitiva</h3>
@@ -25,11 +37,11 @@
                     <button id="enviarRespostaBtn" class="btn btn-success resposta-btn">Enviar Resposta</button>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
 @endsection
+
 
 @push('scripts')
 <script>
