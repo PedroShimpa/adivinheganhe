@@ -21,19 +21,12 @@
                         Quem errar primeiro, perde!
                     </p>
                     <ul class="list-group list-group-flush mb-4">
-                        <li class="list-group-item">⏱️ Começamos com <strong>1:40 minutos</strong> na primeira pergunta, e a cada rodada o tempo diminui em 10 segundos.</li>
+                        <li class="list-group-item">⏱️ Começamos com <strong>1:40 </strong> na primeira pergunta, e a cada rodada o tempo diminui em 10 segundos.</li>
                         <li class="list-group-item">💡 As perguntas vão de dificuldade <strong>1 até 10</strong>.</li>
-                        <li class="list-group-item">🏆 O último jogador restante vence a partida.</li>
                         <li class="list-group-item">📈 Seus resultados influenciam seu <strong>rating competitivo</strong>, aproximando você de jogadores com nível parecido.</li>
                         <li class="list-group-item">🔄 Partidas são rápidas e cada rodada exige atenção e agilidade!</li>
-                    </ul>
-
-                    <h3 class="fw-bold mt-4 mb-3">⚖️ Regras</h3>
-                    <ul class="list-group list-group-flush mb-4">
-                        <li class="list-group-item">🤖 Uso de bots/cheats ou automações resulta em <span class="text-danger">banimento permanente</span>.</li>
                         <li class="list-group-item">🎯 Responder fora do tempo ou errar elimina você da rodada.</li>
-                        <li class="list-group-item">🔄 A cada partida, você ganha ou perde pontos de <strong>Rank</strong> de acordo com seu desempenho.</li>
-                        <li class="list-group-item">💬 Pesquisas externas são permitidas, mas o tempo corre contra você!</li>
+
                     </ul>
 
                     <div class="text-center mt-5">
@@ -86,7 +79,6 @@ $(document).ready(function() {
                     tempoEl.textContent = segundos;
                 }, 1000);
 
-                // Cancelar busca
                 $(cancelarBtn).on('click', function() {
                     clearInterval(interval);
                     Swal.close();
@@ -98,7 +90,6 @@ $(document).ready(function() {
 
                 });
 
-                // Escutar eventos via Echo
             }
         });
         @auth

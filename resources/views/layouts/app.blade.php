@@ -162,7 +162,7 @@
                         @endauth
                         <a href="{{ route('jogadores') }}" class="nav-link text-white">Jogadores</a>
                         <a href="{{ route('premiacoes') }}" class="nav-link text-white">Prêmios</a>
-                        <a href="{{ route('hall_da_fama') }}" class="nav-link text-white">Ranking</a>
+                        <a href="{{ route('hall_da_fama') }}" class="nav-link text-white">Ranking - Modo Clássico</a>
                     </div>
                 </div>
             </div>
@@ -241,7 +241,6 @@
             }
         }
 
-        /* No desktop a sidebar fica fixa à esquerda */
         @media (min-width: 992px) {
             .offcanvas-start {
                 position: fixed;
@@ -255,12 +254,10 @@
 
             main {
                 margin-left: 250px;
-                /* desloca conteúdo pra direita */
             }
 
             .navbar {
                 display: none;
-                /* some o topo em desktop */
             }
         }
     </style>
