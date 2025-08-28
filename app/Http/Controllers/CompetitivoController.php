@@ -23,8 +23,19 @@ class CompetitivoController extends Controller
         return view('competitivo.index');
     }
 
+    public function create_pergunta()
+    {
+        if (auth()->user()->isAdmin()) {
+            return view('competitivo.nova_pergunta');
+        }
+        return redirect()->route('home');
+    }
+
     public function store_pergunta(CreatePerguntaCompetitivoRequest $request)
     {
+        if (!auth()->user()->isAdmin()) {
+            return redirect()->route('home');
+        }
         $data = $request->validated();
 
         if ($request->hasFile('arquivo')) {

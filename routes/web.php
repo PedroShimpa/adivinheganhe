@@ -74,6 +74,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/notificacoes', [UsersController::class, 'getUnreadNotifications'])->name('user.notificacoes');
 
+    Route::get('/competitivo/nova-pergunta', [CompetitivoController::class, 'create_pergunta'])->name('competitivo.nova_pergunta');
+    Route::post('/competitivo/nova-pergunta', [CompetitivoController::class, 'store_pergunta'])->name('competitivo.store_pergunta');
     Route::get('/competitivo/partida/{partida}', [CompetitivoController::class, 'partida'])->name('competitivo.partida');
     Route::get('/competitivo/partida/{partida}/pergunta', [CompetitivoController::class, 'buscar_pergunta'])->name('competitivo.pergunta');
     #pergunta é $pergunta->id
