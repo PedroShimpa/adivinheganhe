@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-
+use App\Models\Competitivo\Ranks;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -170,5 +170,25 @@ class User extends Authenticatable
             'bio' => $this->bio,
             'perfil_privado' => $this->perfil_privado
         ];
+    }
+    public function rank()
+    {
+        return $this->hasOne(Ranks::class, 'user_id');
+    }
+
+    public function getOrCreateRank()
+    {
+        // Tenta obter o rank existente
+        $rank = $this->rank()->first();
+
+        // Se não existir, cria um novo
+        if (!$rank) {
+            $rank = $this->rank()->create([
+                'user_id' => $this->id,
+                'elo' => 200,
+            ]);
+        }
+
+        return $rank;
     }
 }

@@ -31,7 +31,7 @@
 </div>
 @endsection
 
-@push('js-scripts')
+@push('scripts')
 <script>
 $(document).ready(function() {
     let partidaUuid = "{{ $partida->uuid }}";

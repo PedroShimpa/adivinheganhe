@@ -9,7 +9,7 @@
             <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
                 <div class="card-header text-center text-white p-5"
                     style="background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);">
-                    <h1 class="fw-bold display-5">⚔️ Modo Competitivo <span class="text-warning">Adivinhe o Milhão</span> ⚔️</h1>
+                    <h1 class="fw-bold display-5">⚔️ Modo Competitivo ⚔️</h1>
                     <p class="lead mt-3">Enfrente outros jogadores, responda rápido e prove que você é o melhor!</p>
                 </div>
 
@@ -61,7 +61,8 @@
         </div>
     </div>
 </div>
-@push('js-scripts')
+@endsection
+@push('scripts')
 <script>
 $(document).ready(function() {
     let segundos = 0;
@@ -95,29 +96,30 @@ $(document).ready(function() {
                     }).done(() => console.log('Saiu da fila.'))
                       .fail(() => console.log('Erro ao sair da fila.'));
 
-                    window.Echo.private('competitivo.{{ auth()->id() }}')
-                        .whisper('cancelar.busca', { user_id: {{ auth()->id() }} });
                 });
 
                 // Escutar eventos via Echo
-                window.Echo.private('competitivo.{{ auth()->id() }}')
-                    .listen('.buscar.partida', e => {
-                        console.log('Busca iniciada:', e);
-                    })
-                    .listen('.partida.encontrada', e => {
-                        clearInterval(interval);
-                        Swal.close();
-                        window.location.href = "competitvo/partida/" + e.uuid;
-                    });
             }
         });
+        @auth
+        window.Echo.private('competitivo')
+            .listen('.partida.encontrada', e => {
 
-        // Inicia busca no backend
-        $.post("{{ route('competitivo.iniciar_busca') }}", {
-            _token: '{{ csrf_token() }}'
-        }).done(() => console.log('Busca iniciada no backend'))
-          .fail(() => console.log('Erro ao iniciar busca'));
+                console.log('evento receibdo', e)
+                
+                clearInterval(interval);
+                Swal.close();
+                if(e.user_id1 == "{{auth()->id()}}" || e.user_id2 == "{{auth()->id()}}" )
+                window.location.href = "competitivo/partida/" + e.uuid;
+            });
+            // Inicia busca no backend
+            $.post("{{ route('competitivo.iniciar_busca') }}", {
+                _token: '{{ csrf_token() }}'
+            }).done(() => console.log('Busca iniciada no backend'))
+            .fail(() => console.log('Erro ao iniciar busca'));
+        @endauth
     });
+
 });
 </script>
 @endpush

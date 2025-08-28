@@ -66,7 +66,7 @@ class CompetitivoController extends Controller
 
         Fila::create([
             'user_id' => $user->id,
-            'elo' => $user->rank->elo,
+            'elo' => $user->getOrCreateRank()->elo ?? 200,
             'status' => 0
         ]);
 
@@ -97,7 +97,7 @@ class CompetitivoController extends Controller
     {
         $oponentes = Fila::where('status', 0)
             ->where('user_id', '!=', $user->id)
-            ->orderByRaw('ABS(elo - ?)', [$user->rank->elo])
+            // ->orderByRaw('ABS(elo - ?)', [$user->rank->elo])
             ->get();
 
         if ($oponentes->isEmpty()) {
@@ -119,19 +119,19 @@ class CompetitivoController extends Controller
             ['partida_id' => $partida->id, 'user_id' => $adversario->user_id],
         ]);
 
-        broadcast(new PartidaEncontrada($partida->uuid))->toOthers();
+        broadcast(new PartidaEncontrada($partida->uuid, $user->id, $adversario->user_id));
     }
 
     public function partida(Partidas $partida)
     {
-        if (!empty($partida->jogadores->where('user_id', auth()->user()->id)->exists())) {
+        if (!empty($partida->jogadores()->where('user_id', auth()->user()->id)->exists())) {
 
             if ($partida->status != 2) {
 
-                return view('competitivo.partida');
+                return view('competitivo.partida')->with('partida', $partida);
             } else {
 
-                return view('competitivo.partida_finalizada');
+                return view('competitivo.partida_finalizada')->with('partida', $partida);;
             }
         }
         return redirect()->route('home');

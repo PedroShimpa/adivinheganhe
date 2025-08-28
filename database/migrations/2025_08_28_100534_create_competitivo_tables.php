@@ -20,14 +20,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('competitivo_respostas', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('pergunta_id')->constrained('competitivo_perguntas');
-            $table->string('resposta');
-            $table->boolean('correta');
-            $table->timestamps();
-        });
-
         Schema::create('competitivo_partidas', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid');
@@ -37,6 +29,17 @@ return new class extends Migration
             $table->tinyInteger('dificuldade_atual')->default(1);
             $table->timestamps();
         });
+
+        Schema::create('competitivo_respostas', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('partida_id')->constrained('competitivo_partidas');
+            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('pergunta_id')->constrained('competitivo_perguntas');
+            $table->string('resposta');
+            $table->boolean('correta');
+            $table->timestamps();
+        });
+
 
         Schema::create('competitivo_fila', function (Blueprint $table) {
             $table->id();

@@ -10,7 +10,9 @@ class Respostas extends Model
 
     protected $fillable = [
         'pergunta_id',
+        'user_id',
         'resposta',
-        'correta'
+        'correta',
+        'partida_id'
     ];
 }
