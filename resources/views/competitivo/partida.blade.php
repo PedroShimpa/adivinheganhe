@@ -68,6 +68,7 @@ $(document).ready(function() {
             $('#respostaInput').val('');
             $('.resposta-btn').prop('disabled', false).text('Enviar Resposta');
 
+            // tocar som pergunta buscada
             iniciarContador(tempoMax);
         });
     }
@@ -108,9 +109,11 @@ $(document).ready(function() {
             $('#roundAtual').text(roundAtual);
             tempoMax = Math.max(100 - (roundAtual - 1) * 10, 10);
             carregarPergunta();
+            
         })
         .listen('.partida.finalizada', e => {
             window.location.href = `/competitivo/partida/finalizada/${partidaUuid}`;
+            // tocar som partida finalizada
         });
 });
 </script>
