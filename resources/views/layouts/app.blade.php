@@ -177,9 +177,19 @@
             <a href="{{ route('profile.view', auth()->user()->username) }}" class="nav-link text-white"><i class="bi bi-person-circle"></i> Meu Perfil</a>
             <a href="{{ route('meus_premios') }}" class="nav-link text-white"><i class="bi bi-gift"></i> Meus Prêmios</a>
             @if(auth()->user()->isAdmin())
-            <a href="{{ route('adivinhacoes.expiradas') }}" class="nav-link text-white"><i class="bi bi-clock-history"></i> Expiradas</a>
-            <a href="{{ route('adivinhacoes.create') }}" class="nav-link text-white"><i class="bi bi-plus-circle"></i> Nova Adivinhação</a>
-            <a href="{{ route('adivinhe_o_milhao.create_pergunta') }}" class="nav-link text-white"><i class="bi bi-question-circle"></i> Nova Pergunta</a>
+
+            <a href="{{ route('sobre') }}" class="nav-link text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdmin"> <i class="bi bi-people"></i> Admin</a>
+            <div class="accordion" id="adminAccordion">
+                <div class="accordion-item bg-dark border-0">
+
+                    <div id="collapseAdmin" class="accordion-collapse collapse" data-bs-parent="#adminAccordion">
+                        <a href="{{ route('adivinhacoes.expiradas') }}" class="nav-link text-white">Expiradas</a>
+                        <a href="{{ route('adivinhacoes.create') }}" class="nav-link text-white"></i> Nova Adivinhação</a>
+                        <a href="{{ route('adivinhe_o_milhao.create_pergunta') }}" class="nav-link text-white">Nova Pergunta AOM</a>
+                        <a href="{{ route('competitivo.store_pergunta') }}" class="nav-link text-white">Nova Pergunta Comp</a>
+                    </div>
+                </div>
+            </div>
             @endif
             <form method="POST" action="{{ route('logout') }}" class="mt-2">
                 @csrf
