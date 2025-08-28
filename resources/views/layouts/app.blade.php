@@ -147,6 +147,7 @@
                     <div id="collapsePlay" class="accordion-collapse collapse" data-bs-parent="#playAccordion">
                         <a href="{{ route('home') }}" class="nav-link text-white">Clássico</a>
                         <a href="{{ route('regioes.index') }}" class="nav-link text-white">Clássico por região</a>
+                        <a href="{{ route('competitivo.index') }}" class="nav-link text-white">Competitivo</a>
                         <a href="{{ route('adivinhe_o_milhao.index') }}" class="nav-link text-white">Adivinhe o Milhão</a>
                     </div>
                 </div>
