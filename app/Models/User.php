@@ -197,10 +197,8 @@ class User extends Authenticatable
 
     public function getOrCreateRank()
     {
-        // Tenta obter o rank existente
         $rank = $this->rank()->first();
 
-        // Se não existir, cria um novo
         if (!$rank) {
             $rank = $this->rank()->create([
                 'user_id' => $this->id,
