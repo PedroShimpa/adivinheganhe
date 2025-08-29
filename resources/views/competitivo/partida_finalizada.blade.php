@@ -16,7 +16,7 @@
                     <h3 class="fw-bold mb-3">🎯 Resultado</h3>
 
                     <div class="text-center mb-4">
-                        @if($partida->jogadores->where('user_id', auth()->id)->value('vencedor') == auth()->id())
+                        @if($partida->jogadores->where('user_id', auth()->id())->value('vencedor') == auth()->id())
                             <h2 class="text-success fw-bold">🎉 Você venceu!</h2>
                         @else
                             <h2 class="text-danger fw-bold">😞 Você perdeu!</h2>
@@ -39,19 +39,13 @@
 
                     <h4 class="fw-bold mt-4 mb-3">📊 Estatísticas</h4>
                     <ul class="list-group list-group-flush mb-4">
-                        <li class="list-group-item">Tempo de partida: <strong>{{ gmdate("i:s", $partida->duracao) }}</strong></li>
                         <li class="list-group-item">Rodadas jogadas: <strong>{{ $partida->rodada_atual }}</strong></li>
-                        <li class="list-group-item">Rating ganho/perdido: <strong>{{ $partida->elo_diff }}</strong></li>
                     </ul>
 
                     <div class="text-center mt-4">
                         <a href="{{ route('competitivo.index') }}" 
                            class="btn btn-lg btn-primary px-5 py-3 rounded-pill shadow fw-bold">
                             🔙 Voltar para o Modo Competitivo
-                        </a>
-                        <a href="{{ route('competitivo.buscar_partida') }}" 
-                           class="btn btn-lg btn-success px-5 py-3 rounded-pill shadow fw-bold ms-2">
-                            ⚡ Jogar Novamente
                         </a>
                     </div>
                 </div>
