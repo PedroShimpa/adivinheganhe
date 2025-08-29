@@ -28,7 +28,7 @@ class MonitorarPartidas extends Command
 
             $roundAtual = $partida->round_atual;
             $tempoMax = max(100 - ($roundAtual - 1) * 10, 10);
-            $inicioRound = $partida->round_started_at ?? $partida->updated_at;
+            $inicioRound = $partida->round_started_at;
 
             if (Carbon::now()->diffInSeconds($inicioRound) > $tempoMax) {
 
