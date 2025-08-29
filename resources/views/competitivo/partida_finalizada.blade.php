@@ -62,7 +62,9 @@
 @push('scripts')
 <script>
     $(document).ready(function() {
-        new Audio("{{ asset('sounds/fim_comp.wav')}}").play();
+        let audio = new Audio("{{ asset('sounds/fim_comp.wav') }}");
+        audio.volume = 0.8; 
+        audio.play();
     })
 </script>
 @endpush
