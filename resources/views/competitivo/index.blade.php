@@ -124,20 +124,18 @@
             window.Echo.channel('competitivo')
                 .listen('.partida.encontrada', e => {
 
-                    console.log('evento receibdo', e)
-
+                $.post("{{ route('competitivo.iniciar_busca') }}", {
+                        _token: '{{ csrf_token() }}'
+                    }).done(() => console.log('Busca iniciada no backend'))
+                    .fail(() => console.log('Erro ao iniciar busca'));
                     clearInterval(interval);
                     Swal.close();
                     if (e.user_id1 == "{{auth()->id()}}" || e.user_id2 == "{{auth()->id()}}")
                         window.location.href = "competitivo/partida/" + e.uuid;
-                });
-            // Inicia busca no backend
-            $.post("{{ route('competitivo.iniciar_busca') }}", {
-                    _token: '{{ csrf_token() }}'
-                }).done(() => console.log('Busca iniciada no backend'))
-                .fail(() => console.log('Erro ao iniciar busca'));
-            @endauth
+            });
+
         });
+                @endauth
 
     });
 </script>
