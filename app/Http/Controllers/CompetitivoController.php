@@ -145,7 +145,7 @@ class CompetitivoController extends Controller
     public function buscar_pergunta(Partidas $partida)
     {
         if ($partida->status == 1) {
-            $pergunta = Cache::get('pergunta_atual_partida' . $partida->uuid);
+            $pergunta = Cache::get('pergunta_atual_partida' . $partida->id);
             return response()->json($pergunta);
         }
         return null;
@@ -162,7 +162,7 @@ class CompetitivoController extends Controller
             ->whereNull('competitivo_respostas.id')
             ->inRandomOrder()
             ->first();
-        Cache::put('pergunta_atual_partida' . $partida->uuid, $pergunta);
+        Cache::put('pergunta_atual_partida_' . $partida->id, $pergunta);
     }
 
     public function responder(Request $request, Partidas $partida, Perguntas $pergunta)
@@ -226,13 +226,13 @@ class CompetitivoController extends Controller
                 $partida->status = 2;
                 $partida->save();
 
-                Cache::forget('pergunta_atual_partida' . $partida->uuid);
+                Cache::forget('pergunta_atual_partida' . $partida->id);
                 event(new \App\Events\PartidaFinalizada($partida->uuid));
             } else {
                 $partida->status = 2;
                 $partida->save();
 
-                Cache::forget('pergunta_atual_partida' . $partida->uuid);
+                Cache::forget('pergunta_atual_partida' . $partida->id);
 
                 event(new \App\Events\PartidaFinalizada($partida->uuid));
             }
