@@ -16,6 +16,7 @@
         </div>
         <div class="card-body text-center mt-5">
             <h2 class="fw-bold mb-0">{{ $user->name }}</h2>
+            <h4 class="fw-bold mb-0">Rating Competitivo:    {{ auth()->check() ? auth()->user()->getOrCreateRank()->elo : 0 }}</h4>
             <p class="text-muted mb-1">{{ '@'.$user->username }} ({{ $user->followers()->count()}} Seguidores)</p>
 
             @auth
@@ -223,6 +224,44 @@
         } finally {
             $(this).attr('disabled', false)
         }
+    });
+
+
+    document.querySelectorAll('.btn-like').forEach(button => {
+        button.addEventListener('click', function() {
+            const adivinhacaoId = this.dataset.id;
+            const btn = this;
+            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            fetch(`/posts/${adivinhacaoId}/toggle-like`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(res => res.json())
+                .then(data => {
+                    // Atualiza count
+                    btn.querySelector('.likes-count').textContent = data.likes_count;
+
+                    // Alterna ícone e cor do botão
+                    const icon = btn.querySelector('i');
+                    if (data.liked) {
+                        btn.classList.remove('btn-outline-primary');
+                        btn.classList.add('btn-danger');
+                        icon.classList.remove('bi-hand-thumbs-up');
+                        icon.classList.add('bi-hand-thumbs-up-fill');
+                    } else {
+                        btn.classList.remove('btn-danger');
+                        btn.classList.add('btn-outline-primary');
+                        icon.classList.remove('bi-hand-thumbs-up-fill');
+                        icon.classList.add('bi-hand-thumbs-up');
+                    }
+                })
+                .catch(err => console.error(err));
+        });
     });
 </script>
 @endpush

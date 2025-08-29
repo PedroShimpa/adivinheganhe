@@ -172,4 +172,28 @@ class AdivinhacoesController extends Controller
             $request->input('body')
         ));
     }
+
+    public function toggleLike(Request $request, Adivinhacoes $adivinhacao)
+    {
+        $user = auth()->user();
+
+        $like = $adivinhacao->likes()->where('user_id', $user->id)->first();
+
+        if ($like) {
+            // Se já tiver like, remove
+            $like->delete();
+            $liked = false;
+        } else {
+            // Senão, adiciona like
+            $adivinhacao->likes()->create([
+                'user_id' => $user->id
+            ]);
+            $liked = true;
+        }
+
+        return response()->json([
+            'liked' => $liked,
+            'likes_count' => $adivinhacao->likes()->count()
+        ]);
+    }
 }

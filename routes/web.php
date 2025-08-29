@@ -38,6 +38,11 @@ Route::middleware('auth')->group(function () {
     Route::put('/adivinhacoes/{adivinhacaoId}', [AdivinhacoesController::class, 'update'])->name('adivinhacoes.update')->whereNumber('adivinhacaoId');
     Route::get('/adivinhacoes-expiradas', [HomeController::class, 'expiradas'])->name('adivinhacoes.expiradas');
     Route::post('/adivinhacoes/{adivinhacao}/comment', [AdivinhacoesController::class, 'comment'])->name('adivinhacoes.comment');
+
+    Route::post('/adivinhacoes/{adivinhacao}/toggle-like', [AdivinhacoesController::class, 'toggleLike'])->name('adivinhacoes.toggle-like');
+
+
+
     Route::post('/responder', [RespostaController::class, 'enviar'])->name('resposta.enviar');
     Route::get('/palpites/comprar', [PagamentosController::class, 'index_buy_attempts'])->name('tentativas.shop');
     Route::post('/palpites/comprar', [PagamentosController::class, 'buy_attempts'])->name('tentativas.comprar');
@@ -71,6 +76,7 @@ Route::middleware('auth')->group(function () {
     Route::get('posts/individual{post}', [PostController::class, 'single_post'])->name('posts.single');
     Route::post('posts/comment/{post}', [PostController::class, 'comment'])->name('posts.comment');
     Route::get('posts/comments/{post}', [PostController::class, 'comments'])->name('posts.comments');
+    Route::post('/posts/{post}/toggle-like', [PostController::class, 'toggleLike'])->name('posts.toggle-like');
 
     Route::get('/notificacoes', [UsersController::class, 'getUnreadNotifications'])->name('user.notificacoes');
 

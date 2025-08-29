@@ -14,7 +14,6 @@
 
                 <div class="card-body p-5">
                     <h3 class="fw-bold mb-3">🎯 Resultado</h3>
-
                     <div class="text-center mb-4">
                         @if($partida->jogadores->where('user_id', auth()->id())->whereNotNull('vencedor')->value('user_id') == auth()->id())
                         <h2 class="text-success fw-bold">🎉 Você venceu!</h2>

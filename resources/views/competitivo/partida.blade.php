@@ -88,6 +88,7 @@
         let perguntaAtualId = null;
 
         function carregarPergunta() {
+            $('#aguardeOponente').remove()
             $.get(`/competitivo/partida/${partidaUuid}/pergunta`, function(pergunta) {
                 perguntaAtualId = pergunta.id;
 

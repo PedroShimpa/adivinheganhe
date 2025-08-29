@@ -125,11 +125,19 @@ class User extends Authenticatable
         return $friends->filter(fn($friend) => in_array($friend->id, $onlineIds));
     }
 
+    public function getUunreadMessagesCount()
+    {
+        return ChatMessages::whereNull('chat_messages.read_at')->where('receiver_id', $this->id)
+            ->select('user_id', DB::raw('COUNT(chat_messages.id) as unread_count'))
+            ->groupBy('user_id')
+            ->get();
+    }
+
     public function partidaEmAndamento()
     {
         return $this->hasOne(PartidasJogadores::class, 'user_id', 'id')
             ->whereHas('partida', function ($query) {
-                $query->where('status', 1); // status 1 = em andamento
+                $query->where('status', 1);
             });
     }
 
@@ -157,6 +165,7 @@ class User extends Authenticatable
     {
         return $this->unreadNotifications()->count();
     }
+
 
     public function feedPosts()
     {
