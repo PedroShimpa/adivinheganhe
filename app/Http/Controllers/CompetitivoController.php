@@ -237,7 +237,7 @@ class CompetitivoController extends Controller
 
                     $userPerdedor = User::find($perdedor)->rank;
                     if ($userPerdedor) {
-                        $userPerdedor->elo += env('PONTOS_COMPETITVO', 5);
+                        $userPerdedor->elo -= env('PONTOS_COMPETITVO', 5);
                         $userPerdedor->save();
                     }
                 }

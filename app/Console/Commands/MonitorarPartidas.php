@@ -52,7 +52,7 @@ class MonitorarPartidas extends Command
                         // Atualiza elo do perdedor
                         $userPerdedor = User::find($perdedorId)->rank;
                         if ($userPerdedor) {
-                            $userPerdedor->elo += env('PONTOS_COMPETITVO', 5);
+                            $userPerdedor->elo -= env('PONTOS_COMPETITVO', 5);
                             $userPerdedor->save();
                         }
                     }
