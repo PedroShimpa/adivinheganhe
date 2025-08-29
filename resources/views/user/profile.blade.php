@@ -16,7 +16,7 @@
         </div>
         <div class="card-body text-center mt-5">
             <h2 class="fw-bold mb-0">{{ $user->name }}</h2>
-            <h4 class="fw-bold mb-0">Rating Competitivo: {{ $user->getOrCreateRank()->elo : 0 }}</h4>
+            <h5 class="fw-bold mb-0">Rating Competitivo: {{ $user->getOrCreateRank()->elo : 0 }}</h5>
             <p class="text-muted mb-1">{{ '@'.$user->username }} ({{ $user->followers()->count()}} Seguidores)</p>
 
             @auth
