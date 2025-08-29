@@ -215,7 +215,7 @@ class CompetitivoController extends Controller
                 $vencedor = $respostasRodada->firstWhere('correta', true)->user_id ?? null;
 
                 if ($vencedor) {
-                    $partida->jogadores->where('user_id', $vencedor)->update(['vencedor' => 1]);
+                    $partida->jogadores()->where('user_id', $vencedor)->update(['vencedor' => 1]);
                 }
 
                 $partida->status = 2;

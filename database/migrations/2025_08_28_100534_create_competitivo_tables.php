@@ -25,7 +25,7 @@ return new class extends Migration
             $table->uuid('uuid');
             $table->tinyInteger('status')->default(0)->comment('0=aguardando, 1=em andamento, 2=finalizada');
             $table->integer('round_atual')->default(0);
-            $table->integer('round_started_at')->default(0);
+            $table->dateTime('round_started_at')->nullable();
             $table->integer('tempo_atual')->default(100);
             $table->tinyInteger('dificuldade_atual')->default(1);
             $table->timestamps();

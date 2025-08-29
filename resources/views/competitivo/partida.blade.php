@@ -3,7 +3,7 @@
 @section('content')
 <div class="container mt-5">
 
-    <div style="position: fixed; top: 100px; right: 20px; width: 220px; background: #f8f9fa; border: 1px solid #ddd; padding: 15px; border-radius: 10px;">
+    <div style="position: fixed; top: 100px; right: 20px; width: 220px; background: #f8f9fa; border: 1px solid #ddd; padding: 15px; border-radius: 10px;" class="text-dark">
         <h5 class="text-center mb-3">Jogadores</h5>
         @foreach($partida->jogadores as $jogador)
         <div class="d-flex justify-content-between mb-2">
