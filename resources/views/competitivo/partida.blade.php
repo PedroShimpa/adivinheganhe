@@ -87,6 +87,24 @@
         let tempoInterval;
         let perguntaAtualId = null;
 
+        // Bloqueia CTRL+C / CMD+C
+        $(document).on('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'c') {
+                e.preventDefault();
+                alert('Copiar não é permitido!');
+            }
+        });
+
+        $(document).on('contextmenu', function(e) {
+            e.preventDefault();
+            alert('Copiar não é permitido!');
+        });
+
+        // Bloqueia copiar via arrastar imagens (opcional)
+        $('img').on('dragstart', function(e) {
+            e.preventDefault();
+        });
+
         function carregarPergunta() {
             $('#aguardeOponente').remove()
             $.get(`/competitivo/partida/${partidaUuid}/pergunta`, function(pergunta) {

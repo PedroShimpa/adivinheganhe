@@ -47,7 +47,7 @@ class ChatController extends Controller
             'created_at' => now(),
         ]);
 
-        event(new \App\Events\ChatMessageSent($message->message, auth()->user()->id,  auth()->user()->username, $message->receiver_id));
+        event(new \App\Events\ChatMessageSent($message->message, auth()->user()->id,  auth()->user()->username, $message->receiver_id, $message->created_at));
         return response()->json(['status' => 'success', 'message' => $message]);
     }
 }
