@@ -162,7 +162,7 @@ class CompetitivoController extends Controller
             ->whereNull('competitivo_respostas.id')
             ->inRandomOrder()
             ->first();
-        Cache::put('pergunta_atual_partida_' . $partida->id, $pergunta);
+        Cache::put('pergunta_atual_partida' . $partida->id, $pergunta);
     }
 
     public function responder(Request $request, Partidas $partida, Perguntas $pergunta)
