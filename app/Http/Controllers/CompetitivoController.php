@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\BuscarPartida;
 use App\Events\PartidaEncontrada;
 use App\Http\Requests\CreatePerguntaCompetitivoRequest;
 use App\Models\Competitivo\Fila;
@@ -81,8 +80,6 @@ class CompetitivoController extends Controller
             'status' => 0
         ]);
 
-        broadcast(new BuscarPartida($user->id))->toOthers();
-
         $this->matchmaking($user);
 
         return response()->json(['message' => 'Busca iniciada']);
@@ -92,16 +89,9 @@ class CompetitivoController extends Controller
     {
         $user = Auth::user();
 
-        $fila = Fila::where('user_id', $user->id)
+        Fila::where('user_id', $user->id)
             ->where('status', 0)
-            ->first();
-
-        if ($fila) {
-            $fila->delete();
-            return response()->json(['message' => 'Você saiu da fila.']);
-        }
-
-        return response()->json(['message' => 'Você não estava na fila.'], 404);
+            ->delete();
     }
 
     private function matchmaking($user)
@@ -236,6 +226,7 @@ class CompetitivoController extends Controller
                 $partida->save();
 
                 Cache::forget('pergunta_atual_partida' . $partida->uuid);
+    
                 event(new \App\Events\PartidaFinalizada($partida->uuid));
             }
         }
