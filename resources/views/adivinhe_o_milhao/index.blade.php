@@ -2,6 +2,34 @@
 
 @section('content')
 
+@if($recordista)
+<div class="container mt-5 mb-4">
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden animate__animated animate__fadeInUp">
+        <div class="card-body text-center p-5"
+            style="background: linear-gradient(135deg, #ff512f, #dd2476); color: white;">
+
+            <h2 class="fw-bold mb-4">
+                <i class="fas fa-crown text-warning"></i> Recordista Atual
+            </h2>
+
+            <div class="d-flex flex-column align-items-center gap-3">
+                <div class="bg-white text-dark fw-bold px-4 py-2 rounded-pill shadow-sm">
+                    <i class="fas fa-user"></i> {{ $recordista->username }}
+                </div>
+
+                <div class="display-6 fw-bold text-warning">
+                    <i class="fas fa-star"></i> {{ $recordista->respostas_corretas }} respostas corretas
+                </div>
+            </div>
+
+            <p class="mt-4 mb-0 fst-italic">
+                Será que você consegue superar esse recorde? 🚀
+            </p>
+        </div>
+    </div>
+</div>
+@endif
+
 <div class="container mb-5 mt-2">
     @if(Auth::check())
     <div class="mb-4 p-4 card text-center animate__animated animate__fadeInUp">
@@ -77,34 +105,6 @@
         </div>
     </div>
 </div>
-
-@if($recordista)
-<div class="container mt-5 mb-4">
-    <div class="card border-0 shadow-lg rounded-4 overflow-hidden animate__animated animate__fadeInUp">
-        <div class="card-body text-center p-5"
-            style="background: linear-gradient(135deg, #ff512f, #dd2476); color: white;">
-
-            <h2 class="fw-bold mb-4">
-                <i class="fas fa-crown text-warning"></i> Recordista Atual
-            </h2>
-
-            <div class="d-flex flex-column align-items-center gap-3">
-                <div class="bg-white text-dark fw-bold px-4 py-2 rounded-pill shadow-sm">
-                    <i class="fas fa-user"></i> {{ $recordista->username }}
-                </div>
-
-                <div class="display-6 fw-bold text-warning">
-                    <i class="fas fa-star"></i> {{ $recordista->respostas_corretas }} respostas corretas
-                </div>
-            </div>
-
-            <p class="mt-4 mb-0 fst-italic">
-                Será que você consegue superar esse recorde? 🚀
-            </p>
-        </div>
-    </div>
-</div>
-@endif
 @endsection
 
 @push('scripts')
