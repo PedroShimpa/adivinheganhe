@@ -119,6 +119,11 @@
 
                     });
 
+                       $.post("{{ route('competitivo.iniciar_busca') }}", {
+                        _token: '{{ csrf_token() }}'
+                    }).done(() => console.log('Busca iniciada no backend'))
+                    .fail(() => console.log('Erro ao iniciar busca'));
+
                 }
             });
 
@@ -126,10 +131,7 @@
             window.Echo.channel('competitivo')
                 .listen('.partida.encontrada', e => {
 
-                $.post("{{ route('competitivo.iniciar_busca') }}", {
-                        _token: '{{ csrf_token() }}'
-                    }).done(() => console.log('Busca iniciada no backend'))
-                    .fail(() => console.log('Erro ao iniciar busca'));
+             
                     clearInterval(interval);
                     Swal.close();
                     if (e.user_id1 == "{{auth()->id()}}" || e.user_id2 == "{{auth()->id()}}")
