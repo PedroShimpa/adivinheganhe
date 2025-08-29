@@ -25,12 +25,13 @@ class MonitorarPartidas extends Command
         $partidas = Partidas::where('status', 1)->get();
 
         foreach ($partidas as $partida) {
-
+            
             $roundAtual = $partida->round_atual;
             $tempoMax = max(100 - ($roundAtual - 1) * 10, 10);
             $inicioRound = $partida->round_started_at;
-
-            if (Carbon::now()->diffInSeconds($inicioRound) > $tempoMax) {
+            
+            
+            if ($inicioRound->diffInSeconds(Carbon::now(), false)> $tempoMax) {
 
                 $respostas = Respostas::where('partida_id', $partida->id)->where('round_atual', $roundAtual)->get();
 

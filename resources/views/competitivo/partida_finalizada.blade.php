@@ -22,7 +22,12 @@
                         <h2 class="text-danger fw-bold">😞 Você perdeu!</h2>
                         @endif
                     </div>
-
+                    <div class="text-center mt-4">
+                        <a href="{{ route('competitivo.index') }}"
+                            class="btn btn-lg btn-primary px-5 py-3 rounded-pill shadow fw-bold">
+                            🔙 Voltar para o Modo Competitivo
+                        </a>
+                    </div>
                     <h4 class="fw-bold mt-4 mb-3">👥 Jogadores</h4>
                     <ul class="list-group list-group-flush mb-4">
                         @foreach($partida->jogadores as $jogador)
@@ -42,29 +47,54 @@
                         <li class="list-group-item">Rodadas jogadas: <strong>{{ $partida->round_atual }}</strong></li>
                     </ul>
 
-                    <div class="text-center mt-4">
-                        <a href="{{ route('competitivo.index') }}"
-                            class="btn btn-lg btn-primary px-5 py-3 rounded-pill shadow fw-bold">
-                            🔙 Voltar para o Modo Competitivo
-                        </a>
+                    <div class="mt-5">
+                        @php
+                        // Agrupa respostas por pergunta_id
+                        $respostasPorPergunta = $partida->respostas
+                        ->groupBy('pergunta_id');
+                        @endphp
+
+                        @foreach($respostasPorPergunta as $perguntaId => $respostas)
+                        <div class="card mb-3 shadow-sm rounded-4">
+                            <div class="card-header bg-secondary text-white">
+                                {{ $respostas->first()->pergunta->pergunta ?? 'Pergunta' }}
+                            </div>
+                            <div class="card-body">
+                                @foreach($respostas as $resposta)
+                                <div class="d-flex justify-content-between align-items-center mb-2 p-2 rounded 
+            {{ $resposta->correta ? 'bg-success text-white' : 'bg-light text-dark' }}">
+
+                                    <div class="d-flex align-items-center">
+                                        <img src="{{ $resposta->user->image ?? 'https://ui-avatars.com/api/?name='.urlencode($resposta->user->username).'&background=random' }}"
+                                            width="40" height="40" class="rounded-circle me-2" style="object-fit: cover;">
+                                        <span class="fw-bold">{{ $resposta->user->username }}</span>
+                                    </div>
+
+                                    <span class="fw-bold">{{ $resposta->resposta }}</span>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        @endforeach
+                        <div class="text-center mt-4">
+                            <a href="{{ route('competitivo.index') }}"
+                                class="btn btn-lg btn-primary px-5 py-3 rounded-pill shadow fw-bold">
+                                🔙 Voltar para o Modo Competitivo
+                            </a>
+                        </div>
                     </div>
                 </div>
 
-                <div class="card-footer text-center p-4 bg-light">
-                    <small class="text-muted">🏆 Continue evoluindo seu rating e se torne o melhor jogador!</small>
-                </div>
             </div>
-
         </div>
     </div>
-</div>
-@endsection
-@push('scripts')
-<script>
-    $(document).ready(function() {
-        let audio = new Audio("{{ asset('sounds/fim_comp.wav') }}");
-        audio.volume = 0.8; 
-        audio.play();
-    })
-</script>
-@endpush
+    @endsection
+    @push('scripts')
+    <script>
+        $(document).ready(function() {
+            let audio = new Audio("{{ asset('sounds/fim_comp.wav') }}");
+            audio.volume = 0.3;
+            audio.play();
+        })
+    </script>
+    @endpush

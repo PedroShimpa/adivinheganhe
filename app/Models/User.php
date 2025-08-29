@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Competitivo\Partidas;
+use App\Models\Competitivo\PartidasJogadores;
 use App\Models\Competitivo\Ranks;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -121,6 +123,14 @@ class User extends Authenticatable
             ->toArray();
 
         return $friends->filter(fn($friend) => in_array($friend->id, $onlineIds));
+    }
+
+    public function partidaEmAndamento()
+    {
+        return $this->hasOne(PartidasJogadores::class, 'user_id', 'id')
+            ->whereHas('partida', function ($query) {
+                $query->where('status', 1); // status 1 = em andamento
+            });
     }
 
     public function friendsRelation()

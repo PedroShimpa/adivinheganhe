@@ -2,6 +2,7 @@
 
 namespace App\Models\Competitivo;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Respostas extends Model
@@ -16,4 +17,14 @@ class Respostas extends Model
         'partida_id',
         'round_atual'
     ];
+
+    public function pergunta()
+    {
+        return $this->belongsTo(Perguntas::class, 'pergunta_id', 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

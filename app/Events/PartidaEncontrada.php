@@ -9,9 +9,9 @@ class PartidaEncontrada implements ShouldBroadcastNow
 {
     public $uuid;
     public $user_id1;
-    public $user_id2;
+    public$user_id2;
 
-    public function __construct($uuid, $user_id1, $user_id2)
+    public function __construct($uuid, $user_id1, $user_id2 = null)
     {
         $this->uuid = $uuid;
         $this->user_id1 = $user_id1;

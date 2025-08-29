@@ -71,7 +71,14 @@ class CompetitivoController extends Controller
         $user = Auth::user();
 
         if (Fila::where('user_id', $user->id)->where('status', 0)->exists()) {
-            return response()->json(['message' => 'Você já está buscando partida.']);
+            return response()->json(['message' => 'Você já está buscando partida.'], 422);
+        }
+        $partida = Partidas::where('status', 1)->whereHas('jogadores', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->first();
+        if ($partida) {
+            broadcast(new PartidaEncontrada($partida->uuid, $user->id));
+            return;
         }
 
         Fila::create([
@@ -120,10 +127,10 @@ class CompetitivoController extends Controller
             ['partida_id' => $partida->id, 'user_id' => $adversario->user_id],
         ]);
 
-        $this->newPergunta($partida);
         $partida->increment('round_atual');
         $partida->round_started_at = now();
         $partida->save();
+        $this->newPergunta($partida);
 
         broadcast(new PartidaEncontrada($partida->uuid, $user->id, $adversario->user_id));
     }
@@ -157,6 +164,9 @@ class CompetitivoController extends Controller
         $pergunta = Perguntas::select('competitivo_perguntas.pergunta', 'competitivo_perguntas.id', 'arquivo')->leftJoin('competitivo_respostas', function ($join) use ($partida) {
             $join->on('competitivo_respostas.pergunta_id', '=', 'competitivo_perguntas.id')->where('competitivo_respostas.partida_id', '=', $partida->id);
         })->where('dificuldade', $partida->dificuldade_atual)->whereNull('competitivo_respostas.id')->inRandomOrder()->first();
+
+        $pergunta->round_started_at = $partida->round_started_at;
+
         Cache::put('pergunta_atual_partida' . $partida->id, $pergunta);
     }
 
@@ -206,10 +216,10 @@ class CompetitivoController extends Controller
                 $partida->dificuldade_atual = min($partida->dificuldade_atual + 1, 10);
                 $partida->save();
 
-                $this->newPergunta($partida);
                 $partida->increment('round_atual');
                 $partida->round_started_at = now();
                 $partida->save();
+                $this->newPergunta($partida);
                 event(new \App\Events\NovaPergunta($partida->uuid));
             } elseif ($algumErrado && $totalJogadores == 2) {
                 $vencedor = $respostasRodada->firstWhere('correta', true)->user_id ?? null;

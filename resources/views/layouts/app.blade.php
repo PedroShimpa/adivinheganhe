@@ -30,7 +30,7 @@
     <link rel="preload" href="{{ asset('vendor/mdb/mdb.min.css') }}" as="style">
     <link rel="stylesheet" href="{{ asset('vendor/mdb/mdb.min.css') }}">
 
-    <link rel="preload" href="{{ asset('vendor/animate/animate.min.css') }}" as="style">
+    <!-- <link rel="preload" href="{{ asset('vendor/animate/animate.min.css') }}" as="style"> -->
     <link rel="stylesheet" href="{{ asset('vendor/animate/animate.min.css') }}" media="print" onload="this.media='all'">
 
 
@@ -73,6 +73,21 @@
         main {
             flex: 1 0 auto;
             padding-top: 4.5rem;
+            /* desktop */
+        }
+
+      
+
+        .alert-partida {
+            margin-top: 4.5rem;
+            /* altura aproximada da navbar mobile */
+        }
+
+        @media (min-width: 992px) {
+            .alert-partida {
+                margin-top: 1rem;
+                /* menos no desktop, já que navbar está escondida */
+            }
         }
 
         .glass {
@@ -113,8 +128,6 @@
 </head>
 
 <body class="bg-dark text-white d-flex flex-column min-vh-100">
-
-
     <div class="offcanvas offcanvas-start bg-dark text-white sidebar-nav" tabindex="-1" id="sidebarMenu">
         <div class="offcanvas-header border-bottom">
             <h5 class="offcanvas-title fw-bold">Adivinhe e Ganhe</h5>
@@ -211,7 +224,26 @@
             </button>
         </div>
     </nav>
+
+   
     <main class="flex-grow-1 pt-5 mt-3">
+         @auth
+    @php
+    $user = auth()->user();
+    $partidaEmAndamento = $user?->partidaEmAndamento;
+    $rotaAtual = Route::currentRouteName();
+    @endphp
+
+    @if($partidaEmAndamento && $rotaAtual !== 'competitivo.partida')
+    <div class="alert alert-warning text-center shadow-lg rounded-4 py-4 mb-4" role="alert" style="font-size: 1.5rem;">
+        ⚠️ Você tem uma partida em andamento!
+        <a href="{{ route('competitivo.partida', $partidaEmAndamento->partida->uuid) }}"
+            class="btn btn-primary btn-lg ms-3">
+            Voltar para a partida
+        </a>
+    </div>
+    @endif
+    @endauth
         @yield('content')
     </main>
 

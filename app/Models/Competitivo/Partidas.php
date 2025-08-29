@@ -16,7 +16,11 @@ class Partidas extends Model
         'tempo_atual',
         'dificuldade_atual',
         'uuid',
-        'round_started_at'
+        'round_started_at',
+    ];
+
+    protected $casts = [
+        'round_started_at' => 'datetime'
     ];
 
     public function getRouteKeyName()
@@ -27,6 +31,11 @@ class Partidas extends Model
     public function jogadores()
     {
         return $this->hasMany(PartidasJogadores::class, 'partida_id');
+    }
+
+    public function respostas()
+    {
+        return $this->hasMany(Respostas::class, 'partida_id');
     }
 
     protected static function booted()

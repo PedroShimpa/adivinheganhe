@@ -20,4 +20,8 @@ class PartidasJogadores extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function partida() {
+        return $this->belongsTo(Partidas::class, 'partida_id', 'id');
+    }
 }

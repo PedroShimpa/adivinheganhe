@@ -1,16 +1,20 @@
 @auth
+@php
+
+$friends = auth()->user()->friends();
+@endphp
 <div id="friendsSidebar" class="friends-sidebar shadow-lg rounded-start position-fixed d-flex flex-column">
     <div id="friendsHeader" class="d-flex justify-content-between align-items-center p-3">
-        <h6 class="m-0">Amigos Online (<span id="friendsCount">{{ auth()->user()->onlineFriends()->count() }}</span>)</h6>
+        <h6 class="m-0">Amigos (<span id="friendsCount">{{$friends->count() }}</span>)</h6>
         <button id="friendsToggleBtn" class="btn btn-sm btn-primary d-none d-md-block">
             <i class="bi bi-chevron-right"></i>
         </button>
     </div>
 
     <div id="friendsBody" class="flex-grow-1 overflow-auto px-2 pb-3">
-        @if(auth()->user()->onlineFriends()->count())
+        @if($friends->count())
         <ul class="list-unstyled m-0 p-0">
-            @foreach(auth()->user()->onlineFriends() as $friend)
+            @foreach($friends as $friend)
             <li class="d-flex align-items-center gap-2 py-2 px-2 friend-item rounded hover-glow"
                 style="cursor: pointer;"
                 data-id="{{ $friend->id }}"
@@ -32,7 +36,7 @@
         </ul>
         @else
         <div class="alert alert-warning small rounded-3 mt-2 px-3">
-            Nenhum amigo online no momento
+            Nenhum amigo ainda...
         </div>
         @endif
     </div>
@@ -41,7 +45,7 @@
 {{-- Botão flutuante para celular --}}
 <button id="friendsMobileBtn" class="btn btn-primary d-md-none friends-mobile-btn">
     <i class="bi bi-people-fill"></i>
-    <span class="badge bg-light text-dark" id="mobileFriendsCount">{{ auth()->user()->onlineFriends()->count() }}</span>
+    <span class="badge bg-light text-dark" id="mobileFriendsCount">{{ $friends->count() }}</span>
 </button>
 
 {{-- Balão de ações --}}
