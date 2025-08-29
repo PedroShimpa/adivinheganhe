@@ -123,7 +123,6 @@ class CompetitivoController extends Controller
         $partida->increment('round_atual');
         $partida->round_started_at = now();
         $partida->save();
-        Cache::put('pergunta_atual_partida' . $partida->uuid, $pergunta);
 
         broadcast(new PartidaEncontrada($partida->uuid, $user->id, $adversario->user_id));
     }

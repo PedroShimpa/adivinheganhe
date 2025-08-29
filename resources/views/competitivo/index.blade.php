@@ -58,10 +58,11 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    let segundos = 0;
-    let interval;
-
+    
+    @auth
     $('.buscar-partida').on('click', function(e) {
+        let segundos = 0;
+        let interval;
         e.preventDefault();
 
         Swal.fire({
@@ -92,7 +93,6 @@ $(document).ready(function() {
 
             }
         });
-        @auth
         window.Echo.channel('competitivo')
             .listen('.partida.encontrada', e => {
 
