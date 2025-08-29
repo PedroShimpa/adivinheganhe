@@ -135,7 +135,7 @@
             });
 
         });
-                @endauth
+        @endauth
 
     });
 </script>
