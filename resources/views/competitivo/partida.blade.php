@@ -210,6 +210,25 @@
                 window.location.href = `/competitivo/partida/finalizada/${partidaUuid}`;
 
             });
+
+        const respostaInput = document.getElementById('respostaInput');
+        if (respostaInput) {
+            respostaInput.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'v') {
+                    e.preventDefault();
+                    alert('Colar não é permitido!');
+                }
+            });
+            respostaInput.addEventListener('paste', function(e) {
+                e.preventDefault();
+                alert('Colar não é permitido!');
+            });
+            respostaInput.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                alert('Colar não é permitido!');
+            });
+        }
     });
+
 </script>
 @endpush
