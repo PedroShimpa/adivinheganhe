@@ -32,7 +32,7 @@
                 {{-- Jogador da direita --}}
                 <div class="col-5 d-flex flex-column align-items-center">
                     <img src="{{ $right?->user->image ?? 'https://ui-avatars.com/api/?name='.urlencode($right?->user->username ?? 'Jogador').'&background=random' }}"
-                        class="rounded-circle border border-3 border-danger shadow-lg mb-3"
+                        class="rounded-circle border border-3 border-primary shadow-lg mb-3"
                         width="100" height="100" style="object-fit: cover;">
                     <h5 class="fw-bold mb-1">{{ $right?->user->username ?? 'Jogador 2' }}</h5>
                     <span class="text-danger fw-bold">Rating {{ $right?->user->rank->elo ?? 0 }}</span>

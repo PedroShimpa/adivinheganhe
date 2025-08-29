@@ -191,7 +191,7 @@ $(function() {
     });
     $balloon.find('.open-chat').on('click', function() {
         const username = $balloon.data('username');
-        window.location.href = `/chat/${username}`;
+        window.open(`/chat/${username}`, '_blank');
     });
 
     // Fecha balão ao clicar fora

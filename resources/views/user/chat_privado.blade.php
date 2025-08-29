@@ -35,7 +35,7 @@ function appendMessage(sender, text, created_at = null) {
     const isMe = sender == {{ auth()->user()->id }};
     const alignment = isMe ? 'justify-content-end' : 'justify-content-start';
     const bg = isMe ? 'bg-primary text-white' : 'bg-white text-dark';
-    const timestamp = created_at ? `<div class="text-muted small mt-1 text-end">${created_at}</div>` : '';
+    const timestamp = created_at ? `<div class="text-white small mt-1 text-end">${created_at}</div>` : '';
     const messageHtml = `
         <div class="d-flex ${alignment} mb-2">
             <div class="p-2 ${bg} rounded-3" style="max-width: 70%; word-wrap: break-word;">

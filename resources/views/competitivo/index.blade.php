@@ -120,7 +120,7 @@
 
                        $.post("{{ route('competitivo.iniciar_busca') }}", {
                         _token: '{{ csrf_token() }}'
-                    }).done(() => console.log('Busca iniciada no backend'))
+                    }).done(() => console.log('Busca iniciada'))
                     .fail(() => console.log('Erro ao iniciar busca'));
 
                 }
