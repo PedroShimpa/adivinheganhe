@@ -14,11 +14,12 @@
                     <p class="mb-3">{{ $post->content }}</p>
                     @endif
 
-                    @if($post->file)
+                @if($post->file)
                     <div class="mb-3">
-                        <img src="{{$post->file }}" class="img-fluid rounded shadow-sm">
+                        <img src="{{ $post->file }}" class="rounded shadow-sm" style="width: 300px; height: 200px; object-fit: cover;">
                     </div>
                     @endif
+
               
                          <div class="d-flex align-items-center gap-2 mt-1 mb-2">
                         @php
