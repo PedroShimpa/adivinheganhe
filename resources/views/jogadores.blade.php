@@ -33,7 +33,7 @@
                                 {{ $player->bio ? Str::limit($player->bio, 80) : 'Ainda não escreveu nada...' }}
                             </p>
 
-                            <a href="{{ route('profile.view', $player->username) }}" class="btn btn-primary btn-sm rounded-pill">
+                            <a href="{{ route('profile.view', $player->username) }}" class="btn btn-primary btn-sm rounded-pill" target="_blank">
                                 Ver Perfil
                             </a>
                         </div>

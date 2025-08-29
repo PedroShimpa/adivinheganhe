@@ -27,6 +27,7 @@
             @endif
 
             @if(auth()->id() !== $user->id)
+            @if($user->perfil_privado == 'N')
             @if($user->followers()->where('user_id', auth()->user()->id)->exists())
             <a href="{{ route('users.unfollow', $user->username) }}" class="btn btn-sm btn-danger">
                 <i class="bi bi-person-dash"></i> Deixar de seguir
@@ -35,6 +36,7 @@
             <a href="{{ route('users.follow', $user->username) }}" class="btn btn-sm btn-primary">
                 <i class="bi bi-person-plus"></i> Seguir
             </a>
+            @endif
             @endif
             @endif
             @endauth
@@ -72,7 +74,6 @@
             @auth
             @if(auth()->id() === $user->id)
             @php
-            // Contar pedidos pendentes recebidos
             $pendingRequestsCount = $user->receivedFriendships()
             ->where('status', 'pending')
             ->count();
@@ -89,18 +90,19 @@
             @endif
             @endauth
 
-
-
-
         </div>
     </div>
 
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
             <h5 class="fw-bold mb-3">Sobre</h5>
+            @if($user->perfil_privado == 'S' && (!auth()->check()  || (auth()->id() != $user->id)))
+            <p class="mb-3">Este perfil é privado.</p>
+            @else
             <p class="mb-3">
                 {{ $user->bio ?: 'Ainda não escreveu nada sobre si mesmo.' }}
             </p>
+            @endif
         </div>
     </div>
 
@@ -110,14 +112,17 @@
     @endif
     @endauth
 
-    {{-- Timeline de posts --}}
+    @if($user->perfil_privado == 'S' && (!auth()->check()  || (auth()->id() != $user->id)))
+    <p class="card text-dark">Este perfil é privado.</p>
+    @else
     <h5 class="fw-bold mb-3">Publicações</h5>
 
     @forelse($user->posts as $post)
     @include('partials.post')
     @empty
-    <p class="card text-white">Nenhuma publicação ainda.</p>
+    <p class="card text-dark">Nenhuma publicação ainda.</p>
     @endforelse
+    @endif
 
 </div>
 @endsection

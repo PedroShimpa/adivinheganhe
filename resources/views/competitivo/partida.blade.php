@@ -14,12 +14,12 @@
                 $right = $jogadores[1] ?? null;
                 @endphp
 
-                {{-- Jogador da esquerda --}}
+
                 <div class="col-5 d-flex flex-column align-items-center">
                     <img src="{{ $left?->user->image ?? 'https://ui-avatars.com/api/?name='.urlencode($left?->user->username ?? 'Jogador').'&background=random' }}"
                         class="rounded-circle border border-3 border-primary shadow-lg mb-3"
                         width="100" height="100" style="object-fit: cover;">
-                    <h5 class="fw-bold mb-1">{{ $left?->user->username ?? 'Jogador 1' }}</h5>
+                    <h5 class="fw-bold mb-1 abrir-perfil" data-username="{{ $left?->user->username }}">{{ $left?->user->username ?? 'Jogador 1' }}</h5>
                     <span class="text-primary fw-bold">Rating {{ $left?->user->rank->elo ?? 0 }}</span>
                 </div>
 
@@ -34,7 +34,7 @@
                     <img src="{{ $right?->user->image ?? 'https://ui-avatars.com/api/?name='.urlencode($right?->user->username ?? 'Jogador').'&background=random' }}"
                         class="rounded-circle border border-3 border-primary shadow-lg mb-3"
                         width="100" height="100" style="object-fit: cover;">
-                    <h5 class="fw-bold mb-1">{{ $right?->user->username ?? 'Jogador 2' }}</h5>
+                    <h5 class="fw-bold mb-1 abrir-perfil" data-username="{{ $right?->user->username }}">{{ $right?->user->username ?? 'Jogador 2' }}</h5>
                     <span class="text-danger fw-bold">Rating {{ $right?->user->rank->elo ?? 0 }}</span>
                 </div>
 

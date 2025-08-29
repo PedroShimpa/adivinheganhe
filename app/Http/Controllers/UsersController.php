@@ -49,15 +49,7 @@ class UsersController extends Controller
 
     public function view(User $user)
     {
-        if ($user->perfil_privado == 'N') {
-            return view('user.profile', compact('user'));
-        } else {
-            if ($user->id == auth()->user()->id) {
-                return view('user.profile', compact('user'));
-            } else {
-                redirect()->route('home');
-            }
-        }
+        return view('user.profile', compact('user'));
     }
 
     public function edit(Request $request): View

@@ -187,7 +187,7 @@ $(function() {
     // Ações do balão
     $balloon.find('.open-profile').on('click', function() {
         const username = $balloon.data('username');
-        window.location.href = `/jogadores/${username}`;
+        window.open(`/jogadores/${username}`, '_blank');
     });
     $balloon.find('.open-chat').on('click', function() {
         const username = $balloon.data('username');

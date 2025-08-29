@@ -76,7 +76,7 @@
             /* desktop */
         }
 
-      
+
 
         .alert-partida {
             margin-top: 4.5rem;
@@ -225,25 +225,24 @@
         </div>
     </nav>
 
-   
-    <main class="flex-grow-1 pt-5 mt-3">
-         @auth
-    @php
-    $user = auth()->user();
-    $partidaEmAndamento = $user?->partidaEmAndamento;
-    $rotaAtual = Route::currentRouteName();
-    @endphp
 
-    @if($partidaEmAndamento && $rotaAtual !== 'competitivo.partida')
-    <div class="alert alert-warning text-center shadow-lg rounded-4 py-4 mb-4" role="alert" style="font-size: 1.5rem;">
-        ⚠️ Você tem uma partida em andamento!
-        <a href="{{ route('competitivo.partida', $partidaEmAndamento->partida->uuid) }}"
-            class="btn btn-primary btn-lg ms-3">
-            Voltar para a partida
-        </a>
-    </div>
-    @endif
-    @endauth
+    <main class="flex-grow-1 pt-5 mt-3">
+        @auth
+        @php
+        $partidaEmAndamento = $auth()->user()->partidaEmAndamento;
+        $rotaAtual = Route::currentRouteName();
+        @endphp
+
+        @if($partidaEmAndamento && $rotaAtual !== 'competitivo.partida')
+        <div class="alert alert-warning text-center shadow-lg rounded-4 py-4 mb-4" role="alert" style="font-size: 1.5rem;">
+            ⚠️ Você tem uma partida em andamento!
+            <a href="{{ route('competitivo.partida', $partidaEmAndamento->partida->uuid) }}"
+                class="btn btn-primary btn-lg ms-3">
+                Voltar para a partida
+            </a>
+        </div>
+        @endif
+        @endauth
         @yield('content')
     </main>
 
@@ -370,6 +369,11 @@
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
         });
+
+        $(document).on('.abrir-perfil', 'click', function() {
+            username = $(this).attr('data-username')
+            window.open(`/jogadores/${username}`, '_blank')
+        })
     </script>
 
     @endauth

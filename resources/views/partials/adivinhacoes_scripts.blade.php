@@ -47,9 +47,12 @@
                  alt="${comentario.usuario}" 
                  class="rounded-circle shadow-sm" 
                  width="48" height="48" 
-                 style="object-fit: cover;">
+                 style="object-fit: cover;"
+                 
+                 >
+
             <div>
-                <div class="fw-bold">${comentario.usuario}</div>
+                <div class="fw-bold abrir-perfil" data-username="${comentario.usuario}">${comentario.usuario}</div>
                 <div class="text-muted">${comentario.body}</div>
             </div>
         </div>
