@@ -121,6 +121,8 @@
 
                 }
             });
+
+        });
             window.Echo.channel('competitivo')
                 .listen('.partida.encontrada', e => {
 
@@ -133,8 +135,6 @@
                     if (e.user_id1 == "{{auth()->id()}}" || e.user_id2 == "{{auth()->id()}}")
                         window.location.href = "competitivo/partida/" + e.uuid;
             });
-
-        });
         @endauth
 
     });
