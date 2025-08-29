@@ -61,7 +61,7 @@
                         </a>
                         @else
                         <p class="text-muted mb-3">Você precisa estar logado para jogar.</p>
-                        <a href="{{ route('login') }}"
+                        <a  href="{{ route('adivinhe_o_milhao.iniciar') }}"
                             class="btn btn-lg btn-primary px-4 py-2 rounded-pill shadow fw-bold">
                             🔑 Clique aqui para entrar
                         </a>
