@@ -119,15 +119,7 @@ class CompetitivoController extends Controller
             ['partida_id' => $partida->id, 'user_id' => $adversario->user_id],
         ]);
 
-        $pergunta = Perguntas::select('competitivo_perguntas.pergunta', 'competitivo_perguntas.id', 'arquivo')
-            ->leftJoin('competitivo_respostas', function ($join) use ($partida) {
-                $join->on('competitivo_respostas.pergunta_id', '=', 'competitivo_perguntas.id')
-                    ->where('competitivo_respostas.partida_id', '=', $partida->id);
-            })
-            ->where('dificuldade', $partida->dificuldade_atual)
-            ->whereNull('competitivo_respostas.id')
-            ->inRandomOrder()
-            ->first();
+        $this->newPergunta($partida);
         $partida->increment('round_atual');
         $partida->round_started_at = now();
         $partida->save();
@@ -155,25 +147,23 @@ class CompetitivoController extends Controller
     {
         if ($partida->status == 1) {
             $pergunta = Cache::get('pergunta_atual_partida' . $partida->uuid);
-
-            if (empty($pergunta)) {
-                $pergunta = Perguntas::select('competitivo_perguntas.pergunta', 'competitivo_perguntas.id', 'arquivo')
-                    ->leftJoin('competitivo_respostas', function ($join) use ($partida) {
-                        $join->on('competitivo_respostas.pergunta_id', '=', 'competitivo_perguntas.id')
-                            ->where('competitivo_respostas.partida_id', '=', $partida->id);
-                    })
-                    ->where('dificuldade', $partida->dificuldade_atual)
-                    ->whereNull('competitivo_respostas.id')
-                    ->inRandomOrder()
-                    ->first();
-                $partida->increment('round_atual');
-                $partida->round_started_at = now();
-                $partida->save();
-                Cache::put('pergunta_atual_partida' . $partida->uuid, $pergunta);
-            }
             return response()->json($pergunta);
         }
         return null;
+    }
+
+    public function newPergunta(Partidas $partida)
+    {
+        $pergunta = Perguntas::select('competitivo_perguntas.pergunta', 'competitivo_perguntas.id', 'arquivo')
+            ->leftJoin('competitivo_respostas', function ($join) use ($partida) {
+                $join->on('competitivo_respostas.pergunta_id', '=', 'competitivo_perguntas.id')
+                    ->where('competitivo_respostas.partida_id', '=', $partida->id);
+            })
+            ->where('dificuldade', $partida->dificuldade_atual)
+            ->whereNull('competitivo_respostas.id')
+            ->inRandomOrder()
+            ->first();
+        Cache::put('pergunta_atual_partida' . $partida->uuid, $pergunta);
     }
 
     public function responder(Request $request, Partidas $partida, Perguntas $pergunta)
@@ -222,7 +212,10 @@ class CompetitivoController extends Controller
                 $partida->dificuldade_atual = min($partida->dificuldade_atual + 1, 10);
                 $partida->save();
 
-                Cache::forget('pergunta_atual_partida' . $partida->uuid);
+                $this->newPergunta($partida);
+                $partida->increment('round_atual');
+                $partida->round_started_at = now();
+                $partida->save();
                 event(new \App\Events\NovaPergunta($partida->uuid));
             } elseif ($algumErrado && $totalJogadores == 2) {
                 $vencedor = $respostasRodada->firstWhere('correta', true)->user_id ?? null;
