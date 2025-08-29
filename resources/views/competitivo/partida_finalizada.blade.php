@@ -16,7 +16,7 @@
                     <h3 class="fw-bold mb-3">🎯 Resultado</h3>
 
                     <div class="text-center mb-4">
-                        @if($partida->jogadores->where('user_id', auth()->id())->value('vencedor') == auth()->id())
+                        @if($partida->jogadores->where('user_id', auth()->id())->whereNotNull('vencedor')->value('user_id') == auth()->id())
                             <h2 class="text-success fw-bold">🎉 Você venceu!</h2>
                         @else
                             <h2 class="text-danger fw-bold">😞 Você perdeu!</h2>
@@ -28,7 +28,7 @@
                         @foreach($partida->jogadores as $jogador)
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 {{ $jogador->user->name }}
-                                @if($partida->vencedor )
+                                @if($jogador->vencedor)
                                     <span class="badge bg-success rounded-pill">Vencedor</span>
                                 @else
                                     <span class="badge bg-secondary rounded-pill">Perdedor</span>
