@@ -39,7 +39,7 @@
 
                     <h4 class="fw-bold mt-4 mb-3">📊 Estatísticas</h4>
                     <ul class="list-group list-group-flush mb-4">
-                        <li class="list-group-item">Rodadas jogadas: <strong>{{ $partida->rodada_atual }}</strong></li>
+                        <li class="list-group-item">Rodadas jogadas: <strong>{{ $partida->round_atual }}</strong></li>
                     </ul>
 
                     <div class="text-center mt-4">
