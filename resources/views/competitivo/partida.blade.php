@@ -138,23 +138,31 @@
         }
 
         function enviarResposta(perguntaId, resposta) {
-            $('.resposta-btn').prop('disabled', true).text('Resposta enviada');
+            $.ajax({
+                url: `/competitivo/partida/${partidaUuid}/${perguntaId}/responder`,
+                type: "POST",
+                data: {
+                    resposta: resposta,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function() {
+                    $('.resposta-btn').prop('disabled', true).text('Resposta enviada');
 
-            $.post(`/competitivo/partida/${partidaUuid}/${perguntaId}/responder`, {
-                resposta: resposta,
-                _token: '{{ csrf_token() }}'
-            }, function() {
-                $('.resposta-btn').prop('disabled', true).text('Resposta enviada');
+                    if (!$('#aguardeOponente').length) {
+                        $('#perguntaContainer').append(
+                            `<p id="aguardeOponente" class="text-center text-warning fw-bold mt-3">
+                        ⏳ Aguarde o oponente responder para prosseguir...
+                    </p>`
+                        );
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert("❌ Ocorreu um erro ao enviar a resposta. Tente novamente.");
 
-                if (!$('#aguardeOponente').length) {
-                    $('#perguntaContainer').append(
-                        `<p id="aguardeOponente" class="text-center text-warning fw-bold mt-3">
-                    ⏳ Aguarde o oponente responder para prosseguir...
-                </p>`
-                    );
                 }
             });
         }
+
         $('#enviarRespostaBtn').click(function() {
             let resposta = $('#respostaInput').val().trim();
             if (!resposta) return alert('Digite uma resposta antes de enviar!');
@@ -230,6 +238,5 @@
             });
         }
     });
-
 </script>
 @endpush
