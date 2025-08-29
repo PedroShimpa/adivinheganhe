@@ -96,7 +96,7 @@
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
             <h5 class="fw-bold mb-3">Sobre</h5>
-            @if($user->perfil_privado == 'S' && (!auth()->check()  || (auth()->id() != $user->id)))
+            @if($user->perfil_privado == 'S' && (!auth()->check() || (auth()->id() != $user->id)))
             <p class="mb-3">Este perfil é privado.</p>
             @else
             <p class="mb-3">
@@ -112,15 +112,23 @@
     @endif
     @endauth
 
-    @if($user->perfil_privado == 'S' && (!auth()->check()  || (auth()->id() != $user->id)))
-    <p class="card text-dark">Este perfil é privado.</p>
+    @if($user->perfil_privado == 'S' && (!auth()->check() || (auth()->id() != $user->id)))
+       <div class="card shadow-lg border-0 timeline-card " style="min-width: 100%; max-width:100%;">
+        <div class="card-body">
+            <p class="m-3">Este perfil é privado.</p>
+        </div>
+    </div>
     @else
     <h5 class="fw-bold mb-3">Publicações</h5>
 
     @forelse($user->posts as $post)
     @include('partials.post')
     @empty
-    <p class="card text-dark">Nenhuma publicação ainda.</p>
+    <div class="card shadow-lg border-0 timeline-card " style="min-width: 100%; max-width:100%;">
+        <div class="card-body">
+            <p class="m-3">Nenhuma publicação ainda.</p>
+        </div>
+    </div>
     @endforelse
     @endif
 

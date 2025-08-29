@@ -19,7 +19,6 @@
                         <img src="{{ $post->file }}" class="rounded shadow-sm" style="width: 300px; height: 200px; object-fit: cover;">
                     </div>
                     @endif
-
               
                          <div class="d-flex align-items-center gap-2 mt-1 mb-2">
                         @php
