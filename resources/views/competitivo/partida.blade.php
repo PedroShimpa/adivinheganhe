@@ -10,10 +10,10 @@
                 <div class="card-body p-3">
                     <h5 class="text-center fw-bold mb-3">👥 Jogadores</h5>
                     @foreach($partida->jogadores as $jogador)
-                        <div class="d-flex justify-content-between py-1 px-2 bg-light rounded mb-2">
-                            <span class="fw-semibold">{{ $jogador->user->username }}</span>
-                            <span class="text-primary fw-bold">{{ $jogador->user->rank->elo ?? 0 }}</span>
-                        </div>
+                    <div class="d-flex justify-content-between py-1 px-2 bg-light rounded mb-2">
+                        <span class="fw-semibold">{{ $jogador->user->username }}</span>
+                        <span class="text-primary fw-bold">{{ $jogador->user->rank->elo ?? 0 }}</span>
+                    </div>
                     @endforeach
                     <hr>
                     <p class="text-center fw-bold text-danger mb-0">⚔️ VS ⚔️</p>
@@ -41,11 +41,11 @@
 
                     {{-- Resposta --}}
                     <div class="input-group mb-3">
-                        <input type="text" id="respostaInput" 
-                               class="form-control form-control-lg" 
-                               placeholder="Digite sua resposta...">
-                        <button id="enviarRespostaBtn" 
-                                class="btn btn-success btn-lg px-4 resposta-btn">
+                        <input type="text" id="respostaInput"
+                            class="form-control form-control-lg"
+                            placeholder="Digite sua resposta...">
+                        <button id="enviarRespostaBtn"
+                            class="btn btn-success btn-lg px-4 resposta-btn">
                             Enviar
                         </button>
                     </div>
@@ -84,6 +84,7 @@
                 $('#respostaInput').val('');
                 $('.resposta-btn').prop('disabled', false).text('Enviar Resposta');
 
+                new Audio("{{ asset('sounds/new_question.wav')}}").play();
                 iniciarContador(tempoMax);
             });
         }
@@ -107,9 +108,16 @@
                 _token: '{{ csrf_token() }}'
             }, function() {
                 $('.resposta-btn').prop('disabled', true).text('Resposta enviada');
+
+                if (!$('#aguardeOponente').length) {
+                    $('#perguntaContainer').append(
+                        `<p id="aguardeOponente" class="text-center text-warning fw-bold mt-3">
+                    ⏳ Aguarde o oponente responder para prosseguir...
+                </p>`
+                    );
+                }
             });
         }
-
         $('#enviarRespostaBtn').click(function() {
             let resposta = $('#respostaInput').val().trim();
             if (!resposta) return alert('Digite uma resposta antes de enviar!');

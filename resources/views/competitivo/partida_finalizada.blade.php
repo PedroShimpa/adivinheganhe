@@ -17,23 +17,23 @@
 
                     <div class="text-center mb-4">
                         @if($partida->jogadores->where('user_id', auth()->id())->whereNotNull('vencedor')->value('user_id') == auth()->id())
-                            <h2 class="text-success fw-bold">🎉 Você venceu!</h2>
+                        <h2 class="text-success fw-bold">🎉 Você venceu!</h2>
                         @else
-                            <h2 class="text-danger fw-bold">😞 Você perdeu!</h2>
+                        <h2 class="text-danger fw-bold">😞 Você perdeu!</h2>
                         @endif
                     </div>
 
                     <h4 class="fw-bold mt-4 mb-3">👥 Jogadores</h4>
                     <ul class="list-group list-group-flush mb-4">
                         @foreach($partida->jogadores as $jogador)
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ $jogador->user->name }}
-                                @if($jogador->vencedor)
-                                    <span class="badge bg-success rounded-pill">Vencedor</span>
-                                @else
-                                    <span class="badge bg-secondary rounded-pill">Perdedor</span>
-                                @endif
-                            </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ $jogador->user->name }}
+                            @if($jogador->vencedor)
+                            <span class="badge bg-success rounded-pill">Vencedor</span>
+                            @else
+                            <span class="badge bg-secondary rounded-pill">Perdedor</span>
+                            @endif
+                        </li>
                         @endforeach
                     </ul>
 
@@ -43,8 +43,8 @@
                     </ul>
 
                     <div class="text-center mt-4">
-                        <a href="{{ route('competitivo.index') }}" 
-                           class="btn btn-lg btn-primary px-5 py-3 rounded-pill shadow fw-bold">
+                        <a href="{{ route('competitivo.index') }}"
+                            class="btn btn-lg btn-primary px-5 py-3 rounded-pill shadow fw-bold">
                             🔙 Voltar para o Modo Competitivo
                         </a>
                     </div>
@@ -59,3 +59,10 @@
     </div>
 </div>
 @endsection
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        new Audio("{{ asset('sounds/fim_comp.wav')}}").play();
+    })
+</script>
+@endpush
