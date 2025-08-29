@@ -14,11 +14,10 @@
                 </div>
 
 
-                <div class="card-body p-5">
-                    <div class="text-center mt-5">
+                <div class="card-body ">
+                    <div class="text-center mt-5 mb-5">
                         @auth
                         <button
-
                             class="btn btn-lg btn-danger px-5 py-3 rounded-pill shadow fw-bold buscar-partida">
                             ⚡ Buscar Partida
                         </button>

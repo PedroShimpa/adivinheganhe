@@ -1,6 +1,9 @@
 @auth
 @php
 $friends = auth()->user()->friends();
+if($friends->count()) {
+    $unreadMessages =  auth()->user()->getUunreadMessagesCount();
+}
 @endphp
 
 {{-- Sidebar de amigos --}}
@@ -26,7 +29,7 @@ $friends = auth()->user()->friends();
                              alt="{{ $friend->username }}"
                              class="rounded-circle" width="40" height="40" style="object-fit: cover;">
                         <span class="flex-grow-1">{{ $friend->username }}</span>
-                        <span class="badge bg-danger unread-badge d-none" id="mensagem-recebida-{{ $friend->id }}"></span>
+                        <span class="badge bg-danger unread-badge {{$unreadMessages->where('user_id', $friend->id)?->value('unread_count') ? '' : 'd-none'}}" id="mensagem-recebida-{{ $friend->id }}">{{$unreadMessages->where('user_id', $friend->id)?->value('unread_count')}}</span>
                         <span class="badge bg-success rounded-circle" title="Online" style="width:10px;height:10px;"></span>
                     </li>
                 @endforeach

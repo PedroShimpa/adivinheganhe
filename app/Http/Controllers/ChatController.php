@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\NotificacaoEvent;
 use App\Http\Controllers\Controller;
 use App\Models\ChatMessages;
 use App\Models\User;
@@ -18,6 +17,7 @@ class ChatController extends Controller
 
     public function get_messages($userId)
     {
+        ChatMessages::where('user_id', $userId)->where('receiver_id', auth()->user()->id)->update(['read_at' => now()]);
         $messages = ChatMessages::select('user_id', 'receiver_id', 'message as mensagem', 'created_at')
             ->where(function ($q) use ($userId) {
                 $q->where('user_id', auth()->user()->id);
