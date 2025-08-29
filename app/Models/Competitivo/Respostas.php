@@ -13,6 +13,7 @@ class Respostas extends Model
         'user_id',
         'resposta',
         'correta',
-        'partida_id'
+        'partida_id',
+        'round_atual'
     ];
 }

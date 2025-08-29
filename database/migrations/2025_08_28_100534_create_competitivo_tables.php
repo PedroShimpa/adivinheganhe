@@ -24,18 +24,20 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid');
             $table->tinyInteger('status')->default(0)->comment('0=aguardando, 1=em andamento, 2=finalizada');
-            $table->integer('round_atual')->default(1);
+            $table->integer('round_atual')->default(0);
+            $table->integer('round_started_at')->default(0);
             $table->integer('tempo_atual')->default(100);
             $table->tinyInteger('dificuldade_atual')->default(1);
             $table->timestamps();
         });
-
+        
         Schema::create('competitivo_respostas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('partida_id')->constrained('competitivo_partidas');
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('pergunta_id')->constrained('competitivo_perguntas');
             $table->string('resposta');
+            $table->integer('round_atual')->default(0);
             $table->boolean('correta');
             $table->timestamps();
         });

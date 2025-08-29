@@ -155,6 +155,7 @@ class CompetitivoController extends Controller
                     ->first();
 
                 $partida->increment('round_atual');
+                $partida->round_started_at = now();
                 $partida->save();
                 Cache::put('pergunta_atual_partida' . $partida->uuid, $pergunta);
             }
@@ -174,6 +175,7 @@ class CompetitivoController extends Controller
         $jaRespondeu = Respostas::where('partida_id', $partida->id)
             ->where('pergunta_id', $pergunta->id)
             ->where('user_id', $user->id)
+            ->where('round_atual', $partida->round_atual)
             ->exists();
 
         if ($jaRespondeu) return null;
@@ -186,7 +188,8 @@ class CompetitivoController extends Controller
             'user_id' => $user->id,
             'partida_id' => $partida->id,
             'resposta' => $resposta,
-            'correta' => $correta
+            'correta' => $correta,
+            'round_atual' => $partida->round_atual
         ]);
 
         $totalJogadores = $partida->jogadores->count();
@@ -226,7 +229,7 @@ class CompetitivoController extends Controller
                 $partida->save();
 
                 Cache::forget('pergunta_atual_partida' . $partida->uuid);
-    
+
                 event(new \App\Events\PartidaFinalizada($partida->uuid));
             }
         }

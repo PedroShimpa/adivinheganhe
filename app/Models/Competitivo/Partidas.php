@@ -15,7 +15,8 @@ class Partidas extends Model
         'round_atual',
         'tempo_atual',
         'dificuldade_atual',
-        'uuid'
+        'uuid',
+        'round_started_at'
     ];
 
     public function getRouteKeyName()
