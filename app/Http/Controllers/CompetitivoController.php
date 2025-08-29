@@ -112,6 +112,7 @@ class CompetitivoController extends Controller
         $partida = Partidas::create([
             'uuid' => Str::uuid(),
             'status' => 1,
+            'dificuldade_atual' => 1
         ]);
 
         PartidasJogadores::insert([
@@ -153,15 +154,9 @@ class CompetitivoController extends Controller
 
     public function newPergunta(Partidas $partida)
     {
-        $pergunta = Perguntas::select('competitivo_perguntas.pergunta', 'competitivo_perguntas.id', 'arquivo')
-            ->leftJoin('competitivo_respostas', function ($join) use ($partida) {
-                $join->on('competitivo_respostas.pergunta_id', '=', 'competitivo_perguntas.id')
-                    ->where('competitivo_respostas.partida_id', '=', $partida->id);
-            })
-            ->where('dificuldade', $partida->dificuldade_atual)
-            ->whereNull('competitivo_respostas.id')
-            ->inRandomOrder()
-            ->first();
+        $pergunta = Perguntas::select('competitivo_perguntas.pergunta', 'competitivo_perguntas.id', 'arquivo')->leftJoin('competitivo_respostas', function ($join) use ($partida) {
+            $join->on('competitivo_respostas.pergunta_id', '=', 'competitivo_perguntas.id')->where('competitivo_respostas.partida_id', '=', $partida->id);
+        })->where('dificuldade', $partida->dificuldade_atual)->whereNull('competitivo_respostas.id')->inRandomOrder()->first();
         Cache::put('pergunta_atual_partida' . $partida->id, $pergunta);
     }
 
