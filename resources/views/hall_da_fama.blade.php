@@ -11,7 +11,6 @@
         @foreach($usuariosComMaisPremios as $index => $usuario)
             <div class="col-md-4 col-lg-3">
                 <div class="card shadow-sm border-0 h-100 text-center position-relative rounded-4">
-                    {{-- Medalha destaque para top 3 --}}
                     @if($index < 3)
                         <span class="position-absolute top-0 start-50 translate-middle badge 
                             {{ $index == 0 ? 'bg-warning text-dark' : ($index == 1 ? 'bg-secondary' : 'bg-primary') }} 

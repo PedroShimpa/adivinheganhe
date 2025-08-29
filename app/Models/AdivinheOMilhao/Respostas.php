@@ -16,7 +16,7 @@ class Respostas extends Model
         'user_id',
         'resposta',
         'pergunta_id',
-        'correta'
+        'correta',
     ];
 
     protected static function booted()

@@ -4,6 +4,7 @@ use App\Http\Controllers\AdivinhacoesController;
 use App\Http\Controllers\AdivinheOMilhaoController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\CompetitivoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PagamentosController;
 use App\Http\Controllers\PostController;
@@ -21,13 +22,13 @@ Route::post('/salvar_fingerprint', [HomeController::class, 'saveFingerprint'])->
 Route::get('/jogadores', [UsersController::class, 'jogadores'])->name('jogadores');
 Route::get('/jogadores/{user}', [UsersController::class, 'view'])->name('profile.view');
 
+Route::get('/competitivo', [CompetitivoController::class, 'index'])->name('competitivo.index');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [UsersController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [UsersController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [UsersController::class, 'destroy'])->name('profile.destroy');
-});
 
-Route::middleware('auth')->group(function () {
     Route::get('/para-voce', [UsersController::class, 'para_voce'])->name('para_voce');
 
     Route::get('/adivinhacoes/create', [AdivinhacoesController::class, 'create'])->name('adivinhacoes.create');
@@ -72,6 +73,16 @@ Route::middleware('auth')->group(function () {
     Route::get('posts/comments/{post}', [PostController::class, 'comments'])->name('posts.comments');
 
     Route::get('/notificacoes', [UsersController::class, 'getUnreadNotifications'])->name('user.notificacoes');
+
+    Route::get('/competitivo/nova-pergunta', [CompetitivoController::class, 'create_pergunta'])->name('competitivo.nova_pergunta');
+    Route::post('/competitivo/nova-pergunta', [CompetitivoController::class, 'store_pergunta'])->name('competitivo.store_pergunta');
+    Route::get('/competitivo/partida/{partida}', [CompetitivoController::class, 'partida'])->name('competitivo.partida');
+    Route::get('/competitivo/partida/{partida}/pergunta', [CompetitivoController::class, 'buscar_pergunta'])->name('competitivo.pergunta');
+    #pergunta é $pergunta->id
+    Route::post('/competitivo/partida/{partida}/{pergunta}/responder', [CompetitivoController::class, 'responder'])->name('competitivo.responder');
+    Route::post('/competitivo/iniciar-busca', [CompetitivoController::class, 'iniciarBusca'])->name('competitivo.iniciar_busca');
+    Route::post('/competitivo/cancelar-busca', [CompetitivoController::class, 'sairFila'])->name('competitivo.cancelar_busca');
+    Route::get('/competitivo/partida/finalizada/{partida}', [CompetitivoController::class, 'partida'])->name('competitivo.partida.finalizada');
 });
 
 Route::post('/webhook/mercadopago', [PagamentosController::class, 'webhook']);
