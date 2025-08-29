@@ -19,7 +19,27 @@
                         <img src="{{$post->file }}" class="img-fluid rounded shadow-sm">
                     </div>
                     @endif
+              
+                         <div class="d-flex align-items-center gap-2 mt-1 mb-2">
+                        @php
+                        $userLiked = auth()->check() && $post->likes()->where('user_id', auth()->id())->exists();
+                        $likesCount = $post->likes()->count();
+                        @endphp
 
+                        @auth
+                        <button
+                            class="btn btn-sm rounded-pill btn-like {{ $userLiked ? 'btn-danger' : 'btn-outline-primary' }}"
+                            data-id="{{ $post->id }}">
+                            <i class="bi {{ $userLiked ? 'bi-hand-thumbs-up-fill' : 'bi-hand-thumbs-up' }}"></i>
+                            <span class="likes-count">{{ $likesCount }}</span>
+                        </button>
+                        @else
+                        <div class="btn btn-sm btn-outline-secondary rounded-pill disabled">
+                            <i class="bi bi-hand-thumbs-up"></i>
+                            <span class="likes-count">{{ $likesCount }}</span>
+                        </div>
+                        @endauth
+                    </div>
                     <div class="d-flex justify-content-between mt-3">
                         <button class="btn btn-secondary btn-sm rounded-pill verComentarios"
                             data-id="{{ $post->id }}"
@@ -34,7 +54,6 @@
 
                     <div id="comentarios-post-{{ $post->id }}" class="comentarios-box d-none mt-3 p-3 rounded-4 bg-light shadow-sm animate__animated">
                         <div class="comentarios-list small mb-3 text-dark">
-                            <p class="text-muted">Carregando comentários...</p>
                         </div>
 
                         @auth

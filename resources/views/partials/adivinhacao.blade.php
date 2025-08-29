@@ -99,6 +99,27 @@
                             WhatsApp
                         </a>
                     </div>
+                    <div class="d-flex align-items-center gap-2 mt-1 mb-2">
+                        @php
+                        $userLiked = auth()->check() && $adivinhacao->likes()->where('user_id', auth()->id())->exists();
+                        $likesCount = $adivinhacao->likes()->count();
+                        @endphp
+
+                        @auth
+                        <button
+                            class="btn btn-sm rounded-pill btn-like {{ $userLiked ? 'btn-danger' : 'btn-outline-primary' }}"
+                            data-id="{{ $adivinhacao->uuid }}">
+                            <i class="bi {{ $userLiked ? 'bi-hand-thumbs-up-fill' : 'bi-hand-thumbs-up' }}"></i>
+                            <span class="likes-count">{{ $likesCount }}</span>
+                        </button>
+                        @else
+                        <div class="btn btn-sm btn-outline-secondary rounded-pill disabled">
+                            <i class="bi bi-hand-thumbs-up"></i>
+                            <span class="likes-count">{{ $likesCount }}</span>
+                        </div>
+                        @endauth
+                    </div>
+
                     <button class="btn btn-secondary btn-sm rounded-pill verComentarios"
                         data-id="{{ $adivinhacao->id }}"
                         data-route="{{ route('adivinhacoes.comments', $adivinhacao->uuid) }}">
@@ -107,7 +128,6 @@
 
                     <div id="comentarios-{{ $adivinhacao->id }}" class="comentarios-box d-none mt-3 p-3 rounded-4 bg-light shadow-sm animate__animated">
                         <div class="comentarios-list small mb-3 text-dark">
-                            <p class="text-muted">Carregando comentários...</p>
                         </div>
 
                         @auth

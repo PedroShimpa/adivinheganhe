@@ -166,6 +166,7 @@ class User extends Authenticatable
         return $this->unreadNotifications()->count();
     }
 
+
     public function feedPosts()
     {
         $friendIds = $this->friends()->pluck('id')->toArray();

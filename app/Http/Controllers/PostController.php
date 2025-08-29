@@ -50,6 +50,7 @@ class PostController extends Controller
             return redirect()->back()->withErrors('Erro ao criar a publicação. Tente novamente.');
         }
     }
+
     public function comments(Post $post)
     {
         return response()->json(GetCommentsResource::collection($post->comments));
@@ -69,5 +70,30 @@ class PostController extends Controller
             $post->user->notify(new NewCommnetNotification($request->input('body'), $post->id));
             broadcast(new NotificacaoEvent($post->user->id, auth()->user()->name . ' comentou: ' . $request->input('body')));
         }
+    }
+
+
+    public function toggleLike(Request $request, Post $post)
+    {
+        $user = auth()->user();
+
+        $like = $post->likes()->where('user_id', $user->id)->first();
+
+        if ($like) {
+            // Se já tiver like, remove
+            $like->delete();
+            $liked = false;
+        } else {
+            // Senão, adiciona like
+            $post->likes()->create([
+                'user_id' => $user->id
+            ]);
+            $liked = true;
+        }
+
+        return response()->json([
+            'liked' => $liked,
+            'likes_count' => $post->likes()->count()
+        ]);
     }
 }

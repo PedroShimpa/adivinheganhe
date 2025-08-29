@@ -20,5 +20,5 @@
 @endsection
 
 @push('scripts')
-    @include('partials.essentials_scripts_to_reply')
+    @include('partials.adivinhacoes_scripts')
 @endpush
