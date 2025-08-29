@@ -15,10 +15,24 @@
 
 
                 <div class="card-body p-5">
+                    <div class="text-center mt-5">
+                        @auth
+                        <button
 
-                 <div class="card-footer text-center p-4 bg-light mb-2">
-                    <small class="text-muted">🔥 Mostre que você é o mais rápido e inteligente! Seu rating está em jogo! 🔥</small>
-                </div>
+                            class="btn btn-lg btn-danger px-5 py-3 rounded-pill shadow fw-bold buscar-partida">
+                            ⚡ Buscar Partida
+                        </button>
+                        @else
+                        <p class="text-muted mb-3">Você precisa estar logado para jogar no modo competitivo.</p>
+                        <a href="{{ route('login') }}"
+                            class="btn btn-lg btn-primary px-4 py-2 rounded-pill shadow fw-bold">
+                            🔑 Clique aqui para entrar
+                        </a>
+                        @endauth
+                    </div>
+                    <div class="card-footer text-center p-4 bg-light mb-2">
+                        <small class="text-muted">🔥 Mostre que você é o mais rápido e inteligente! Seu rating está em jogo! 🔥</small>
+                    </div>
                     <h3 class="fw-bold mb-3">📜 Como funciona?</h3>
                     <p class="fs-5">
                         No modo competitivo, você será colocado contra outro jogador em tempo real.
@@ -62,60 +76,60 @@
 @endsection
 @push('scripts')
 <script>
-$(document).ready(function() {
-    
-    @auth
-    $('.buscar-partida').on('click', function(e) {
-        let segundos = 0;
-        let interval;
-        e.preventDefault();
+    $(document).ready(function() {
 
-        Swal.fire({
-            title: '🔎 Buscando partida...',
-            html: `<p>Tempo de busca: <strong id="tempoBusca">0</strong> segundos</p>
+        @auth
+        $('.buscar-partida').on('click', function(e) {
+            let segundos = 0;
+            let interval;
+            e.preventDefault();
+
+            Swal.fire({
+                title: '🔎 Buscando partida...',
+                html: `<p>Tempo de busca: <strong id="tempoBusca">0</strong> segundos</p>
                    <button id="cancelarBusca" class="swal2-confirm swal2-styled" style="background:#dc3545;">Parar Busca</button>`,
-            allowOutsideClick: false,
-            showConfirmButton: false,
-            didOpen: () => {
-                const tempoEl = Swal.getHtmlContainer().querySelector('#tempoBusca');
-                const cancelarBtn = Swal.getHtmlContainer().querySelector('#cancelarBusca');
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    const tempoEl = Swal.getHtmlContainer().querySelector('#tempoBusca');
+                    const cancelarBtn = Swal.getHtmlContainer().querySelector('#cancelarBusca');
 
-                interval = setInterval(() => {
-                    segundos++;
-                    tempoEl.textContent = segundos;
-                }, 1000);
+                    interval = setInterval(() => {
+                        segundos++;
+                        tempoEl.textContent = segundos;
+                    }, 1000);
 
-                $(cancelarBtn).on('click', function() {
+                    $(cancelarBtn).on('click', function() {
+                        clearInterval(interval);
+                        Swal.close();
+
+                        $.post("{{ route('competitivo.cancelar_busca') }}", {
+                                _token: '{{ csrf_token() }}'
+                            }).done(() => console.log('Saiu da fila.'))
+                            .fail(() => console.log('Erro ao sair da fila.'));
+
+                    });
+
+                }
+            });
+            window.Echo.channel('competitivo')
+                .listen('.partida.encontrada', e => {
+
+                    console.log('evento receibdo', e)
+
                     clearInterval(interval);
                     Swal.close();
-
-                    $.post("{{ route('competitivo.cancelar_busca') }}", {
-                        _token: '{{ csrf_token() }}'
-                    }).done(() => console.log('Saiu da fila.'))
-                      .fail(() => console.log('Erro ao sair da fila.'));
-
+                    if (e.user_id1 == "{{auth()->id()}}" || e.user_id2 == "{{auth()->id()}}")
+                        window.location.href = "competitivo/partida/" + e.uuid;
                 });
-
-            }
-        });
-        window.Echo.channel('competitivo')
-            .listen('.partida.encontrada', e => {
-
-                console.log('evento receibdo', e)
-                
-                clearInterval(interval);
-                Swal.close();
-                if(e.user_id1 == "{{auth()->id()}}" || e.user_id2 == "{{auth()->id()}}" )
-                window.location.href = "competitivo/partida/" + e.uuid;
-            });
             // Inicia busca no backend
             $.post("{{ route('competitivo.iniciar_busca') }}", {
-                _token: '{{ csrf_token() }}'
-            }).done(() => console.log('Busca iniciada no backend'))
-            .fail(() => console.log('Erro ao iniciar busca'));
-        @endauth
-    });
+                    _token: '{{ csrf_token() }}'
+                }).done(() => console.log('Busca iniciada no backend'))
+                .fail(() => console.log('Erro ao iniciar busca'));
+            @endauth
+        });
 
-});
+    });
 </script>
 @endpush
