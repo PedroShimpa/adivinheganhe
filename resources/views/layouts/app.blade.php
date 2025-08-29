@@ -229,7 +229,7 @@
     <main class="flex-grow-1 pt-5 mt-3">
         @auth
         @php
-        $partidaEmAndamento = $auth()->user()->partidaEmAndamento;
+        $partidaEmAndamento = auth()->user()->partidaEmAndamento;
         $rotaAtual = Route::currentRouteName();
         @endphp
 
