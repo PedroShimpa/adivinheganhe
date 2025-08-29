@@ -25,7 +25,6 @@
                         </div>
 
                         @auth
-                        {{-- Botão de buscar partida --}}
                         <button
                             class="btn btn-danger btn-lg px-5 py-3 rounded-pill shadow fw-bold buscar-partida">
                             ⚡ Buscar Partida
@@ -128,15 +127,13 @@
             });
 
         });
-            window.Echo.channel('competitivo')
+        window.Echo.channel('competitivo')
                 .listen('.partida.encontrada', e => {
-
-             
-                    clearInterval(interval);
                     Swal.close();
                     if (e.user_id1 == "{{auth()->id()}}" || e.user_id2 == "{{auth()->id()}}")
                         window.location.href = "competitivo/partida/" + e.uuid;
             });
+
         @endauth
 
     });
