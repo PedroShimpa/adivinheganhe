@@ -13,7 +13,12 @@
                     <p class="lead mt-3">Enfrente outros jogadores, responda rápido e prove que você é o melhor!</p>
                 </div>
 
+
                 <div class="card-body p-5">
+
+                 <div class="card-footer text-center p-4 bg-light mb-2">
+                    <small class="text-muted">🔥 Mostre que você é o mais rápido e inteligente! Seu rating está em jogo! 🔥</small>
+                </div>
                     <h3 class="fw-bold mb-3">📜 Como funciona?</h3>
                     <p class="fs-5">
                         No modo competitivo, você será colocado contra outro jogador em tempo real.
