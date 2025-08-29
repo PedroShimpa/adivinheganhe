@@ -114,7 +114,6 @@ class CompetitivoController extends Controller
             'status' => 1,
         ]);
 
-
         PartidasJogadores::insert([
             ['partida_id' => $partida->id, 'user_id' => $user->id],
             ['partida_id' => $partida->id, 'user_id' => $adversario->user_id],

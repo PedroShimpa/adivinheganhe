@@ -93,7 +93,7 @@ $(document).ready(function() {
             }
         });
         @auth
-        window.Echo.private('competitivo')
+        window.Echo.channel('competitivo')
             .listen('.partida.encontrada', e => {
 
                 console.log('evento receibdo', e)

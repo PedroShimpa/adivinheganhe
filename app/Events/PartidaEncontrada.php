@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
 class PartidaEncontrada implements ShouldBroadcastNow
@@ -20,7 +20,7 @@ class PartidaEncontrada implements ShouldBroadcastNow
 
     public function broadcastOn()
     {
-        return new PrivateChannel('competitivo');
+        return new Channel('competitivo');
     }
 
     public function broadcastAs()
