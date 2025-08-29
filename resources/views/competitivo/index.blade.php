@@ -15,21 +15,33 @@
 
 
                 <div class="card-body ">
-                    <div class="text-center mt-5 mb-5">
+                    <div class="d-flex flex-column align-items-center justify-content-center mt-5 mb-5">
+                        {{-- Card do rating --}}
+                        <div class="card shadow-lg rounded-4 p-4 mb-4 text-center" style="max-width: 400px;">
+                            <h4 class="fw-bold mb-2">🏆 Seu rating atual</h4>
+                            <div class="display-5 fw-bold text-primary">
+                                {{ auth()->check() ? auth()->user()->getOrCreateRank()->elo : 0 }}
+                            </div>
+                        </div>
+
                         @auth
+                        {{-- Botão de buscar partida --}}
                         <button
-                            class="btn btn-lg btn-danger px-5 py-3 rounded-pill shadow fw-bold buscar-partida">
+                            class="btn btn-danger btn-lg px-5 py-3 rounded-pill shadow fw-bold buscar-partida">
                             ⚡ Buscar Partida
                         </button>
                         @else
-                        <p class="text-muted mb-3">Você precisa estar logado para jogar no modo competitivo.</p>
+                        <p class="text-muted mb-3 text-center">
+                            Você precisa estar logado para jogar no modo competitivo.
+                        </p>
                         <a href="{{ route('login') }}"
-                            class="btn btn-lg btn-primary px-4 py-2 rounded-pill shadow fw-bold">
+                            class="btn btn-primary btn-lg px-4 py-2 rounded-pill shadow fw-bold">
                             🔑 Clique aqui para entrar
                         </a>
                         @endauth
                     </div>
-                   
+
+
                     <h3 class="fw-bold mb-3">📜 Como funciona?</h3>
                     <p class="fs-5">
                         No modo competitivo, você será colocado contra outro jogador em tempo real.

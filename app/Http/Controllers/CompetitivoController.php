@@ -9,6 +9,7 @@ use App\Models\Competitivo\Partidas;
 use App\Models\Competitivo\PartidasJogadores;
 use App\Models\Competitivo\Perguntas;
 use App\Models\Competitivo\Respostas;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -105,7 +106,7 @@ class CompetitivoController extends Controller
     {
         $oponentes = Fila::where('status', 0)
             ->where('user_id', '!=', $user->id)
-            // ->orderByRaw('ABS(elo - ?)', [$user->rank->elo])
+            ->orderByRaw('ABS(elo - ?)', [$user->rank->elo])
             ->get();
 
         if ($oponentes->isEmpty()) {
@@ -225,7 +226,20 @@ class CompetitivoController extends Controller
                 $vencedor = $respostasRodada->firstWhere('correta', true)->user_id ?? null;
 
                 if ($vencedor) {
+                    $perdedor = $respostasRodada->firstWhere('correta', false)->user_id;
                     $partida->jogadores()->where('user_id', $vencedor)->update(['vencedor' => 1]);
+
+                    $userVencedor = User::find($vencedor)->rank; 
+                    if ($userVencedor) {
+                        $userVencedor->elo += env('PONTOS_COMPETITVO', 5);
+                        $userVencedor->save();
+                    }
+
+                    $userPerdedor = User::find($perdedor)->rank;
+                    if ($userPerdedor) {
+                        $userPerdedor->elo += env('PONTOS_COMPETITVO', 5);
+                        $userPerdedor->save();
+                    }
                 }
 
                 $partida->status = 2;
