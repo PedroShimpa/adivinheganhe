@@ -8,7 +8,7 @@ services:
     image: getmeili/meilisearch:v1.11
     container_name: meilisearch
     environment:
-      - MEILI_MASTER_KEY=Jacare2603!
+      - MEILI_MASTER_KEY=1234
     ports:
       - "7700:7700"
     volumes:
