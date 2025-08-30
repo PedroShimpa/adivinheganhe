@@ -32,7 +32,7 @@
 
 <div class="container mb-5 mt-2">
     @if(Auth::check())
-    <div class="mb-4 p-4 card text-center animate__animated animate__fadeInUp">
+    <div class="mb-4 p-4 card text-center  ">
         <h5 class="mb-3 ">
             🎯 Indique e ganhe 1 tentativa extra por adivinhador registrado em seu link</strong>
         </h5>
@@ -44,7 +44,7 @@
     </div>
     @endif
 
-    <div class="alert alert-success mt-4 d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 p-3 shadow-sm border-start border-4 border-success rounded-4 animate__animated animate__fadeInUp">
+    <div class="alert alert-success mt-4 d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 p-3 shadow-sm border-start border-4 border-success rounded-4 ">
         <div class="d-flex align-items-center gap-3 text-center text-md-start">
             <i class="bi bi-whatsapp fs-4 text-success"></i>
             <span class="fw-semibold">

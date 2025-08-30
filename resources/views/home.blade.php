@@ -12,7 +12,7 @@
         @forelse($adivinhacoes as $adivinhacao)
             @include('partials.adivinhacao', ['adivinhacao' => $adivinhacao])
         @empty
-            <div class="text-center animate__animated animate__fadeIn">
+            <div class="text-center  ">
                 <h5 class="text-white">Nenhuma adivinhação disponível no momento.</h5>
             </div>
         @endforelse
