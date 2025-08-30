@@ -75,10 +75,10 @@ class HomeController extends Controller
         return view('home')->with(compact('adivinhacoes', 'regiao'));
     }
 
-    public function hallOfFame(Request $request)
+    public function rankingClassico(Request $request)
     {
         $usuariosComMaisPremios = $this->adivinhacoesPremiacoes->getUsuariosMaisPremiados();
-        return view('hall_da_fama')->with(compact('usuariosComMaisPremios'));
+        return view('ranking_classico')->with(compact('usuariosComMaisPremios'));
     }
 
     public function saveFingerprint(Request $request)

@@ -234,7 +234,7 @@
 
             })
             .listen('.partida.finalizada', e => {
-                window.location.href = `/competitivo/partida/finalizada/${partidaUuid}`;
+                window.location.href = `/competitivo/partida/finalizada/${partidaUuid}?tocar_fim=true`;
 
             });
 

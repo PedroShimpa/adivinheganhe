@@ -41,8 +41,6 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/adivinhacoes/{adivinhacao}/toggle-like', [AdivinhacoesController::class, 'toggleLike'])->name('adivinhacoes.toggle-like');
 
-
-
     Route::post('/responder', [RespostaController::class, 'enviar'])->name('resposta.enviar');
     Route::get('/palpites/comprar', [PagamentosController::class, 'index_buy_attempts'])->name('tentativas.shop');
     Route::post('/palpites/comprar', [PagamentosController::class, 'buy_attempts'])->name('tentativas.comprar');
@@ -92,7 +90,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::post('/webhook/mercadopago', [PagamentosController::class, 'webhook']);
-Route::get('/hall-da-fama', [HomeController::class, 'hallOfFame'])->name('hall_da_fama');
+Route::get('/ranking-classico', [HomeController::class, 'rankingClassico'])->name('ranking_classico');
 Route::get('/sobre', [HomeController::class, 'sobre'])->name('sobre');
 
 

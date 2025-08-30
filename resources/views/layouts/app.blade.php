@@ -175,7 +175,7 @@
                         @endauth
                         <a href="{{ route('jogadores') }}" class="nav-link text-white">Jogadores</a>
                         <a href="{{ route('premiacoes') }}" class="nav-link text-white">Prêmios</a>
-                        <a href="{{ route('hall_da_fama') }}" class="nav-link text-white">Ranking - Modo Clássico</a>
+                        <a href="{{ route('ranking_classico') }}" class="nav-link text-white">Ranking - Modo Clássico</a>
                     </div>
                 </div>
             </div>
