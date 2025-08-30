@@ -5,6 +5,7 @@ use App\Http\Controllers\AdivinheOMilhaoController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CompetitivoController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PagamentosController;
 use App\Http\Controllers\PostController;
@@ -25,6 +26,8 @@ Route::get('/jogadores/{user}', [UsersController::class, 'view'])->name('profile
 Route::get('/competitivo', [CompetitivoController::class, 'index'])->name('competitivo.index');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+
     Route::get('/profile', [UsersController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [UsersController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [UsersController::class, 'destroy'])->name('profile.destroy');
@@ -41,16 +44,12 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/adivinhacoes/{adivinhacao}/toggle-like', [AdivinhacoesController::class, 'toggleLike'])->name('adivinhacoes.toggle-like');
 
-
-
     Route::post('/responder', [RespostaController::class, 'enviar'])->name('resposta.enviar');
     Route::get('/palpites/comprar', [PagamentosController::class, 'index_buy_attempts'])->name('tentativas.shop');
     Route::post('/palpites/comprar', [PagamentosController::class, 'buy_attempts'])->name('tentativas.comprar');
     Route::get('/dicas/{adivinhacao}/comprar', [PagamentosController::class, 'index_buy_dica'])->name('dicas.index_buy');
     Route::post('/dicas/{adivinhacao}/comprar', [PagamentosController::class, 'buy_dica'])->name('dicas.comprar');
     Route::get('/meus_premios', [HomeController::class, 'meusPremios'])->name('meus_premios');
-
-
 
     Route::get('/chat/{user}', [ChatController::class, 'private_chat'])->name('chat.chat_privado');
     Route::get('/chat/buscar/{userId}', [ChatController::class, 'get_messages'])->name('chat.buscar');
@@ -92,7 +91,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::post('/webhook/mercadopago', [PagamentosController::class, 'webhook']);
-Route::get('/hall-da-fama', [HomeController::class, 'hallOfFame'])->name('hall_da_fama');
+Route::get('/ranking-classico', [HomeController::class, 'rankingClassico'])->name('ranking_classico');
 Route::get('/sobre', [HomeController::class, 'sobre'])->name('sobre');
 
 

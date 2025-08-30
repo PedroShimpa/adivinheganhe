@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Laravel\Scout\Searchable;
@@ -131,6 +130,14 @@ class User extends Authenticatable
             ->select('user_id', DB::raw('COUNT(chat_messages.id) as unread_count'))
             ->groupBy('user_id')
             ->get();
+    }
+
+    public function partidas()
+    {
+        return $this->hasMany(PartidasJogadores::class, 'user_id', 'id')
+            ->whereHas('partida', function ($query) {
+                $query->where('status', 2);
+            });
     }
 
     public function partidaEmAndamento()

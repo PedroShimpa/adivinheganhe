@@ -1,6 +1,32 @@
 @extends('layouts.app', ['enable_adsense' => true])
 
 @section('content')
+<style>
+    .custom-tabs .nav-link {
+        background-color: #0d6efd;
+        /* azul intermediário (inativa) */
+        color: #fff;
+        border-radius: 0.5rem 0.5rem 0 0;
+        margin-right: 4px;
+        transition: background-color 0.2s ease-in-out;
+        border: none;
+        /* remove borda padrão do bootstrap */
+    }
+
+    .custom-tabs .nav-link:hover {
+        background-color: #0b5ed7;
+        /* hover */
+        color: #fff;
+    }
+
+    .custom-tabs .nav-link.active {
+        background-color: black;
+        /* ativa */
+        color: #fff;
+        font-weight: bold;
+        border: none !important;
+    }
+</style>
 <div class="container mb-5 mt-2" style="max-width: 900px;">
 
     <div class="card shadow-sm border-0 overflow-hidden mb-4">
@@ -45,7 +71,6 @@
             @if(auth()->id() !== $user->id)
             @php
             $isFriend = auth()->user()->friends()->contains(fn($f) => $f->id === $user->id);
-
             // Verifica se existe pedido pendente enviado pelo usuário logado
             $pendingRequest = auth()->user()->sentFriendships()
             ->where('receiver_id', $user->id)
@@ -96,7 +121,7 @@
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
             <h5 class="fw-bold mb-3">Sobre</h5>
-            @if($user->perfil_privado == 'S' && (!auth()->check() || (auth()->id() != $user->id)))
+            @if($user->perfil_privado == 'S' && (!auth()->check() || (auth()->id() != $user->id && !$isFriend)))
             <p class="mb-3">Este perfil é privado.</p>
             @else
             <p class="mb-3">
@@ -112,24 +137,98 @@
     @endif
     @endauth
 
-    @if($user->perfil_privado == 'S' && (!auth()->check() || (auth()->id() != $user->id)))
-       <div class="card shadow-lg border-0 timeline-card " style="min-width: 100%; max-width:100%;">
+    @if($user->perfil_privado == 'S' && (!auth()->check() || (auth()->id() != $user->id && !$isFriend)))
+    <div class="card shadow-lg border-0 timeline-card " style="min-width: 100%; max-width:100%;">
         <div class="card-body">
             <p class="m-3">Este perfil é privado.</p>
         </div>
     </div>
     @else
-    <h5 class="fw-bold mb-3">Publicações</h5>
+    <h5 class="fw-bold mb-3">Atividades</h5>
 
-    @forelse($user->posts as $post)
-    @include('partials.post')
-    @empty
-    <div class="card shadow-lg border-0 timeline-card " style="min-width: 100%; max-width:100%;">
-        <div class="card-body">
-            <p class="m-3">Nenhuma publicação ainda.</p>
+    <ul class="nav nav-tabs mb-3 custom-tabs" id="profileTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="posts-tab" data-bs-toggle="tab" data-bs-target="#posts"
+                type="button" role="tab" aria-controls="posts" aria-selected="true">
+                Publicações
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history"
+                type="button" role="tab" aria-controls="history" aria-selected="false">
+                Histórico Competitivo
+            </button>
+        </li>
+    </ul>
+    <div class="tab-content" id="profileTabsContent">
+
+        {{-- Aba de Publicações --}}
+        <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
+            @forelse($user->posts as $post)
+            @include('partials.post')
+            @empty
+            <div class="card shadow-lg border-0 timeline-card " style="min-width: 100%; max-width:100%;">
+                <div class="card-body">
+                    <p class="m-3">Nenhuma publicação ainda.</p>
+                </div>
+            </div>
+            @endforelse
         </div>
+        <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+            @forelse($user->partidas as $partida)
+            @php
+            $oponente = $partida->partida->jogadores()
+            ->where('user_id', '!=', $user->id)
+            ->with('user')
+            ->first();
+            @endphp
+
+            <a href="{{ route('competitivo.partida.finalizada', $partida->partida->uuid) }}"
+                class="text-decoration-none text-reset">
+                <div class="card border-0 shadow-sm mb-2 rounded-3 p-3 d-flex flex-row align-items-center justify-content-between hover-shadow-sm">
+                    <div class="d-flex align-items-center gap-3">
+                        {{-- Avatar oponente --}}
+                        @if($oponente && $oponente->user)
+                        <img src="{{ $oponente->user->image ?? 'https://ui-avatars.com/api/?name='.urlencode($oponente->user->username).'&background=random' }}"
+                            alt="oponente"
+                            class="rounded-circle shadow-sm"
+                            width="48" height="48"
+                            style="object-fit: cover;">
+                        <div>
+                            <div class="fw-bold">{{ $oponente->user->username }}</div>
+                            <small class="text-muted">
+                                {{ $partida->partida->created_at->format('d/m/Y H:i') }}
+                            </small>
+                        </div>
+                        @endif
+                    </div>
+
+                    <div class="text-center">
+                        <span class="badge bg-dark px-3 py-2">
+                            {{ $partida->partida->round_atual }} Rounds
+                        </span>
+                    </div>
+
+                    <div>
+                        @if($partida->vencedor == $user->id)
+                        <span class="badge bg-success px-3 py-2"><i class="bi bi-check2"></i> Vitória</span>
+                        @else
+                        <span class="badge bg-danger px-3 py-2"><i class="bi bi-x"></i> Derrota</span>
+                        @endif
+                    </div>
+                </div>
+            </a>
+            @empty
+            <div class="card shadow-lg border-0 timeline-card " style="min-width: 100%; max-width:100%;">
+                <div class="card-body text-center text-muted">
+                    Nenhuma partida encontrada.
+                </div>
+            </div>
+            @endforelse
+        </div>
+
+
     </div>
-    @endforelse
     @endif
 
 </div>
@@ -192,6 +291,7 @@
                 if (data.length > 0) {
                     let html = '';
                     data.forEach(c => {
+                              c.isPost = true
                         html += adicionarComentario(c, true);
                     });
                     $list.html(html);

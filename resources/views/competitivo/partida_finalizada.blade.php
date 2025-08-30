@@ -28,7 +28,7 @@
                             @if($jogador->vencedor)
                                 <span class="badge bg-success rounded-pill">Vencedor</span>
                             @else
-                                <span class="badge bg-secondary rounded-pill">Perdedor</span>
+                                <span class="badge bg-danger rounded-pill">Perdedor</span>
                             @endif
                         </li>
                         @endforeach
@@ -90,9 +90,12 @@
 @push('scripts')
 <script>
     $(document).ready(function() {
-        let audio = new Audio("{{ asset('sounds/fim_comp.wav') }}");
-        audio.volume = 0.3;
-        audio.play();
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('tocar_fim')) {
+            let audio = new Audio("{{ asset('sounds/fim_comp.wav') }}");
+            audio.volume = 0.3;
+            audio.play();
+        }
     });
 </script>
 @endpush

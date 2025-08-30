@@ -44,6 +44,7 @@ class AdivinhacoesPremiacoes extends Model
     {
         return $this->select(
             'users.username',
+            'users.image',
             DB::raw('COUNT(adivinhacoes_premiacoes.id) as count_premiacoes')
         )
             ->join('users', 'users.id', '=', 'adivinhacoes_premiacoes.user_id')

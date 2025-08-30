@@ -175,7 +175,7 @@
                         @endauth
                         <a href="{{ route('jogadores') }}" class="nav-link text-white">Jogadores</a>
                         <a href="{{ route('premiacoes') }}" class="nav-link text-white">Prêmios</a>
-                        <a href="{{ route('hall_da_fama') }}" class="nav-link text-white">Ranking - Modo Clássico</a>
+                        <a href="{{ route('ranking_classico') }}" class="nav-link text-white">Ranking - Modo Clássico</a>
                     </div>
                 </div>
             </div>
@@ -196,6 +196,7 @@
                 <div class="accordion-item bg-dark border-0">
 
                     <div id="collapseAdmin" class="accordion-collapse collapse" data-bs-parent="#adminAccordion">
+                        <a href="{{ route('dashboard') }}" class="nav-link text-white">Dashboard</a>
                         <a href="{{ route('adivinhacoes.expiradas') }}" class="nav-link text-white">Expiradas</a>
                         <a href="{{ route('adivinhacoes.create') }}" class="nav-link text-white"></i> Nova Adivinhação</a>
                         <a href="{{ route('adivinhe_o_milhao.create_pergunta') }}" class="nav-link text-white">Nova Pergunta AOM</a>
