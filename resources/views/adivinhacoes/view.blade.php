@@ -56,12 +56,12 @@
                                 class="form-control @error('resposta') is-invalid @enderror"
                                 id="resposta"
                                 name="resposta"
-                                value="{{ old('resposta' }}"
+                                value=""
                                 required>
                             @error('resposta')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            Por motivos de segurança, a resposta não é mais exibida aqui
+                            Por motivos de segurança, a resposta não é mais exibida
                         </div>
 
                         <div class="mb-3">
