@@ -370,10 +370,10 @@
             e.preventDefault();
         });
 
-        $(document).on('.abrir-perfil', 'click', function() {
-            username = $(this).attr('data-username')
-            window.open(`/jogadores/${username}`, '_blank')
-        })
+        $(document).on('click', '.abrir-perfil', function() {
+            let username = $(this).data('username');
+            window.open(`/jogadores/${username}`, '_blank');
+        });
     </script>
 
     @endauth
