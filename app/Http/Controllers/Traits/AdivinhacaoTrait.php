@@ -27,6 +27,8 @@ trait AdivinhacaoTrait
         if (!empty($adivinhacao->dica) && $adivinhacao->dica_paga == 'S' && Auth::check()) {
             $adivinhacao->buyed = DicasCompras::where('user_id', auth()->user()->id)->where('adivinhacao_id', $adivinhacao->id)->exists();
         }
+
+        $adivinhacao->resposta = null;
     }
 
     public function verifyLimitExceded(int $id, &$adivinhacao)

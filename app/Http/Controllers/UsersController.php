@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\NotificacaoEvent;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Mail\BanPlayerMail;
 use App\Mail\FriendrequestMail;
 use App\Models\Friendship;
 use App\Models\User;
@@ -13,6 +14,7 @@ use App\Notifications\NewFollowerNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
@@ -25,9 +27,9 @@ class UsersController extends Controller
     public function jogadores(Request $request)
     {
         if ($request->input('search')) {
-            $players = User::search($request->input('search'))->where('perfil_privado', 'N')->get();
+            $players = User::search($request->input('search'))->where('banned', false)->where('perfil_privado', 'N')->get();
         } else {
-            $players = User::select('username', 'image', 'bio')->where('perfil_privado', 'N')->inRandomOrder()->limit(9)->get();
+            $players = User::select('username', 'image', 'bio')->where('perfil_privado', 'N')->where('banned', false)->inRandomOrder()->limit(9)->get();
         }
 
         return view('jogadores')->with('players', $players);
@@ -50,8 +52,8 @@ class UsersController extends Controller
     public function view(User $user)
     {
         $userPartidas = $user->partidas()
-            ->with('partida.jogadores.user') // eager load
-            ->orderByDesc('partida_id')     // mais recente primeiro
+            ->with('partida.jogadores.user') 
+            ->orderByDesc('partida_id')    
             ->paginate(10);
 
         if (request()->ajax() && request()->ajax == 'partidas') {
@@ -190,5 +192,20 @@ class UsersController extends Controller
         $friends = auth()->user()->friends();
 
         return view('amigos')->with(compact('friends'));
+    }
+
+    public function banUser(User $user, Request $request)
+    {
+        if (!auth()->user()->isAdmin()) {
+            Log::info(auth()->user()->name . ' tentou banir um jogador sem permissão');
+            return;
+        }
+        $user->banned = true;
+        $user->banned_info = $request->input('motivo');
+
+        $user->save();
+        Mail::to($user->email)->queue(new BanPlayerMail());
+
+        return redirect()->back();
     }
 }

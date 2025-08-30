@@ -25,7 +25,7 @@ Route::get('/jogadores/{user}', [UsersController::class, 'view'])->name('profile
 
 Route::get('/competitivo', [CompetitivoController::class, 'index'])->name('competitivo.index');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'banned'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 
     Route::get('/profile', [UsersController::class, 'edit'])->name('profile.edit');
@@ -88,6 +88,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/competitivo/iniciar-busca', [CompetitivoController::class, 'iniciarBusca'])->name('competitivo.iniciar_busca');
     Route::post('/competitivo/cancelar-busca', [CompetitivoController::class, 'sairFila'])->name('competitivo.cancelar_busca');
     Route::get('/competitivo/partida/finalizada/{partida}', [CompetitivoController::class, 'partida'])->name('competitivo.partida.finalizada');
+
+    Route::post('users/ban-player/{user}', [UsersController::class, 'banUser'])->name('user.ban');
 });
 
 Route::post('/webhook/mercadopago', [PagamentosController::class, 'webhook']);
@@ -97,7 +99,6 @@ Route::get('/sobre', [HomeController::class, 'sobre'])->name('sobre');
 
 Route::get('/adivinhacoes/{adivinhacao}/comments', [AdivinhacoesController::class, 'comments'])->name('adivinhacoes.comments');
 Route::get('/adivinhacoes/{adivinhacao}', [AdivinhacoesController::class, 'index'])->name('adivinhacoes.index');
-Route::get('/adivinhacoes/{adivinhacao}/respostas-iframe', [AdivinhacoesController::class, 'respostas'])->name('adivinhacoes.respostas');
 
 Route::get('/premiacoes', [HomeController::class, 'premiacoes'])->name('premiacoes');
 
@@ -113,6 +114,12 @@ Route::get('/register/extra', [GoogleController::class, 'showExtraForm'])->name(
 Route::post('/register/extra', [GoogleController::class, 'storeExtraForm']);
 
 Route::get('/adivinhe-o-milhao', [AdivinheOMilhaoController::class, 'index'])->name('adivinhe_o_milhao.index');
+
+Route::get('/banned', function () {
+    return view('auth.banned');
+})->name('banned.view');
+
+
 
 require __DIR__ . '/socket.php';
 require __DIR__ . '/auth.php';

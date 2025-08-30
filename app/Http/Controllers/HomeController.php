@@ -50,8 +50,9 @@ class HomeController extends Controller
 
     public function premiacoes()
     {
-        $premios = $this->adivinhacoesPremiacoes->getPremiosGanhos();
-        return view('premiacoes')->with('premios', $premios);
+        echo 'falha na busca';
+        // $premios = $this->adivinhacoesPremiacoes->getPremiosGanhos();
+        // return view('premiacoes')->with('premios', $premios);
     }
 
     public function meusPremios(Request $request)

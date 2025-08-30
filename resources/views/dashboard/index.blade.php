@@ -47,7 +47,6 @@
         </div>
     </div>
 
-    <!-- Segundo bloco de cards -->
     <div class="row g-3 mb-4">
         <div class="col-md-3">
             <div class="card text-white bg-info shadow-sm">
@@ -76,7 +75,32 @@
             </div>
         </div>
     </div>
-    <!-- Tabela de respostas ativas -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Premiações</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Usuário</th>
+                        <th>Título</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($premiacoes as $premiacao)
+                    <tr>
+                        <td>{{ $premiacao->created_at->format('d/m/Y H:i') }}</td>
+                        <td>{{ $premiacao->name }}</td>
+                        <td>{{ $premiacao->titulo }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-light">
             <h5 class="mb-0">Respostas Adivinhações Ativas</h5>
@@ -89,7 +113,6 @@
                         <th>Usuário</th>
                         <th>Título</th>
                         <th>Resposta</th>
-                        <th>Resposta Correta</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -99,7 +122,6 @@
                         <td>{{ $resposta->name }}</td>
                         <td>{{ $resposta->titulo }}</td>
                         <td>{{ $resposta->resposta }}</td>
-                        <td>{{ $resposta->resposta_correta }}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -107,28 +129,68 @@
         </div>
     </div>
     <!-- Tabela de usuários -->
+    <!-- Tabela de usuários -->
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-light">
-            <h5 class="mb-0">Usuários </h5>
+            <h5 class="mb-0">Usuários</h5>
         </div>
         <div class="card-body">
             <table id="usersTable" class="table table-striped table-hover">
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Nome</th>
                         <th>Username</th>
                         <th>Email</th>
                         <th>Whatsapp</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($users as $user)
                     <tr>
+                        <td>{{ $user->id }}</td>
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->username }}</td>
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->whatsapp }}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#banModal-{{ $user->id }}">
+                                Banir
+                            </button>
+                        </td>
                     </tr>
+
+                    <!-- Modal de Banimento -->
+                    <div class="modal fade" id="banModal-{{ $user->id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <form action="{{ route('user.ban', ['user' => $user->username]) }}" method="POST">
+                                    @csrf
+                                    <div class="modal-header bg-danger text-white">
+                                        <h5 class="modal-title">Banir Usuário</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>
+                                            Tem certeza que deseja banir o usuário
+                                            <strong>{{ $user->name }} ({{ $user->username }})</strong>?
+                                        </p>
+                                        <div class="mb-3">
+                                            <label for="motivo-{{ $user->id }}" class="form-label">Motivo (opcional)</label>
+                                            <textarea name="motivo" id="motivo-{{ $user->id }}" class="form-control" rows="3" placeholder="Escreva o motivo do banimento..."></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-danger">Confirmar Banimento</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                     @endforeach
                 </tbody>
             </table>

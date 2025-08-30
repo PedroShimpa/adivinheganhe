@@ -48,7 +48,7 @@ class AdivinhacoesPremiacoes extends Model
             DB::raw('COUNT(adivinhacoes_premiacoes.id) as count_premiacoes')
         )
             ->join('users', 'users.id', '=', 'adivinhacoes_premiacoes.user_id')
-            ->groupBy('adivinhacoes_premiacoes.user_id', 'users.username')
+            ->groupBy('adivinhacoes_premiacoes.user_id', 'users.username', 'users.image')
             ->orderByDesc('count_premiacoes')
             ->limit(10)
             ->get();

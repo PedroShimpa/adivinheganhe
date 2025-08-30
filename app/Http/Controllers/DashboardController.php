@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Adivinhacoes;
+use App\Models\AdivinhacoesPremiacoes;
 use App\Models\AdivinhacoesRespostas;
 use App\Models\AdivinheOMilhao\InicioJogo;
 use App\Models\Competitivo\Fila;
 use App\Models\Competitivo\Partidas;
 use App\Models\Post;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
@@ -21,12 +23,14 @@ class DashboardController extends Controller
 
     public function dashboard()
     {
-           if (!auth()->user()->isAdmin()) {
+        if (!auth()->user()->isAdmin()) {
+            Log::info(auth()->user()->name . ' tentou acessar o dashboard sem permissão');
+
             return redirect()->route('home');
         }
         $data = [
             'countUsers' => User::count(),
-            'users' => User::orderBy('id', 'desc')->all(), #listar name, username, email, whatsapp
+            'users' => User::where('banned', false)->all(),
 
             'countAdivinhacoes' => Adivinhacoes::count(),
             'countAdivinhacoesAtivas' => (new Adivinhacoes())->getAtivas()->count(),
@@ -34,6 +38,10 @@ class DashboardController extends Controller
             'countPosts' => Post::count(),
             'countRespostasClassico' => AdivinhacoesRespostas::count(),
             'countRespostasClassicoToday' => AdivinhacoesRespostas::whereDate('created_at', today())->count(),
+
+            'permiacoes' => AdivinhacoesPremiacoes::select('adivinhacoes_premiacoes.created_at', 'users.name', 'adivinhacoes.titulo')
+                ->join('adivinhacoes', 'adivinhacoes.id', '=', 'adivinhacoes_premiacoes.adivinhacao_id')->join('users', 'users.id', '=', 'adivinhacoes_premiacoes.user_id')
+                ->orderBy('id', 'desc')->get(),
 
             'countJogosAdivinheOmilhao' => InicioJogo::count(),
             'countJogosAdivinheOmilhaoToday' => InicioJogo::whereDate('created_at', today())->count(),

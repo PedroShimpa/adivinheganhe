@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Competitivo\Partidas;
 use App\Models\Competitivo\PartidasJogadores;
 use App\Models\Competitivo\Ranks;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
@@ -37,7 +36,9 @@ class User extends Authenticatable
         'fingerprint',
         'perfil_privado',
         'bio',
-        'image'
+        'image',
+        'banned',
+        'banned_info'
     ];
 
     public function getRouteKeyName()
