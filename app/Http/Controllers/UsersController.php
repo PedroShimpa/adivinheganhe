@@ -49,7 +49,20 @@ class UsersController extends Controller
 
     public function view(User $user)
     {
-        return view('user.profile', compact('user'));
+        $userPartidas = $user->partidas()
+            ->with('partida.jogadores.user') // eager load
+            ->orderByDesc('partida_id')     // mais recente primeiro
+            ->paginate(10);
+
+        if (request()->ajax() && request()->ajax == 'partidas') {
+            $html = view('partials.user_partidas', compact('userPartidas', 'user'))->render();
+            return response()->json([
+                'html' => $html,
+                'hasMorePages' => $userPartidas->hasMorePages()
+            ]);
+        }
+
+        return view('user.profile', compact('user', 'userPartidas'));
     }
 
     public function edit(Request $request): View

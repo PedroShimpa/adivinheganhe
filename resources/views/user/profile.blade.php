@@ -160,74 +160,18 @@
             </button>
         </li>
     </ul>
-    <div class="tab-content" id="profileTabsContent">
-
-        {{-- Aba de Publicações --}}
-        <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
-            @forelse($user->posts as $post)
-            @include('partials.post')
-            @empty
-            <div class="card shadow-lg border-0 timeline-card " style="min-width: 100%; max-width:100%;">
-                <div class="card-body">
-                    <p class="m-3">Nenhuma publicação ainda.</p>
-                </div>
-            </div>
-            @endforelse
-        </div>
-        <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
-            @forelse($user->partidas as $partida)
-            @php
-            $oponente = $partida->partida->jogadores()
-            ->where('user_id', '!=', $user->id)
-            ->with('user')
-            ->first();
-            @endphp
-
-            <a href="{{ route('competitivo.partida.finalizada', $partida->partida->uuid) }}"
-                class="text-decoration-none text-reset">
-                <div class="card border-0 shadow-sm mb-2 rounded-3 p-3 d-flex flex-row align-items-center justify-content-between hover-shadow-sm">
-                    <div class="d-flex align-items-center gap-3">
-                        {{-- Avatar oponente --}}
-                        @if($oponente && $oponente->user)
-                        <img src="{{ $oponente->user->image ?? 'https://ui-avatars.com/api/?name='.urlencode($oponente->user->username).'&background=random' }}"
-                            alt="oponente"
-                            class="rounded-circle shadow-sm"
-                            width="48" height="48"
-                            style="object-fit: cover;">
-                        <div>
-                            <div class="fw-bold">{{ $oponente->user->username }}</div>
-                            <small class="text-muted">
-                                {{ $partida->partida->created_at->format('d/m/Y H:i') }}
-                            </small>
-                        </div>
-                        @endif
-                    </div>
-
-                    <div class="text-center">
-                        <span class="badge bg-dark px-3 py-2">
-                            {{ $partida->partida->round_atual }} Rounds
-                        </span>
-                    </div>
-
-                    <div>
-                        @if($partida->vencedor == $user->id)
-                        <span class="badge bg-success px-3 py-2"><i class="bi bi-check2"></i> Vitória</span>
-                        @else
-                        <span class="badge bg-danger px-3 py-2"><i class="bi bi-x"></i> Derrota</span>
-                        @endif
-                    </div>
-                </div>
-            </a>
-            @empty
-            <div class="card shadow-lg border-0 timeline-card " style="min-width: 100%; max-width:100%;">
-                <div class="card-body text-center text-muted">
-                    Nenhuma partida encontrada.
-                </div>
-            </div>
-            @endforelse
+    <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+        <div id="partidas-list">
+            @include('partials.user_partidas', ['userPartidas' => $userPartidas])
         </div>
 
-
+        @if($userPartidas->hasMorePages())
+            <div class="text-center mt-2">
+                <button id="loadMorePartidas" class="btn btn-sm btn-primary" data-next-page="{{ $userPartidas->currentPage() + 1 }}">
+                    Ver mais
+                </button>
+            </div>
+        @endif
     </div>
     @endif
 
@@ -376,5 +320,24 @@
                 .catch(err => console.error(err));
         });
     });
+
+
+    $('#loadMorePartidas').on('click', function() {
+    const btn = $(this);
+    const nextPage = btn.data('next-page');
+    const url = `{{ route('profile.view', $user->username) }}?page=${nextPage}&ajax=partidas`;
+
+    btn.prop('disabled', true).text('Carregando...');
+
+    $.get(url, function(res) {
+        $('#partidas-list').append(res.html);
+
+        if(res.hasMorePages) {
+            btn.data('next-page', nextPage + 1).prop('disabled', false).text('Ver mais');
+        } else {
+            btn.remove();
+        }
+    });
+});
 </script>
 @endpush
