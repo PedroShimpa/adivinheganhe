@@ -146,48 +146,51 @@
     @else
     <h5 class="fw-bold mb-3">Atividades</h5>
 
+<ul class="nav nav-tabs mb-3 custom-tabs" id="profileTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="posts-tab" data-bs-toggle="tab" data-bs-target="#posts"
+            type="button" role="tab" aria-controls="posts" aria-selected="true">
+            Publicações
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history"
+            type="button" role="tab" aria-controls="history" aria-selected="false">
+            Histórico Competitivo
+        </button>
+    </li>
+</ul>
 
-    <ul class="nav nav-tabs mb-3 custom-tabs" id="profileTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="posts-tab" data-bs-toggle="tab" data-bs-target="#posts"
-                type="button" role="tab" aria-controls="posts" aria-selected="true">
-                Publicações
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history"
-                type="button" role="tab" aria-controls="history" aria-selected="false">
-                Histórico Competitivo
-            </button>
-        </li>
-    </ul>
-
+<div class="tab-content" id="profileTabsContent">
+    <!-- Publicações -->
     <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
-
         @forelse($user->posts as $post)
-        @include('partials.post')
+            @include('partials.post')
         @empty
-        <div class="card shadow-lg border-0 timeline-card " style="min-width: 100%; max-width:100%;">
-            <div class="card-body">
-                <p class="m-3">Nenhuma publicação ainda.</p>
+            <div class="card shadow-lg border-0 timeline-card" style="min-width: 100%; max-width: 100%;">
+                <div class="card-body">
+                    <p class="m-3">Nenhuma publicação ainda.</p>
+                </div>
             </div>
-        </div>
         @endforelse
     </div>
 
+    <!-- Histórico Competitivo -->
     <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
         <div id="partidas-list">
             @include('partials.user_partidas', ['userPartidas' => $userPartidas])
         </div>
 
         @if($userPartidas->hasMorePages())
-        <div class="text-center mt-2">
-            <button id="loadMorePartidas" class="btn btn-sm btn-primary" data-next-page="{{ $userPartidas->currentPage() + 1 }}">
-                Ver mais
-            </button>
-        </div>
+            <div class="text-center mt-2">
+                <button id="loadMorePartidas" class="btn btn-sm btn-primary" data-next-page="{{ $userPartidas->currentPage() + 1 }}">
+                    Ver mais
+                </button>
+            </div>
         @endif
     </div>
+</div>
+
 
     @endif
 </div>
