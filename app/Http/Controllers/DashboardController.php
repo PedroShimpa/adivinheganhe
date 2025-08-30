@@ -29,8 +29,8 @@ class DashboardController extends Controller
             return redirect()->route('home');
         }
         $data = [
-            'countUsers' => User::count(),
-            'users' => User::where('banned', false)->all(),
+            'countUsers' => User::where('banned', false)->count(),
+            'users' => User::where('banned', false)->get(),
 
             'countAdivinhacoes' => Adivinhacoes::count(),
             'countAdivinhacoesAtivas' => (new Adivinhacoes())->getAtivas()->count(),
