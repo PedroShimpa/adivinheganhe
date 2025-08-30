@@ -35,8 +35,8 @@ class DashboardController extends Controller
             'countJogosAdivinheOmilhao' => InicioJogo::count(),
             'countJogosAdivinheOmilhaoToday' => InicioJogo::whereDate('created_at', today())->count(),
 
-            'countRespostasCompetitivo' => Partidas::count(),
-            'countRespostasCompetitivoToday' => Partidas::whereDate('created_at', today())->count(),
+            'countPartidasCompetitivo' => Partidas::count(),
+            'countPartidasCompetitivoToday' => Partidas::whereDate('created_at', today())->count(),
 
             'jogadoresNaFilaAgoraCompetitivo' => Fila::count(),
 

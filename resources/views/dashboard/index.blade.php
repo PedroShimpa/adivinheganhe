@@ -61,9 +61,9 @@
         <div class="col-md-3">
             <div class="card text-white bg-secondary shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title">Respostas Competitivo</h5>
-                    <p class="card-text display-6">{{ $countRespostasCompetitivo }}</p>
-                    <small>Hoje: {{ $countRespostasCompetitivoToday }}</small>
+                    <h5 class="card-title">Partidas Competitivo</h5>
+                    <p class="card-text display-6">{{ $countPartidasCompetitivo }}</p>
+                    <small>Hoje: {{ $countPartidasCompetitivoToday }}</small>
                 </div>
             </div>
         </div>
