@@ -91,7 +91,7 @@
                 <tbody>
                     @foreach($premiacoes as $premiacao)
                     <tr>
-                        <td>{{ $premiacao->created_at->format('d/m/Y H:i') }}</td>
+                        <td>{{ $premiacao->created_at?->format('d/m/Y H:i') }}</td>
                         <td>{{ $premiacao->name }}</td>
                         <td>{{ $premiacao->titulo }}</td>
                     </tr>
