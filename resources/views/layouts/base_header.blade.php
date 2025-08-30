@@ -1,12 +1,12 @@
 @if(!Auth::check())
-<div class="alert alert-warning text-center rounded-0 mb-3 animate__animated animate__fadeInDown">
+<div class="alert alert-warning text-center rounded-0 mb-3 ">
     <strong>🎯 Você precisa se registrar para jogar.</strong>
     <a href="{{ route('register') }}" class="text-decoration-underline text-primary">Clique aqui para registrar-se</a>
 </div>
 @endif
 
 @if(Auth::check() && !auth()->user()->whatsapp)
-<div class="alert alert-warning text-center rounded-0 mb-3 animate__animated animate__fadeInDown">
+<div class="alert alert-warning text-center rounded-0 mb-3 ">
     <strong>📱 Você ainda não cadastrou seu WhatsApp!</strong><br>
     Você precisa dele cadastrado para receber os prêmios em caso de acerto.<br>
     Cadastre agora mesmo:
@@ -18,7 +18,7 @@
 
 
 @if(Auth::check())
-<div class="mb-4 p-4 card text-center animate__animated animate__fadeInUp">
+<div class="mb-4 p-4 card text-center ">
     <h5 class="mb-3 ">
         🎯 Indique e ganhe <strong>{{ env('INDICATION_ADICIONAL')}} palpites por adivinhador registrado em seu link</strong>
     </h5>

@@ -52,7 +52,7 @@
                         </div> -->
                     </div>
 
-                    <div id="comentarios-post-{{ $post->id }}" class="comentarios-box d-none mt-3 p-3 rounded-4 bg-light shadow-sm animate__animated">
+                    <div id="comentarios-post-{{ $post->id }}" class="comentarios-box d-none mt-3 p-3 rounded-4 bg-light shadow-sm ">
                         <div class="comentarios-list small mb-3 text-dark">
                         </div>
 
