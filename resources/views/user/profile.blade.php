@@ -149,13 +149,13 @@
 <ul class="nav nav-tabs mb-3 custom-tabs" id="profileTabs" role="tablist">
     <li class="nav-item" role="presentation">
         <button class="nav-link " id="posts-tab" data-bs-toggle="tab" data-bs-target="#posts"
-            type="button" role="tab" aria-controls="posts" aria-selected="true">
+            type="button" role="tab" aria-controls="posts" aria-selected="false">
             Publicações
         </button>
     </li>
     <li class="nav-item" role="presentation">
         <button class="nav-link active" id="history-tab" data-bs-toggle="tab" data-bs-target="#history"
-            type="button" role="tab" aria-controls="history" aria-selected="false">
+            type="button" role="tab" aria-controls="history" aria-selected="true">
             Histórico Competitivo
         </button>
     </li>
@@ -163,7 +163,7 @@
 
 <div class="tab-content" id="profileTabsContent">
     <!-- Publicações -->
-    <div class="tab-pane fade show " id="posts" role="tabpanel" aria-labelledby="posts-tab">
+    <div class="tab-pane fade  " id="posts" role="tabpanel" aria-labelledby="posts-tab">
         @forelse($user->posts as $post)
             @include('partials.post')
         @empty
@@ -176,7 +176,7 @@
     </div>
 
     <!-- Histórico Competitivo -->
-    <div class="tab-pane fade active" id="history" role="tabpanel" aria-labelledby="history-tab">
+    <div class="tab-pane fade active show" id="history" role="tabpanel" aria-labelledby="history-tab">
         <div id="partidas-list">
             @include('partials.user_partidas', ['userPartidas' => $userPartidas])
         </div>
