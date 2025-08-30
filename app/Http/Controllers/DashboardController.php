@@ -41,7 +41,7 @@ class DashboardController extends Controller
             'jogadoresNaFilaAgoraCompetitivo' => Fila::count(),
 
             'respostasAdivinhacoesAtivas' => AdivinhacoesRespostas::select('adivinhacoes_respostas.created_at', 'adivinhacoes_respostas.resposta', 'adivinhacoes.resposta as resposta_correta', 'adivinhacoes.titulo', 'users.name')
-                ->join('adivinhacoes', 'adivinhacoes.id', '=', 'adivinhacoes_respostas.adivinhacao_id')->join('users', 'users.id', '=', 'adivinhacoes_respostas.id')
+                ->join('adivinhacoes', 'adivinhacoes.id', '=', 'adivinhacoes_respostas.adivinhacao_id')->join('users', 'users.id', '=', 'adivinhacoes_respostas.user_id')
                 ->where('resolvida', 'N')
                 ->where('exibir_home', 'S')
                 ->where(function ($q) {

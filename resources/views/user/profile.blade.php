@@ -146,6 +146,17 @@
     @else
     <h5 class="fw-bold mb-3">Atividades</h5>
 
+        <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
+            @forelse($user->posts as $post)
+            @include('partials.post')
+            @empty
+            <div class="card shadow-lg border-0 timeline-card " style="min-width: 100%; max-width:100%;">
+                <div class="card-body">
+                    <p class="m-3">Nenhuma publicação ainda.</p>
+                </div>
+            </div>
+            @endforelse
+        </div>
     <ul class="nav nav-tabs mb-3 custom-tabs" id="profileTabs" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="posts-tab" data-bs-toggle="tab" data-bs-target="#posts"

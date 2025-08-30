@@ -106,7 +106,7 @@
         });
 
         function carregarPergunta() {
-            $('#aguardeOponente').remove()
+            $('#aguardeOponente').fadeOut()
             $.get(`/competitivo/partida/${partidaUuid}/pergunta`, function(pergunta) {
                 perguntaAtualId = pergunta.id;
 
