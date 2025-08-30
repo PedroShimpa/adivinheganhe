@@ -21,6 +21,9 @@ class DashboardController extends Controller
 
     public function dashboard()
     {
+           if (!auth()->user()->isAdmin()) {
+            return redirect()->route('home');
+        }
         $data = [
             'countUsers' => User::count(),
             'users' => User::orderBy('id', 'desc')->all(), #listar name, username, email, whatsapp
