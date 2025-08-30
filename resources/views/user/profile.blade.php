@@ -146,17 +146,7 @@
     @else
     <h5 class="fw-bold mb-3">Atividades</h5>
 
-        <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
-            @forelse($user->posts as $post)
-            @include('partials.post')
-            @empty
-            <div class="card shadow-lg border-0 timeline-card " style="min-width: 100%; max-width:100%;">
-                <div class="card-body">
-                    <p class="m-3">Nenhuma publicação ainda.</p>
-                </div>
-            </div>
-            @endforelse
-        </div>
+
     <ul class="nav nav-tabs mb-3 custom-tabs" id="profileTabs" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="posts-tab" data-bs-toggle="tab" data-bs-target="#posts"
@@ -171,22 +161,37 @@
             </button>
         </li>
     </ul>
+
+    <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
+
+        @forelse($user->posts as $post)
+        @include('partials.post')
+        @empty
+        <div class="card shadow-lg border-0 timeline-card " style="min-width: 100%; max-width:100%;">
+            <div class="card-body">
+                <p class="m-3">Nenhuma publicação ainda.</p>
+            </div>
+        </div>
+        @endforelse
+    </div>
+
     <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
         <div id="partidas-list">
             @include('partials.user_partidas', ['userPartidas' => $userPartidas])
         </div>
 
         @if($userPartidas->hasMorePages())
-            <div class="text-center mt-2">
-                <button id="loadMorePartidas" class="btn btn-sm btn-primary" data-next-page="{{ $userPartidas->currentPage() + 1 }}">
-                    Ver mais
-                </button>
-            </div>
+        <div class="text-center mt-2">
+            <button id="loadMorePartidas" class="btn btn-sm btn-primary" data-next-page="{{ $userPartidas->currentPage() + 1 }}">
+                Ver mais
+            </button>
+        </div>
         @endif
     </div>
-    @endif
 
+    @endif
 </div>
+
 @endsection
 
 @push('scripts')
@@ -246,7 +251,7 @@
                 if (data.length > 0) {
                     let html = '';
                     data.forEach(c => {
-                              c.isPost = true
+                        c.isPost = true
                         html += adicionarComentario(c, true);
                     });
                     $list.html(html);
@@ -334,21 +339,21 @@
 
 
     $('#loadMorePartidas').on('click', function() {
-    const btn = $(this);
-    const nextPage = btn.data('next-page');
-    const url = `{{ route('profile.view', $user->username) }}?page=${nextPage}&ajax=partidas`;
+        const btn = $(this);
+        const nextPage = btn.data('next-page');
+        const url = `{{ route('profile.view', $user->username) }}?page=${nextPage}&ajax=partidas`;
 
-    btn.prop('disabled', true).text('Carregando...');
+        btn.prop('disabled', true).text('Carregando...');
 
-    $.get(url, function(res) {
-        $('#partidas-list').append(res.html);
+        $.get(url, function(res) {
+            $('#partidas-list').append(res.html);
 
-        if(res.hasMorePages) {
-            btn.data('next-page', nextPage + 1).prop('disabled', false).text('Ver mais');
-        } else {
-            btn.remove();
-        }
+            if (res.hasMorePages) {
+                btn.data('next-page', nextPage + 1).prop('disabled', false).text('Ver mais');
+            } else {
+                btn.remove();
+            }
+        });
     });
-});
 </script>
 @endpush
