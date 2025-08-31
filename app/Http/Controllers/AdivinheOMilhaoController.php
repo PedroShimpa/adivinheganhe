@@ -18,11 +18,8 @@ class AdivinheOMilhaoController extends Controller
 
     public function create()
     {
-        if (auth()->user()->isAdmin()) {
 
-            return view('adivinhe_o_milhao.create_pergunta');
-        }
-        return redirect()->route('home');
+        return view('adivinhe_o_milhao.create_pergunta');
     }
 
     public function store(StorePerguntaAdivinheOMilhaoRequest $request)

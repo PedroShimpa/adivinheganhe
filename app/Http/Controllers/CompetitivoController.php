@@ -25,17 +25,11 @@ class CompetitivoController extends Controller
 
     public function create_pergunta()
     {
-        if (auth()->user()->isAdmin()) {
-            return view('competitivo.nova_pergunta');
-        }
-        return redirect()->route('home');
+        return view('competitivo.nova_pergunta');
     }
 
     public function store_pergunta(CreatePerguntaCompetitivoRequest $request)
     {
-        if (!auth()->user()->isAdmin()) {
-            return redirect()->route('home');
-        }
         $data = $request->validated();
 
         if ($request->hasFile('arquivo')) {
@@ -229,7 +223,7 @@ class CompetitivoController extends Controller
                     $perdedor = $respostasRodada->firstWhere('correta', false)->user_id;
                     $partida->jogadores()->where('user_id', $vencedor)->update(['vencedor' => 1]);
 
-                    $userVencedor = User::find($vencedor)->rank; 
+                    $userVencedor = User::find($vencedor)->rank;
                     if ($userVencedor) {
                         $userVencedor->elo += env('PONTOS_COMPETITVO', 5);
                         $userVencedor->save();

@@ -196,10 +196,6 @@ class UsersController extends Controller
 
     public function banUser(User $user, Request $request)
     {
-        if (!auth()->user()->isAdmin()) {
-            Log::info(auth()->user()->name . ' tentou banir um jogador sem permissão');
-            return;
-        }
         $user->banned = true;
         $user->banned_info = $request->input('motivo');
 

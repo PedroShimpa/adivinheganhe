@@ -32,10 +32,6 @@ class HomeController extends Controller
 
     public function expiradas()
     {
-        if (!auth()->user()->isAdmin()) {
-
-            return redirect()->route('home');
-        }
         $adivinhacoes =  $this->adivinhacoes->getExpiradas();
 
         $adivinhacoes = $adivinhacoes->filter(function ($a) {

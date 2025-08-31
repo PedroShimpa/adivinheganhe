@@ -10,30 +10,21 @@ use App\Models\Competitivo\Fila;
 use App\Models\Competitivo\Partidas;
 use App\Models\Post;
 use App\Models\User;
-use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
-    public function __construct()
-    {
-        if (!auth()->user()->isAdmin()) {
-            return redirect()->route('home');
-        }
-    }
-
     public function dashboard()
     {
-        if (!auth()->user()->isAdmin()) {
-            Log::info(auth()->user()->name ." (".auth()->user()->id.") ". ' tentou acessar o dashboard sem permissão');
 
-            return redirect()->route('home');
-        }
+        $adivinhacoesAtivas = (new Adivinhacoes())->getAtivas(true);
         $data = [
             'countUsers' => User::where('banned', false)->count(),
             'users' => User::where('banned', false)->get(),
 
             'countAdivinhacoes' => Adivinhacoes::count(),
-            'countAdivinhacoesAtivas' => (new Adivinhacoes())->getAtivas()->count(),
+            'countAdivinhacoesAtivas' => $adivinhacoesAtivas->count(),
+
+            'adivinhacoesAtivas' => $adivinhacoesAtivas,
 
             'countPosts' => Post::count(),
             'countRespostasClassico' => AdivinhacoesRespostas::count(),

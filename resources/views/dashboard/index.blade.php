@@ -104,6 +104,68 @@
 
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-light">
+            <h5 class="mb-0">Adivinhações Ativas</h5>
+        </div>
+        <div class="card-body">
+            <table id="premiacoesTable" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Data de criação</th>
+                        <th>Título</th>
+                        <th>Qtd Respostas</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($adivinhacoesAtivas as $adivinhacao)
+                    <tr>
+                        <td>{{ $adivinhacao->uuid }}</td>
+                        <td>{{ $adivinhacao->created_at?->format('d/m/Y H:i') }}</td>
+                        <td>{{ $adivinhacao->titulo }}</td>
+                        <td>{{ $adivinhacao->respostas->count() }}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#removeAdivinhacao-{{ $adivinhacao->id }}">
+                                Remover
+                            </button>
+                        </td>
+                    </tr>
+
+                    <div class="modal fade" id="removeAdivinhacao-{{ $adivinhacao->id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <form action="{{ route('adivinhacoes.delete', ['adivinhacao' => $adivinhacao->uuid]) }}" method="POST">
+                                    @method('DELETE')
+                                    @csrf
+                                    <div class="modal-header bg-danger text-white">
+                                        <h5 class="modal-title">Excluir Adivinhação</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>
+                                            Tem certeza que deseja excluir a adivinhação?
+                                            <strong>{{ $adivinhacao->titulo }}</strong>?
+                                        </p>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
             <h5 class="mb-0">Respostas Adivinhações Ativas</h5>
         </div>
         <div class="card-body">

@@ -46,71 +46,25 @@ class AdivinhacoesController extends Controller
 
     public function create()
     {
-        if (auth()->user()->isAdmin()) {
-            $regioes = Regioes::all();
-            return view('adivinhacoes.create')->with(compact('regioes'));
-        }
-        return redirect()->route('home');
+        $regioes = Regioes::all();
+        return view('adivinhacoes.create')->with(compact('regioes'));
     }
 
-    public function view(Adivinhacoes $adivinhacao)
+    public function edit(Adivinhacoes $adivinhacao)
     {
-        if (auth()->user()->isAdmin()) {
-            $regioes = Regioes::all();
+        $regioes = Regioes::all();
 
-            return view('adivinhacoes.view')->with(compact('adivinhacao', 'regioes'));
-        }
-        return redirect()->route('home');
+        return view('adivinhacoes.view')->with(compact('adivinhacao', 'regioes'));
     }
 
     public function update(UpdateAdivinhacoesRequest $request, $adivinhacaoId)
     {
-        if (auth()->user()->isAdmin()) {
-            $data = $request->validated();
+        $data = $request->validated();
 
-            $imagem = $request->file('imagem');
-            $hash = Str::random(10);
-            $fileName = $hash . '_' . time() . '.webp';
-            if (!empty($imagem) && !$imagem->getClientOriginalExtension() != 'webp') {
-
-                $image = Image::read($imagem)->encodeByExtension('webp', 85);
-
-                $filePath = 'imagens_adivinhacoes/' . $fileName;
-
-                Storage::disk('s3')->put($filePath, (string) $image);
-
-                $urlImagem = Storage::disk('s3')->url($filePath);
-
-                $data['imagem'] = $urlImagem;
-
-                $data['descricao'] = $request->input('descricao');
-            }
-
-            $data['descricao'] = $request->input('descricao');
-
-            if (!empty($data['expire_at'])) {
-                $data['expire_at'] = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i', $data['expire_at'])->format('Y-m-d H:i:s');
-            }
-            Adivinhacoes::where('id', $adivinhacaoId)->update($data);
-
-            if ($request->input('enviar_alerta_global') == 'S') {
-                broadcast(new AlertaGlobal('Adivinhação Editada', $data['titulo'] . ' foi atualizada, acesse a pagina inicial para ver'))->toOthers();
-            }
-
-            return redirect()->route('adivinhacoes.index', Adivinhacoes::find($adivinhacaoId)->uuid);
-        }
-
-        return redirect()->route('home');
-    }
-
-    public function store(StoreAdivinhacoesRequest $request)
-    {
-        if (auth()->user()->isAdmin()) {
-            $data = $request->validated();
-
-            $imagem = $request->file('imagem');
-            $hash = Str::random(10);
-            $fileName = $hash . '_' . time() . '.webp';
+        $imagem = $request->file('imagem');
+        $hash = Str::random(10);
+        $fileName = $hash . '_' . time() . '.webp';
+        if (!empty($imagem) && !$imagem->getClientOriginalExtension() != 'webp') {
 
             $image = Image::read($imagem)->encodeByExtension('webp', 85);
 
@@ -123,32 +77,64 @@ class AdivinhacoesController extends Controller
             $data['imagem'] = $urlImagem;
 
             $data['descricao'] = $request->input('descricao');
-
-
-            if (!empty($data['expire_at'])) {
-                $data['expire_at'] = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i', $data['expire_at'])->format('Y-m-d H:i:s');
-            }
-
-            if (!empty($data['liberado_at'])) {
-                $data['liberado_at'] = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i', $data['liberado_at'])->format('Y-m-d H:i:s');
-            }
-
-            $adivinhacao = Adivinhacoes::create($data);
-            if ($request->input('enviar_alerta_global') == 'S') {
-
-                broadcast(new AlertaGlobal('Nova Adivinhação', $data['titulo'] . ' adicionada, acesse a pagina inicial para ver'))->toOthers();
-            }
-            $titulo = $adivinhacao->titulo;
-            $url = route('adivinhacoes.index', $adivinhacao->uuid);
-
-            if ($request->input('enviar_email') == 'S') {
-                dispatch(new EnviarNotificacaoNovaAdivinhacao($titulo, $url));
-            }
-
-            return redirect()->route('adivinhacoes.index', $adivinhacao->uuid);
         }
 
-        return redirect()->route('home');
+        $data['descricao'] = $request->input('descricao');
+
+        if (!empty($data['expire_at'])) {
+            $data['expire_at'] = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i', $data['expire_at'])->format('Y-m-d H:i:s');
+        }
+        Adivinhacoes::where('id', $adivinhacaoId)->update($data);
+
+        if ($request->input('enviar_alerta_global') == 'S') {
+            broadcast(new AlertaGlobal('Adivinhação Editada', $data['titulo'] . ' foi atualizada, acesse a pagina inicial para ver'))->toOthers();
+        }
+
+        return redirect()->route('adivinhacoes.index', Adivinhacoes::find($adivinhacaoId)->uuid);
+    }
+
+    public function store(StoreAdivinhacoesRequest $request)
+    {
+        $data = $request->validated();
+
+        $imagem = $request->file('imagem');
+        $hash = Str::random(10);
+        $fileName = $hash . '_' . time() . '.webp';
+
+        $image = Image::read($imagem)->encodeByExtension('webp', 85);
+
+        $filePath = 'imagens_adivinhacoes/' . $fileName;
+
+        Storage::disk('s3')->put($filePath, (string) $image);
+
+        $urlImagem = Storage::disk('s3')->url($filePath);
+
+        $data['imagem'] = $urlImagem;
+
+        $data['descricao'] = $request->input('descricao');
+
+
+        if (!empty($data['expire_at'])) {
+            $data['expire_at'] = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i', $data['expire_at'])->format('Y-m-d H:i:s');
+        }
+
+        if (!empty($data['liberado_at'])) {
+            $data['liberado_at'] = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i', $data['liberado_at'])->format('Y-m-d H:i:s');
+        }
+
+        $adivinhacao = Adivinhacoes::create($data);
+        if ($request->input('enviar_alerta_global') == 'S') {
+
+            broadcast(new AlertaGlobal('Nova Adivinhação', $data['titulo'] . ' adicionada, acesse a pagina inicial para ver'))->toOthers();
+        }
+        $titulo = $adivinhacao->titulo;
+        $url = route('adivinhacoes.index', $adivinhacao->uuid);
+
+        if ($request->input('enviar_email') == 'S') {
+            dispatch(new EnviarNotificacaoNovaAdivinhacao($titulo, $url));
+        }
+
+        return redirect()->route('adivinhacoes.index', $adivinhacao->uuid);
     }
 
     public function findUserReply(Request $request)
@@ -192,5 +178,11 @@ class AdivinhacoesController extends Controller
             'liked' => $liked,
             'likes_count' => $adivinhacao->likes()->count()
         ]);
+    }
+
+    public function deletar(Adivinhacoes $adivinhacao)
+    {
+        $adivinhacao->delete();
+        return redirect()->back();
     }
 }

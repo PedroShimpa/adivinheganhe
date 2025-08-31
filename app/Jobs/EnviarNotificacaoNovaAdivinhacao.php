@@ -23,7 +23,7 @@ class EnviarNotificacaoNovaAdivinhacao implements ShouldQueue
 
     public function handle(): void
     {
-        User::select('users.email')->leftJoin('emails_bloqueados', 'emails_bloqueados.email', '=', 'users.email')->whereNull('emails_bloqueados.id')->chunk(100, function ($usuarios) {
+        User::select('users.email')->leftJoin('emails_bloqueados', 'emails_bloqueados.email', '=', 'users.email')->whereNull('emails_bloqueados.id')->where('banned', false)->chunk(100, function ($usuarios) {
             foreach ($usuarios as $usuario) {
                 Mail::to($usuario->email)
                     ->queue(new NotifyNewAdivinhacaoMail($this->titulo, $this->url));

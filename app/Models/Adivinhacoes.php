@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 class Adivinhacoes extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $cacheCooldownSeconds = 60;
 
@@ -39,9 +40,14 @@ class Adivinhacoes extends Model
         return 'uuid';
     }
 
-    public function getAtivas()
+    public function respostas()
     {
-        return $this->select(
+        return $this->hasMany(AdivinhacoesRespostas::class, 'adivinhacao_id');
+    }
+
+    public function getAtivas($withRespostas = false)
+    {
+        $querie =  $this->select(
             'id',
             'uuid',
             'titulo',
@@ -65,8 +71,14 @@ class Adivinhacoes extends Model
             ->where(function ($q) {
                 $q->where('liberado_at', '<=', now());
                 $q->orWhereNull('liberado_at');
-            })
-            ->orderBy('id', 'desc')
+            });
+
+            if($withRespostas) {
+                $querie->with('respostas');
+            }
+    
+
+            return $querie->orderBy('liberado_at', 'desc')
             ->get();
     }
 
