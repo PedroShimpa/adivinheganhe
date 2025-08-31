@@ -9,7 +9,6 @@
         <p class="text-white">Visão geral do sistema</p>
     </div>
 
-    <!-- Cards de estatísticas -->
     <div class="row g-3 mb-4">
         <div class="col-md-3">
             <div class="card text-white bg-primary shadow-sm">
@@ -80,9 +79,10 @@
             <h5 class="mb-0">Premiações</h5>
         </div>
         <div class="card-body">
-            <table class="table table-striped table-hover">
+            <table id="premiacoesTable" class="table table-striped table-hover">
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Data</th>
                         <th>Usuário</th>
                         <th>Título</th>
@@ -91,6 +91,7 @@
                 <tbody>
                     @foreach($premiacoes as $premiacao)
                     <tr>
+                        <td>{{ $premiacao->id }}</td>
                         <td>{{ $premiacao->created_at?->format('d/m/Y H:i') }}</td>
                         <td>{{ $premiacao->name }}</td>
                         <td>{{ $premiacao->titulo }}</td>
@@ -209,6 +210,13 @@
 
 <script>
     $(document).ready(function() {
+        $('#premiacoesTable').DataTable({
+            pageLength: 10,
+            lengthChange: false,
+            order: [
+                [0, 'desc']
+            ]
+        });
         $('#usersTable').DataTable({
             pageLength: 10,
             lengthChange: false,

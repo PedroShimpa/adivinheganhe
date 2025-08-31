@@ -39,7 +39,7 @@ class DashboardController extends Controller
             'countRespostasClassico' => AdivinhacoesRespostas::count(),
             'countRespostasClassicoToday' => AdivinhacoesRespostas::whereDate('created_at', today())->count(),
 
-            'premiacoes' => AdivinhacoesPremiacoes::select('adivinhacoes_premiacoes.created_at', 'users.name', 'adivinhacoes.titulo')
+            'premiacoes' => AdivinhacoesPremiacoes::select('adivinhacoes_premiacoes.id', 'adivinhacoes_premiacoes.created_at', 'users.name', 'adivinhacoes.titulo')
                 ->join('adivinhacoes', 'adivinhacoes.id', '=', 'adivinhacoes_premiacoes.adivinhacao_id')->join('users', 'users.id', '=', 'adivinhacoes_premiacoes.user_id')
                 ->orderBy('adivinhacoes_premiacoes.id', 'desc')->get(),
 
