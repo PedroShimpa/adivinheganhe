@@ -74,7 +74,7 @@ jobs:
           username: ${{ secrets.SSH2_USER }}
           key: ${{ secrets.SSH2_KEY }}
           script: |
-            cd /root/adivinheganhe
+            cd /var/www/adivinheganhe
             rm composer.lock
             git stash
             git pull origin master
