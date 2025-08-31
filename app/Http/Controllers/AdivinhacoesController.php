@@ -188,7 +188,6 @@ class AdivinhacoesController extends Controller
             ]);
             $liked = true;
         }
-
         return response()->json([
             'liked' => $liked,
             'likes_count' => $adivinhacao->likes()->count()
