@@ -24,7 +24,7 @@ class DashboardController extends Controller
     public function dashboard()
     {
         if (!auth()->user()->isAdmin()) {
-            Log::info(auth()->user()->name . ' tentou acessar o dashboard sem permissão');
+            Log::info(auth()->user()->name ." (".auth()->user()->id.") ". ' tentou acessar o dashboard sem permissão');
 
             return redirect()->route('home');
         }
