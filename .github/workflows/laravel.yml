@@ -85,3 +85,21 @@ jobs:
             php artisan cache:clear
             systemctl restart octane
             php artisan scout:queue-import "App\Models\User"
+      - name: Deploy to server 2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH2_HOST }}
+          username: ${{ secrets.SSH2_USER }}
+          key: ${{ secrets.SSH2_KEY }}
+          script: |
+            cd /root/adivinheganhe
+            rm composer.lock
+            git stash
+            git pull origin master
+            composer install --optimize-autoloader --prefer-dist
+            php artisan migrate --force
+            php artisan route:cache
+            php artisan view:clear
+            php artisan cache:clear
+            systemctl restart octane
+            php artisan scout:queue-import "App\Models\User"
