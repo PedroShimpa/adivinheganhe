@@ -96,6 +96,7 @@ Route::middleware(['auth', 'banned'])->group(function () {
     Route::post('posts/comment/{post}', [PostController::class, 'comment'])->name('posts.comment');
     Route::get('posts/comments/{post}', [PostController::class, 'comments'])->name('posts.comments');
     Route::post('/posts/{post}/toggle-like', [PostController::class, 'toggleLike'])->name('posts.toggle-like');
+    Route::delete('/posts/delete/{post}', [PostController::class, 'deletar'])->name('posts.delete');
 
     Route::get('/notificacoes', [UsersController::class, 'getUnreadNotifications'])->name('user.notificacoes');
 

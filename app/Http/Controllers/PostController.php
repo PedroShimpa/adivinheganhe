@@ -96,4 +96,12 @@ class PostController extends Controller
             'likes_count' => $post->likes()->count()
         ]);
     }
+
+    public function deletar(Post $post)
+    {
+
+        if (auth()->user()->isAdmin() || auth()->user()->id == $post->user_id) {
+            return response()->json($post->delete());
+        }
+    }
 }

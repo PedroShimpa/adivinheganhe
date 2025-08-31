@@ -364,6 +364,57 @@
                 });
 
             });
+
+          $('.apagarPost').on('click', function(e) {
+    e.preventDefault();
+
+    let rota = $(this).data('route');
+    let id = $(this).data('id');
+
+    Swal.fire({
+        title: 'Tem certeza?',
+        text: "Essa ação não pode ser desfeita!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sim, excluir!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: rota,
+                type: 'POST',
+                data: {
+                    _method: 'DELETE',
+                    _token: $('meta[name="csrf-token"]').attr('content') 
+                },
+                success: function(res) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Excluído!',
+                        text: 'O post foi deletado com sucesso.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
+                    // remove o elemento da tela
+                    $(`#${id}`).fadeOut(200, function() {
+                        $(this).remove();
+                    });
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erro!',
+                        text: 'Não foi possível excluir. Tente novamente.'
+                    });
+                }
+            });
+        }
+    });
+});
+
         });
     </script>
     <script>
