@@ -142,7 +142,7 @@
                 <thead>
                     <tr>
                         <th>Data</th>
-                        <th>Uusuario</th>
+                        <th>Usuario</th>
                         <th>Adivinhação</th>
                         <th>Comentario</th>
                     </tr>
