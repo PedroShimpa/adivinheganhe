@@ -48,6 +48,7 @@ class ChatController extends Controller
         ]);
 
         event(new \App\Events\ChatMessageSent($message->message, auth()->user()->id,  auth()->user()->username, $message->receiver_id, $message->created_at));
+        ChatMessages::where('user_id', $request->receiver_id)->where('receiver_id', auth()->user()->id)->update(['read_at' => now()]);
         return response()->json(['status' => 'success', 'message' => $message]);
     }
 }

@@ -180,11 +180,9 @@ class AdivinhacoesController extends Controller
         $like = $adivinhacao->likes()->where('user_id', $user->id)->first();
 
         if ($like) {
-            // Se já tiver like, remove
             $like->delete();
             $liked = false;
         } else {
-            // Senão, adiciona like
             $adivinhacao->likes()->create([
                 'user_id' => $user->id
             ]);
