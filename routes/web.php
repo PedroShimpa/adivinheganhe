@@ -124,6 +124,7 @@ Route::middleware(['auth', 'banned'])->group(function () {
 
         #deleções
         Route::delete('/adivinhacoes/deletar/{adivinhacao}', [AdivinhacoesController::class, 'deletar'])->name('adivinhacoes.delete');
+        Route::delete('/premiacoes/deletar/{premiacao}', [AdivinhacoesController::class, 'deletarPremiacao'])->name('premiacoes.delete');
     });
 });
 

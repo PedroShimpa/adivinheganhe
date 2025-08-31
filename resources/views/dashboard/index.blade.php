@@ -3,18 +3,33 @@
 @section('content')
 <div class="container mt-4">
 
-    <!-- Título -->
     <div class="mb-4">
         <h1 class="h3">Dashboard</h1>
         <p class="text-white">Visão geral do sistema</p>
     </div>
 
     <div class="row g-3 mb-4">
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card text-white bg-primary shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Usuários</h5>
                     <p class="card-text display-6">{{ $countUsers }}</p>
+                </div>
+            </div>
+        </div>
+         <div class="col-md-4">
+            <div class="card text-white bg-dark shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Jogadores na Fila Competitivo</h5>
+                    <p class="card-text display-6">{{ $jogadoresNaFilaAgoraCompetitivo }}</p>
+                </div>
+            </div>
+        </div>
+          <div class="col-md-4">
+            <div class="card text-white bg-warning shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Posts</h5>
+                    <p class="card-text display-6">{{ $countPosts }}</p>
                 </div>
             </div>
         </div>
@@ -27,14 +42,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-warning shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Posts</h5>
-                    <p class="card-text display-6">{{ $countPosts }}</p>
-                </div>
-            </div>
-        </div>
+      
         <div class="col-md-3">
             <div class="card text-white bg-danger shadow-sm">
                 <div class="card-body">
@@ -44,9 +52,7 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="row g-3 mb-4">
         <div class="col-md-3">
             <div class="card text-white bg-info shadow-sm">
                 <div class="card-body">
@@ -65,14 +71,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-dark shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Jogadores na Fila Competitivo</h5>
-                    <p class="card-text display-6">{{ $jogadoresNaFilaAgoraCompetitivo }}</p>
-                </div>
-            </div>
-        </div>
+       
     </div>
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-light">
@@ -86,6 +85,7 @@
                         <th>Data</th>
                         <th>Usuário</th>
                         <th>Título</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -95,7 +95,39 @@
                         <td>{{ $premiacao->created_at?->format('d/m/Y H:i') }}</td>
                         <td>{{ $premiacao->name }}</td>
                         <td>{{ $premiacao->titulo }}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#removePremiacao-{{ $premiacao->id }}">
+                                Remover
+                            </button>
+                        </td>
                     </tr>
+
+                    <div class="modal fade" id="removePremiacao-{{ $premiacao->id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <form action="{{ route('premiacoes.delete', ['premiacao' => $premiacao->id]) }}" method="POST">
+                                    @method('DELETE')
+                                    @csrf
+                                    <div class="modal-header bg-danger text-white">
+                                        <h5 class="modal-title">Excluir Adivinhação</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>
+                                            Tem certeza que deseja excluir a premiação?
+                                        </p>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                     @endforeach
                 </tbody>
             </table>

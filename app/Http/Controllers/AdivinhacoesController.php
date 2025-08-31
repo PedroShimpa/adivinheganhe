@@ -11,6 +11,7 @@ use App\Http\Controllers\Traits\AdivinhacaoTrait;
 use App\Http\Requests\UpdateAdivinhacoesRequest;
 use App\Http\Resources\GetCommentsResource;
 use App\Jobs\EnviarNotificacaoNovaAdivinhacao;
+use App\Models\AdivinhacoesPremiacoes;
 use App\Models\Regioes;
 use DateTime;
 use Illuminate\Http\Request;
@@ -183,6 +184,12 @@ class AdivinhacoesController extends Controller
     public function deletar(Adivinhacoes $adivinhacao)
     {
         $adivinhacao->delete();
+        return redirect()->back();
+    }
+
+    public function deletarPremiacao(AdivinhacoesPremiacoes $premiacao)
+    {
+        $premiacao->delete();
         return redirect()->back();
     }
 }
