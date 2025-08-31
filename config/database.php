@@ -143,31 +143,33 @@ return [
 
     'redis' => [
 
-        'client' => env('REDIS_CLIENT', 'phpredis-sentinel'),
+        'client' => env('REDIS_CLIENT', 'phpredis'),
+
+        'options' => [
+            'cluster' => env('REDIS_CLUSTER', 'redis'),
+            'prefix' => env('REDIS_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')) . '-database-'),
+            'persistent' => env('REDIS_PERSISTENT', false),
+        ],
 
         'default' => [
-            'sentinel_host' => env('REDIS_SENTINEL_HOST', '10.0.0.1'),   
-            'sentinel_port' => (int) env('REDIS_SENTINEL_PORT', 26379),
-            'sentinel_service' => env('REDIS_SENTINEL_SERVICE', 'mymaster'),
-            'sentinel_timeout' => (float) env('REDIS_SENTINEL_TIMEOUT', 0),
-            'sentinel_persistent' => env('REDIS_SENTINEL_PERSISTENT', false),
-            'sentinel_retry_interval' => (int) env('REDIS_SENTINEL_RETRY_INTERVAL', 0),
-            'sentinel_read_timeout' => (float) env('REDIS_SENTINEL_READ_TIMEOUT', 0),
-            'sentinel_username' => env('REDIS_SENTINEL_USERNAME'),
-            'sentinel_password' => env('REDIS_SENTINEL_PASSWORD'),
-
+            'url' => env('REDIS_URL'),
+            'host' => env('REDIS_HOST', '127.0.0.1'),
+            'username' => env('REDIS_USERNAME'),
             'password' => env('REDIS_PASSWORD'),
-            'database' => (int) env('REDIS_DB', 0),
+            'port' => env('REDIS_PORT', '6379'),
+            'database' => env('REDIS_DB', '0'),
         ],
 
         'cache' => [
-            'sentinel_host' => env('REDIS_SENTINEL_HOST', '10.0.0.1'),
-            'sentinel_port' => (int) env('REDIS_SENTINEL_PORT', 26379),
-            'sentinel_service' => env('REDIS_SENTINEL_SERVICE', 'mymaster'),
+            'url' => env('REDIS_URL'),
+            'host' => env('REDIS_HOST', '127.0.0.1'),
+            'username' => env('REDIS_USERNAME'),
             'password' => env('REDIS_PASSWORD'),
-            'database' => (int) env('REDIS_CACHE_DB', 1),
+            'port' => env('REDIS_PORT', '6379'),
+            'database' => env('REDIS_CACHE_DB', '1'),
         ],
-    ],
+
+    ]
 
 
 ];
