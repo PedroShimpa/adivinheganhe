@@ -195,7 +195,6 @@ class User extends Authenticatable
             'username' => $this->username,
             'bio' => $this->bio,
             'perfil_privado' => $this->perfil_privado,
-            'banned' => $this->banned
         ];
     }
     public function rank()

@@ -27,7 +27,7 @@ class UsersController extends Controller
     public function jogadores(Request $request)
     {
         if ($request->input('search')) {
-            $players = User::search($request->input('search'))->where('banned', false)->where('perfil_privado', 'N')->get();
+            $players = User::search($request->input('search'))->where('perfil_privado', 'N')->get();
         } else {
             $players = User::select('username', 'image', 'bio')->where('perfil_privado', 'N')->where('banned', false)->inRandomOrder()->limit(9)->get();
         }
