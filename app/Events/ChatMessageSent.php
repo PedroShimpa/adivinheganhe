@@ -1,6 +1,5 @@
 <?php
 
-// app/Events/ChatMessageSent.php
 namespace App\Events;
 
 use Illuminate\Broadcasting\PrivateChannel;
