@@ -26,6 +26,6 @@ class IsAdminMiddleware
 
         Log::warning("Acesso negado para usuário " . ($user ? "{$user->id} ({$user->username})" : "guest") . " na rota: " . $request->path());
 
-        return redirect()->route('home')->with('error', 'Você não tem permissão para acessar esta página.');
+        return redirect()->route('home');
     }
 }
