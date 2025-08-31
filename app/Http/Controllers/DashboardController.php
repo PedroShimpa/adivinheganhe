@@ -60,7 +60,7 @@ class DashboardController extends Controller
                 ->get(),
 
             'comentarios' => Comment::select('comments.created_at', 'comments.body', 'users.username', 'adivinhacoes.titulo')
-            ->join('adivinhacoes', 'adivinhacoes.adivinhacao_id', '=', 'comments.commentable_id')->join('users', 'users.id', '=', 'comments.user_id')->where('commentable_type', 'commentable_type')
+            ->join('adivinhacoes', 'adivinhacoes.id', '=', 'comments.commentable_id')->join('users', 'users.id', '=', 'comments.user_id')->where('commentable_type', 'commentable_type')
             ->get()
 
         ];
