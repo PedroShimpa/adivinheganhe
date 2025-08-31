@@ -67,24 +67,6 @@ jobs:
     if: github.ref == 'refs/heads/master'
 
     steps:
-      - name: Deploy to server
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            cd /var/www/adivinheganhe
-            rm composer.lock
-            git stash
-            git pull origin master
-            composer install --optimize-autoloader
-            php artisan migrate --force
-            php artisan route:cache
-            php artisan view:clear
-            php artisan cache:clear
-            systemctl restart octane
-            php artisan scout:queue-import "App\Models\User"
       - name: Deploy to server 2
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -102,4 +84,5 @@ jobs:
             php artisan view:clear
             php artisan cache:clear
             systemctl restart octane
+            php artisan scout:index users
             php artisan scout:queue-import "App\Models\User"

@@ -174,7 +174,6 @@ class User extends Authenticatable
         return $this->unreadNotifications()->count();
     }
 
-
     public function feedPosts()
     {
         $friendIds = $this->friends()->pluck('id')->toArray();
@@ -195,7 +194,8 @@ class User extends Authenticatable
             'name' => $this->name,
             'username' => $this->username,
             'bio' => $this->bio,
-            'perfil_privado' => $this->perfil_privado
+            'perfil_privado' => $this->perfil_privado,
+            'banned' => $this->banned
         ];
     }
     public function rank()
