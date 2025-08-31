@@ -85,4 +85,4 @@ jobs:
             php artisan cache:clear
             systemctl restart octane
             php artisan scout:index users
-            php artisan scout:queue-import "App\Models\User"
+            php artisan scout:import "App\Models\User"
