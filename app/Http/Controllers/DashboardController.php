@@ -6,6 +6,7 @@ use App\Models\Adivinhacoes;
 use App\Models\AdivinhacoesPremiacoes;
 use App\Models\AdivinhacoesRespostas;
 use App\Models\AdivinheOMilhao\InicioJogo;
+use App\Models\Comment;
 use App\Models\Competitivo\Fila;
 use App\Models\Competitivo\Partidas;
 use App\Models\Post;
@@ -30,7 +31,7 @@ class DashboardController extends Controller
             'countRespostasClassico' => AdivinhacoesRespostas::count(),
             'countRespostasClassicoToday' => AdivinhacoesRespostas::whereDate('created_at', today())->count(),
 
-            'premiacoes' => AdivinhacoesPremiacoes::select('adivinhacoes_premiacoes.id', 'adivinhacoes_premiacoes.created_at', 'users.name', 'adivinhacoes.titulo')
+            'premiacoes' => AdivinhacoesPremiacoes::select('adivinhacoes_premiacoes.id', 'adivinhacoes_premiacoes.created_at', 'users.name', 'users.username', 'adivinhacoes.titulo')
                 ->join('adivinhacoes', 'adivinhacoes.id', '=', 'adivinhacoes_premiacoes.adivinhacao_id')->join('users', 'users.id', '=', 'adivinhacoes_premiacoes.user_id')
                 
                 ->orderBy('adivinhacoes_premiacoes.id', 'desc')->get(),
@@ -43,7 +44,7 @@ class DashboardController extends Controller
 
             'jogadoresNaFilaAgoraCompetitivo' => Fila::count(),
 
-            'respostasAdivinhacoesAtivas' => AdivinhacoesRespostas::select('adivinhacoes_respostas.created_at', 'adivinhacoes_respostas.resposta', 'adivinhacoes.resposta as resposta_correta', 'adivinhacoes.titulo', 'users.name')
+            'respostasAdivinhacoesAtivas' => AdivinhacoesRespostas::select('adivinhacoes_respostas.created_at', 'adivinhacoes_respostas.resposta', 'adivinhacoes.resposta as resposta_correta', 'adivinhacoes.titulo', 'users.name',  'users.username')
                 ->join('adivinhacoes', 'adivinhacoes.id', '=', 'adivinhacoes_respostas.adivinhacao_id')->join('users', 'users.id', '=', 'adivinhacoes_respostas.user_id')
                 ->where('resolvida', 'N')
                 ->where('exibir_home', 'S')
@@ -56,7 +57,11 @@ class DashboardController extends Controller
                     $q->orWhereNull('liberado_at');
                 })
                 ->orderBy('adivinhacoes_respostas.id', 'desc')
-                ->get()
+                ->get(),
+
+            'comentarios' => Comment::select('comments.created_at', 'comments.body', 'users.username', 'adivinhacoes.titulo')
+            ->join('adivinhacoes', 'adivinhacoes.adivinhacao_id', '=', 'comments.commentable_id')->join('users', 'users.id', '=', 'comments.user_id')->where('commentable_type', 'commentable_type')
+            ->get()
 
         ];
         return view('dashboard.index')->with($data);

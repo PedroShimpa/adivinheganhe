@@ -17,7 +17,7 @@
                 </div>
             </div>
         </div>
-         <div class="col-md-4">
+        <div class="col-md-4">
             <div class="card text-white bg-dark shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Jogadores na Fila Competitivo</h5>
@@ -25,7 +25,7 @@
                 </div>
             </div>
         </div>
-          <div class="col-md-4">
+        <div class="col-md-4">
             <div class="card text-white bg-warning shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Posts</h5>
@@ -42,7 +42,7 @@
                 </div>
             </div>
         </div>
-      
+
         <div class="col-md-3">
             <div class="card text-white bg-danger shadow-sm">
                 <div class="card-body">
@@ -71,7 +71,7 @@
                 </div>
             </div>
         </div>
-       
+
     </div>
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-light">
@@ -93,7 +93,7 @@
                     <tr>
                         <td>{{ $premiacao->id }}</td>
                         <td>{{ $premiacao->created_at?->format('d/m/Y H:i') }}</td>
-                        <td>{{ $premiacao->name }}</td>
+                        <td>{{ $premiacao->username }}</td>
                         <td>{{ $premiacao->titulo }}</td>
                         <td>
                             <button class="btn btn-danger btn-sm"
@@ -128,6 +128,34 @@
                             </div>
                         </div>
                     </div>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Comentarios em Adivinhações</h5>
+        </div>
+        <div class="card-body">
+            <table id="comentariosTable" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Uusuario</th>
+                        <th>Adivinhação</th>
+                        <th>Comentario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($comentarios as $comentario)
+                    <tr>
+                        <td>{{ $comentario->created_at?->format('d/m/Y H:i') }}</td>
+                        <td>{{ $comentario->username }}</td>
+                        <td>{{ $comentario->titulo }}</td>
+                        <td>{{ $comentario->body }}</td>
+
+                    </tr>
                     @endforeach
                 </tbody>
             </table>
@@ -214,7 +242,7 @@
                     @foreach($respostasAdivinhacoesAtivas as $resposta)
                     <tr>
                         <td>{{ $resposta->created_at->format('d/m/Y H:i') }}</td>
-                        <td>{{ $resposta->name }}</td>
+                        <td>{{ $resposta->username }}</td>
                         <td>{{ $resposta->titulo }}</td>
                         <td>{{ $resposta->resposta }}</td>
                     </tr>
@@ -304,6 +332,13 @@
 
 <script>
     $(document).ready(function() {
+        $('#comentariosTable').DataTable({
+            pageLength: 10,
+            lengthChange: false,
+            order: [
+                [0, 'desc']
+            ]
+        });
         $('#premiacoesTable').DataTable({
             pageLength: 10,
             lengthChange: false,
