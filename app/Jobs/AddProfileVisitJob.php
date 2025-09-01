@@ -14,18 +14,7 @@ class AddProfileVisitJob implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $userId;
-    protected $userName;
-    protected $visitedId;
-    protected $visitedMail;
-
-    public function __construct($userId, $userName, $visitedId, $visitedMail)
-    {
-        $this->userId = $userId;
-        $this->userName = $userName;
-        $this->visitedId = $visitedId;
-        $this->visitedMail = $visitedMail;
-    }
+    public function __construct(protected $userId, protected $userName, protected $visitedId, protected $visitedMail) {}
 
     public function handle()
     {

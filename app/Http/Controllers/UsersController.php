@@ -55,6 +55,7 @@ class UsersController extends Controller
         if(auth()->check() && auth()->user()->id != $user->id) {
             dispatch(new AddProfileVisitJob(auth()->user()->id, auth()->user()->username, $user->id, $user->email));
         }
+        
         $userPartidas = $user->partidas()
             ->with('partida.jogadores.user') 
             ->orderByDesc('partida_id')    
