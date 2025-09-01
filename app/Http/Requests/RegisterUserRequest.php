@@ -29,7 +29,7 @@ class RegisterUserRequest extends FormRequest
             'username' => ['required', 'string', 'max:255', 'unique:users,username', 'regex:/^[a-z0-9_]+$/i', 'lowercase'],
             'password' => ['required', Rules\Password::defaults()],
             'indicated_by' => ['nullable', 'string', 'exists:users,uuid'],
-            'fingerprint' => ['required', 'string']
+            'fingerprint' => ['nullable', 'string']
         ];
     }
 
