@@ -113,11 +113,11 @@ Route::middleware(['auth', 'banned'])->group(function () {
     Route::middleware(['isAdmin'])->group(function () {
         Route::post('users/ban-player/{user}', [UsersController::class, 'banUser'])->name('user.ban');
         
-        Route::get('/adivinhacoes/new', [AdivinhacoesController::class, 'create'])->name('adivinhacoes.new');
-        Route::post('/adivinhacoes/create', [AdivinhacoesController::class, 'store'])->name('adivinhacoes.store');
+        Route::get('/a/new', [AdivinhacoesController::class, 'create'])->name('adivinhacoes.new');
+        Route::post('/a/create', [AdivinhacoesController::class, 'store'])->name('adivinhacoes.store');
         Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
-        Route::put('/adivinhacoes/{adivinhacaoId}', [AdivinhacoesController::class, 'update'])->name('adivinhacoes.update')->whereNumber('adivinhacaoId');
-        Route::get('/adivinhacoes/view/{adivinhacao}', [AdivinhacoesController::class, 'edit'])->name('adivinhacoes.view');
+        Route::put('/a/{adivinhacaoId}', [AdivinhacoesController::class, 'update'])->name('adivinhacoes.update')->whereNumber('adivinhacaoId');
+        Route::get('/a/view/{adivinhacao}', [AdivinhacoesController::class, 'edit'])->name('adivinhacoes.view');
         Route::get('/adivinhe-o-milhao/create-pergunta', [AdivinheOMilhaoController::class, 'create'])->name('adivinhe_o_milhao.create_pergunta');
         Route::post('/adivinhe-o-milhao/create-pergunta', [AdivinheOMilhaoController::class, 'store'])->name('adivinhe_o_milhao.store_pergunta');
         Route::get('/competitivo/nova-pergunta', [CompetitivoController::class, 'create_pergunta'])->name('competitivo.nova_pergunta');
