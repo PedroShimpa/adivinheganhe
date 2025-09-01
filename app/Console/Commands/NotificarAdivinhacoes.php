@@ -49,7 +49,7 @@ class NotificarAdivinhacoes extends Command
         $headers = ["Authorization" => "Bearer $token"];
 
         foreach ($adivinhacoes as $adiv) {
-            if ($adiv->notificar_email == 1) {
+            if ($adiv->notificar_email == 1 && empty($adiv->notificado_email_em)) {
 
                 $titulo = $adiv->titulo;
                 $url = route('adivinhacoes.index', $adiv->uuid);
@@ -57,7 +57,7 @@ class NotificarAdivinhacoes extends Command
 
                 DB::table('adivinhacoes')->where('id', $adiv->id)->update(['notificado_email_em' => now()]);
             }
-            if ($adiv->notificar_whatsapp == 1) {
+            if ($adiv->notificar_whatsapp == 1 && empty($adiv->notificar_whatsapp_em)) {
                 $mensagem = "*Nova adivinhação adicionada!*\n{$adiv->titulo}\nJogue em: https://adivinheganhe.com.br/adivinhacoes/{$adiv->uuid}";
 
                 $payload = [
