@@ -4,7 +4,7 @@
 
 @if($recordista)
 <div class="container mt-5 mb-4">
-    <div class="card border-0 shadow-lg rounded-4 overflow-hidden animate__animated animate__fadeInUp">
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden ">
         <div class="card-body text-center p-5"
             style="background: linear-gradient(135deg, #ff512f, #dd2476); color: white;">
 

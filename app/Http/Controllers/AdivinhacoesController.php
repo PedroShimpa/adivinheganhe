@@ -34,7 +34,7 @@ class AdivinhacoesController extends Controller
                 $q->where('user_id', auth()->id());
             }]);
         }
-        
+
         $this->customize($adivinhacao);
 
         $respostas = collect([]);
@@ -109,15 +109,27 @@ class AdivinhacoesController extends Controller
         $data = $request->validated();
 
         $imagem = $request->file('imagem');
-        $hash = Str::random(10);
-        $fileName = $hash . '_' . time() . '.webp';
-        $image = Image::read($imagem)->encodeByExtension('webp', 85);
-        $filePath = 'imagens_adivinhacoes/' . $fileName;
-        Storage::disk('s3')->put($filePath, (string) $image);
-        $urlImagem = Storage::disk('s3')->url($filePath);
+
+        $ext = strtolower($imagem->getClientOriginalExtension());
+        if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+
+            $hash = Str::random(10);
+            $fileName = $hash . '_' . time() . '.webp';
+
+            $image = Image::read($imagem)->encodeByExtension('webp', 85);
+            $filePath = 'imagens_adivinhacoes/' . $fileName;
+            Storage::disk('s3')->put($filePath, (string) $image);
+            $urlImagem = Storage::disk('s3')->url($filePath);
+        } else {
+            $hash = Str::random(10);
+            $fileName = $hash . '_' . time() . '.' . $ext;
+
+            Storage::disk('s3')->putFileAs('imagens_adivinhacoes', $imagem, $fileName);
+        }
+
         $data['imagem'] = $urlImagem;
         $data['descricao'] = $request->input('descricao');
-        
+
         if (!empty($data['expire_at'])) {
             $data['expire_at'] = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i', $data['expire_at'])->format('Y-m-d H:i:s');
         }
@@ -127,7 +139,7 @@ class AdivinhacoesController extends Controller
         }
 
         $adivinhacao = Adivinhacoes::create($data);
-        
+
         return redirect()->route('adivinhacoes.index', $adivinhacao->uuid);
     }
 
