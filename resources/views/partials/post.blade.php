@@ -46,13 +46,15 @@
                             data-route="{{ route('posts.comments', $post->id) }}">
                             💬 Comentários
                         </button>
-                        @if(auth()->check() && auth()->user()->id == $post->user_id || auth()->user()->isAdmin())
+                        @auth
+                        @if(auth()->user()->id == $post->user_id || auth()->user()->isAdmin())
                         <button class="btn btn-danger btn-sm rounded-pill apagarPost"
                             data-id="post-{{ $post->id }}"
                             data-route="{{ route('posts.delete', $post->id) }}">
                             Apagar
                         </button>
                         @endif
+                        @endauth
                         <!-- <div>
                             <button class="btn btn-danger btn-sm rounded-pill me-1">❤️ Curtir</button>
                             <button class="btn btn-primary btn-sm rounded-pill">🔗 Compartilhar</button>
