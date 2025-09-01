@@ -109,16 +109,16 @@
 
          
              @auth
-    <div class="d-flex justify-content-between align-items-center flex-wrap mb-3 gap-2">
-        <button type="button" class="btn btn-gradient-primary btn-sm rounded-pill verRespostas" adivinhacao_id="{{ $adivinhacao->id}}" data-bs-toggle="modal" data-bs-target="#modalSuasRespostas">
-            📜 Seus Palpites
-        </button>
-        <button class="btn btn-gradient-info btn-sm mb-3 rounded-pill abrirModalInformacoes" data-bs-toggle="modal" data-bs-target="#modalInformacoes" 
-                titulo="{{ $adivinhacao->titulo. (!empty($adivinhacao->expired_at_br) && $adivinhacao->expired ? ' - EXPIRADA' : '') }}" 
-                descricao="{{ $adivinhacao->descricao}}">
-            ➕ Informações
-        </button>
-    </div>
+            <div class="d-flex justify-content-between align-items-center flex-wrap mb-3 gap-2">
+                <button type="button" class="btn btn-gradient-primary btn-sm rounded-pill verRespostas" adivinhacao_id="{{ $adivinhacao->id}}" data-bs-toggle="modal" data-bs-target="#modalSuasRespostas">
+                    📜 Seus Palpites
+                </button>
+                <button class="btn btn-gradient-info btn-sm mb-3 rounded-pill abrirModalInformacoes" data-bs-toggle="modal" data-bs-target="#modalInformacoes" 
+                        titulo="{{ $adivinhacao->titulo. (!empty($adivinhacao->expired_at_br) && $adivinhacao->expired ? ' - EXPIRADA' : '') }}" 
+                        descricao="{{ $adivinhacao->descricao}}">
+                    ➕ Informações
+                </button>
+            </div>
 
                     @if($adivinhacao->limitExceded)
                         <div class="alert alert-warning small py-2 px-3 rounded-pill">⚠️ Você atingiu o limite de palpites dessa adivinhação para hoje!</div>
@@ -137,7 +137,7 @@
                                     placeholder="💬 Digite seu palpite aqui..."
                                     style="font-size: 1.25rem; height: 60px;"
                                 >
-                                <button class="btn btn-gradient-primary d-flex align-items-center justify-content-center fw-bold"
+                                <button class="btn btn-gradient-primary d-flex align-items-center justify-content-center fw-bold sendResposta"
                                         id="btn-resposta-{{ $adivinhacao->id }}"
                                         style="min-width: 140px; font-size: 1.1rem;"
                                         @if($adivinhacao->expired && !empty($adivinhacao->expired_at_br)) disabled @endif>
