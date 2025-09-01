@@ -51,6 +51,9 @@ Route::get('/banned', function () {
     return view('auth.banned');
 })->name('banned.view');
 
+Route::post('api/auth/google-mobile', [GoogleController::class, 'mobileLoginToken']);
+Route::get('mobile/login-with-token', [GoogleController::class, 'loginWithToken']);
+
 #rotas autenticadas
 
 Route::middleware(['auth', 'banned'])->group(function () {
@@ -113,7 +116,7 @@ Route::middleware(['auth', 'banned'])->group(function () {
     #rotas apenas para administreadores
     Route::middleware(['isAdmin'])->group(function () {
         Route::post('users/ban-player/{user}', [UsersController::class, 'banUser'])->name('user.ban');
-        
+
         Route::get('/a/new', [AdivinhacoesController::class, 'create'])->name('adivinhacoes.new');
         Route::post('/a/create', [AdivinhacoesController::class, 'store'])->name('adivinhacoes.store');
         Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
@@ -131,6 +134,8 @@ Route::middleware(['auth', 'banned'])->group(function () {
         Route::delete('/premiacoes/deletar/{premiacao}', [AdivinhacoesController::class, 'deletarPremiacao'])->name('premiacoes.delete');
     });
 });
+
+
 
 require __DIR__ . '/socket.php';
 require __DIR__ . '/auth.php';
