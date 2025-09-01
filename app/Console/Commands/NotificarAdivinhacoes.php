@@ -54,6 +54,8 @@ class NotificarAdivinhacoes extends Command
                 $titulo = $adiv->titulo;
                 $url = route('adivinhacoes.index', $adiv->uuid);
                 dispatch(new EnviarNotificacaoNovaAdivinhacao($titulo, $url));
+
+                DB::table('adivinhacoes')->where('id', $adiv->id)->update(['notificado_email_em' => now()]);
             }
             if ($adiv->notificar_whatsapp == 1) {
                 $mensagem = "*Nova adivinhação adicionada!*\n{$adiv->titulo}\nJogue em: https://adivinheganhe.com.br/adivinhacoes/{$adiv->uuid}";
@@ -69,9 +71,7 @@ class NotificarAdivinhacoes extends Command
                 try {
                     $resp = Http::withHeaders($headers)->post($SEND_MESSAGE_ENDPOINT, $payload);
                     if ($resp->successful()) {
-                        DB::table('adivinhacoes')
-                            ->where('id', $adiv->id)
-                            ->update(['notificado_canal_whatsapp' => 1]);
+                        DB::table('adivinhacoes')->where('id', $adiv->id)->update(['notificado_whatsapp_em' => now()]);
                     } else {
                         $msg = "Falha ao enviar mensagem para {$adiv->titulo}: " . $resp->body();
                         $this->error($msg);
