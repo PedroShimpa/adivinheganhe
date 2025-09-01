@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Events\NotificacaoEvent;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Jobs\AddProfileVisitJob;
 use App\Mail\BanPlayerMail;
 use App\Mail\FriendrequestMail;
 use App\Models\Friendship;
+use App\Models\ProfileVisits;
 use App\Models\User;
 use App\Notifications\FriendRequestAcceptedNotification;
 use App\Notifications\FriendRequestNotification;
@@ -14,7 +16,6 @@ use App\Notifications\NewFollowerNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
@@ -51,6 +52,9 @@ class UsersController extends Controller
 
     public function view(User $user)
     {
+        if(auth()->check() && auth()->user()->id != $user->id) {
+            dispatch(new AddProfileVisitJob(auth()->user()->id, auth()->user()->username, $user->id, $user->email));
+        }
         $userPartidas = $user->partidas()
             ->with('partida.jogadores.user') 
             ->orderByDesc('partida_id')    
