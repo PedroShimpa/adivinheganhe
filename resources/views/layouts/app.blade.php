@@ -41,6 +41,12 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     </noscript>
     <style>
+        .nav-link.active {
+            background-color: rgba(13, 110, 253, 0.15);
+            /* azul clarinho */
+            border-radius: 8px;
+        }
+
         img {
             -webkit-user-drag: none;
             -khtml-user-drag: none;
@@ -153,66 +159,152 @@
         </div>
         <div class="offcanvas-body d-flex flex-column gap-2">
 
-            <a href="{{ route('sobre') }}" class="nav-link text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePlay"><i class="bi bi-controller me-2"></i> Jogar</a>
+            {{-- ================== Jogar ================== --}}
+            <a href="#collapsePlay"
+                class="nav-link text-white"
+                type="button"
+                data-bs-toggle="collapse"
+                aria-expanded="{{ request()->routeIs('home','competitivo.index','adivinhe_o_milhao.index') ? 'true' : 'false' }}">
+                <i class="bi bi-controller me-2"></i> Jogar
+            </a>
             <div class="accordion" id="playAccordion">
                 <div class="accordion-item bg-dark border-0">
-
-                    <div id="collapsePlay" class="accordion-collapse collapse" data-bs-parent="#playAccordion">
-                        <a href="{{ route('home') }}" class="nav-link text-white">Clássico</a>
-                        <!-- <a href="{{ route('regioes.index') }}" class="nav-link text-white">Clássico por região</a> -->
-                        <a href="{{ route('competitivo.index') }}" class="nav-link text-white">Competitivo</a>
-                        <a href="{{ route('adivinhe_o_milhao.index') }}" class="nav-link text-white">Adivinhe o Milhão</a>
+                    <div id="collapsePlay"
+                        class="accordion-collapse collapse {{ request()->routeIs('home','competitivo.index','adivinhe_o_milhao.index') ? 'show' : '' }}"
+                        data-bs-parent="#playAccordion">
+                        <a href="{{ route('home') }}"
+                            class="nav-link text-white {{ request()->routeIs('home') ? 'active fw-bold text-primary' : '' }}">
+                            Clássico
+                        </a>
+                        {{-- <a href="{{ route('regioes.index') }}" class="nav-link text-white">Clássico por região</a> --}}
+                        <a href="{{ route('competitivo.index') }}"
+                            class="nav-link text-white {{ request()->routeIs('competitivo.index') ? 'active fw-bold text-primary' : '' }}">
+                            Competitivo
+                        </a>
+                        <a href="{{ route('adivinhe_o_milhao.index') }}"
+                            class="nav-link text-white {{ request()->routeIs('adivinhe_o_milhao.index') ? 'active fw-bold text-primary' : '' }}">
+                            Adivinhe o Milhão
+                        </a>
                     </div>
                 </div>
             </div>
-            <a href="{{ route('sobre') }}" class="nav-link text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseComunidade"> <i class="bi bi-people"></i> Comunidade</a>
+
+            {{-- ================== Comunidade ================== --}}
+            <a href="#collapseComunidade"
+                class="nav-link text-white"
+                type="button"
+                data-bs-toggle="collapse"
+                aria-expanded="{{ request()->routeIs('para_voce','jogadores','premiacoes','ranking_classico') ? 'true' : 'false' }}">
+                <i class="bi bi-people"></i> Comunidade
+            </a>
             <div class="accordion" id="playersAccordion">
                 <div class="accordion-item bg-dark border-0">
+                    <div id="collapseComunidade"
+                        class="accordion-collapse collapse {{ request()->routeIs('para_voce','jogadores','premiacoes','ranking_classico') ? 'show' : '' }}"
+                        data-bs-parent="#playersAccordion">
 
-                    <div id="collapseComunidade" class="accordion-collapse collapse" data-bs-parent="#playersAccordion">
                         @auth
-                        <a href="{{ route('para_voce') }}" class="nav-link text-white">Para Você</a>
+                        <a href="{{ route('para_voce') }}"
+                            class="nav-link text-white {{ request()->routeIs('para_voce') ? 'active fw-bold text-primary' : '' }}">
+                            Para Você
+                        </a>
                         @endauth
-                        <a href="{{ route('jogadores') }}" class="nav-link text-white">Jogadores</a>
-                        <a href="{{ route('premiacoes') }}" class="nav-link text-white">Prêmios</a>
-                        <a href="{{ route('ranking_classico') }}" class="nav-link text-white">Ranking - Modo Clássico</a>
+
+                        <a href="{{ route('jogadores') }}"
+                            class="nav-link text-white {{ request()->routeIs('jogadores') ? 'active fw-bold text-primary' : '' }}">
+                            Jogadores
+                        </a>
+                        <a href="{{ route('premiacoes') }}"
+                            class="nav-link text-white {{ request()->routeIs('premiacoes') ? 'active fw-bold text-primary' : '' }}">
+                            Prêmios
+                        </a>
+                        <a href="{{ route('ranking_classico') }}"
+                            class="nav-link text-white {{ request()->routeIs('ranking_classico') ? 'active fw-bold text-primary' : '' }}">
+                            Ranking - Modo Clássico
+                        </a>
                     </div>
                 </div>
             </div>
 
-            <a href="{{ route('sobre') }}" class="nav-link text-white"><i class="bi bi-info-circle"></i> Sobre</a>
+            {{-- ================== Links soltos ================== --}}
+            <a href="{{ route('sobre') }}"
+                class="nav-link text-white {{ request()->routeIs('sobre') ? 'active fw-bold text-primary' : '' }}">
+                <i class="bi bi-info-circle"></i> Sobre
+            </a>
 
-            <a href="{{ route('suporte.index') }}" class="nav-link text-white"><i class="bi bi-life-preserver"></i> Suporte</a>
+            <a href="{{ route('suporte.index') }}"
+                class="nav-link text-white {{ request()->routeIs('suporte.index') ? 'active fw-bold text-primary' : '' }}">
+                <i class="bi bi-life-preserver"></i> Suporte
+            </a>
 
             <hr class="border-secondary">
 
+            {{-- ================== Usuário autenticado ================== --}}
             @auth
-            <a href="{{ route('profile.view', auth()->user()->username) }}" class="nav-link text-white"><i class="bi bi-person-circle"></i> Meu Perfil</a>
-            <a href="{{ route('meus_premios') }}" class="nav-link text-white"><i class="bi bi-gift"></i> Meus Prêmios</a>
-            @if(auth()->user()->isAdmin())
+            <a href="{{ route('profile.view', auth()->user()->username) }}"
+                class="nav-link text-white {{ request()->routeIs('profile.view') ? 'active fw-bold text-primary' : '' }}">
+                <i class="bi bi-person-circle"></i> Meu Perfil
+            </a>
+            <a href="{{ route('meus_premios') }}"
+                class="nav-link text-white {{ request()->routeIs('meus_premios') ? 'active fw-bold text-primary' : '' }}">
+                <i class="bi bi-gift"></i> Meus Prêmios
+            </a>
 
-            <a href="{{ route('sobre') }}" class="nav-link text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdmin"> <i class="bi bi-people"></i> Admin</a>
+            {{-- ================== Admin ================== --}}
+            @if(auth()->user()->isAdmin())
+            <a href="#collapseAdmin"
+                class="nav-link text-white"
+                type="button"
+                data-bs-toggle="collapse"
+                aria-expanded="{{ request()->routeIs('dashboard','adivinhacoes.expiradas','adivinhacoes.new','adivinhe_o_milhao.create_pergunta','competitivo.store_pergunta') ? 'true' : 'false' }}">
+                <i class="bi bi-gear"></i> Admin
+            </a>
             <div class="accordion" id="adminAccordion">
                 <div class="accordion-item bg-dark border-0">
+                    <div id="collapseAdmin"
+                        class="accordion-collapse collapse {{ request()->routeIs('dashboard','adivinhacoes.expiradas','adivinhacoes.new','adivinhe_o_milhao.create_pergunta','competitivo.store_pergunta') ? 'show' : '' }}"
+                        data-bs-parent="#adminAccordion">
 
-                    <div id="collapseAdmin" class="accordion-collapse collapse" data-bs-parent="#adminAccordion">
-                        <a href="{{ route('dashboard') }}" class="nav-link text-white">Dashboard</a>
-                        <a href="{{ route('adivinhacoes.expiradas') }}" class="nav-link text-white">Expiradas</a>
-                        <a href="{{ route('adivinhacoes.new') }}" class="nav-link text-white"></i> Nova Adivinhação</a>
-                        <a href="{{ route('adivinhe_o_milhao.create_pergunta') }}" class="nav-link text-white">Nova Pergunta AOM</a>
-                        <a href="{{ route('competitivo.store_pergunta') }}" class="nav-link text-white">Nova Pergunta Comp</a>
+                        <a href="{{ route('dashboard') }}"
+                            class="nav-link text-white {{ request()->routeIs('dashboard') ? 'active fw-bold text-primary' : '' }}">
+                            Dashboard
+                        </a>
+                        <a href="{{ route('adivinhacoes.expiradas') }}"
+                            class="nav-link text-white {{ request()->routeIs('adivinhacoes.expiradas') ? 'active fw-bold text-primary' : '' }}">
+                            Expiradas
+                        </a>
+                        <a href="{{ route('adivinhacoes.new') }}"
+                            class="nav-link text-white {{ request()->routeIs('adivinhacoes.new') ? 'active fw-bold text-primary' : '' }}">
+                            Nova Adivinhação
+                        </a>
+                        <a href="{{ route('adivinhe_o_milhao.create_pergunta') }}"
+                            class="nav-link text-white {{ request()->routeIs('adivinhe_o_milhao.create_pergunta') ? 'active fw-bold text-primary' : '' }}">
+                            Nova Pergunta AOM
+                        </a>
+                        <a href="{{ route('competitivo.store_pergunta') }}"
+                            class="nav-link text-white {{ request()->routeIs('competitivo.store_pergunta') ? 'active fw-bold text-primary' : '' }}">
+                            Nova Pergunta Comp
+                        </a>
                     </div>
                 </div>
             </div>
             @endif
+
+            {{-- Logout --}}
             <form method="POST" action="{{ route('logout') }}" class="mt-2">
                 @csrf
-                <button type="submit" class="btn btn-danger w-100"><i class="bi bi-box-arrow-right"></i> Sair</button>
+                <button type="submit" class="btn btn-danger w-100">
+                    <i class="bi bi-box-arrow-right"></i> Sair
+                </button>
             </form>
             @else
-            <a href="{{ route('login') }}" class="btn btn-primary w-100"><i class="bi bi-box-arrow-in-right"></i> Entrar</a>
+            {{-- Login --}}
+            <a href="{{ route('login') }}" class="btn btn-primary w-100">
+                <i class="bi bi-box-arrow-in-right"></i> Entrar
+            </a>
             @endauth
         </div>
+
     </div>
 
     <nav class="navbar navbar-dark bg-dark fixed-top d-lg-none px-3">
@@ -365,55 +457,55 @@
 
             });
 
-          $('.apagarPost').on('click', function(e) {
-    e.preventDefault();
+            $('.apagarPost').on('click', function(e) {
+                e.preventDefault();
 
-    let rota = $(this).data('route');
-    let id = $(this).data('id');
+                let rota = $(this).data('route');
+                let id = $(this).data('id');
 
-    Swal.fire({
-        title: 'Tem certeza?',
-        text: "Essa ação não pode ser desfeita!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Sim, excluir!',
-        cancelButtonText: 'Cancelar'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: rota,
-                type: 'POST',
-                data: {
-                    _method: 'DELETE',
-                    _token: $('meta[name="csrf-token"]').attr('content') 
-                },
-                success: function(res) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Excluído!',
-                        text: 'O post foi deletado com sucesso.',
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
+                Swal.fire({
+                    title: 'Tem certeza?',
+                    text: "Essa ação não pode ser desfeita!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Sim, excluir!',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: rota,
+                            type: 'POST',
+                            data: {
+                                _method: 'DELETE',
+                                _token: $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function(res) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Excluído!',
+                                    text: 'O post foi deletado com sucesso.',
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
 
-                    // remove o elemento da tela
-                    $(`#${id}`).fadeOut(200, function() {
-                        $(this).remove();
-                    });
-                },
-                error: function(xhr) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erro!',
-                        text: 'Não foi possível excluir. Tente novamente.'
-                    });
-                }
+                                // remove o elemento da tela
+                                $(`#${id}`).fadeOut(200, function() {
+                                    $(this).remove();
+                                });
+                            },
+                            error: function(xhr) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Erro!',
+                                    text: 'Não foi possível excluir. Tente novamente.'
+                                });
+                            }
+                        });
+                    }
+                });
             });
-        }
-    });
-});
 
         });
     </script>
