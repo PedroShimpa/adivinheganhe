@@ -46,6 +46,7 @@ Route::get('login/google/callback', [GoogleController::class, 'handleGoogleCallb
 Route::get('/adivinhe-o-milhao', [AdivinheOMilhaoController::class, 'index'])->name('adivinhe_o_milhao.index');
 
 Route::post('/webhook/mercadopago', [PagamentosController::class, 'webhook']);
+
 Route::get('/banned', function () {
     return view('auth.banned');
 })->name('banned.view');
@@ -118,6 +119,8 @@ Route::middleware(['auth', 'banned'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
         Route::put('/a/{adivinhacaoId}', [AdivinhacoesController::class, 'update'])->name('adivinhacoes.update')->whereNumber('adivinhacaoId');
         Route::get('/a/view/{adivinhacao}', [AdivinhacoesController::class, 'edit'])->name('adivinhacoes.view');
+        Route::delete('/a/deletar/{adivinhacao}', [AdivinhacoesController::class, 'deletar'])->name('adivinhacoes.delete');
+
         Route::get('/adivinhe-o-milhao/create-pergunta', [AdivinheOMilhaoController::class, 'create'])->name('adivinhe_o_milhao.create_pergunta');
         Route::post('/adivinhe-o-milhao/create-pergunta', [AdivinheOMilhaoController::class, 'store'])->name('adivinhe_o_milhao.store_pergunta');
         Route::get('/competitivo/nova-pergunta', [CompetitivoController::class, 'create_pergunta'])->name('competitivo.nova_pergunta');
@@ -125,7 +128,6 @@ Route::middleware(['auth', 'banned'])->group(function () {
         Route::get('/adivinhacoes-expiradas', [HomeController::class, 'expiradas'])->name('adivinhacoes.expiradas');
 
         #deleções
-        Route::delete('/adivinhacoes/deletar/{adivinhacao}', [AdivinhacoesController::class, 'deletar'])->name('adivinhacoes.delete');
         Route::delete('/premiacoes/deletar/{premiacao}', [AdivinhacoesController::class, 'deletarPremiacao'])->name('premiacoes.delete');
     });
 });

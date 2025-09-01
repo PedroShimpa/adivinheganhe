@@ -86,20 +86,7 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">{{ __('Enviar E-mails?') }}</label>
-                            <select class="form-select" name="enviar_email" required>
-                                <option value="S">Sim</option>
-                                <option value="N" selected>Não</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">{{ __('Enviar Alerta Global?') }}</label>
-                            <select class="form-select" name="enviar_alerta_global" required>
-                                <option value="S">Sim</option>
-                                <option value="N" selected>Não</option>
-                            </select>
-                        </div>
+            
 
                         <div class="mb-3">
                             <label for="liberado_at" class="form-label">{{ __('Liberar em') }}</label>
@@ -128,6 +115,22 @@
                                 @endforeach
                             </select>
                             @error('regiao_id') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">{{ __('Notificações (canal)') }}</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="notificar_whatsapp" id="notificar_whatsapp" value="1" {{ old('notificar_whatsapp') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="notificar_whatsapp">
+                                    WhatsApp
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="notificar_email" id="notificar_email" value="1" {{ old('notificar_email') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="notificar_email">
+                                    E-mail
+                                </label>
+                            </div>
                         </div>
 
 

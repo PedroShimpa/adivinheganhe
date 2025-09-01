@@ -25,7 +25,9 @@ class StoreAdivinhacoesRequest extends FormRequest
             'liberado_at' => ['nullable'],
             'expire_at' => ['nullable'],
             'regiao_id' => ['nullable', 'exists:regioes,id'],
-            'formato_resposta' => ['nullable']
+            'formato_resposta' => ['nullable'],
+            'notificar_whatsapp' => ['nullable'],
+            'notificar_email' => ['nullable'],
         ];
     }
 }

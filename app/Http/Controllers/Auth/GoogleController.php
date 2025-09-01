@@ -44,37 +44,4 @@ class GoogleController extends Controller
 
         return redirect()->route('home');
     }
-
-    public function showExtraForm()
-    {
-        $socialUser = session('social_user');
-        if (!$socialUser) return redirect()->route('home');
-
-        return view('auth.register_extra', ['user' => $socialUser]);
-    }
-
-    public function storeExtraForm(RegisterExtraUserRequest $request)
-    {
-
-        $socialUser = session('social_user');
-        if (!$socialUser) return redirect()->route('home');
-
-        $user = User::create([
-            'name' => $socialUser['name'],
-            'username' => $request->username,
-            'email' => $socialUser['email'],
-            'password' => bcrypt(uniqid()),
-            'email_verified_at' => now(),
-            'cpf' => $request->cpf,
-            'whatsapp' => $request->whatsapp,
-            'fingerprint' => $request->input('fingerprint'),
-            'indicated_by' => session('indicated_by')
-        ]);
-
-        session()->forget('social_user');
-
-        Auth::login($user);
-
-        return redirect()->route('home');
-    }
 }

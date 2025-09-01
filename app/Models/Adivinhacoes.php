@@ -11,8 +11,6 @@ class Adivinhacoes extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $cacheCooldownSeconds = 60;
-
     protected $fillable = [
         'titulo',
         'imagem',
@@ -28,7 +26,12 @@ class Adivinhacoes extends Model
         'dica_valor',
         'regiao_id',
         'visualizacoes',
-        'formato_resposta'
+        'formato_resposta',
+        'enviar_emails',
+        'notificar_whatsapp',
+        'notificar_email',
+        'notificado_email_em',
+        'notificado_whatsapp_em',
     ];
 
     protected $dates = [
@@ -72,9 +75,8 @@ class Adivinhacoes extends Model
                 $q->where('liberado_at', '<=', now());
                 $q->orWhereNull('liberado_at');
             })
-            ->withCount('likes'); // 🔥 já traz quantidade de likes
+            ->withCount('likes'); 
 
-        // 🔥 se usuário está logado, já traz só o like dele
         if (auth()->check()) {
             $query->with(['likes' => function ($q) {
                 $q->where('user_id', auth()->id());
@@ -87,7 +89,7 @@ class Adivinhacoes extends Model
 
         return $query->orderBy('liberado_at', 'desc')->get();
     }
-    
+
     public function getByRegion(int $regiaoId)
     {
         return $this->select(

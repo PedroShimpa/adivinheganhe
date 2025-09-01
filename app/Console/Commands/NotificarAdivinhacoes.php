@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\EnviarNotificacaoNovaAdivinhacao;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -14,12 +15,17 @@ class NotificarAdivinhacoes extends Command
 
     public function handle()
     {
-
         $adivinhacoes = DB::table('adivinhacoes')
-            ->select('id', 'titulo', 'uuid')
             ->whereNotNull('liberado_at')
             ->where('liberado_at', '<', now())
-            ->where('notificado_canal_whatsapp', 0)
+            ->where(
+                function ($q) {
+                    $q->where('notificar_email', 1);
+                    $q->orWhere('notificar_whatsapp', 1);
+                }
+            )
+            ->whereNull('notificado_email_em')
+            ->whereNull('notificado_whatsapp_em')
             ->get();
 
         if ($adivinhacoes->isEmpty()) {
@@ -31,7 +37,6 @@ class NotificarAdivinhacoes extends Command
         $SEND_MESSAGE_ENDPOINT = $API_BASE . env('NOTIFICACAO_API_SEND_PATH');
         $PHONE_ID = env('NOTIFICACAO_PHONE_ID');
 
-        // Obter token
         $tokenRes = Http::post($TOKEN_ENDPOINT);
 
         if (!$tokenRes->successful() || $tokenRes->json('status') !== 'success') {
@@ -44,35 +49,42 @@ class NotificarAdivinhacoes extends Command
         $headers = ["Authorization" => "Bearer $token"];
 
         foreach ($adivinhacoes as $adiv) {
-            $mensagem = "*Nova adivinhação adicionada!*\n{$adiv->titulo}\nJogue em: https://adivinheganhe.com.br/adivinhacoes/{$adiv->uuid}";
+            if ($adiv->notificar_email == 1) {
 
-            $payload = [
-                "phone" => $PHONE_ID,
-                "isGroup" => false,
-                "isNewsletter" => true,
-                "isLid" => false,
-                "message" => $mensagem,
-            ];
+                $titulo = $adiv->titulo;
+                $url = route('adivinhacoes.index', $adiv->uuid);
+                dispatch(new EnviarNotificacaoNovaAdivinhacao($titulo, $url));
+            }
+            if ($adiv->notificar_whatsapp == 1) {
+                $mensagem = "*Nova adivinhação adicionada!*\n{$adiv->titulo}\nJogue em: https://adivinheganhe.com.br/adivinhacoes/{$adiv->uuid}";
 
-            try {
-                $resp = Http::withHeaders($headers)->post($SEND_MESSAGE_ENDPOINT, $payload);
+                $payload = [
+                    "phone" => $PHONE_ID,
+                    "isGroup" => false,
+                    "isNewsletter" => true,
+                    "isLid" => false,
+                    "message" => $mensagem,
+                ];
 
-                if ($resp->successful()) {
-                    DB::table('adivinhacoes')
-                        ->where('id', $adiv->id)
-                        ->update(['notificado_canal_whatsapp' => 1]);
-                } else {
-                    $msg = "❌ Falha ao enviar mensagem para {$adiv->titulo}: " . $resp->body();
+                try {
+                    $resp = Http::withHeaders($headers)->post($SEND_MESSAGE_ENDPOINT, $payload);
+                    if ($resp->successful()) {
+                        DB::table('adivinhacoes')
+                            ->where('id', $adiv->id)
+                            ->update(['notificado_canal_whatsapp' => 1]);
+                    } else {
+                        $msg = "Falha ao enviar mensagem para {$adiv->titulo}: " . $resp->body();
+                        $this->error($msg);
+                        Log::error($msg);
+                    }
+                } catch (\Exception $e) {
+                    $msg = "Exceção ao enviar mensagem para {$adiv->titulo}: {$e->getMessage()}";
                     $this->error($msg);
                     Log::error($msg);
                 }
-            } catch (\Exception $e) {
-                $msg = "❌ Exceção ao enviar mensagem para {$adiv->titulo}: {$e->getMessage()}";
-                $this->error($msg);
-                Log::error($msg);
             }
         }
-    
+
         return Command::SUCCESS;
     }
 }
