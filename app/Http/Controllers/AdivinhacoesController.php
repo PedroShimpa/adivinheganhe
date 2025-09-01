@@ -123,8 +123,10 @@ class AdivinhacoesController extends Controller
         } else {
             $hash = Str::random(10);
             $fileName = $hash . '_' . time() . '.' . $ext;
+            $filePath = 'imagens_adivinhacoes/' . $fileName;
 
             Storage::disk('s3')->putFileAs('imagens_adivinhacoes', $imagem, $fileName);
+            $urlImagem = Storage::disk('s3')->url($filePath);
         }
 
         $data['imagem'] = $urlImagem;
