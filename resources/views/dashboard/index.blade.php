@@ -111,7 +111,7 @@
                                     @method('DELETE')
                                     @csrf
                                     <div class="modal-header bg-danger text-white">
-                                        <h5 class="modal-title">Excluir Adivinhação</h5>
+                                        <h5 class="modal-title">Excluir Premiação</h5>
                                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
                                     </div>
                                     <div class="modal-body">
@@ -141,6 +141,7 @@
             <table id="comentariosTable" class="table table-striped table-hover">
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Data</th>
                         <th>Usuario</th>
                         <th>Adivinhação</th>
@@ -150,11 +151,11 @@
                 <tbody>
                     @foreach($comentarios as $comentario)
                     <tr>
+                        <td>{{ $comentario->id }}</td>
                         <td>{{ $comentario->created_at?->format('d/m/Y H:i') }}</td>
                         <td>{{ $comentario->username }}</td>
                         <td>{{ $comentario->titulo }}</td>
                         <td>{{ $comentario->body }}</td>
-
                     </tr>
                     @endforeach
                 </tbody>
@@ -232,6 +233,7 @@
             <table id="respostasTable" class="table table-striped table-hover">
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Data</th>
                         <th>Usuário</th>
                         <th>Título</th>
@@ -241,6 +243,7 @@
                 <tbody>
                     @foreach($respostasAdivinhacoesAtivas as $resposta)
                     <tr>
+                        <td>{{ $resposta->id }}</td>
                         <td>{{ $resposta->created_at->format('d/m/Y H:i') }}</td>
                         <td>{{ $resposta->username }}</td>
                         <td>{{ $resposta->titulo }}</td>
@@ -355,7 +358,7 @@
         });
 
         $('#respostasTable').DataTable({
-            pageLength: 10,
+            pageLength: 20,
             lengthChange: false,
             order: [
                 [0, 'desc']
