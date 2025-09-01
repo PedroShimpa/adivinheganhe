@@ -47,7 +47,7 @@ class Adivinhacoes extends Model
 
     public function getAtivas($withRespostas = false)
     {
-        $querie =  $this->select(
+        $query = $this->select(
             'id',
             'uuid',
             'titulo',
@@ -71,17 +71,23 @@ class Adivinhacoes extends Model
             ->where(function ($q) {
                 $q->where('liberado_at', '<=', now());
                 $q->orWhereNull('liberado_at');
-            });
+            })
+            ->withCount('likes'); // 🔥 já traz quantidade de likes
 
-            if($withRespostas) {
-                $querie->with('respostas');
-            }
-    
+        // 🔥 se usuário está logado, já traz só o like dele
+        if (auth()->check()) {
+            $query->with(['likes' => function ($q) {
+                $q->where('user_id', auth()->id());
+            }]);
+        }
 
-            return $querie->orderBy('liberado_at', 'desc')
-            ->get();
+        if ($withRespostas) {
+            $query->with('respostas');
+        }
+
+        return $query->orderBy('liberado_at', 'desc')->get();
     }
-
+    
     public function getByRegion(int $regiaoId)
     {
         return $this->select(

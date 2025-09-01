@@ -23,8 +23,18 @@ use Intervention\Image\Laravel\Facades\Image;
 class AdivinhacoesController extends Controller
 {
     use AdivinhacaoTrait;
+
     public function index(Adivinhacoes $adivinhacao)
     {
+
+        $adivinhacao->loadCount('likes');
+
+        if (auth()->check()) {
+            $adivinhacao->load(['likes' => function ($q) {
+                $q->where('user_id', auth()->id());
+            }]);
+        }
+        
         $this->customize($adivinhacao);
 
         $respostas = collect([]);

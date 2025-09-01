@@ -100,10 +100,10 @@
                         </a>
                     </div>
                     <div class="d-flex align-items-center gap-2 mt-1 mb-2">
-                        @php
-                        $userLiked = auth()->check() && $adivinhacao->likes()->where('user_id', auth()->id())->exists();
-                        $likesCount = $adivinhacao->likes()->count();
-                        @endphp
+                      @php
+                        $userLiked = auth()->check() && $adivinhacao->likes->isNotEmpty();
+                        $likesCount = $adivinhacao->likes_count;
+                     @endphp
 
                         @auth
                         <button
