@@ -112,7 +112,8 @@ Route::middleware(['auth', 'banned'])->group(function () {
     #rotas apenas para administreadores
     Route::middleware(['isAdmin'])->group(function () {
         Route::post('users/ban-player/{user}', [UsersController::class, 'banUser'])->name('user.ban');
-        Route::get('/adivinhacoes/create', [AdivinhacoesController::class, 'create'])->name('adivinhacoes.create');
+        
+        Route::get('/adivinhacoes/new', [AdivinhacoesController::class, 'create'])->name('adivinhacoes.new');
         Route::post('/adivinhacoes/create', [AdivinhacoesController::class, 'store'])->name('adivinhacoes.store');
         Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
         Route::put('/adivinhacoes/{adivinhacaoId}', [AdivinhacoesController::class, 'update'])->name('adivinhacoes.update')->whereNumber('adivinhacaoId');

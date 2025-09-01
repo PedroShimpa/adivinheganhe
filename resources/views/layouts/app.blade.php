@@ -198,7 +198,7 @@
                     <div id="collapseAdmin" class="accordion-collapse collapse" data-bs-parent="#adminAccordion">
                         <a href="{{ route('dashboard') }}" class="nav-link text-white">Dashboard</a>
                         <a href="{{ route('adivinhacoes.expiradas') }}" class="nav-link text-white">Expiradas</a>
-                        <a href="{{ route('adivinhacoes.create') }}" class="nav-link text-white"></i> Nova Adivinhação</a>
+                        <a href="{{ route('adivinhacoes.new') }}" class="nav-link text-white"></i> Nova Adivinhação</a>
                         <a href="{{ route('adivinhe_o_milhao.create_pergunta') }}" class="nav-link text-white">Nova Pergunta AOM</a>
                         <a href="{{ route('competitivo.store_pergunta') }}" class="nav-link text-white">Nova Pergunta Comp</a>
                     </div>
