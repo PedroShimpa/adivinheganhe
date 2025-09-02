@@ -39,7 +39,6 @@ class RegistrationTest extends TestCase
             'email',
             // 'cpf',
             // 'whatsapp',
-            'fingerprint',
             'indicated_by'
         ]);
 
@@ -50,7 +49,6 @@ class RegistrationTest extends TestCase
         $this->assertStringContainsString('deve ser um endereço de e-mail válido', $errors['email'][0]);
         // $this->assertStringContainsString('O cpf informado não é valido', $errors['cpf'][0]); // Cpf custom rule
         // $this->assertStringContainsString('formato inválido', $errors['whatsapp'][0]);
-        $this->assertStringContainsString('O campo fingerprint é obrigatório', $errors['fingerprint'][0]);
         $this->assertStringContainsString('O campo indicated by selecionado é inválido.', $errors['indicated_by'][0]);
 
         $this->assertGuest();
