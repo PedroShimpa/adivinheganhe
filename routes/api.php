@@ -31,7 +31,6 @@ Route::middleware(['auth:sanctum', 'banned'])->group(function () {
 
     #gestao de usuario / comunidade
     Route::get('/jogadores/index', [UsersController::class, 'jogadores']);
-    Route::get('/meu-amigo/{userId}', [UsersController::class, 'verificarAmigo']);
     Route::get('/para_voce', [UsersController::class, 'para_voce']);
     Route::get('/user/{user}', [UsersController::class, 'view']);
     Route::get('/usuario/update', [UsersController::class, 'update']);

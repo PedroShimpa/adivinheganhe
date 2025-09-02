@@ -31,11 +31,6 @@ class UsersController extends Controller
         return view('jogadores')->with('players', $players);
     }
 
-    public function verificarAmigo($userId)
-    {
-        return response()->json(['isFriend' => auth()->user()->friends()->contains(fn($f) => $f->id === $userId)]);
-    }
-
     public function para_voce(Request $request)
     {
         $posts = auth()->user()->feedPosts();
@@ -48,19 +43,25 @@ class UsersController extends Controller
             dispatch(new AddProfileVisitJob(auth()->user()->id, auth()->user()->username, $user->id, $user->email));
         }
 
-        #verifica se é amigo
+        if ($user->id != auth()->user()->id) {
 
-        return response()->json(['user' => $user->only(
-            [
-                'id',
-                'name',
-                'username',
-                'created_at',
-                'perfil_privado',
-                'bio',
-                'image'
-            ]
-        )]);
+            $user->isFriend = auth()->user()->friends()->contains(fn($f) => $f->id === $user->id);
+            if ($user->perfil_privado == 'S' && $user->isFriend) {
+                $user->load('posts', 'partidas');
+            } else {
+
+                $user->friendRequested = auth()->user()->sentFriendships()
+                    ->where('receiver_id', $user->id)
+                    ->where('status', 'pending')
+                    ->exists();
+            }
+        } else {
+            $user->load('posts', 'partidas');
+        }
+        ####removr campos da api
+
+        
+        return response()->json(['user' => $user]);
     }
 
     public function update(ProfileUpdateRequest $request)
