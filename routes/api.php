@@ -43,7 +43,7 @@ Route::middleware(['auth:sanctum', 'banned'])->group(function () {
     Route::post('/notificacoes', [UsersController::class, 'getUnreadNotifications']);
 
     #posts
-    Route::post('posts/by-user/{user}', [PostController::class, 'getPostsByUser']);
+    Route::get('posts/by-user/{user}', [PostController::class, 'getPostsByUser']);
     Route::post('posts/store', [PostController::class, 'store']);
     Route::get('posts/individual{post}', [PostController::class, 'single_post']);
     Route::post('posts/comment/{post}', [PostController::class, 'comment']);
