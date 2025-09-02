@@ -32,12 +32,13 @@ Route::middleware(['auth:sanctum', 'banned'])->group(function () {
 
     #gestao de usuario / comunidade
     Route::get('/jogadores/index', [UsersController::class, 'jogadores']);
+    Route::get('/meu-amigo/{userId}', [UsersController::class, 'verificarAmigo']);
     Route::get('/para_voce', [UsersController::class, 'para_voce']);
     Route::get('/user/{user}', [UsersController::class, 'view']);
-    Route::get('/update', [UsersController::class, 'update']);
-    Route::get('/pedidos-de-amizade', [UsersController::class, 'friendRequests']);
+    Route::get('/usuario/update', [UsersController::class, 'update']);
     Route::post('/meus-amigos', [UsersController::class, 'meusAmigos']);
     Route::post('/user/{user}/enviar-pedido-de-amizade', [UsersController::class, 'sendFriendRequest']);
+    Route::get('/pedidos-de-amizade', [UsersController::class, 'friendRequests']);
     Route::post('/aceitar-pedido-de-amizade/{user}', [UsersController::class, 'acceptFriendRequest']);
     Route::post('/recusar-pedido-de-amizade/{user}', [UsersController::class, 'recuseFriendRequest']);
     Route::post('/notificacoes', [UsersController::class, 'getUnreadNotifications']);
@@ -50,8 +51,6 @@ Route::middleware(['auth:sanctum', 'banned'])->group(function () {
     Route::get('posts/comments/{post}', [PostController::class, 'comments']);
     Route::post('/posts/{post}/toggle-like', [PostController::class, 'toggleLike']);
     Route::delete('/posts/delete/{post}', [PostController::class, 'deletar']);
-
-
 
     #rotas faltantes api
     Route::get('/ranking-classico', [CompetitivoController::class, 'rankingClassico']);

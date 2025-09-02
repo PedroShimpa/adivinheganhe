@@ -31,6 +31,11 @@ class UsersController extends Controller
         return view('jogadores')->with('players', $players);
     }
 
+    public function verificarAmigo($userId)
+    {
+        return response()->json(['isFriend' => auth()->user()->friends()->contains(fn($f) => $f->id === $userId)]);
+    }
+
     public function para_voce(Request $request)
     {
         $posts = auth()->user()->feedPosts();
