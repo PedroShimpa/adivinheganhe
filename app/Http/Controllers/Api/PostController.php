@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Events\NewCommentEvent;
 use App\Events\NotificacaoEvent;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\CreatePostRequest;
 use App\Http\Resources\GetCommentsResource;
 use App\Models\Post;
+use App\Models\User;
 use App\Notifications\NewCommnetNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -17,9 +19,17 @@ class PostController extends Controller
 {
     public function __construct(private Post $posts) {}
 
+    public function getPostsByUser(User $user)
+    {
+        if ($user->perfil_privado == 'S' && auth()->user()->id != $user->id) {
+            return response()->json(['error' => 'Este perfil é privado']);
+        }
+        return response()->json(['posts' => $user->posts()]);
+    }
+
     public function single_post(Post $post)
     {
-        return view('post.single')->with('post', $post);
+        return response()->json(['post' => $post]);
     }
 
     public function store(CreatePostRequest $request)
@@ -41,12 +51,12 @@ class PostController extends Controller
                 $data['file'] = Storage::disk('s3')->url($filePath);
             }
 
-            $this->posts->create($data);
+            $post = $this->posts->create($data);
 
-            return redirect()->back()->with('success', 'Publicação criada com sucesso!');
+            return response()->json(['success' => true, 'post' => $post]);
         } catch (\Exception $e) {
             report($e);
-            return redirect()->back()->withErrors('Erro ao criar a publicação. Tente novamente.');
+            return response()->json(['error' => 'Erro ao criar a publicação. Tente novamente.']);
         }
     }
 
@@ -57,7 +67,7 @@ class PostController extends Controller
 
     public function comment(Request $request, Post $post)
     {
-        $post->comments()->create(['user_id' => auth()->user()->id, 'body' => $request->input('body')]);
+        $comment = $post->comments()->create(['user_id' => auth()->user()->id, 'body' => $request->input('body')]);
         broadcast(new NewCommentEvent(
             auth()->user()->image,
             auth()->user()->username,
@@ -69,8 +79,8 @@ class PostController extends Controller
             $post->user->notify(new NewCommnetNotification($request->input('body'), $post->id));
             broadcast(new NotificacaoEvent($post->user->id, auth()->user()->name . ' comentou: ' . $request->input('body')));
         }
+        return response()->json(['comment' => $comment]);
     }
-
 
     public function toggleLike(Request $request, Post $post)
     {
@@ -79,11 +89,9 @@ class PostController extends Controller
         $like = $post->likes()->where('user_id', $user->id)->first();
 
         if ($like) {
-            // Se já tiver like, remove
             $like->delete();
             $liked = false;
         } else {
-            // Senão, adiciona like
             $post->likes()->create([
                 'user_id' => $user->id
             ]);

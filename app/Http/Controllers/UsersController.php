@@ -8,7 +8,6 @@ use App\Jobs\AddProfileVisitJob;
 use App\Mail\BanPlayerMail;
 use App\Mail\FriendrequestMail;
 use App\Models\Friendship;
-use App\Models\ProfileVisits;
 use App\Models\User;
 use App\Notifications\FriendRequestAcceptedNotification;
 use App\Notifications\FriendRequestNotification;

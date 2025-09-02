@@ -48,43 +48,6 @@ class Adivinhacoes extends Model
         return $this->hasMany(AdivinhacoesRespostas::class, 'adivinhacao_id');
     }
 
-    public function getAtivasApi()
-    {
-        $query = $this->select(
-            'id',
-            'uuid',
-            'titulo',
-            'imagem',
-            'descricao',
-            'premio',
-            'expire_at',
-            'dica_paga',
-            'dica_valor',
-            'created_at',
-            'formato_resposta',
-        )
-            ->whereNull('regiao_id')
-            ->where('resolvida', 'N')
-            ->where('exibir_home', 'S')
-            ->where(function ($q) {
-                $q->where('expire_at', '>', now());
-                $q->orWhereNull('expire_at');
-            })
-            ->where(function ($q) {
-                $q->where('liberado_at', '<=', now());
-                $q->orWhereNull('liberado_at');
-            })
-            ->withCount('likes');
-
-        if (auth()->check()) {
-            $query->with(['likes' => function ($q) {
-                $q->where('user_id', auth()->id());
-            }]);
-        }
-
-        return $query->orderBy('liberado_at', 'desc')->get();
-    }
-
     public function getAtivas($withRespostas = false)
     {
         $query = $this->select(
