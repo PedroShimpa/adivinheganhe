@@ -42,7 +42,6 @@ class GoogleController extends Controller
         $platform = session('platform', 'web');
 
         if ($platform === 'mobile') {
-            // Cria token para o app Flutter
             $token = $user->createToken('mobile')->plainTextToken;
 
             return redirect('adivinheganhe://home?token=' . $token . '&username=' . $user->username);
