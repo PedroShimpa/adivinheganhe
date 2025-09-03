@@ -42,7 +42,7 @@ class GoogleController extends Controller
         $platform = session('platform', 'web');
 
         if ($platform === 'mobile') {
-            $token = $user->createToken('mobile')->plainTextToken;
+            $token = $user->createToken('api-token')->plainTextToken;
 
             return redirect('adivinheganhe://home?token=' . $token . '&username=' . $user->username);
         }
