@@ -33,7 +33,7 @@ Route::middleware(['auth:sanctum', 'banned'])->group(function () {
     Route::get('/jogadores/index', [UsersController::class, 'jogadores']);
     Route::get('/para_voce', [UsersController::class, 'para_voce']);
     Route::get('/user/{user}', [UsersController::class, 'view']);
-    Route::get('/usuario/update', [UsersController::class, 'update']);
+    Route::post('/usuario/update', [UsersController::class, 'update']);
     Route::post('/meus-amigos', [UsersController::class, 'meusAmigos']);
     Route::post('/user/{user}/enviar-pedido-de-amizade', [UsersController::class, 'sendFriendRequest']);
     Route::get('/pedidos-de-amizade', [UsersController::class, 'friendRequests']);

@@ -58,9 +58,10 @@ class UsersController extends Controller
         } else {
             $user->load('posts', 'partidas');
         }
-        ####removr campos da api
 
-        
+        unset($user->name, $user->password, $user->email, $user->cpf, $user->whatsapp, $user->indicated_by, $user->fingerprint, $user->token_push_notification);
+
+    
         return response()->json(['user' => $user]);
     }
 
