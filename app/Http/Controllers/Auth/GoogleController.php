@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RegisterExtraUserRequest;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +12,7 @@ class GoogleController extends Controller
     public function redirectToGoogle()
     {
         session(['indicated_by' => request()->input('ib')]);
+        session(['platform' => request()->input('platform', 'web')]); // default web
         return Socialite::driver('google')->redirect();
     }
 
@@ -34,46 +34,15 @@ class GoogleController extends Controller
                 'email_verified_at' => now(),
                 'indicated_by' => session('indicated_by')
             ]);
-
-            Auth::login($user);
-
-            return redirect()->route('home');
         }
 
         Auth::login($user);
 
-        return redirect()->route('home');
-    }
+        $platform = session('platform', 'web');
 
-    public function showExtraForm()
-    {
-        $socialUser = session('social_user');
-        if (!$socialUser) return redirect()->route('home');
-
-        return view('auth.register_extra', ['user' => $socialUser]);
-    }
-
-    public function storeExtraForm(RegisterExtraUserRequest $request)
-    {
-
-        $socialUser = session('social_user');
-        if (!$socialUser) return redirect()->route('home');
-
-        $user = User::create([
-            'name' => $socialUser['name'],
-            'username' => $request->username,
-            'email' => $socialUser['email'],
-            'password' => bcrypt(uniqid()),
-            'email_verified_at' => now(),
-            'cpf' => $request->cpf,
-            'whatsapp' => $request->whatsapp,
-            'fingerprint' => $request->input('fingerprint'),
-            'indicated_by' => session('indicated_by')
-        ]);
-
-        session()->forget('social_user');
-
-        Auth::login($user);
+        if ($platform === 'mobile') {
+            return redirect('adivinheganhe://home'); // você precisa ter registrado o deep link no Flutter
+        }
 
         return redirect()->route('home');
     }
