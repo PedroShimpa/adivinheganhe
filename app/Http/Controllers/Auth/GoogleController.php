@@ -16,6 +16,7 @@ class GoogleController extends Controller
         return Socialite::driver('google')->redirect();
     }
 
+
     public function handleGoogleCallback()
     {
         $googleUser = Socialite::driver('google')->stateless()->user();
@@ -41,7 +42,10 @@ class GoogleController extends Controller
         $platform = session('platform', 'web');
 
         if ($platform === 'mobile') {
-            return redirect('adivinheganhe://home'); // você precisa ter registrado o deep link no Flutter
+            // Cria token para o app Flutter
+            $token = $user->createToken('mobile')->plainTextToken;
+
+            return redirect('adivinheganhe://home?token=' . $token . '&username=' . $user->username);
         }
 
         return redirect()->route('home');
