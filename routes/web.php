@@ -51,9 +51,6 @@ Route::get('/banned', function () {
     return view('auth.banned');
 })->name('banned.view');
 
-Route::post('api/auth/google-mobile', [GoogleController::class, 'mobileLoginToken']);
-Route::get('mobile/login-with-token', [GoogleController::class, 'loginWithToken']);
-
 #rotas autenticadas
 
 Route::middleware(['auth', 'banned'])->group(function () {
