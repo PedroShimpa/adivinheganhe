@@ -44,7 +44,15 @@ class GoogleController extends Controller
         if ($platform === 'mobile') {
             $token = $user->createToken('api-token')->plainTextToken;
 
-            return redirect('adivinheganhe://home?token=' . $token . '&username=' . $user->username);
+            // Serializa o usuário em JSON e codifica para URL
+            $userJson = urlencode(json_encode([
+                'id' => $user->id,
+                'name' => $user->name,
+                'username' => $user->username,
+                'email' => $user->email,
+            ]));
+
+            return redirect('adivinheganhe://home?token=' . $token . '&user=' . $userJson);
         }
 
         return redirect()->route('home');
