@@ -35,7 +35,7 @@ Route::middleware(['auth:sanctum', 'banned'])->group(function () {
     Route::get('/pedidos-de-amizade', [UsersController::class, 'friendRequests']);
     Route::post('/aceitar-pedido-de-amizade/{user}', [UsersController::class, 'acceptFriendRequest']);
     Route::post('/recusar-pedido-de-amizade/{user}', [UsersController::class, 'recuseFriendRequest']);
-    Route::post('/notificacoes', [UsersController::class, 'getUnreadNotifications']);
+    Route::get('/notificacoes', [UsersController::class, 'getUnreadNotifications']);
 
     #posts
     Route::get('posts/by-user/{user}', [PostController::class, 'getPostsByUser']);
