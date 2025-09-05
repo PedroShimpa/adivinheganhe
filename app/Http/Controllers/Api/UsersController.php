@@ -19,6 +19,11 @@ use App\Http\Controllers\Controller;
 
 class UsersController extends Controller
 {
+    public function me() {
+        $me = auth()->user();
+        $me->unread_notifications = $me->unreadNotificationsCount();
+        return response()->json(['user' => $me]);
+    }
 
     public function jogadores(Request $request)
     {

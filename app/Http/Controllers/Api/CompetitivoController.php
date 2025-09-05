@@ -21,11 +21,6 @@ class CompetitivoController extends Controller
 {
     public function __construct(private AdivinhacoesPremiacoes $adivinhacoesPremiacoes, private Adivinhacoes $adivinhacoes) {}
 
-    public function rankingClassico(Request $request)
-    {
-        return response()->json(['ranking' => $this->adivinhacoesPremiacoes->getUsuariosMaisPremiados()]);
-    }
-
     public function iniciarBusca(Request $request)
     {
         $user = Auth::user();
@@ -49,7 +44,7 @@ class CompetitivoController extends Controller
 
         $this->matchmaking($user);
 
-        return response()->json(['message' => 'Busca iniciada']);
+        return response()->json(['sucess' => true, 'message' => 'Busca iniciada']);
     }
 
     public function sairFila(Request $request)

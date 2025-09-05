@@ -76,4 +76,9 @@ class AdivinhacoesController extends Controller
             'likes_count' => $adivinhacao->likes()->count()
         ]);
     }
+
+    public function rankingClassico(Request $request)
+    {
+        return response()->json(['ranking' => $this->adivinhacoesPremiacoes->getUsuariosMaisPremiados()]);
+    }
 }

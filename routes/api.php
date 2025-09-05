@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\Api\AdivinhacoesController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\CompetitivoController;
-use App\Http\Controllers\Api\GoogleController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UsersController;
 use App\Http\Controllers\RespostaController;
@@ -14,6 +14,9 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 
 Route::middleware(['auth:sanctum', 'banned'])->group(function () {
+    #auth
+    Route::get('/me', [UsersController::class, 'me']);
+
     #adinhacoes
     Route::get('/adivinhacoes/index', [AdivinhacoesController::class, 'getAtivas']);
     Route::post('/adivinhacao/responder', [RespostaController::class, 'enviar']);
@@ -22,8 +25,7 @@ Route::middleware(['auth:sanctum', 'banned'])->group(function () {
     Route::post('/adivinhacao/{adivinhacao}/comentar', [AdivinhacoesController::class, 'comment']);
     Route::post('/adivinhacao/{adivinhacao}/toogle-like', [AdivinhacoesController::class, 'toggleLike']);
     Route::get('/premiacoes', [AdivinhacoesController::class, 'premiacoes']);
-
-    #modo competitivo
+    Route::get('/ranking-classico', [AdivinhacoesController::class, 'rankingClassico']);
 
     #gestao de usuario / comunidade
     Route::get('/jogadores/index', [UsersController::class, 'jogadores']);
@@ -37,6 +39,10 @@ Route::middleware(['auth:sanctum', 'banned'])->group(function () {
     Route::post('/recusar-pedido-de-amizade/{user}', [UsersController::class, 'recuseFriendRequest']);
     Route::get('/notificacoes', [UsersController::class, 'getUnreadNotifications']);
 
+    #chat
+    Route::get('chat/messages/{userId}', [ChatController::class, 'get_messages']);
+    Route::post('chat/new-message', [ChatController::class, 'store']);
+
     #posts
     Route::get('posts/by-user/{user}', [PostController::class, 'getPostsByUser']);
     Route::post('posts/store', [PostController::class, 'store']);
@@ -47,10 +53,6 @@ Route::middleware(['auth:sanctum', 'banned'])->group(function () {
     Route::delete('/posts/delete/{post}', [PostController::class, 'deletar']);
 
     #rotas faltantes api
-    Route::get('/ranking-classico', [CompetitivoController::class, 'rankingClassico']);
-
-    ###compras e suporte vai abrir o site
-    ###sobre vai abrir o site
 
     Route::post('/competitivo/iniciar-busca', [CompetitivoController::class, 'iniciarBusca']);
     Route::post('/competitivo/cancelar-busca', [CompetitivoController::class, 'sairFila']);

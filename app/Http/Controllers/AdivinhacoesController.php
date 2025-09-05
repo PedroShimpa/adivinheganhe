@@ -10,7 +10,6 @@ use App\Models\AdivinhacoesRespostas;
 use App\Http\Controllers\Traits\AdivinhacaoTrait;
 use App\Http\Requests\UpdateAdivinhacoesRequest;
 use App\Http\Resources\GetCommentsResource;
-use App\Jobs\EnviarNotificacaoNovaAdivinhacao;
 use App\Models\AdivinhacoesPremiacoes;
 use App\Models\Regioes;
 use DateTime;

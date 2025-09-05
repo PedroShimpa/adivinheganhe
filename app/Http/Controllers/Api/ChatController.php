@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\ChatMessages;
+use Illuminate\Http\Request;
+
+class ChatController extends Controller
+{
+    public function get_messages($userId)
+    {
+        ChatMessages::where('user_id', $userId)->where('receiver_id', auth()->user()->id)->update(['read_at' => now()]);
+        $messages = ChatMessages::select('user_id', 'receiver_id', 'message as mensagem', 'created_at')
+            ->where(function ($q) use ($userId) {
+                $q->where('user_id', auth()->user()->id);
+                $q->where('receiver_id', $userId);
+            })
+            ->orWhere(function ($q) use ($userId) {
+                $q->where('user_id', $userId);
+                $q->where('receiver_id', auth()->user()->id);
+            })
+            ->orderBy('chat_messages.id', 'asc')
+            ->get()
+            ->toArray();
+        return response()->json(['messages' => $messages]);
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'message' => 'required|string',
+            'receiver_id' => 'required|integer|exists:users,id'
+        ]);
+
+        $message = ChatMessages::create([
+            'user_id' => auth()->user()->id,
+            'receiver_id' => $request->receiver_id,
+            'message' => $request->message,
+            'created_at' => now(),
+        ]);
+
+        event(new \App\Events\ChatMessageSent($message->message, auth()->user()->id,  auth()->user()->username, $message->receiver_id, $message->created_at));
+        ChatMessages::where('user_id', $request->receiver_id)->where('receiver_id', auth()->user()->id)->update(['read_at' => now()]);
+        return response()->json(['status' => 'success', 'message' => $message]);
+    }
+}

@@ -12,7 +12,7 @@ class GoogleController extends Controller
     public function redirectToGoogle()
     {
         session(['indicated_by' => request()->input('ib')]);
-        session(['platform' => request()->input('platform', 'web')]); // default web
+        session(['platform' => request()->input('platform', 'web')]); 
         return Socialite::driver('google')->redirect();
     }
 

@@ -21,14 +21,18 @@ class PostController extends Controller
 
     public function getPostsByUser(User $user)
     {
-        if ($user->perfil_privado == 'S' && auth()->user()->id != $user->id) {
-            return response()->json(['error' => 'Este perfil é privado']);
+        if ($user->perfil_privado == 'S' && auth()->id() != $user->id && !auth()->user()->friends()->contains(fn($f) => $f->id === $user->id)) {
+            return response()->json(['error' => 'Este perfil é privado'], 403);
         }
-        return response()->json(['posts' => $user->posts()]);
+
+        $posts = $user->posts()->withCount('likes')->get();
+
+        return response()->json(['posts' => $posts]);
     }
 
     public function single_post(Post $post)
     {
+        $post = $post->withCount('likes');
         return response()->json(['post' => $post]);
     }
 
