@@ -52,7 +52,7 @@ class GoogleController extends Controller
                 'email' => $user->email,
             ]));
 
-            return redirect('adivinheganhe://home?token=' . $token . '&user=' . $userJson);
+            return redirect('adivinheganhe://home?token=' . $token . '&user=' . $userJson.'&route=/home');
         }
 
         return redirect()->route('home');
