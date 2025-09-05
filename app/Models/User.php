@@ -116,6 +116,8 @@ class User extends Authenticatable
             ->map(fn($user) => [
                 'id' => $user->id,
                 'username' => $user->username,
+                'user_photo' => $user->image,
+
             ]);
 
         // Amigos que te enviaram
@@ -127,6 +129,7 @@ class User extends Authenticatable
             ->map(fn($user) => [
                 'id' => $user->id,
                 'username' => $user->username,
+                'user_photo' => $user->image,
             ]);
 
         // Junta os dois
