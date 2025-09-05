@@ -105,6 +105,34 @@ class User extends Authenticatable
         return $this->hasMany(Friendship::class, 'receiver_id');
     }
 
+    public function friendsWithUsername()
+    {
+        // Amigos que você enviou
+        $sent = $this->sentFriendships()
+            ->where('status', 'accepted')
+            ->with('receiver') // carrega relacionamento
+            ->get()
+            ->pluck('receiver')
+            ->map(fn($user) => [
+                'id' => $user->id,
+                'username' => $user->username,
+            ]);
+
+        // Amigos que te enviaram
+        $received = $this->receivedFriendships()
+            ->where('status', 'accepted')
+            ->with('sender')
+            ->get()
+            ->pluck('sender')
+            ->map(fn($user) => [
+                'id' => $user->id,
+                'username' => $user->username,
+            ]);
+
+        // Junta os dois
+        return $sent->merge($received);
+    }
+
     public function friends()
     {
         $sent = $this->sentFriendships()->where('status', 'accepted')->with('receiver')->get()->pluck('receiver');

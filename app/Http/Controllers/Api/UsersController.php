@@ -61,7 +61,7 @@ class UsersController extends Controller
 
         unset($user->name, $user->password, $user->email, $user->cpf, $user->whatsapp, $user->indicated_by, $user->fingerprint, $user->token_push_notification);
 
-    
+
         return response()->json(['user' => $user]);
     }
 
@@ -148,7 +148,7 @@ class UsersController extends Controller
 
     public function meusAmigos()
     {
-        $friends = auth()->user()->friends();
+        $friends = auth()->user()->friendsWithUsername();
 
         return response()->json(['friends' => $friends]);
     }
