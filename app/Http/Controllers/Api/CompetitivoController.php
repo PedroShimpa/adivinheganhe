@@ -92,6 +92,7 @@ class CompetitivoController extends Controller
 
     public function partida(Partidas $partida)
     {
+        $partida = $partida->load('joagdores', 'respostas');
         return response()->json(['partida' => $partida]);
     }
 
@@ -99,7 +100,7 @@ class CompetitivoController extends Controller
     {
         if ($partida->status == 1) {
             $pergunta = Cache::get('pergunta_atual_partida' . $partida->id);
-            return response()->json($pergunta);
+            return response()->json(['pergunta' => $pergunta]);
         }
         return null;
     }
