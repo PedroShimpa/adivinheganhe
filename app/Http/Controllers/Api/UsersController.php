@@ -37,7 +37,7 @@ class UsersController extends Controller
         return view('para_voce')->with(['posts' => $posts]);
     }
 
-    public function view(User $user)
+    public function getProfile(User $user)
     {
         if (auth()->check() && auth()->user()->id != $user->id) {
             dispatch(new AddProfileVisitJob(auth()->user()->id, auth()->user()->username, $user->id, $user->email));
@@ -46,14 +46,19 @@ class UsersController extends Controller
         if ($user->id != auth()->user()->id) {
 
             $user->isFriend = auth()->user()->friends()->contains(fn($f) => $f->id === $user->id);
-            if ($user->perfil_privado == 'S' && $user->isFriend) {
-                $user->load('posts', 'partidas');
-            } else {
+            if (!$user->isFriend) {
 
                 $user->friendRequested = auth()->user()->sentFriendships()
                     ->where('receiver_id', $user->id)
                     ->where('status', 'pending')
                     ->exists();
+            }
+            if ($user->perfil_privado == 'S') {
+                if ($user->isFriend) {
+                    $user->load('posts', 'partidas');
+                }
+            } else {
+                $user->load('posts', 'partidas');
             }
         } else {
             $user->load('posts', 'partidas');
@@ -73,15 +78,10 @@ class UsersController extends Controller
             $imagem = $request->file('image');
             $hash = Str::random(10);
             $fileName = $hash . '_' . time() . '.webp';
-
             $image = Image::read($imagem)->encodeByExtension('webp', 55);
-
             $filePath = 'usuarios/imagens/' . $fileName;
-
             Storage::disk('s3')->put($filePath, (string) $image);
-
             $urlImagem = Storage::disk('s3')->url($filePath);
-
             $request->user()->image = $urlImagem;
         }
 
