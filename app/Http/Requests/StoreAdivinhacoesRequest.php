@@ -16,7 +16,7 @@ class StoreAdivinhacoesRequest extends FormRequest
         return [
             'titulo' => ['string'],
             'imagem' => ['file'],
-            'descricao'  => ['string'],
+            'descricao'  => ['string',  'nullable'],
             'premio'  => ['string'],
             'resposta' => ['string'],
             'dica' => ['string', 'nullable'],

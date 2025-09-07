@@ -16,13 +16,21 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Laravel\Facades\Image;
 use App\Http\Controllers\Controller;
+use App\Models\AdivinhacoesPremiacoes;
 
 class UsersController extends Controller
 {
-    public function me() {
+    public function me()
+    {
         $me = auth()->user();
         $me->unread_notifications = $me->unreadNotificationsCount();
         return response()->json(['user' => $me]);
+    }
+
+    public function meusPremios()
+    {
+        $meusPremios = (new AdivinhacoesPremiacoes())->getMeusPremios();
+        return response()->json(['meus_premios' => $meusPremios]);
     }
 
     public function jogadores(Request $request)
@@ -30,10 +38,10 @@ class UsersController extends Controller
         if ($request->input('search')) {
             $players = User::search($request->input('search'))->where('perfil_privado', 'N')->get();
         } else {
-            $players = User::select('username', 'image', 'bio')->where('perfil_privado', 'N')->where('banned', false)->inRandomOrder()->limit(9)->get();
+            $players = User::select('username', 'image as user_photo', 'bio')->where('perfil_privado', 'N')->where('banned', false)->inRandomOrder()->limit(9)->get();
         }
 
-        return view('jogadores')->with('players', $players);
+        return response()->json(['players' => $players]);
     }
 
     public function para_voce(Request $request)
@@ -113,6 +121,12 @@ class UsersController extends Controller
             ->where('status', 'pending')
             ->with('sender')
             ->get();
+
+        $pendingRequests->filter(function ($q) {
+            $sender = $q->sender;
+            $q->username =  '@' . $sender->username;
+            $q->user_photo =  $sender->image;
+        });
 
         return response()->json(['peding_requests' => $pendingRequests]);
     }

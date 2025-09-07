@@ -107,24 +107,31 @@ class User extends Authenticatable
 
     public function friendsWithUsername()
     {
-        $friends = $this->friends();
+        $sent = $this->sentFriendships()
+            ->where('status', 'accepted')
+            ->with('receiver') 
+            ->get()
+            ->pluck('receiver')
+            ->map(fn($user) => [
+                'id' => $user->id,
+                'username' => $user->username,
+                'user_photo' => $user->image,
 
-        $friendIds = $friends->pluck('id');
+            ]);
 
-        $unreadCounts = DB::table('messages')
-            ->select('sender_id', DB::raw('count(*) as unread_count'))
-            ->whereIn('sender_id', $friendIds)
-            ->where('receiver_id', $this->id)
-            ->whereNull('read_at')
-            ->groupBy('sender_id')
-            ->pluck('unread_count', 'sender_id'); 
+ 
+        $received = $this->receivedFriendships()
+            ->where('status', 'accepted')
+            ->with('sender')
+            ->get()
+            ->pluck('sender')
+            ->map(fn($user) => [
+                'id' => $user->id,
+                'username' => $user->username,
+                'user_photo' => $user->image,
+            ]);
 
-        $friendsWithUnread = $friends->map(function ($friend) use ($unreadCounts) {
-            $friend->unread_messages = $unreadCounts[$friend->id] ?? 0;
-            return $friend;
-        });
-
-        return response()->json($friendsWithUnread);
+        return $sent->merge($received);
     }
 
 

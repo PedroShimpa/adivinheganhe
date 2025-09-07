@@ -7,7 +7,9 @@ use App\Http\Controllers\Api\CompetitivoController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UsersController;
 use App\Http\Controllers\RespostaController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Pusher\Pusher;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -33,14 +35,16 @@ Route::middleware(['auth:sanctum', 'banned'])->group(function () {
     Route::get('/user/{user}', [UsersController::class, 'getProfile']);
     Route::post('/usuario/update', [UsersController::class, 'update']);
     Route::get('/meus-amigos', [UsersController::class, 'meusAmigos']);
+    Route::get('/meus-premios', [UsersController::class, 'meusPremios']);
     Route::post('/user/{user}/enviar-pedido-de-amizade', [UsersController::class, 'sendFriendRequest']);
-    Route::get('/pedidos-de-amizade', [UsersController::class, 'friendRequests']);
-    Route::post('/aceitar-pedido-de-amizade/{user}', [UsersController::class, 'acceptFriendRequest']);
-    Route::post('/recusar-pedido-de-amizade/{user}', [UsersController::class, 'recuseFriendRequest']);
+    Route::get('/users/friend-requests', [UsersController::class, 'friendRequests']);
+    Route::post('/users/friend-request/accept/{user}', [UsersController::class, 'acceptFriendRequest']);
+    Route::post('/users/friend-request/recuse/{user}', [UsersController::class, 'recuseFriendRequest']);
     Route::get('/notificacoes', [UsersController::class, 'getUnreadNotifications']);
 
     #chat
-    Route::get('chat/messages/{userId}', [ChatController::class, 'get_messages']);
+    Route::get('chats', [ChatController::class, 'chats']);
+    Route::get('chat/messages/{user}', [ChatController::class, 'get_messages']);
     Route::post('chat/new-message', [ChatController::class, 'store']);
 
     #posts
@@ -58,4 +62,28 @@ Route::middleware(['auth:sanctum', 'banned'])->group(function () {
     Route::post('/competitivo/cancelar-busca', [CompetitivoController::class, 'sairFila']);
     Route::post('/competitivo/partida/{partida}/{pergunta}/responder', [CompetitivoController::class, 'responder']);
     Route::get('/competitivo/partida/finalizada/{partida}', [CompetitivoController::class, 'partida']);
+});
+Route::post('/broadcasting/auth-mixed', function (Request $request) {
+    $pusher = new Pusher(
+        env('REVERB_APP_KEY'),
+        env('REVERB_APP_SECRET'),
+        env('REVERB_APP_ID'),
+        ['cluster' => env('PUSHER_APP_CLUSTER')]
+    );
+
+    $user = auth()->user();
+    if ($user) {
+        $id   = 'user-' . $user->id;
+        $info = ['name' => $user->name];
+    } else {
+        $id   = 'guest-' . substr(md5($request->ip() . microtime()), 0, 8);
+        $info = ['name' => 'Visitante'];
+    }
+
+    return $pusher->presence_auth(
+        $request->channel_name,
+        $request->socket_id,
+        $id,
+        $info
+    );
 });
