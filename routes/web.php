@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 
 Broadcast::routes(['middleware' => ['web', 'auth']]);
 
+Route::get('/politica-de-privacidade', function() {
+    return view('politica_de_privacidade');
+});
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/salvar_fingerprint', [HomeController::class, 'saveFingerprint'])->name('salvar_fingerprint');
 
