@@ -1,4 +1,4 @@
-@extends('layouts.app', ['enable_adsense' => true])
+@extends('layouts.app', ['enable_adsense' => false])
 
 @section('content')
 <div class="text-white">
