@@ -171,4 +171,11 @@ class UsersController extends Controller
 
         return response()->json(['friends' => $friends]);
     }
+
+    public function savePushNotificationToken(Request $request) {
+        
+        $user = auth()->user();
+        $user->token_push_notification = $request->input('token_push_notification');
+        $user->save();
+    }
 }

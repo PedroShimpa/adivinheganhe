@@ -40,6 +40,7 @@ Route::middleware(['auth:sanctum', 'banned'])->group(function () {
     Route::get('/users/friend-requests', [UsersController::class, 'friendRequests']);
     Route::post('/users/friend-request/accept/{user}', [UsersController::class, 'acceptFriendRequest']);
     Route::post('/users/friend-request/recuse/{user}', [UsersController::class, 'recuseFriendRequest']);
+    Route::post('/user/save-token', [UsersController::class, 'savePushNotificationToken']);
     Route::get('/notificacoes', [UsersController::class, 'getUnreadNotifications']);
 
     #chat
