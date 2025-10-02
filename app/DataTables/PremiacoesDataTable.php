@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\AdivinhacoesPremiacoes;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -22,6 +23,9 @@ class PremiacoesDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
+            ->editColumn('created_at', function ($row) {
+                return $row->created_at->format('d/m/Y H:i');
+            })
             ->addColumn('action', function($row) {
                 $modal = '<div class="modal fade" id="removePremiacao-' . $row->id . '" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">

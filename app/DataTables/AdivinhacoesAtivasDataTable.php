@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\Adivinhacoes;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -22,6 +23,9 @@ class AdivinhacoesAtivasDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
+            ->editColumn('created_at', function ($row) {
+                return $row->created_at->format('d/m/Y H:i');
+            })
             ->addColumn('respostas_count', function ($row) {
                 return $row->respostas->count();
             })
