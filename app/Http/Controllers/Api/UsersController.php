@@ -68,13 +68,13 @@ class UsersController extends Controller
             }
             if ($user->perfil_privado == 'S') {
                 if ($user->isFriend) {
-                    $user->load('posts', 'partidas');
+                    $user->load('posts');
                 }
             } else {
-                $user->load('posts', 'partidas');
+                $user->load('posts');
             }
         } else {
-            $user->load('posts', 'partidas');
+            $user->load('posts');
         }
 
         unset($user->name, $user->password, $user->email, $user->cpf, $user->whatsapp, $user->indicated_by, $user->fingerprint, $user->token_push_notification);
