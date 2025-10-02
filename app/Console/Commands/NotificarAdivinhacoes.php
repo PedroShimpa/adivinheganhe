@@ -72,10 +72,6 @@ class NotificarAdivinhacoes extends Command
                     $resp = Http::withHeaders($headers)->post($SEND_MESSAGE_ENDPOINT, $payload);
                     if ($resp->successful()) {
                         DB::table('adivinhacoes')->where('id', $adiv->id)->update(['notificado_whatsapp_em' => now()]);
-                    } else {
-                        $msg = "Falha ao enviar mensagem para {$adiv->titulo}: " . $resp->body();
-                        $this->error($msg);
-                        Log::error($msg);
                     }
                 } catch (\Exception $e) {
                     $msg = "Exceção ao enviar mensagem para {$adiv->titulo}: {$e->getMessage()}";
