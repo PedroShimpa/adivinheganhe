@@ -22,10 +22,10 @@ class AdivinhacoesAtivasDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->addColumn('respostas_count', function($row) {
+            ->addColumn('respostas_count', function ($row) {
                 return $row->respostas->count();
             })
-            ->addColumn('action', function($row) {
+            ->addColumn('action', function ($row) {
                 $modal = '<div class="modal fade" id="removeAdivinhacao-' . $row->id . '" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
@@ -60,10 +60,18 @@ class AdivinhacoesAtivasDataTable extends DataTable
      */
     public function query(Adivinhacoes $model): QueryBuilder
     {
-        return $model->newQuery()
-            ->with('respostas')
-            ->where('status', 'ativa')
-            ->orderBy('id', 'desc');
+        return $model->newQuery()->whereNull('regiao_id')
+            ->where('resolvida', 'N')
+            ->where('exibir_home', 'S')
+            ->where(function ($q) {
+                $q->where('expire_at', '>', now());
+                $q->orWhereNull('expire_at');
+            })
+            ->where(function ($q) {
+                $q->where('liberado_at', '<=', now());
+                $q->orWhereNull('liberado_at');
+            })
+            ->withCount('likes');;
     }
 
     /**
@@ -72,19 +80,19 @@ class AdivinhacoesAtivasDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('adivinhacoesAtivasTable')
-                    ->columns($this->getColumns())
-                    ->ajax(route('dashboard.adivinhacoes_ativas.data'))
-                    ->orderBy(0, 'desc')
-                    ->selectStyleSingle()
-                    ->buttons([
-                        Button::make('excel'),
-                        Button::make('csv'),
-                        Button::make('pdf'),
-                        Button::make('print'),
-                        Button::make('reset'),
-                        Button::make('reload')
-                    ]);
+            ->setTableId('adivinhacoesAtivasTable')
+            ->columns($this->getColumns())
+            ->ajax(route('dashboard.adivinhacoes_ativas.data'))
+            ->orderBy(0, 'desc')
+            ->selectStyleSingle()
+            ->buttons([
+                Button::make('excel'),
+                Button::make('csv'),
+                Button::make('pdf'),
+                Button::make('print'),
+                Button::make('reset'),
+                Button::make('reload')
+            ]);
     }
 
     /**
@@ -98,10 +106,10 @@ class AdivinhacoesAtivasDataTable extends DataTable
             Column::make('titulo')->title('Título'),
             Column::computed('respostas_count')->title('Qtd Respostas'),
             Column::computed('action')
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(60)
-                  ->addClass('text-center'),
+                ->exportable(false)
+                ->printable(false)
+                ->width(60)
+                ->addClass('text-center'),
         ];
     }
 
