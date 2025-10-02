@@ -23,7 +23,8 @@
         "league/flysystem-aws-s3-v3": "3.0",
         "meilisearch/meilisearch-php": "^1.15",
         "mercadopago/dx-php": "3.5.1",
-        "namoshek/laravel-redis-sentinel": "^1.1"
+        "namoshek/laravel-redis-sentinel": "^1.1",
+        "yajra/laravel-datatables": "^12.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.16",

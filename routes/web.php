@@ -120,6 +120,11 @@ Route::middleware(['auth', 'banned'])->group(function () {
         Route::get('/a/new', [AdivinhacoesController::class, 'create'])->name('adivinhacoes.new');
         Route::post('/a/create', [AdivinhacoesController::class, 'store'])->name('adivinhacoes.store');
         Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+        Route::get('/dashboard/premiacoes-data', [DashboardController::class, 'premiacoesData'])->name('dashboard.premiacoes.data');
+        Route::get('/dashboard/comentarios-data', [DashboardController::class, 'comentariosData'])->name('dashboard.comentarios.data');
+        Route::get('/dashboard/adivinhacoes-ativas-data', [DashboardController::class, 'adivinhacoesAtivasData'])->name('dashboard.adivinhacoes_ativas.data');
+        Route::get('/dashboard/respostas-data', [DashboardController::class, 'respostasData'])->name('dashboard.respostas.data');
+        Route::get('/dashboard/users-data', [DashboardController::class, 'usersData'])->name('dashboard.users.data');
         Route::put('/a/{adivinhacaoId}', [AdivinhacoesController::class, 'update'])->name('adivinhacoes.update')->whereNumber('adivinhacaoId');
         Route::get('/a/view/{adivinhacao}', [AdivinhacoesController::class, 'edit'])->name('adivinhacoes.view');
         Route::delete('/a/deletar/{adivinhacao}', [AdivinhacoesController::class, 'deletar'])->name('adivinhacoes.delete');
