@@ -6,11 +6,11 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use App\Notifications\FirebaseChannel;
 
-class NewCommnetNotification extends Notification
+class ProfileVisitNotification extends Notification
 {
     use Queueable;
 
-    public function __construct(private string $comment, private int $postId) {}
+    public function __construct(private string $visitorName) {}
 
     public function via($notifiable)
     {
@@ -24,19 +24,19 @@ class NewCommnetNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'message' => auth()->user()->username . ' comentou em seu post',
-            'sender_id' => auth()->id(),
-            'url' => route('posts.single',  $this->postId)
+            'message' => $this->visitorName . ' visitou seu perfil.',
+            'sender_id' => null, // No specific sender ID for visits
+            'url' => route('profile.view', $notifiable->username)
         ];
     }
 
     public function toFirebase($notifiable)
     {
         return [
-            'title' => 'Novo comentário',
-            'body' => auth()->user()->username . ' comentou em seu post.',
+            'title' => 'Visita ao perfil',
+            'body' => $this->visitorName . ' visitou seu perfil.',
             'data' => [
-                'url' => route('posts.single', $this->postId)
+                'url' => route('profile.view', $notifiable->username)
             ],
         ];
     }

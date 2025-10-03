@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\ChatMessages;
 use App\Models\User;
+use App\Notifications\NewMessageNotification;
 use Illuminate\Http\Request;
 
 class ChatController extends Controller
@@ -48,6 +49,7 @@ class ChatController extends Controller
         ]);
 
         event(new \App\Events\ChatMessageSent($message->message, auth()->user()->id,  auth()->user()->username, $message->receiver_id, $message->created_at));
+        User::find($request->receiver_id)->notify(new NewMessageNotification($message->message));
         ChatMessages::where('user_id', $request->receiver_id)->where('receiver_id', auth()->user()->id)->update(['read_at' => now()]);
         return response()->json(['status' => 'success', 'message' => $message]);
     }

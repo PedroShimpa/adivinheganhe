@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Jobs\EnviarNotificacaoNovaAdivinhacao;
+use App\Models\User;
+use App\Notifications\TestFirebaseNotification;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -11,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 class NotificarAdivinhacoes extends Command
 {
     protected $signature = 'notificar:adivinhacoes';
-    protected $description = 'Notifica novas adivinhações no canal WhatsApp';
+    protected $description = 'Notifica novas adivinhações no canal WhatsApp e push notification';
 
     public function handle()
     {
@@ -78,6 +80,24 @@ class NotificarAdivinhacoes extends Command
                     $this->error($msg);
                     Log::error($msg);
                 }
+            }
+
+            // Send push notification to users with tokens
+            if ($adiv->notificar_push == 1 && empty($adiv->notificado_push_em)) {
+                $titulo = $adiv->titulo;
+                $url = route('adivinhacoes.index', $adiv->uuid);
+
+                $users = User::whereNotNull('token_push_notification')->get();
+
+                foreach ($users as $user) {
+                    $user->notify(new TestFirebaseNotification(
+                        $titulo,
+                        "Nova adivinhação disponível: {$titulo}",
+                        ['url' => $url]
+                    ));
+                }
+
+                DB::table('adivinhacoes')->where('id', $adiv->id)->update(['notificado_push_em' => now()]);
             }
         }
 

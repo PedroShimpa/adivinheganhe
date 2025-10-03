@@ -6,11 +6,11 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use App\Notifications\FirebaseChannel;
 
-class NewCommnetNotification extends Notification
+class NewMessageNotification extends Notification
 {
     use Queueable;
 
-    public function __construct(private string $comment, private int $postId) {}
+    public function __construct(private string $message) {}
 
     public function via($notifiable)
     {
@@ -24,19 +24,19 @@ class NewCommnetNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'message' => auth()->user()->username . ' comentou em seu post',
+            'message' => auth()->user()->username . ' enviou uma mensagem: ' . $this->message,
             'sender_id' => auth()->id(),
-            'url' => route('posts.single',  $this->postId)
+            'url' => route('chat.index')
         ];
     }
 
     public function toFirebase($notifiable)
     {
         return [
-            'title' => 'Novo comentário',
-            'body' => auth()->user()->username . ' comentou em seu post.',
+            'title' => 'Nova mensagem',
+            'body' => auth()->user()->username . ': ' . $this->message,
             'data' => [
-                'url' => route('posts.single', $this->postId)
+                'url' => route('chat.index')
             ],
         ];
     }

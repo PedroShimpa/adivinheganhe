@@ -4,6 +4,8 @@ namespace App\Jobs;
 
 use App\Mail\ProfileVisitMail;
 use App\Models\ProfileVisits;
+use App\Models\User;
+use App\Notifications\ProfileVisitNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -27,6 +29,12 @@ class AddProfileVisitJob implements ShouldQueue
         if (!$alreadyMailSendedtoday) {
             Mail::to($this->visitedMail)->queue(new ProfileVisitMail($this->userName));
             $profileVisit->update(['mail_send_at' => now()]);
+        }
+
+        // Send push notification
+        $visitedUser = User::find($this->visitedId);
+        if ($visitedUser) {
+            $visitedUser->notify(new ProfileVisitNotification($this->userName));
         }
     }
 }

@@ -2,10 +2,9 @@
 
 namespace App\Notifications;
 
-namespace App\Notifications;
-
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
+use App\Notifications\FirebaseChannel;
 
 class FriendRequestNotification extends Notification
 {
@@ -13,7 +12,11 @@ class FriendRequestNotification extends Notification
 
     public function via($notifiable)
     {
-        return ['database'];
+        $channels = ['database'];
+        if ($notifiable->token_push_notification) {
+            $channels[] = FirebaseChannel::class;
+        }
+        return $channels;
     }
 
     public function toDatabase($notifiable)
@@ -22,6 +25,17 @@ class FriendRequestNotification extends Notification
             'message'   => auth()->user()->username . ' enviou um pedido de amizade.',
             'sender_id' => auth()->id(),
             'url' => route('users.friend_requests')
+        ];
+    }
+
+    public function toFirebase($notifiable)
+    {
+        return [
+            'title' => 'Novo pedido de amizade',
+            'body' => auth()->user()->username . ' enviou um pedido de amizade.',
+            'data' => [
+                'url' => route('users.friend_requests')
+            ],
         ];
     }
 }
