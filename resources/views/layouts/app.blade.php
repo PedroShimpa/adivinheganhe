@@ -285,6 +285,10 @@
                             class="nav-link text-white {{ request()->routeIs('competitivo.store_pergunta') ? 'active fw-bold text-primary' : '' }}">
                             Nova Pergunta Comp
                         </a>
+                        <a href="{{ route('suporte.admin.index') }}"
+                            class="nav-link text-white {{ request()->routeIs('suporte.admin.index') ? 'active fw-bold text-primary' : '' }}">
+                           Atender Chamados
+                        </a>
                     </div>
                 </div>
             </div>
