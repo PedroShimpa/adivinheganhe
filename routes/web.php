@@ -135,6 +135,10 @@ Route::middleware(['auth', 'banned'])->group(function () {
         Route::post('/competitivo/nova-pergunta', [CompetitivoController::class, 'store_pergunta'])->name('competitivo.store_pergunta');
         Route::get('/adivinhacoes-expiradas', [HomeController::class, 'expiradas'])->name('adivinhacoes.expiradas');
 
+        Route::get('/suporte/admin', [SuporteController::class, 'adminIndex'])->name('suporte.admin.index');
+        Route::get('/suporte/admin/{suporte}', [SuporteController::class, 'adminShow'])->name('suporte.admin.show');
+        Route::put('/suporte/admin/{suporte}', [SuporteController::class, 'adminUpdate'])->name('suporte.admin.update');
+
         #deleções
         Route::delete('/premiacoes/deletar/{premiacao}', [AdivinhacoesController::class, 'deletarPremiacao'])->name('premiacoes.delete');
     });

@@ -14,6 +14,17 @@ class Suporte extends Model
         'user_id',
         'categoria_id',
         'descricao',
-        'status'
+        'status',
+        'admin_response'
     ];
+
+    public function categoria()
+    {
+        return $this->belongsTo(SuporteCategorias::class, 'categoria_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
