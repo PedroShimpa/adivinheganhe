@@ -10,7 +10,7 @@
         $box.removeClass('d-none animate__fadeOut').addClass('animate__fadeIn');
 
         try {
-          const res = await fetch(`${route}?limit=10&offset=0`, {
+          const res = await fetch(`${route}?limit=5&offset=0`, {
             headers: {
               'Accept': 'application/json'
             }
@@ -273,7 +273,7 @@
     $btn.prop('disabled', true).text('Carregando...');
 
     try {
-      const res = await fetch(`${route}?limit=10&offset=${offset}`, {
+      const res = await fetch(`${route}?limit=5&offset=${offset}`, {
         headers: {
           'Accept': 'application/json'
         }
@@ -288,7 +288,7 @@
         $list.append(html);
 
         // Update offset for next load
-        $btn.data('offset', offset + 10);
+        $btn.data('offset', offset + 5);
 
         // Hide button if no more comments
         if (!data.has_more) {
