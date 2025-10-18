@@ -192,6 +192,11 @@
 
                     <div id="comentarios-{{ $adivinhacao->id }}" class="comentarios-box d-none mt-3 p-3 rounded-4 bg-light shadow-sm">
                         <div class="comentarios-list small mb-3 text-dark"></div>
+                        <div class="text-center">
+                            <button class="btn btn-outline-primary btn-sm rounded-pill load-more-comments d-none" data-id="{{ $adivinhacao->id }}" data-route="{{ route('adivinhacoes.comments', $adivinhacao->uuid) }}" data-offset="10">
+                                Ver Mais Comentários
+                            </button>
+                        </div>
 
                         @auth
                             <div class="input-group">

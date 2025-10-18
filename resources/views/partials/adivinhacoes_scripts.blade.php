@@ -10,19 +10,24 @@
         $box.removeClass('d-none animate__fadeOut').addClass('animate__fadeIn');
 
         try {
-          const res = await fetch(route, {
+          const res = await fetch(`${route}?limit=10&offset=0`, {
             headers: {
               'Accept': 'application/json'
             }
           });
           const data = await res.json();
 
-          if (data.length > 0) {
+          if (data.comments && data.comments.length > 0) {
             let html = '';
-            data.forEach(c => {
+            data.comments.forEach(c => {
               html += adicionarComentario(c);
             });
             $list.html(html);
+
+            // Show "Ver Mais" button if there are more comments
+            if (data.has_more) {
+              $box.find('.load-more-comments').removeClass('d-none');
+            }
           } else {
             // $list.html('<p class="text-muted">Nenhum comentário ainda. Seja o primeiro!</p>');
           }
@@ -255,6 +260,46 @@
           })
           .catch(err => console.error(err));
       });
+  });
+
+  // Load more comments functionality
+  $(document).on('click', '.load-more-comments', async function() {
+    const $btn = $(this);
+    const adivinhacaoId = $btn.data('id');
+    const route = $btn.data('route');
+    const offset = parseInt($btn.data('offset'));
+    const $list = $(`#comentarios-${adivinhacaoId} .comentarios-list`);
+
+    $btn.prop('disabled', true).text('Carregando...');
+
+    try {
+      const res = await fetch(`${route}?limit=10&offset=${offset}`, {
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      const data = await res.json();
+
+      if (data.comments && data.comments.length > 0) {
+        let html = '';
+        data.comments.forEach(c => {
+          html += adicionarComentario(c);
+        });
+        $list.append(html);
+
+        // Update offset for next load
+        $btn.data('offset', offset + 10);
+
+        // Hide button if no more comments
+        if (!data.has_more) {
+          $btn.addClass('d-none');
+        }
+      }
+    } catch (e) {
+      console.error('Erro ao carregar mais comentários:', e);
+    } finally {
+      $btn.prop('disabled', false).text('Ver Mais Comentários');
+    }
   });
 
 

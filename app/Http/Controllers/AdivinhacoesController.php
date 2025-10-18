@@ -152,7 +152,15 @@ class AdivinhacoesController extends Controller
 
     public function comments(Adivinhacoes $adivinhacao)
     {
-        return response()->json(GetCommentsResource::collection($adivinhacao->comments));
+        $limit = request('limit', 10);
+        $offset = request('offset', 0);
+
+        $comments = $adivinhacao->comments()->orderBy('created_at', 'desc')->skip($offset)->take($limit)->get();
+
+        return response()->json([
+            'comments' => GetCommentsResource::collection($comments),
+            'has_more' => $adivinhacao->comments()->count() > ($offset + $limit)
+        ]);
     }
 
     public function comment(Request $request, Adivinhacoes $adivinhacao)
