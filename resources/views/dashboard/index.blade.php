@@ -100,6 +100,27 @@
         </div>
     </div>
 
+    <!-- Usuários Online -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Usuários Online</h5>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush" id="online-users-list">
+                @if(isset($onlineUsers['users']) && is_array($onlineUsers['users']) && count($onlineUsers['users']) > 0)
+                @foreach($onlineUsers['users'] as $user)
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ $user['name'] ?? $user->name ?? 'Usuário Desconhecido' }}
+                    <span class="badge bg-success rounded-pill">Online</span>
+                </li>
+                @endforeach
+                @else
+                <li class="list-group-item text-muted">Nenhum usuário online no momento.</li>
+                @endif
+            </ul>
+        </div>
+    </div>
+
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-light">
             <h5 class="mb-0">Premiações</h5>
@@ -132,26 +153,6 @@
         </div>
         <div class="card-body">
             {!! $respostasTable->table(['class' => 'table table-striped table-hover'], true) !!}
-        </div>
-    </div>
-    <!-- Usuários Online -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-light">
-            <h5 class="mb-0">Usuários Online</h5>
-        </div>
-        <div class="card-body">
-            <ul class="list-group list-group-flush" id="online-users-list">
-                @if(isset($onlineUsers['users']) && is_array($onlineUsers['users']) && count($onlineUsers['users']) > 0)
-                    @foreach($onlineUsers['users'] as $user)
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            {{ $user['name'] ?? $user->name ?? 'Usuário Desconhecido' }}
-                            <span class="badge bg-success rounded-pill">Online</span>
-                        </li>
-                    @endforeach
-                @else
-                    <li class="list-group-item text-muted">Nenhum usuário online no momento.</li>
-                @endif
-            </ul>
         </div>
     </div>
 
@@ -187,9 +188,9 @@
         </div>
     </div>
     @if($adsenseEarnings['error'])
-        <div class="alert alert-warning" role="alert">
-            {{ $adsenseEarnings['error'] }}
-        </div>
+    <div class="alert alert-warning" role="alert">
+        {{ $adsenseEarnings['error'] }}
+    </div>
     @endif
 
 </div>
@@ -204,8 +205,6 @@
 <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.15.3/dist/echo.iife.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pusher-js@8.4.0-rc2/dist/web/pusher.min.js"></script>
 <script>
-
-
     window.Echo = new Echo({
         broadcaster: 'pusher',
         key: '{{ env("REVERB_APP_KEY") }}',
@@ -287,10 +286,19 @@
     .count-update {
         animation: pulse 0.5s ease-in-out;
     }
+
     @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-        100% { transform: scale(1); }
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+
+        100% {
+            transform: scale(1);
+        }
     }
 </style>
 
