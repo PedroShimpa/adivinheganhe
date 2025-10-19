@@ -9,7 +9,7 @@ use App\Models\Competitivo\Partidas;
 use App\Models\User;
 use Illuminate\Support\Facades\Redis;
 use Google\Client;
-use Google\Service\AdSense;
+use Illuminate\Support\Facades\Http;
 use App\DataTables\PremiacoesDataTable;
 use App\DataTables\ComentariosDataTable;
 use App\DataTables\AdivinhacoesAtivasDataTable;
@@ -148,43 +148,72 @@ class DashboardController extends Controller
             $client = new Client();
             $client->setAuthConfig($jsonPath);
             $client->addScope('https://www.googleapis.com/auth/adsense.readonly');
+            $client->useApplicationDefaultCredentials();
 
-            $adsense = new AdSense($client);
+            $accessToken = $client->fetchAccessTokenWithAssertion()['access_token'];
+
+            // Fetch AdSense accounts to get account ID
+            $accountsResponse = Http::withToken($accessToken)
+                ->get('https://adsense.googleapis.com/v2/accounts');
+
+            if ($accountsResponse->failed()) {
+                throw new \Exception('Failed to fetch AdSense accounts: ' . $accountsResponse->body());
+            }
+
+            $accounts = $accountsResponse->json();
+            if (empty($accounts['accounts'])) {
+                throw new \Exception('No AdSense accounts found.');
+            }
+
+            $accountId = $accounts['accounts'][0]['name']; // e.g., "accounts/pub-XXXXXXXXXXXXXXXX"
 
             // Today's earnings
-            $todayReport = $adsense->reports->generate(
-                'today',
-                'today',
-                [
-                    'metric' => ['EARNINGS'],
-                    'dimension' => ['DATE'],
-                    'useTimezoneReporting' => true
-                ]
-            );
+            $today = now()->format('Y-m-d');
+            $todayReportResponse = Http::withToken($accessToken)
+                ->get("https://adsense.googleapis.com/v2/{$accountId}/reports:generate", [
+                    'dateRange' => 'TODAY',
+                    'metrics' => ['ESTIMATED_EARNINGS'],
+                    'dimensions' => ['DATE'],
+                    'reportingTimeZone' => 'ACCOUNT_TIME_ZONE'
+                ]);
 
+            if ($todayReportResponse->failed()) {
+                throw new \Exception('Failed to fetch today\'s earnings: ' . $todayReportResponse->body());
+            }
+
+            $todayReport = $todayReportResponse->json();
             $todayEarnings = 0;
-            if (!empty($todayReport->getRows())) {
-                $todayEarnings = $todayReport->getRows()[0][1];
+            if (!empty($todayReport['rows'])) {
+                $todayEarnings = $todayReport['rows'][0]['cells'][1]['value'];
             }
 
             // This month's earnings
             $startOfMonth = now()->startOfMonth()->format('Y-m-d');
             $endOfMonth = now()->endOfMonth()->format('Y-m-d');
 
-            $monthReport = $adsense->reports->generate(
-                $startOfMonth,
-                $endOfMonth,
-                [
-                    'metric' => ['EARNINGS'],
-                    'dimension' => ['DATE'],
-                    'useTimezoneReporting' => true
-                ]
-            );
+            $monthReportResponse = Http::withToken($accessToken)
+                ->get("https://adsense.googleapis.com/v2/{$accountId}/reports:generate", [
+                    'dateRange' => 'CUSTOM',
+                    'startDate.day' => (int)now()->startOfMonth()->format('d'),
+                    'startDate.month' => (int)now()->startOfMonth()->format('m'),
+                    'startDate.year' => (int)now()->startOfMonth()->format('Y'),
+                    'endDate.day' => (int)now()->endOfMonth()->format('d'),
+                    'endDate.month' => (int)now()->endOfMonth()->format('m'),
+                    'endDate.year' => (int)now()->endOfMonth()->format('Y'),
+                    'metrics' => ['ESTIMATED_EARNINGS'],
+                    'dimensions' => ['DATE'],
+                    'reportingTimeZone' => 'ACCOUNT_TIME_ZONE'
+                ]);
 
+            if ($monthReportResponse->failed()) {
+                throw new \Exception('Failed to fetch this month\'s earnings: ' . $monthReportResponse->body());
+            }
+
+            $monthReport = $monthReportResponse->json();
             $thisMonthEarnings = 0;
-            if (!empty($monthReport->getRows())) {
-                foreach ($monthReport->getRows() as $row) {
-                    $thisMonthEarnings += $row[1];
+            if (!empty($monthReport['rows'])) {
+                foreach ($monthReport['rows'] as $row) {
+                    $thisMonthEarnings += $row['cells'][1]['value'];
                 }
             }
 
