@@ -10,8 +10,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
-use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use App\Events\NewUserRegistered;
 use App\Models\User;
 
