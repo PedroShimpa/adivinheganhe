@@ -56,7 +56,7 @@ Route::get('/banned', function () {
 
 #rotas autenticadas
 
-Route::middleware(['auth', 'banned'])->group(function () {
+Route::middleware(['auth', 'banned', 'trackOnline'])->group(function () {
 
     Route::get('/profile', [UsersController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [UsersController::class, 'update'])->name('profile.update');

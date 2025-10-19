@@ -9,6 +9,14 @@
     </div>
 
     <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-success shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Usuários Online</h5>
+                    <p class="card-text display-6">{{ $countUsersOnline }}</p>
+                </div>
+            </div>
+        </div>
         <div class="col-md-4">
             <div class="card text-white bg-primary shadow-sm">
                 <div class="card-body">
@@ -126,7 +134,27 @@
             {!! $respostasTable->table(['class' => 'table table-striped table-hover'], true) !!}
         </div>
     </div>
-    <!-- Tabela de usuários -->
+    <!-- Usuários Online -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Usuários Online</h5>
+        </div>
+        <div class="card-body">
+            @if($onlineUsers->count() > 0)
+                <ul class="list-group list-group-flush">
+                    @foreach($onlineUsers as $user)
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ $user->name }}
+                            <span class="badge bg-success rounded-pill">Online</span>
+                        </li>
+                    @endforeach
+                </ul>
+            @else
+                <p class="text-muted">Nenhum usuário online no momento.</p>
+            @endif
+        </div>
+    </div>
+
     <!-- Tabela de usuários -->
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-light">
@@ -137,7 +165,32 @@
         </div>
     </div>
 
-
+    <!-- Ganhos do AdSense -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card text-white bg-success shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Ganhos do AdSense</h5>
+                    <p class="card-text display-6">R$ {{ $adsenseEarnings['thisMonth'] }}</p>
+                    <small>Este Mês</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card text-white bg-info shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Ganhos do AdSense</h5>
+                    <p class="card-text display-6">R$ {{ $adsenseEarnings['today'] }}</p>
+                    <small>Hoje</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if($adsenseEarnings['error'])
+        <div class="alert alert-warning" role="alert">
+            {{ $adsenseEarnings['error'] }}
+        </div>
+    @endif
 
 </div>
 
