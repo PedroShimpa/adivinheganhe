@@ -32,6 +32,7 @@ class Adivinhacoes extends Model
         'notificar_email',
         'notificado_email_em',
         'notificado_whatsapp_em',
+        'dificuldade',
     ];
 
     protected $dates = [
@@ -63,6 +64,7 @@ class Adivinhacoes extends Model
             'dica_valor',
             'created_at',
             'formato_resposta',
+            'dificuldade',
         )
             ->whereNull('regiao_id')
             ->where('resolvida', 'N')
@@ -104,7 +106,8 @@ class Adivinhacoes extends Model
             'dica_paga',
             'dica_valor',
             'created_at',
-            'formato_resposta'
+            'formato_resposta',
+            'dificuldade'
         )
             ->where('regiao_id', $regiaoId)
             ->where('resolvida', 'N')
@@ -147,6 +150,7 @@ class Adivinhacoes extends Model
             'dica_valor',
             'created_at',
             'formato_resposta',
+            'dificuldade',
         )
             ->where('resolvida', 'N')
             ->whereNotNull('expire_at')

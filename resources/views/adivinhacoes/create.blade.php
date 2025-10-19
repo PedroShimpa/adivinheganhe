@@ -105,6 +105,21 @@
                         </div>
 
                         <div class="mb-3">
+                            <label for="dificuldade" class="form-label">{{ __('Dificuldade') }}</label>
+                            <select class="form-select @error('dificuldade') is-invalid @enderror" id="dificuldade" name="dificuldade" required>
+                                <option value="">Selecione...</option>
+                                <option value="muito facil" {{ old('dificuldade') == 'muito facil' ? 'selected' : '' }}>Muito Fácil</option>
+                                <option value="facil" {{ old('dificuldade') == 'facil' ? 'selected' : '' }}>Fácil</option>
+                                <option value="média" {{ old('dificuldade') == 'média' ? 'selected' : '' }} selected>Média</option>
+                                <option value="dificil" {{ old('dificuldade') == 'dificil' ? 'selected' : '' }}>Difícil</option>
+                                <option value="muito dificil" {{ old('dificuldade') == 'muito dificil' ? 'selected' : '' }}>Muito Difícil</option>
+                            </select>
+                            @error('dificuldade')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
                             <label for="regiao_id" class="form-label">Região</label>
                             <select name="regiao_id" class="form-select">
                                 <option value="">Selecione</option>
