@@ -144,7 +144,7 @@
                 @if(isset($onlineUsers['users']) && is_array($onlineUsers['users']) && count($onlineUsers['users']) > 0)
                     @foreach($onlineUsers['users'] as $user)
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            {{ $user->name }}
+                            {{ $user['name'] ?? $user->name ?? 'Usuário Desconhecido' }}
                             <span class="badge bg-success rounded-pill">Online</span>
                         </li>
                     @endforeach
@@ -265,7 +265,7 @@
                             const li = document.createElement('li');
                             li.className = 'list-group-item d-flex justify-content-between align-items-center';
                             li.innerHTML = `
-                                ${user.name}
+                                ${user.name || user['name'] || 'Usuário Desconhecido'}
                                 <span class="badge bg-success rounded-pill">Online</span>
                             `;
                             onlineUsersList.appendChild(li);
