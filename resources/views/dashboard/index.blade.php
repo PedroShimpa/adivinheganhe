@@ -14,6 +14,46 @@
                 <div class="card-body">
                     <h5 class="card-title">Usuários</h5>
                     <p class="card-text display-6">{{ $countUsers }}</p>
+                    <small>Hoje: {{ $countUsersToday }}</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-danger shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Respostas Clássico</h5>
+                    <p class="card-text display-6">{{ $countRespostasClassico }}</p>
+                    <small>Hoje: {{ $countRespostasClassicoToday }}</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-success shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Adivinhações</h5>
+                    <p class="card-text display-6">{{ $countAdivinhacoes }}</p>
+                    <small>Ativas: {{ $countAdivinhacoesAtivas }}</small>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="card text-white bg-info shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Jogos Adivinhe o Milhão</h5>
+                    <p class="card-text display-6">{{ $countJogosAdivinheOmilhao }}</p>
+                    <small>Hoje: {{ $countJogosAdivinheOmilhaoToday }}</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-secondary shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Partidas Competitivo</h5>
+                    <p class="card-text display-6">{{ $countPartidasCompetitivo }}</p>
+                    <small>Hoje: {{ $countPartidasCompetitivoToday }}</small>
                 </div>
             </div>
         </div>
@@ -25,54 +65,33 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card text-white bg-warning shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Posts</h5>
-                    <p class="card-text display-6">{{ $countPosts }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-success shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Adivinhações</h5>
-                    <p class="card-text display-6">{{ $countAdivinhacoes }}</p>
-                    <small>Ativas: {{ $countAdivinhacoesAtivas }}</small>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-md-3">
-            <div class="card text-white bg-danger shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Respostas Clássico</h5>
-                    <p class="card-text display-6">{{ $countRespostasClassico }}</p>
-                    <small>Hoje: {{ $countRespostasClassicoToday }}</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card text-white bg-info shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Jogos Adivinhe o Milhão</h5>
-                    <p class="card-text display-6">{{ $countJogosAdivinheOmilhao }}</p>
-                    <small>Hoje: {{ $countJogosAdivinheOmilhaoToday }}</small>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-secondary shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Partidas Competitivo</h5>
-                    <p class="card-text display-6">{{ $countPartidasCompetitivo }}</p>
-                    <small>Hoje: {{ $countPartidasCompetitivoToday }}</small>
-                </div>
-            </div>
-        </div>
 
     </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Horários com mais respostas</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="horariosChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Dias da semana com mais respostas</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="diasChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-light">
             <h5 class="mb-0">Premiações</h5>
@@ -126,11 +145,66 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap4.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 {!! $premiacoesTable->scripts() !!}
 {!! $comentariosTable->scripts() !!}
 {!! $adivinhacoesAtivasTable->scripts() !!}
 {!! $respostasTable->scripts() !!}
 {!! $usersTable->scripts() !!}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Horários Chart
+        const ctxHorarios = document.getElementById('horariosChart').getContext('2d');
+        new Chart(ctxHorarios, {
+            type: 'line',
+            data: {
+                labels: Array.from({
+                    length: 24
+                }, (_, i) => i.toString()),
+                datasets: [{
+                    label: 'Respostas',
+                    data: @json($horariosRespostas),
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Dias da Semana Chart
+        const ctxDias = document.getElementById('diasChart').getContext('2d');
+        new Chart(ctxDias, {
+            type: 'line',
+            data: {
+                labels: Object.keys(@json($diasSemanaRespostas)),
+                datasets: [{
+                    label: 'Respostas',
+                    data: Object.values(@json($diasSemanaRespostas)),
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>
 @endpush
 @endsection
