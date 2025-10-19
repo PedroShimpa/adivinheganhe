@@ -9,7 +9,7 @@
         "php": "^8.2",
         "aws/aws-sdk-php": "^3.351",
         "genealabs/laravel-model-caching": "^12.0",
-        "google/apiclient": "*",
+        "google/apiclient": "^2.18",
         "http-interop/http-factory-guzzle": "^1.2",
         "intervention/image": "^3.11",
         "intervention/image-laravel": "^1.5",
