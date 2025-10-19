@@ -159,19 +159,21 @@ class DashboardController extends Controller
         try {
             // Get all online user keys from Cache using Laravel's Cache facade
             $cacheStore = Cache::store('redis');
-            $redis = $cacheStore->getStore();
+            $redis = $cacheStore->getRedis();
 
             // Use SCAN instead of KEYS for better performance
             $onlineUserIds = [];
             $iterator = null;
             do {
-                $keys = $redis->scan($iterator, 'online_user_*', 100);
+                $result = $redis->scan($iterator, 'online_user_*', 100);
+                $keys = $result[1]; // SCAN returns [iterator, [keys]]
                 foreach ($keys as $key) {
                     $userId = str_replace('online_user_', '', $key);
                     if (is_numeric($userId)) {
                         $onlineUserIds[] = $userId;
                     }
                 }
+                $iterator = $result[0]; // Update iterator
             } while ($iterator !== 0);
 
             $count = count($onlineUserIds);
