@@ -21,7 +21,7 @@
             <div class="card text-white bg-primary shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Usuários</h5>
-                    <p class="card-text display-6">{{ $countUsers }}</p>
+                    <p class="card-text display-6" id="total-users-count">{{ $countUsers }}</p>
                     <small>Hoje: {{ $countUsersToday }}</small>
                 </div>
             </div>
@@ -30,7 +30,7 @@
             <div class="card text-white bg-danger shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Respostas Clássico</h5>
-                    <p class="card-text display-6">{{ $countRespostasClassico }}</p>
+                    <p class="card-text display-6" id="total-responses-count">{{ $countRespostasClassico }}</p>
                     <small>Hoje: {{ $countRespostasClassicoToday }}</small>
                 </div>
             </div>
@@ -41,7 +41,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Adivinhações</h5>
                     <p class="card-text display-6">{{ $countAdivinhacoes }}</p>
-                    <small>Ativas: {{ $countAdivinhacoesAtivas }}</small>
+                    <small>Ativas: {{ is_numeric($countAdivinhacoesAtivas) ? $countAdivinhacoesAtivas : (is_array($countAdivinhacoesAtivas) ? count($countAdivinhacoesAtivas) : 0) }}</small>
                 </div>
             </div>
         </div>
@@ -140,9 +140,9 @@
             <h5 class="mb-0">Usuários Online</h5>
         </div>
         <div class="card-body">
-            @if($onlineUsers->count() > 0)
+            @if(count($onlineUsers['users']) > 0)
                 <ul class="list-group list-group-flush">
-                    @foreach($onlineUsers as $user)
+                    @foreach($onlineUsers['users'] as $user)
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             {{ $user->name }}
                             <span class="badge bg-success rounded-pill">Online</span>
@@ -199,6 +199,65 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/dataTables.bootstrap4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Laravel Echo for real-time updates -->
+<script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.15.3/dist/echo.iife.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pusher-js@8.4.0-rc2/dist/web/pusher.min.js"></script>
+<script>
+    window.Pusher = Pusher;
+    window.Echo = new Echo({
+        broadcaster: 'pusher',
+        key: '{{ config("broadcasting.connections.pusher.key") }}',
+        cluster: '{{ config("broadcasting.connections.pusher.options.cluster") }}',
+        encrypted: true,
+        auth: {
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        }
+    });
+
+    // Listen for dashboard updates
+    Echo.channel('dashboard-updates')
+        .listen('user.registered', (e) => {
+            try {
+                const countElement = document.getElementById('total-users-count');
+                if (countElement) {
+                    countElement.textContent = e.totalUsers;
+                    countElement.classList.add('count-update');
+                    setTimeout(() => countElement.classList.remove('count-update'), 500);
+                }
+            } catch (error) {
+                console.error('Error updating user count:', error);
+            }
+        })
+        .listen('response.added', (e) => {
+            try {
+                const countElement = document.getElementById('total-responses-count');
+                if (countElement) {
+                    countElement.textContent = e.totalResponses;
+                    countElement.classList.add('count-update');
+                    setTimeout(() => countElement.classList.remove('count-update'), 500);
+                }
+            } catch (error) {
+                console.error('Error updating response count:', error);
+            }
+        })
+        .error((error) => {
+            console.error('Echo connection error:', error);
+        });
+</script>
+
+<style>
+    .count-update {
+        animation: pulse 0.5s ease-in-out;
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+</style>
 
 {!! $premiacoesTable->scripts() !!}
 {!! $comentariosTable->scripts() !!}

@@ -20,30 +20,49 @@ class DashboardController extends Controller
 {
     public function dashboard()
     {
-        $adivinhacoesAtivas = (new Adivinhacoes())->getAtivas(true);
+        try {
+            $adivinhacoesAtivas = (new Adivinhacoes())->getAtivas(true);
+            $countAdivinhacoesAtivas = is_array($adivinhacoesAtivas) ? count($adivinhacoesAtivas) : $adivinhacoesAtivas->count();
+        } catch (\Exception $e) {
+            \Log::error('Error getting active adivinhacoes: ' . $e->getMessage());
+            $countAdivinhacoesAtivas = 0;
+        }
 
         // Horarios com mais respostas
-        $horariosRaw = AdivinhacoesRespostas::selectRaw('HOUR(created_at) as hour, COUNT(*) as count')
-            ->groupBy('hour')
-            ->pluck('count', 'hour');
-        $horariosRespostas = array_fill(0, 24, 0);
-        foreach ($horariosRaw as $hour => $count) {
-            $horariosRespostas[$hour] = $count;
+        try {
+            $horariosRaw = AdivinhacoesRespostas::selectRaw('HOUR(created_at) as hour, COUNT(*) as count')
+                ->groupBy('hour')
+                ->pluck('count', 'hour');
+            $horariosRespostas = array_fill(0, 24, 0);
+            foreach ($horariosRaw as $hour => $count) {
+                $horariosRespostas[$hour] = $count;
+            }
+        } catch (\Exception $e) {
+            \Log::error('Error getting horarios respostas: ' . $e->getMessage());
+            $horariosRespostas = array_fill(0, 24, 0);
         }
 
         // Dias da semana com mais respostas
-        $diasRaw = AdivinhacoesRespostas::selectRaw('DAYOFWEEK(created_at) as dia, COUNT(*) as count')
-            ->groupBy('dia')
-            ->pluck('count', 'dia');
-        $diasSemanaRespostas = [
-            'Domingo' => 0, 'Segunda' => 0, 'Terça' => 0, 'Quarta' => 0,
-            'Quinta' => 0, 'Sexta' => 0, 'Sábado' => 0
-        ];
-        $portugueseDays = [1 => 'Domingo', 2 => 'Segunda', 3 => 'Terça', 4 => 'Quarta', 5 => 'Quinta', 6 => 'Sexta', 7 => 'Sábado'];
-        foreach ($diasRaw as $diaNum => $count) {
-            if (isset($portugueseDays[$diaNum])) {
-                $diasSemanaRespostas[$portugueseDays[$diaNum]] = $count;
+        try {
+            $diasRaw = AdivinhacoesRespostas::selectRaw('DAYOFWEEK(created_at) as dia, COUNT(*) as count')
+                ->groupBy('dia')
+                ->pluck('count', 'dia');
+            $diasSemanaRespostas = [
+                'Domingo' => 0, 'Segunda' => 0, 'Terça' => 0, 'Quarta' => 0,
+                'Quinta' => 0, 'Sexta' => 0, 'Sábado' => 0
+            ];
+            $portugueseDays = [1 => 'Domingo', 2 => 'Segunda', 3 => 'Terça', 4 => 'Quarta', 5 => 'Quinta', 6 => 'Sexta', 7 => 'Sábado'];
+            foreach ($diasRaw as $diaNum => $count) {
+                if (isset($portugueseDays[$diaNum])) {
+                    $diasSemanaRespostas[$portugueseDays[$diaNum]] = $count;
+                }
             }
+        } catch (\Exception $e) {
+            \Log::error('Error getting dias semana respostas: ' . $e->getMessage());
+            $diasSemanaRespostas = [
+                'Domingo' => 0, 'Segunda' => 0, 'Terça' => 0, 'Quarta' => 0,
+                'Quinta' => 0, 'Sexta' => 0, 'Sábado' => 0
+            ];
         }
 
         // Online users
@@ -52,29 +71,61 @@ class DashboardController extends Controller
         // Google AdSense earnings
         $adsenseEarnings = $this->getAdSenseEarnings();
 
-        $data = [
-            'countUsers' => User::where('banned', false)->count(),
-            'countUsersToday' => User::where('banned', false)->whereDate('created_at', today())->count(),
-            'countUsersOnline' => $onlineUsers['count'],
-            'onlineUsers' => $onlineUsers['users'],
-            'countAdivinhacoes' => Adivinhacoes::count(),
-            'countAdivinhacoesAtivas' => $adivinhacoesAtivas->count(),
-            'countRespostasClassico' => AdivinhacoesRespostas::count(),
-            'countRespostasClassicoToday' => AdivinhacoesRespostas::whereDate('created_at', today())->count(),
-            'countJogosAdivinheOmilhao' => InicioJogo::count(),
-            'countJogosAdivinheOmilhaoToday' => InicioJogo::whereDate('created_at', today())->count(),
-            'countPartidasCompetitivo' => Partidas::count(),
-            'countPartidasCompetitivoToday' => Partidas::whereDate('created_at', today())->count(),
-            'jogadoresNaFilaAgoraCompetitivo' => Fila::count(),
-            'horariosRespostas' => $horariosRespostas,
-            'diasSemanaRespostas' => $diasSemanaRespostas,
-            'adsenseEarnings' => $adsenseEarnings,
-            'premiacoesTable' => app(PremiacoesDataTable::class)->html(),
-            'comentariosTable' => app(ComentariosDataTable::class)->html(),
-            'adivinhacoesAtivasTable' => app(AdivinhacoesAtivasDataTable::class)->html(),
-            'respostasTable' => app(RespostasDataTable::class)->html(),
-            'usersTable' => app(UsersDataTable::class)->html(),
-        ];
+        try {
+            $data = [
+                'countUsers' => User::where('banned', false)->count(),
+                'countUsersToday' => User::where('banned', false)->whereDate('created_at', today())->count(),
+                'countUsersOnline' => $onlineUsers['count'],
+                'onlineUsers' => $onlineUsers['users'],
+                'countAdivinhacoes' => Adivinhacoes::count(),
+                'countAdivinhacoesAtivas' => $countAdivinhacoesAtivas,
+                'countRespostasClassico' => AdivinhacoesRespostas::count(),
+                'countRespostasClassicoToday' => AdivinhacoesRespostas::whereDate('created_at', today())->count(),
+                'countJogosAdivinheOmilhao' => InicioJogo::count(),
+                'countJogosAdivinheOmilhaoToday' => InicioJogo::whereDate('created_at', today())->count(),
+                'countPartidasCompetitivo' => Partidas::count(),
+                'countPartidasCompetitivoToday' => Partidas::whereDate('created_at', today())->count(),
+                'jogadoresNaFilaAgoraCompetitivo' => Fila::count(),
+                'horariosRespostas' => $horariosRespostas,
+                'diasSemanaRespostas' => $diasSemanaRespostas,
+                'adsenseEarnings' => $adsenseEarnings,
+                'premiacoesTable' => app(PremiacoesDataTable::class)->html(),
+                'comentariosTable' => app(ComentariosDataTable::class)->html(),
+                'adivinhacoesAtivasTable' => app(AdivinhacoesAtivasDataTable::class)->html(),
+                'respostasTable' => app(RespostasDataTable::class)->html(),
+                'usersTable' => app(UsersDataTable::class)->html(),
+            ];
+        } catch (\Exception $e) {
+            \Log::error('Error preparing dashboard data: ' . $e->getMessage());
+            // Provide fallback data
+            $data = [
+                'countUsers' => 0,
+                'countUsersToday' => 0,
+                'countUsersOnline' => 0,
+                'onlineUsers' => collect(),
+                'countAdivinhacoes' => 0,
+                'countAdivinhacoesAtivas' => 0,
+                'countRespostasClassico' => 0,
+                'countRespostasClassicoToday' => 0,
+                'countJogosAdivinheOmilhao' => 0,
+                'countJogosAdivinheOmilhaoToday' => 0,
+                'countPartidasCompetitivo' => 0,
+                'countPartidasCompetitivoToday' => 0,
+                'jogadoresNaFilaAgoraCompetitivo' => 0,
+                'horariosRespostas' => array_fill(0, 24, 0),
+                'diasSemanaRespostas' => [
+                    'Domingo' => 0, 'Segunda' => 0, 'Terça' => 0, 'Quarta' => 0,
+                    'Quinta' => 0, 'Sexta' => 0, 'Sábado' => 0
+                ],
+                'adsenseEarnings' => $adsenseEarnings,
+                'premiacoesTable' => '',
+                'comentariosTable' => '',
+                'adivinhacoesAtivasTable' => '',
+                'respostasTable' => '',
+                'usersTable' => '',
+            ];
+        }
+
         return view('dashboard.index')->with($data);
     }
 
@@ -138,6 +189,7 @@ class DashboardController extends Controller
             $jsonPath = env('GOOGLE_ADSENSE_JSON_PATH');
 
             if (!$jsonPath || !file_exists($jsonPath)) {
+                \Log::warning('AdSense JSON file not found at path: ' . $jsonPath);
                 return [
                     'today' => '0.00',
                     'thisMonth' => '0.00',
@@ -154,22 +206,30 @@ class DashboardController extends Controller
 
             // Fetch AdSense accounts to get account ID
             $accountsResponse = Http::withToken($accessToken)
+                ->timeout(30)
+                ->retry(3, 100)
                 ->get('https://adsense.googleapis.com/v2/accounts');
 
             if ($accountsResponse->failed()) {
-                throw new \Exception('Failed to fetch AdSense accounts: ' . $accountsResponse->body());
+                \Log::error('AdSense API accounts request failed', [
+                    'status' => $accountsResponse->status(),
+                    'body' => $accountsResponse->body()
+                ]);
+                throw new \Exception('Failed to fetch AdSense accounts: HTTP ' . $accountsResponse->status());
             }
 
             $accounts = $accountsResponse->json();
             if (empty($accounts['accounts'])) {
+                \Log::warning('No AdSense accounts found for the authenticated user');
                 throw new \Exception('No AdSense accounts found.');
             }
 
             $accountId = $accounts['accounts'][0]['name']; // e.g., "accounts/pub-XXXXXXXXXXXXXXXX"
 
             // Today's earnings
-            $today = now()->format('Y-m-d');
             $todayReportResponse = Http::withToken($accessToken)
+                ->timeout(30)
+                ->retry(3, 100)
                 ->get("https://adsense.googleapis.com/v2/{$accountId}/reports:generate", [
                     'dateRange' => 'TODAY',
                     'metrics' => ['ESTIMATED_EARNINGS'],
@@ -178,7 +238,11 @@ class DashboardController extends Controller
                 ]);
 
             if ($todayReportResponse->failed()) {
-                throw new \Exception('Failed to fetch today\'s earnings: ' . $todayReportResponse->body());
+                \Log::error('AdSense API today earnings request failed', [
+                    'status' => $todayReportResponse->status(),
+                    'body' => $todayReportResponse->body()
+                ]);
+                throw new \Exception('Failed to fetch today\'s earnings: HTTP ' . $todayReportResponse->status());
             }
 
             $todayReport = $todayReportResponse->json();
@@ -188,10 +252,9 @@ class DashboardController extends Controller
             }
 
             // This month's earnings
-            $startOfMonth = now()->startOfMonth()->format('Y-m-d');
-            $endOfMonth = now()->endOfMonth()->format('Y-m-d');
-
             $monthReportResponse = Http::withToken($accessToken)
+                ->timeout(30)
+                ->retry(3, 100)
                 ->get("https://adsense.googleapis.com/v2/{$accountId}/reports:generate", [
                     'dateRange' => 'CUSTOM',
                     'startDate.day' => (int)now()->startOfMonth()->format('d'),
@@ -206,7 +269,11 @@ class DashboardController extends Controller
                 ]);
 
             if ($monthReportResponse->failed()) {
-                throw new \Exception('Failed to fetch this month\'s earnings: ' . $monthReportResponse->body());
+                \Log::error('AdSense API month earnings request failed', [
+                    'status' => $monthReportResponse->status(),
+                    'body' => $monthReportResponse->body()
+                ]);
+                throw new \Exception('Failed to fetch this month\'s earnings: HTTP ' . $monthReportResponse->status());
             }
 
             $monthReport = $monthReportResponse->json();
@@ -223,6 +290,10 @@ class DashboardController extends Controller
                 'error' => null
             ];
         } catch (\Exception $e) {
+            \Log::error('AdSense earnings fetch failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             return [
                 'today' => '0.00',
                 'thisMonth' => '0.00',

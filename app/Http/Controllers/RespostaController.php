@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\RespostaAprovada;
 use App\Events\RespostaPrivada;
+use App\Events\NewResponseAdded;
 use App\Mail\AcertoAdminMail;
 use App\Mail\AcertoUsuarioMail;
 use App\Models\AdicionaisIndicacao;
@@ -65,6 +66,15 @@ class RespostaController extends Controller
             'resposta' => $respostaCliente,
             'created_at' => now()
         ]);
+
+        // Dispatch event for real-time dashboard update
+        try {
+            $totalResponses = AdivinhacoesRespostas::count();
+            broadcast(new NewResponseAdded($totalResponses));
+        } catch (\Exception $e) {
+            \Log::error('Failed to dispatch NewResponseAdded event: ' . $e->getMessage());
+            // Continue without failing the response submission
+        }
 
         return $this->responderAoUsuario($acertou, $user, $adivinhacao, $respostaUuid, $userUuid);
     }
