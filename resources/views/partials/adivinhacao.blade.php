@@ -74,6 +74,13 @@
                     </p>
                 @endif
 
+                {{-- Dificuldade --}}
+                @if(!empty($adivinhacao->dificuldade))
+                    <p class="text-warning small mb-2">
+                        Dificuldade: <strong>{{ $adivinhacao->dificuldade }}</strong>
+                    </p>
+                @endif
+
                 {{-- Data de expiração --}}
                 @if(!empty($adivinhacao->expired_at_br))
                     <p class="text-info small mb-2">
