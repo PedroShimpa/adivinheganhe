@@ -140,7 +140,7 @@
             <h5 class="mb-0">Usuários Online</h5>
         </div>
         <div class="card-body">
-            @if(count($onlineUsers['users']) > 0)
+            @if(isset($onlineUsers['users']) && is_array($onlineUsers['users']) && count($onlineUsers['users']) > 0)
                 <ul class="list-group list-group-flush">
                     @foreach($onlineUsers['users'] as $user)
                         <li class="list-group-item d-flex justify-content-between align-items-center">
