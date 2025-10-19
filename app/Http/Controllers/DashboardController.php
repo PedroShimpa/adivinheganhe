@@ -179,13 +179,14 @@ class DashboardController extends Controller
             $count = count($activeUsers);
 
             // Get user details for the list
-            $users = collect();
+            $users = [];
             if ($count > 0) {
                 $userIds = array_keys($activeUsers);
                 $users = User::whereIn('id', $userIds)
                     ->where('banned', false)
                     ->orderByRaw('FIELD(id, ' . implode(',', $userIds) . ')') // Maintain order
-                    ->get(['id', 'name', 'email']);
+                    ->get(['id', 'name', 'email'])
+                    ->toArray();
             }
 
             return [

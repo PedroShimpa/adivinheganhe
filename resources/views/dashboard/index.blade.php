@@ -13,7 +13,7 @@
             <div class="card text-white bg-success shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Usuários Online</h5>
-                    <p class="card-text display-6">{{ $countUsersOnline }}</p>
+                    <p class="card-text display-6" id="online-users-count">{{ $countUsersOnline }}</p>
                 </div>
             </div>
         </div>
@@ -140,18 +140,18 @@
             <h5 class="mb-0">Usuários Online</h5>
         </div>
         <div class="card-body">
-            @if(isset($onlineUsers['users']) && is_array($onlineUsers['users']) && count($onlineUsers['users']) > 0)
-                <ul class="list-group list-group-flush">
+            <ul class="list-group list-group-flush" id="online-users-list">
+                @if(isset($onlineUsers['users']) && is_array($onlineUsers['users']) && count($onlineUsers['users']) > 0)
                     @foreach($onlineUsers['users'] as $user)
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             {{ $user->name }}
                             <span class="badge bg-success rounded-pill">Online</span>
                         </li>
                     @endforeach
-                </ul>
-            @else
-                <p class="text-muted">Nenhum usuário online no momento.</p>
-            @endif
+                @else
+                    <li class="list-group-item text-muted">Nenhum usuário online no momento.</li>
+                @endif
+            </ul>
         </div>
     </div>
 
@@ -204,15 +204,19 @@
 <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.15.3/dist/echo.iife.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pusher-js@8.4.0-rc2/dist/web/pusher.min.js"></script>
 <script>
-    window.Pusher = Pusher;
+    const csrfToken = '{{ csrf_token() }}';
+
     window.Echo = new Echo({
         broadcaster: 'pusher',
-        key: '{{ config("broadcasting.connections.pusher.key") }}',
-        cluster: '{{ config("broadcasting.connections.pusher.options.cluster") }}',
-        encrypted: true,
+        key: '{{ env("REVERB_APP_KEY") }}',
+        wsHost: '{{ env("VITE_REVERB_HOST", "adivinheganhe.com.br") }}',
+        wsPort: '{{ env("VITE_REVERB_PORT", 443) }}',
+        forceTLS: false,
+        disableStats: true,
+        authEndpoint: '/broadcasting/auth-mixed',
         auth: {
             headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                'X-CSRF-TOKEN': csrfToken
             }
         }
     });
@@ -241,6 +245,37 @@
                 }
             } catch (error) {
                 console.error('Error updating response count:', error);
+            }
+        })
+        .listen('online.users.updated', (e) => {
+            try {
+                const onlineCountElement = document.getElementById('online-users-count');
+                if (onlineCountElement) {
+                    onlineCountElement.textContent = e.count;
+                    onlineCountElement.classList.add('count-update');
+                    setTimeout(() => onlineCountElement.classList.remove('count-update'), 500);
+                }
+
+                // Update online users list
+                const onlineUsersList = document.getElementById('online-users-list');
+                if (onlineUsersList && e.users) {
+                    onlineUsersList.innerHTML = '';
+                    if (e.users.length > 0) {
+                        e.users.forEach(user => {
+                            const li = document.createElement('li');
+                            li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                            li.innerHTML = `
+                                ${user.name}
+                                <span class="badge bg-success rounded-pill">Online</span>
+                            `;
+                            onlineUsersList.appendChild(li);
+                        });
+                    } else {
+                        onlineUsersList.innerHTML = '<li class="list-group-item text-muted">Nenhum usuário online no momento.</li>';
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating online users:', error);
             }
         })
         .error((error) => {
