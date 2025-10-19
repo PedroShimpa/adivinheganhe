@@ -157,31 +157,52 @@ class DashboardController extends Controller
     private function getOnlineUsers()
     {
         try {
-            // Get all online user keys from Cache using Laravel's Cache facade
+            // Since sessions are stored in Redis, use Redis SCAN to find online users
             $cacheStore = Cache::store('redis');
             $redis = $cacheStore->getRedis();
 
-            // Use SCAN instead of KEYS for better performance
+            // Laravel stores sessions with keys like "laravel:session_key"
+            // We need to scan for session keys and check their data
             $onlineUserIds = [];
             $iterator = null;
+            $pattern = 'laravel:*'; // Laravel's default session prefix
+
             do {
-                $result = $redis->scan($iterator, 'online_user_*', 100);
-                $keys = $result[1]; // SCAN returns [iterator, [keys]]
+                $result = $redis->scan($iterator, $pattern, 100);
+                $keys = $result[1];
+
                 foreach ($keys as $key) {
-                    $userId = str_replace('online_user_', '', $key);
-                    if (is_numeric($userId)) {
-                        $onlineUserIds[] = $userId;
+                    // Get session data
+                    $sessionData = $redis->get($key);
+
+                    if ($sessionData) {
+                        // Decode session data (Laravel uses PHP serialization)
+                        $data = unserialize($sessionData);
+
+                        // Check if session has user_id and recent activity
+                        if (isset($data['user_id']) && isset($data['last_activity'])) {
+                            $lastActivity = $data['last_activity'];
+                            $fiveMinutesAgo = now()->subMinutes(5)->timestamp;
+
+                            if ($lastActivity >= $fiveMinutesAgo) {
+                                $onlineUserIds[] = $data['user_id'];
+                            }
+                        }
                     }
                 }
-                $iterator = $result[0]; // Update iterator
+                $iterator = $result[0];
             } while ($iterator !== 0);
 
+            // Remove duplicates
+            $onlineUserIds = array_unique($onlineUserIds);
             $count = count($onlineUserIds);
 
             // Get user details for the list
             $users = collect();
             if ($count > 0) {
-                $users = User::whereIn('id', $onlineUserIds)->where('banned', false)->get(['id', 'name', 'email']);
+                $users = User::whereIn('id', $onlineUserIds)
+                    ->where('banned', false)
+                    ->get(['id', 'name', 'email']);
             }
 
             return [
@@ -189,7 +210,7 @@ class DashboardController extends Controller
                 'users' => $users
             ];
         } catch (\Exception $e) {
-            \Log::error('Error getting online users: ' . $e->getMessage());
+            \Log::error('Error getting online users from Redis sessions: ' . $e->getMessage());
             return [
                 'count' => 0,
                 'users' => collect()
@@ -232,13 +253,19 @@ class DashboardController extends Controller
                 throw new \Exception('Failed to fetch AdSense accounts: HTTP ' . $accountsResponse->status());
             }
 
-            $accounts = $accountsResponse->json();
-            if (empty($accounts['accounts'])) {
-                \Log::warning('No AdSense accounts found for the authenticated user');
-                throw new \Exception('No AdSense accounts found.');
+            // Use account ID from environment variable instead of fetching from API
+            $accountId = env('GOOGLE_ADSENSE_ACCOUNT_ID');
+
+            if (!$accountId) {
+                \Log::warning('GOOGLE_ADSENSE_ACCOUNT_ID not set in environment variables');
+                throw new \Exception('AdSense account ID not configured. Please set GOOGLE_ADSENSE_ACCOUNT_ID in your .env file.');
             }
 
-            $accountId = $accounts['accounts'][0]['name']; // e.g., "accounts/pub-XXXXXXXXXXXXXXXX"
+            // Validate account ID format
+            if (!preg_match('/^accounts\/pub-\d+$/', $accountId)) {
+                \Log::warning('Invalid AdSense account ID format: ' . $accountId);
+                throw new \Exception('Invalid AdSense account ID format. Expected format: accounts/pub-XXXXXXXXXXXXXXXX');
+            }
 
             // Today's earnings
             $todayReportResponse = Http::withToken($accessToken)
