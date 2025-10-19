@@ -20,7 +20,14 @@ class TrackOnlineUsers
     {
         if (Auth::check()) {
             $user = Auth::user();
-            // Set online status in cache with 5 minutes TTL
+
+            // Track online users in a centralized cache key
+            $onlineUsersKey = 'online_users';
+            $onlineUsers = Cache::get($onlineUsersKey, []);
+            $onlineUsers[$user->id] = now()->timestamp;
+            Cache::put($onlineUsersKey, $onlineUsers, now()->addMinutes(5));
+
+            // Also set individual user online status for backward compatibility
             Cache::put('online_user_' . $user->id, true, now()->addMinutes(5));
         }
 

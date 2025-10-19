@@ -157,51 +157,34 @@ class DashboardController extends Controller
     private function getOnlineUsers()
     {
         try {
-            // Since sessions are stored in Redis, use Redis SCAN to find online users
-            $cacheStore = Cache::store('redis');
-            $redis = $cacheStore->getRedis();
+            // Use a simpler approach: track online users via cache with TTL
+            $onlineUsersKey = 'online_users';
+            $fiveMinutes = 300; // 5 minutes in seconds
 
-            // Laravel stores sessions with keys like "laravel:session_key"
-            // We need to scan for session keys and check their data
-            $onlineUserIds = [];
-            $iterator = null;
-            $pattern = 'laravel:*'; // Laravel's default session prefix
+            // Get current online users from cache
+            $onlineUsers = Cache::get($onlineUsersKey, []);
 
-            do {
-                $result = $redis->scan($iterator, $pattern, 100);
-                $keys = $result[1];
-
-                foreach ($keys as $key) {
-                    // Get session data
-                    $sessionData = $redis->get($key);
-
-                    if ($sessionData) {
-                        // Decode session data (Laravel uses PHP serialization)
-                        $data = unserialize($sessionData);
-
-                        // Check if session has user_id and recent activity
-                        if (isset($data['user_id']) && isset($data['last_activity'])) {
-                            $lastActivity = $data['last_activity'];
-                            $fiveMinutesAgo = now()->subMinutes(5)->timestamp;
-
-                            if ($lastActivity >= $fiveMinutesAgo) {
-                                $onlineUserIds[] = $data['user_id'];
-                            }
-                        }
-                    }
+            // Clean up expired users
+            $currentTime = now()->timestamp;
+            $activeUsers = [];
+            foreach ($onlineUsers as $userId => $lastActivity) {
+                if (($currentTime - $lastActivity) <= $fiveMinutes) {
+                    $activeUsers[$userId] = $lastActivity;
                 }
-                $iterator = $result[0];
-            } while ($iterator !== 0);
+            }
 
-            // Remove duplicates
-            $onlineUserIds = array_unique($onlineUserIds);
-            $count = count($onlineUserIds);
+            // Update cache with cleaned data
+            Cache::put($onlineUsersKey, $activeUsers, $fiveMinutes);
+
+            $count = count($activeUsers);
 
             // Get user details for the list
             $users = collect();
             if ($count > 0) {
-                $users = User::whereIn('id', $onlineUserIds)
+                $userIds = array_keys($activeUsers);
+                $users = User::whereIn('id', $userIds)
                     ->where('banned', false)
+                    ->orderByRaw('FIELD(id, ' . implode(',', $userIds) . ')') // Maintain order
                     ->get(['id', 'name', 'email']);
             }
 
@@ -210,7 +193,7 @@ class DashboardController extends Controller
                 'users' => $users
             ];
         } catch (\Exception $e) {
-            \Log::error('Error getting online users from Redis sessions: ' . $e->getMessage());
+            \Log::error('Error getting online users: ' . $e->getMessage());
             return [
                 'count' => 0,
                 'users' => collect()
@@ -239,21 +222,7 @@ class DashboardController extends Controller
 
             $accessToken = $client->fetchAccessTokenWithAssertion()['access_token'];
 
-            // Fetch AdSense accounts to get account ID
-            $accountsResponse = Http::withToken($accessToken)
-                ->timeout(30)
-                ->retry(3, 100)
-                ->get('https://adsense.googleapis.com/v2/accounts');
-
-            if ($accountsResponse->failed()) {
-                \Log::error('AdSense API accounts request failed', [
-                    'status' => $accountsResponse->status(),
-                    'body' => $accountsResponse->body()
-                ]);
-                throw new \Exception('Failed to fetch AdSense accounts: HTTP ' . $accountsResponse->status());
-            }
-
-            // Use account ID from environment variable instead of fetching from API
+            // Use account ID from environment variable
             $accountId = env('GOOGLE_ADSENSE_ACCOUNT_ID');
 
             if (!$accountId) {
@@ -273,8 +242,8 @@ class DashboardController extends Controller
                 ->retry(3, 100)
                 ->get("https://adsense.googleapis.com/v2/{$accountId}/reports:generate", [
                     'dateRange' => 'TODAY',
-                    'metrics' => ['ESTIMATED_EARNINGS'],
-                    'dimensions' => ['DATE'],
+                    'metrics' => 'ESTIMATED_EARNINGS',
+                    'dimensions' => 'DATE',
                     'reportingTimeZone' => 'ACCOUNT_TIME_ZONE'
                 ]);
 
@@ -304,8 +273,8 @@ class DashboardController extends Controller
                     'endDate.day' => (int)now()->endOfMonth()->format('d'),
                     'endDate.month' => (int)now()->endOfMonth()->format('m'),
                     'endDate.year' => (int)now()->endOfMonth()->format('Y'),
-                    'metrics' => ['ESTIMATED_EARNINGS'],
-                    'dimensions' => ['DATE'],
+                    'metrics' => 'ESTIMATED_EARNINGS',
+                    'dimensions' => 'DATE',
                     'reportingTimeZone' => 'ACCOUNT_TIME_ZONE'
                 ]);
 
