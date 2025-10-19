@@ -7,7 +7,7 @@ use App\Models\AdivinheOMilhao\InicioJogo;
 use App\Models\Competitivo\Fila;
 use App\Models\Competitivo\Partidas;
 use App\Models\User;
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Cache;
 use Google\Client;
 use Illuminate\Support\Facades\Http;
 use App\DataTables\PremiacoesDataTable;
@@ -157,16 +157,27 @@ class DashboardController extends Controller
     private function getOnlineUsers()
     {
         try {
-            // Get all online user keys from Redis
-            $onlineKeys = Redis::keys('online_user_*');
-            $onlineUserIds = array_map(function ($key) {
-                return str_replace('online_user_', '', $key);
-            }, $onlineKeys);
+            // Get all online user keys from Cache using Laravel's Cache facade
+            $cacheStore = Cache::store('redis');
+            $redis = $cacheStore->getStore();
+
+            // Use SCAN instead of KEYS for better performance
+            $onlineUserIds = [];
+            $iterator = null;
+            do {
+                $keys = $redis->scan($iterator, 'online_user_*', 100);
+                foreach ($keys as $key) {
+                    $userId = str_replace('online_user_', '', $key);
+                    if (is_numeric($userId)) {
+                        $onlineUserIds[] = $userId;
+                    }
+                }
+            } while ($iterator !== 0);
 
             $count = count($onlineUserIds);
 
             // Get user details for the list
-            $users = [];
+            $users = collect();
             if ($count > 0) {
                 $users = User::whereIn('id', $onlineUserIds)->where('banned', false)->get(['id', 'name', 'email']);
             }
@@ -176,6 +187,7 @@ class DashboardController extends Controller
                 'users' => $users
             ];
         } catch (\Exception $e) {
+            \Log::error('Error getting online users: ' . $e->getMessage());
             return [
                 'count' => 0,
                 'users' => collect()
