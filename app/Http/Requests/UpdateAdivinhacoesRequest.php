@@ -31,10 +31,11 @@ class UpdateAdivinhacoesRequest extends FormRequest
             'dica_paga' => ['string', 'size:1'],
             'dica_valor' => ['nullable'],
             'expire_at' => ['nullable'],
-            'regiao_id' => ['nullable', 'exists:regioes,id'],
             'dificuldade' => ['nullable', 'string'],
             'formato_resposta' => ['nullable'],
-            'notificar_push' => ['nullable']
+            'notificar_push' => ['nullable'],
+            'vip_release_at' => ['nullable'],
+            'only_members' => ['nullable'],
         ];
     }
 }

@@ -24,11 +24,14 @@ class StoreAdivinhacoesRequest extends FormRequest
             'dica_valor' => ['nullable'],
             'liberado_at' => ['nullable'],
             'expire_at' => ['nullable'],
-            'regiao_id' => ['nullable', 'exists:regioes,id'],
             'formato_resposta' => ['nullable'],
             'notificar_whatsapp' => ['nullable'],
             'notificar_email' => ['nullable'],
             'notificar_push' => ['nullable'],
+            'dificuldade' => ['nullable'],
+            'vip_release_at' => ['nullable'],
+            'only_members' => ['nullable'],
+
         ];
     }
 }

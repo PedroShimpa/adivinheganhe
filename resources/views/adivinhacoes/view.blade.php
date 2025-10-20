@@ -183,30 +183,7 @@
                                     Apenas para membros (membros podem responder, todos podem ver)
                                 </label>
                             </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="regiao_id" class="form-label">Região</label>
-                            <select name="regiao_id" class="form-select">
-                                <option value="">Selecione</option>
-                                @foreach($regioes as $regiao)
-                                <option value="{{ $regiao->id }}" {{ old('regiao_id', $adivinhacao->regiao_id) == $regiao->id ? 'selected' : '' }}>
-                                    {{ $regiao->nome }}
-                                </option>
-                                @endforeach
-                            </select>
-                            @error('regiao_id') <small class="text-danger">{{ $message }}</small> @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">{{ __('Notificações (canal)') }}</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="notificar_push" id="notificar_push" value="1" {{ old('notificar_push', $adivinhacao->notificar_push) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="notificar_push">
-                                    Push Notification
-                                </label>
-                            </div>
-                        </div>
+                        </div>           
 
                         <button type="submit" class="btn btn-primary">{{ __('Salvar Adivinhação') }}</button>
                     </form>

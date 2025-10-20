@@ -47,7 +47,7 @@
             <input type="text" class="form-control @error('whatsapp') is-invalid @enderror"
                 id="whatsapp" name="whatsapp" value="{{ old('whatsapp', auth()->user()->whatsapp) }}"
                 placeholder="(99) 99999-9999">
-            <small class="form-text text-muted">
+        <small class="form-text text-muted">
                 Usamos o WhatsApp para contato de prêmios (Pix, entrega, etc).
             </small>
             @error('whatsapp') <div class="invalid-feedback">{{ $message }}</div> @enderror
