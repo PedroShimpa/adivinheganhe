@@ -64,9 +64,8 @@ return [
             'csv',
             'pdf',
             'print',
-            'reset',
-            'reload',
         ],
+        'initComplete' => 'function() { this.api().buttons().container().appendTo(this.api().table().container().closest(".card-body")); }',
     ],
 
     /*
