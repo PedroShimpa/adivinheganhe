@@ -130,7 +130,7 @@
 
                         <div class="mb-3">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="only_members" id="only_members" value="1" {{ old('only_members') ? 'checked' : '' }}>
+                                <input class="form-check-input" type="checkbox" name="only_members" id="only_members" value="S" {{ old('only_members') ? 'checked' : '' }}>
                                 <label class="form-check-label" for="only_members">
                                     Apenas para membros (membros podem responder, todos podem ver)
                                 </label>

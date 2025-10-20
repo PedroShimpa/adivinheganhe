@@ -8,6 +8,7 @@ use App\Mail\NotifyAdminsOfNewTicket;
 use App\Mail\SupportResponseMail;
 use App\Models\Suporte;
 use App\Models\SuporteCategorias;
+use App\Models\SuporteChatMessages;
 use App\Models\User;
 use App\Notifications\SupportResponseNotification;
 use Illuminate\Http\Request;
@@ -73,6 +74,64 @@ class SuporteController extends Controller
         }
 
         return redirect()->route('suporte.admin.show', $suporte)->with('success', 'Chamado atualizado com sucesso.');
+    }
+
+    public function userIndex()
+    {
+        $suportes = Suporte::where('user_id', auth()->id())->with('categoria')->orderBy('created_at', 'desc')->paginate(20);
+        return view('suporte.user_index', compact('suportes'));
+    }
+
+    public function userShow(Suporte $suporte)
+    {
+        // Ensure user owns the suporte
+        if ($suporte->user_id !== auth()->id()) {
+            abort(403);
+        }
+        $suporte->load('categoria', 'chatMessages');
+        return view('suporte.user_show', compact('suporte'));
+    }
+
+    public function apiUserIndex()
+    {
+        $suportes = Suporte::where('user_id', auth()->id())->with('categoria')->orderBy('created_at', 'desc')->get();
+        return response()->json($suportes);
+    }
+
+    public function apiGetChatMessages(Suporte $suporte)
+    {
+        if ($suporte->user_id !== auth()->id() && !auth()->user()->isAdmin()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $messages = $suporte->chatMessages()->with('user')->orderBy('created_at', 'asc')->get()->map(function ($msg) {
+            return [
+                'user_name' => $msg->user->name,
+                'message' => $msg->message,
+                'created_at' => $msg->created_at->format('d/m/Y H:i'),
+            ];
+        });
+
+        return response()->json($messages);
+    }
+
+    public function apiStoreChatMessage(Request $request, Suporte $suporte)
+    {
+        if ($suporte->user_id !== auth()->id() && !auth()->user()->isAdmin()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'message' => 'required|string|max:1000',
+        ]);
+
+        $message = SuporteChatMessages::create([
+            'suporte_id' => $suporte->id,
+            'user_id' => auth()->id(),
+            'message' => $request->message,
+        ]);
+
+        return response()->json(['success' => true, 'message' => $message]);
     }
 
     private function notifyRequester(Suporte $suporte)

@@ -31,6 +31,7 @@ Route::get('/competitivo', [CompetitivoController::class, 'index'])->name('compe
 
 
 Route::get('/ranking-classico', [HomeController::class, 'rankingClassico'])->name('ranking_classico');
+Route::get('/adivinhacoes-vip', [HomeController::class, 'adivinhacoesVip'])->name('adivinhacoes.vip');
 Route::get('/sobre', [HomeController::class, 'sobre'])->name('sobre');
 
 Route::get('/adivinhacoes/{adivinhacao}/comments', [AdivinhacoesController::class, 'comments'])->name('adivinhacoes.comments');
@@ -40,6 +41,8 @@ Route::get('/premiacoes', [HomeController::class, 'premiacoes'])->name('premiaco
 
 Route::get('/suporte', [SuporteController::class, 'new_help'])->name('suporte.index');
 Route::post('/suporte', [SuporteController::class, 'store'])->name('suporte.store');
+Route::get('/meus-chamados', [SuporteController::class, 'userIndex'])->name('suporte.user.index')->middleware('auth');
+Route::get('/meus-chamados/{suporte}', [SuporteController::class, 'userShow'])->name('suporte.user.show')->middleware('auth');
 
 Route::get('/r', [HomeController::class, 'getRegioes'])->name('regioes.index');
 Route::get('/r/{regiao}', [HomeController::class, 'get_by_region'])->name('adivinhacoes.buscar_por_regiao');

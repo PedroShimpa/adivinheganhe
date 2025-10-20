@@ -116,6 +116,11 @@ class RespostaController extends Controller
 
     private function naoPodeResponder($adivinhacao)
     {
+        // Check if adivinhacao is VIP-only or released to VIPs first and user is not VIP
+        if (($adivinhacao->only_members == 1 || (!is_null($adivinhacao->vip_release_at) && now()->lt($adivinhacao->vip_release_at))) && !auth()->user()->isVip()) {
+            return true;
+        }
+
         return $adivinhacao->resolvida == 'S' || (!empty($adivinhacao->expire_at) && $adivinhacao->expire_at < now());
     }
 

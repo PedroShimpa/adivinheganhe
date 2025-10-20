@@ -94,6 +94,24 @@ class HomeController extends Controller
         return view('regioes')->with(compact('regioes'));
     }
 
+    public function adivinhacoesVip()
+    {
+        $adivinhacoes = $this->adivinhacoes->getAtivas();
+
+        // Filter for VIP adivinhacoes (only_members = 1 or vip_release_at is set)
+        $adivinhacoes = $adivinhacoes->filter(function ($a) {
+            return $a->only_members == 1 || !is_null($a->vip_release_at);
+        })->values();
+
+        $adivinhacoes->each(function ($a) {
+            $this->customize($a);
+        });
+
+        $title = 'Adivinhações VIP';
+
+        return view('home')->with(compact('adivinhacoes', 'title'));
+    }
+
     public function sobre()
     {
         return view('sobre');

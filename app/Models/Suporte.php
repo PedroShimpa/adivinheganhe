@@ -27,4 +27,9 @@ class Suporte extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function chatMessages()
+    {
+        return $this->hasMany(SuporteChatMessages::class);
+    }
 }

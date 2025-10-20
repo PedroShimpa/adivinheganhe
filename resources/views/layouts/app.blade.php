@@ -185,6 +185,10 @@
                             class="nav-link text-white {{ request()->routeIs('adivinhe_o_milhao.index') ? 'active fw-bold text-primary' : '' }}">
                             Adivinhe o Milhão
                         </a>
+                        <a href="{{ route('adivinhacoes.vip') }}"
+                            class="nav-link text-white {{ request()->routeIs('adivinhacoes.vip') ? 'active fw-bold text-primary' : '' }}">
+                            Adivinhações VIP
+                        </a>
                     </div>
                 </div>
             </div>
@@ -252,6 +256,10 @@
             <a href="{{ route('meus_premios') }}"
                 class="nav-link text-white {{ request()->routeIs('meus_premios') ? 'active fw-bold text-primary' : '' }}">
                 <i class="bi bi-gift"></i> Meus Prêmios
+            </a>
+            <a href="{{ route('suporte.user.index') }}"
+                class="nav-link text-white {{ request()->routeIs('suporte.user.index') ? 'active fw-bold text-primary' : '' }}">
+                <i class="bi bi-ticket"></i> Meus Chamados
             </a>
 
             {{-- ================== Admin ================== --}}

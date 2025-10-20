@@ -57,6 +57,11 @@ Route::middleware(['auth:sanctum', 'banned', 'trackOnline'])->group(function () 
     Route::post('/posts/{post}/toggle-like', [PostController::class, 'toggleLike']);
     Route::delete('/posts/delete/{post}', [PostController::class, 'deletar']);
 
+    #suporte
+    Route::get('/suporte/meus-chamados', [SuporteController::class, 'apiUserIndex']);
+    Route::get('/suporte/{suporte}/chat/messages', [SuporteController::class, 'apiGetChatMessages']);
+    Route::post('/suporte/{suporte}/chat/store', [SuporteController::class, 'apiStoreChatMessage']);
+
     #rotas faltantes api
 
     Route::post('/competitivo/iniciar-busca', [CompetitivoController::class, 'iniciarBusca']);
