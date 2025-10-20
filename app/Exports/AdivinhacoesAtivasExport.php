@@ -11,8 +11,7 @@ class AdivinhacoesAtivasExport implements FromQuery, WithHeadings
     public function query()
     {
         return Adivinhacoes::query()
-            ->select('adivinhacoes.uuid', 'adivinhacoes.created_at', 'adivinhacoes.titulo', 'users.name', 'users.username')
-            ->join('users', 'users.id', '=', 'adivinhacoes.user_id')
+            ->select('adivinhacoes.uuid', 'adivinhacoes.created_at', 'adivinhacoes.titulo')
             ->whereNull('regiao_id')
             ->where('resolvida', 'N')
             ->where('exibir_home', 'S')
@@ -33,8 +32,6 @@ class AdivinhacoesAtivasExport implements FromQuery, WithHeadings
             'Código',
             'Data de criação',
             'Título',
-            'Nome do Criador',
-            'Username do Criador',
         ];
     }
 }

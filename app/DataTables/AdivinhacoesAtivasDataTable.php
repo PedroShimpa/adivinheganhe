@@ -76,7 +76,6 @@ class AdivinhacoesAtivasDataTable extends DataTable
                 $q->orWhereNull('liberado_at');
             })
             ->withCount('likes')
-            ->with('user:id,name,username')
             ->with('respostas');
     }
 
@@ -108,8 +107,6 @@ class AdivinhacoesAtivasDataTable extends DataTable
             Column::make('uuid')->title('Código'),
             Column::make('created_at')->title('Data de criação'),
             Column::make('titulo')->title('Título'),
-            Column::make('user.name')->title('Nome do Criador'),
-            Column::make('user.username')->title('Username do Criador'),
             Column::computed('respostas_count')->title('Qtd Respostas'),
             Column::computed('action')
                 ->exportable(false)
