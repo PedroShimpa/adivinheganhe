@@ -61,6 +61,18 @@
                             <div class="col-12">
                                 <div class="d-flex align-items-center text-light">
                                     <i class="bi bi-check-circle-fill text-success me-3 fs-5"></i>
+                                    <span>Sorteios mensais exclusivos para membros</span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex align-items-center text-light">
+                                    <i class="bi bi-check-circle-fill text-success me-3 fs-5"></i>
+                                    <span>Acesso ao adivinhe o milhão para sempre</span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex align-items-center text-light">
+                                    <i class="bi bi-check-circle-fill text-success me-3 fs-5"></i>
                                     <span>Sem anúncios</span>
                                 </div>
                             </div>
