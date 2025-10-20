@@ -18,6 +18,7 @@ class PagamentosController extends Controller
 {
     public function index_buy_attempts(Request $request)
     {
+        Log::info('User accessed buy attempts page', ['user_id' => auth()->id()]);
         return view('buy.buy_attempts');
     }
 
@@ -90,6 +91,7 @@ class PagamentosController extends Controller
 
     public function index_buy_dica(Request $request, Adivinhacoes $adivinhacao)
     {
+        Log::info('User accessed buy dica page', ['user_id' => auth()->id(), 'adivinhacao_id' => $adivinhacao->id]);
         if ($adivinhacao->dica_paga == 'S') {
 
             return view('buy.buy_dica')->with(compact('adivinhacao'));
