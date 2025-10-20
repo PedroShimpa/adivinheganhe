@@ -42,7 +42,7 @@
             @else
                 <div class="alert alert-warning small py-2 px-3 rounded-pill mb-3">
                     <i class="bi bi-star-fill text-warning"></i> Apenas membros VIP podem responder a esta adivinhação.
-                    <a href="{{ route('seja_membro') }}" class="btn btn-sm btn-primary ms-2">Seja VIP</a>
+                    <a href="{{ route('membership.index') }}" class="btn btn-sm btn-primary ms-2">Seja VIP</a>
                 </div>
             @endif
         @else
