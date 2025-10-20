@@ -49,7 +49,13 @@
                             <div class="col-12">
                                 <div class="d-flex align-items-center text-light">
                                     <i class="bi bi-check-circle-fill text-success me-3 fs-5"></i>
-                                    <span>Suporte prioritário</span>
+                                    <span>Suporte prioritário via whatsapp</span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex align-items-center text-light">
+                                    <i class="bi bi-check-circle-fill text-success me-3 fs-5"></i>
+                                    <span>Grupo excluisvo de VIPS no whatsapp </span>
                                 </div>
                             </div>
                             <div class="col-12">

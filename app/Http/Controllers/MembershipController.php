@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
+use App\Mail\MembershipPurchaseAdminMail;
+use App\Models\User;
 
 
 class MembershipController extends Controller
@@ -91,6 +94,12 @@ class MembershipController extends Controller
                     'stripe_payment_id' => $session->payment_intent
                 ]);
 
+                // Notify admins
+                $admins = User::where('is_admin', 'S')->get();
+                foreach ($admins as $admin) {
+                    Mail::to($admin->email)->queue(new MembershipPurchaseAdminMail($user));
+                }
+
                 return redirect()->route('home')->with('success', 'Bem-vindo ao clube VIP!');
             }
 
@@ -170,6 +179,12 @@ class MembershipController extends Controller
                         'session_id' => $session['id'] ?? 'unknown',
                         'stripe_payment_id' => $session['payment_intent'] ?? 'unknown'
                     ]);
+
+                    // Notify admins
+                    $admins = User::where('is_admin', 'S')->get();
+                    foreach ($admins as $admin) {
+                        Mail::to($admin->email)->queue(new MembershipPurchaseAdminMail($user));
+                    }
                 } else {
                     Log::error('User not found for VIP upgrade', [
                         'user_id' => $userId,
