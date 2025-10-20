@@ -64,6 +64,16 @@ class PremiacoesDataTable extends DataTable
             ->select('adivinhacoes_premiacoes.id', 'adivinhacoes_premiacoes.created_at', 'users.name', 'users.username', 'adivinhacoes.titulo')
             ->join('adivinhacoes', 'adivinhacoes.id', '=', 'adivinhacoes_premiacoes.adivinhacao_id')
             ->join('users', 'users.id', '=', 'adivinhacoes_premiacoes.user_id')
+            ->where('adivinhacoes.resolvida', 'N')
+            ->where('adivinhacoes.exibir_home', 'S')
+            ->where(function ($q) {
+                $q->where('adivinhacoes.expire_at', '>', now());
+                $q->orWhereNull('adivinhacoes.expire_at');
+            })
+            ->where(function ($q) {
+                $q->where('adivinhacoes.liberado_at', '<=', now());
+                $q->orWhereNull('adivinhacoes.liberado_at');
+            })
             ->orderBy('adivinhacoes_premiacoes.id', 'desc');
     }
 

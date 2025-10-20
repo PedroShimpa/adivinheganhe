@@ -38,15 +38,15 @@ class RespostasDataTable extends DataTable
             ->select('adivinhacoes_respostas.id', 'adivinhacoes_respostas.created_at', 'adivinhacoes_respostas.resposta', 'adivinhacoes.titulo', 'users.name', 'users.username')
             ->join('adivinhacoes', 'adivinhacoes.id', '=', 'adivinhacoes_respostas.adivinhacao_id')
             ->join('users', 'users.id', '=', 'adivinhacoes_respostas.user_id')
-            ->where('resolvida', 'N')
-            ->where('exibir_home', 'S')
+            ->where('adivinhacoes.resolvida', 'N')
+            ->where('adivinhacoes.exibir_home', 'S')
             ->where(function ($q) {
-                $q->where('expire_at', '>', now());
-                $q->orWhereNull('expire_at');
+                $q->where('adivinhacoes.expire_at', '>', now());
+                $q->orWhereNull('adivinhacoes.expire_at');
             })
             ->where(function ($q) {
-                $q->where('liberado_at', '<=', now());
-                $q->orWhereNull('liberado_at');
+                $q->where('adivinhacoes.liberado_at', '<=', now());
+                $q->orWhereNull('adivinhacoes.liberado_at');
             })
             ->orderBy('adivinhacoes_respostas.id', 'desc');
     }
