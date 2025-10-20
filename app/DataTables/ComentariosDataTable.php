@@ -54,7 +54,7 @@ class ComentariosDataTable extends DataTable
                     ->orderBy(0, 'desc')
                     ->selectStyleSingle()
                     ->buttons([
-                        Button::make('excel'),
+                        Button::make('excel')->text('<i class="fas fa-file-excel"></i> Excel'),
                         Button::make('csv'),
                         Button::make('pdf'),
                         Button::make('print'),
