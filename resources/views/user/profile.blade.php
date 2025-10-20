@@ -42,6 +42,9 @@
         </div>
         <div class="card-body text-center mt-5">
             <h2 class="fw-bold mb-0">{{ $user->name }}</h2>
+            @if($user->isVip())
+            <span class="badge bg-warning text-dark fs-6 mb-2"><i class="bi bi-star-fill"></i> VIP</span>
+            @endif
             <h6 class="fw-bold mb-0">Rating Competitivo: {{ $user->getOrCreateRank()->elo ?? ''}}</h6>
             <p class="text-muted mb-1">{{ '@'.$user->username }} ({{ $user->followers()->count()}} Seguidores)</p>
 

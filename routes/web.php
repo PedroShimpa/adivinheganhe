@@ -131,6 +131,12 @@ Route::middleware(['auth', 'banned', 'trackOnline'])->group(function () {
         Route::get('/dashboard/adivinhacoes-ativas-data', [DashboardController::class, 'adivinhacoesAtivasData'])->name('dashboard.adivinhacoes_ativas.data');
         Route::get('/dashboard/respostas-data', [DashboardController::class, 'respostasData'])->name('dashboard.respostas.data');
         Route::get('/dashboard/users-data', [DashboardController::class, 'usersData'])->name('dashboard.users.data');
+        Route::get('/dashboard/vip-users', [DashboardController::class, 'vipUsers'])->name('dashboard.vip_users');
+        Route::get('/dashboard/export-users', [DashboardController::class, 'exportUsers'])->name('dashboard.export_users');
+        Route::get('/dashboard/export-premiacoes', [DashboardController::class, 'exportPremiacoes'])->name('dashboard.export_premiacoes');
+        Route::get('/dashboard/export-comentarios', [DashboardController::class, 'exportComentarios'])->name('dashboard.export_comentarios');
+        Route::get('/dashboard/export-adivinhacoes-ativas', [DashboardController::class, 'exportAdivinhacoesAtivas'])->name('dashboard.export_adivinhacoes_ativas');
+        Route::get('/dashboard/export-respostas', [DashboardController::class, 'exportRespostas'])->name('dashboard.export_respostas');
         Route::put('/a/{adivinhacaoId}', [AdivinhacoesController::class, 'update'])->name('adivinhacoes.update')->whereNumber('adivinhacaoId');
         Route::get('/a/view/{adivinhacao}', [AdivinhacoesController::class, 'edit'])->name('adivinhacoes.view');
         Route::delete('/a/deletar/{adivinhacao}', [AdivinhacoesController::class, 'deletar'])->name('adivinhacoes.delete');

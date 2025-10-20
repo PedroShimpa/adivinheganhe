@@ -14,6 +14,12 @@ use App\DataTables\ComentariosDataTable;
 use App\DataTables\AdivinhacoesAtivasDataTable;
 use App\DataTables\RespostasDataTable;
 use App\DataTables\UsersDataTable;
+use App\Exports\UsersExport;
+use App\Exports\PremiacoesExport;
+use App\Exports\ComentariosExport;
+use App\Exports\AdivinhacoesAtivasExport;
+use App\Exports\RespostasExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DashboardController extends Controller
 {
@@ -84,6 +90,7 @@ class DashboardController extends Controller
                 'countPartidasCompetitivo' => Partidas::count(),
                 'countPartidasCompetitivoToday' => Partidas::whereDate('created_at', today())->count(),
                 'jogadoresNaFilaAgoraCompetitivo' => Fila::count(),
+                'countVipUsers' => User::where('banned', false)->whereNotNull('membership_expires_at')->where('membership_expires_at', '>', now())->count(),
                 'horariosRespostas' => $horariosRespostas,
                 'diasSemanaRespostas' => $diasSemanaRespostas,
                 'premiacoesTable' => app(PremiacoesDataTable::class)->html(),
@@ -109,6 +116,7 @@ class DashboardController extends Controller
                 'countPartidasCompetitivo' => 0,
                 'countPartidasCompetitivoToday' => 0,
                 'jogadoresNaFilaAgoraCompetitivo' => 0,
+                'countVipUsers' => 0,
                 'horariosRespostas' => array_fill(0, 24, 0),
                 'diasSemanaRespostas' => [
                     'Domingo' => 0, 'Segunda' => 0, 'Terça' => 0, 'Quarta' => 0,
@@ -148,6 +156,42 @@ class DashboardController extends Controller
     public function usersData(UsersDataTable $dataTable)
     {
         return $dataTable->ajax();
+    }
+
+    public function vipUsers()
+    {
+        $vipUsers = User::where('banned', false)
+            ->whereNotNull('membership_expires_at')
+            ->where('membership_expires_at', '>', now())
+            ->orderBy('membership_expires_at', 'asc')
+            ->get();
+
+        return view('admin.vip-users', compact('vipUsers'));
+    }
+
+    public function exportUsers()
+    {
+        return Excel::download(new UsersExport, 'usuarios.xlsx');
+    }
+
+    public function exportPremiacoes()
+    {
+        return Excel::download(new PremiacoesExport, 'premiacoes.xlsx');
+    }
+
+    public function exportComentarios()
+    {
+        return Excel::download(new ComentariosExport, 'comentarios.xlsx');
+    }
+
+    public function exportAdivinhacoesAtivas()
+    {
+        return Excel::download(new AdivinhacoesAtivasExport, 'adivinhacoes_ativas.xlsx');
+    }
+
+    public function exportRespostas()
+    {
+        return Excel::download(new RespostasExport, 'respostas.xlsx');
     }
 
     private function getOnlineUsers()

@@ -94,6 +94,7 @@ class PremiacoesDataTable extends DataTable
         return [
             Column::make('id')->title('ID'),
             Column::make('created_at')->title('Data'),
+            Column::make('name')->title('Nome'),
             Column::make('username')->title('Usuário'),
             Column::make('titulo')->title('Título'),
             Column::computed('action')

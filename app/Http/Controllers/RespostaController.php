@@ -103,7 +103,7 @@ class RespostaController extends Controller
             ->whereDate('created_at', today())
             ->where('adivinhacao_id', $adivinhacaoId)
             ->count();
-        $limite = env('MAX_ADIVINHATIONS', 10);
+        $limite = auth()->user()->isVip() ? 7 : env('MAX_ADIVINHATIONS', 10);
         $bonus = AdicionaisIndicacao::where('user_uuid', $userUuid)->value('value') ?? 0;
 
         return $count >= $limite && $bonus == 0;
@@ -156,9 +156,9 @@ class RespostaController extends Controller
                 ->count();
 
             $bonus = AdicionaisIndicacao::where('user_uuid', $userUuid)->value('value') ?? 0;
-            $limite = env('MAX_ADIVINHATIONS', 10) + $bonus;
+            $limite = (auth()->user()->isVip() ? 7 : env('MAX_ADIVINHATIONS', 10)) + $bonus;
 
-            if (($count >= env('MAX_ADIVINHATIONS', 10)) && $bonus > 0) {
+            if (($count >= (auth()->user()->isVip() ? 7 : env('MAX_ADIVINHATIONS', 10))) && $bonus > 0) {
                 $indicacao = AdicionaisIndicacao::where('user_uuid', $userUuid)->first();
                 $indicacao?->decrement('value');
                 $trysRestantes = $indicacao->value ?? 0;

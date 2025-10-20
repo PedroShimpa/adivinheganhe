@@ -54,7 +54,8 @@ trait AdivinhacaoTrait
             return AdicionaisIndicacao::where('user_uuid', $userUuid)->value('value') ?? 0;
         });
 
-        $adivinhacao->limitExceded = $countTrysToday >= env('MAX_ADIVINHATIONS', 10) && $countFromIndications == 0;
-        $adivinhacao->palpites_restantes = (env('MAX_ADIVINHATIONS', 10) - $countTrysToday) + $countFromIndications;
+        $maxAttempts = auth()->user()->isVip() ? 7 : env('MAX_ADIVINHATIONS', 10);
+        $adivinhacao->limitExceded = $countTrysToday >= $maxAttempts && $countFromIndications == 0;
+        $adivinhacao->palpites_restantes = ($maxAttempts - $countTrysToday) + $countFromIndications;
     }
 }

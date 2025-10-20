@@ -56,6 +56,21 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-warning shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Usuários VIP</h5>
+                    <p class="card-text display-6">{{ $countVipUsers }}</p>
+                    <small>Ativos</small>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ route('dashboard.vip_users') }}" class="btn btn-sm btn-outline-light w-100">
+                        <i class="bi bi-list"></i> Ver Lista
+                    </a>
+                </div>
+            </div>
+        </div>
         <div class="col-md-4">
             <div class="card text-white bg-secondary shadow-sm">
                 <div class="card-body">
@@ -110,7 +125,7 @@
                 @if(isset($onlineUsers['users']) && is_array($onlineUsers['users']) && count($onlineUsers['users']) > 0)
                 @foreach($onlineUsers['users'] as $user)
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{ $user['name'] ?? $user->name ?? 'Usuário Desconhecido' }}
+                    <span>{{ $user['name'] ?? $user->name ?? 'Usuário Desconhecido' }} (ID: {{ $user['id'] ?? $user->id ?? 'N/A' }})</span>
                     <span class="badge bg-success rounded-pill">Online</span>
                 </li>
                 @endforeach
@@ -122,16 +137,22 @@
     </div>
 
     <div class="card shadow-sm mb-4">
-        <div class="card-header bg-light">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Premiações</h5>
+            <a href="{{ route('dashboard.export_premiacoes') }}" class="btn btn-success btn-sm">
+                <i class="bi bi-file-earmark-excel"></i> Exportar XLSX
+            </a>
         </div>
         <div class="card-body">
             {!! $premiacoesTable->table(['class' => 'table table-striped table-hover'], true) !!}
         </div>
     </div>
     <div class="card shadow-sm mb-4">
-        <div class="card-header bg-light">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Comentarios em Adivinhações</h5>
+            <a href="{{ route('dashboard.export_comentarios') }}" class="btn btn-success btn-sm">
+                <i class="bi bi-file-earmark-excel"></i> Exportar XLSX
+            </a>
         </div>
         <div class="card-body">
             {!! $comentariosTable->table(['class' => 'table table-striped table-hover'], true) !!}
@@ -139,8 +160,11 @@
     </div>
 
     <div class="card shadow-sm mb-4">
-        <div class="card-header bg-light">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Adivinhações Ativas</h5>
+            <a href="{{ route('dashboard.export_adivinhacoes_ativas') }}" class="btn btn-success btn-sm">
+                <i class="bi bi-file-earmark-excel"></i> Exportar XLSX
+            </a>
         </div>
         <div class="card-body">
             {!! $adivinhacoesAtivasTable->table(['class' => 'table table-striped table-hover'], true) !!}
@@ -148,8 +172,11 @@
     </div>
 
     <div class="card shadow-sm mb-4">
-        <div class="card-header bg-light">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Respostas Adivinhações Ativas</h5>
+            <a href="{{ route('dashboard.export_respostas') }}" class="btn btn-success btn-sm">
+                <i class="bi bi-file-earmark-excel"></i> Exportar XLSX
+            </a>
         </div>
         <div class="card-body">
             {!! $respostasTable->table(['class' => 'table table-striped table-hover'], true) !!}
@@ -158,8 +185,11 @@
 
     <!-- Tabela de usuários -->
     <div class="card shadow-sm mb-4">
-        <div class="card-header bg-light">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Usuários</h5>
+            <a href="{{ route('dashboard.export_users') }}" class="btn btn-success btn-sm">
+                <i class="bi bi-file-earmark-excel"></i> Exportar XLSX
+            </a>
         </div>
         <div class="card-body">
             {!! $usersTable->table(['class' => 'table table-striped table-hover'], true) !!}
@@ -246,7 +276,7 @@
                             const li = document.createElement('li');
                             li.className = 'list-group-item d-flex justify-content-between align-items-center';
                             li.innerHTML = `
-                                ${user.name || user['name'] || 'Usuário Desconhecido'}
+                                <span>${user.name || user['name'] || 'Usuário Desconhecido'} (ID: ${user.id || user['id'] || 'N/A'})</span>
                                 <span class="badge bg-success rounded-pill">Online</span>
                             `;
                             onlineUsersList.appendChild(li);

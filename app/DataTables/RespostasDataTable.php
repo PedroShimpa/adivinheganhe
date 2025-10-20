@@ -78,6 +78,7 @@ class RespostasDataTable extends DataTable
         return [
             Column::make('id')->title('ID'),
             Column::make('created_at')->title('Data'),
+            Column::make('name')->title('Nome'),
             Column::make('username')->title('Usuário'),
             Column::make('titulo')->title('Título'),
             Column::make('resposta')->title('Resposta'),

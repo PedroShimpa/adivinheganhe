@@ -5,7 +5,11 @@
                         <img src="{{ $post->user->image ?? 'https://ui-avatars.com/api/?name='.urlencode($post->user->username).'&background=random' }}"
                             class="rounded-circle me-3 border border-white shadow-sm" width="50" height="50" style="object-fit: cover;">
                         <div>
-                            <strong class="abrir-perfil" data-username="{{ $post->user->username }}">{{ $post->user->username }}</strong><br>
+                            <strong class="abrir-perfil" data-username="{{ $post->user->username }}">{{ $post->user->username }}</strong>
+                            @if($post->user->isVip())
+                            <span class="badge bg-warning text-dark ms-1"><i class="bi bi-star-fill"></i> VIP</span>
+                            @endif
+                            <br>
                             <small class="text-muted">{{ $post->created_at->diffForHumans() }}</small>
                         </div>
                     </div>

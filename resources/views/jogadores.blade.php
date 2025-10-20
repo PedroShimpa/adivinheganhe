@@ -27,7 +27,11 @@
                                      width="100" height="100"
                                      style="object-fit: cover;">
 
-                                <h5 class="fw-bold text-dark mb-1">{{ '@'.$player->username }}</h5>
+                                <h5 class="fw-bold text-dark mb-1">{{ '@'.$player->username }}
+                                @if($player->isVip())
+                                <span class="badge bg-warning text-dark ms-1"><i class="bi bi-star-fill"></i> VIP</span>
+                                @endif
+                                </h5>
                             </a>
                             <p class="text-dark small mb-3" style="min-height: 40px;">
                                 {{ $player->bio ? Str::limit($player->bio, 80) : 'Ainda não escreveu nada...' }}

@@ -35,7 +35,7 @@ class ComentariosDataTable extends DataTable
     public function query(Comment $model): QueryBuilder
     {
         return $model->newQuery()
-            ->select('comments.id', 'comments.created_at', 'comments.body', 'users.username', 'adivinhacoes.titulo')
+            ->select('comments.id', 'comments.created_at', 'comments.body', 'users.name', 'users.username', 'adivinhacoes.titulo')
             ->join('adivinhacoes', 'adivinhacoes.id', '=', 'comments.commentable_id')
             ->join('users', 'users.id', '=', 'comments.user_id')
             ->where('commentable_type', 'App\Models\Adivinhacoes')
@@ -69,6 +69,7 @@ class ComentariosDataTable extends DataTable
         return [
             Column::make('id')->title('ID'),
             Column::make('created_at')->title('Data'),
+            Column::make('name')->title('Nome'),
             Column::make('username')->title('Usuario'),
             Column::make('titulo')->title('Adivinhação'),
             Column::make('body')->title('Comentario'),

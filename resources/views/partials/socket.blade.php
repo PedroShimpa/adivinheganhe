@@ -106,15 +106,17 @@
             ? comentario.user_photo
             : `https://ui-avatars.com/api/?name=${encodeURIComponent(comentario.usuario)}&background=random`;
 
+        const vipBadge = comentario.is_vip ? '<span class="badge bg-warning text-dark ms-1"><i class="bi bi-star-fill"></i> VIP</span>' : '';
+
         return `
         <div class="d-flex align-items-start gap-2 mb-3 p-3 rounded-3 bg-white shadow-sm">
-            <img src="${foto}" 
-                 alt="${comentario.usuario}" 
-                 class="rounded-circle shadow-sm" 
-                 width="48" height="48" 
+            <img src="${foto}"
+                 alt="${comentario.usuario}"
+                 class="rounded-circle shadow-sm"
+                 width="48" height="48"
                  style="object-fit: cover;">
             <div>
-                <div class="fw-bold abrir-perfil" data-username="${comentario.usuario}">${comentario.usuario}</div>
+                <div class="fw-bold abrir-perfil" data-username="${comentario.usuario}">${comentario.usuario}${vipBadge}</div>
                 <div class="text-muted">${comentario.body}</div>
             </div>
         </div>`;
