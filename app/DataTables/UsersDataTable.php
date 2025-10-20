@@ -22,6 +22,9 @@ class UsersDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
+            ->addColumn('created_at_formatted', function($row) {
+                return $row->created_at->format('d/m/Y H:i:s');
+            })
             ->addColumn('action', function($row) {
                 $modal = '<div class="modal fade" id="banModal-' . $row->id . '" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
@@ -95,6 +98,7 @@ class UsersDataTable extends DataTable
             Column::make('username')->title('Username'),
             Column::make('email')->title('Email'),
             Column::make('whatsapp')->title('Whatsapp'),
+            Column::make('created_at_formatted')->title('Criado em'),
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)
