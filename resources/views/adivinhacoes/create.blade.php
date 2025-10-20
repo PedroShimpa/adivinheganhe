@@ -137,18 +137,7 @@
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="regiao_id" class="form-label">Região</label>
-                            <select name="regiao_id" class="form-select">
-                                <option value="">Selecione</option>
-                                @foreach($regioes as $regiao)
-                                <option value="{{ $regiao->id }}" {{ old('regiao_id') == $regiao->id ? 'selected' : '' }}>
-                                    {{ $regiao->nome }}
-                                </option>
-                                @endforeach
-                            </select>
-                            @error('regiao_id') <small class="text-danger">{{ $message }}</small> @enderror
-                        </div>
+                      
 
                         <div class="mb-3">
                             <label class="form-label">{{ __('Notificações (canal)') }}</label>
