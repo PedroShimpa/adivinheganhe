@@ -1,0 +1,130 @@
+@extends('layouts.app')
+
+@section('title', 'Seja Membro VIP')
+
+@section('content')
+<div class="container-fluid py-5 mb-3">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold text-white mb-3">Seja Membro VIP</h1>
+                <p class="lead text-light">Desbloqueie recursos exclusivos e tenha uma experiência premium</p>
+            </div>
+
+            <div class="card bg-dark border-secondary shadow-lg">
+                <div class="card-header bg-gradient text-white text-center py-4">
+                    <h2 class="h3 mb-2">Plano VIP Mensal</h2>
+                    <div class="display-4 fw-bold mb-2">R$ {{ config('app.membership_value') }}</div>
+                    <p class="text-light">por mês</p>
+                </div>
+
+                <div class="card-body p-4">
+                    <div class="mb-4">
+                        <h3 class="h4 text-white mb-4">Benefícios VIP</h3>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <div class="d-flex align-items-center text-light">
+                                    <i class="bi bi-check-circle-fill text-success me-3 fs-5"></i>
+                                    <span>7 tentativas por adivinhação (vs 3 para não-VIPs)</span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex align-items-center text-light">
+                                    <i class="bi bi-check-circle-fill text-success me-3 fs-5"></i>
+                                    <span>Acesso antecipado a adivinhações VIP</span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex align-items-center text-light">
+                                    <i class="bi bi-check-circle-fill text-success me-3 fs-5"></i>
+                                    <span>Badge VIP no perfil e chats</span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex align-items-center text-light">
+                                    <i class="bi bi-check-circle-fill text-success me-3 fs-5"></i>
+                                    <span>Adivinhações exclusivas para membros</span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex align-items-center text-light">
+                                    <i class="bi bi-check-circle-fill text-success me-3 fs-5"></i>
+                                    <span>Suporte prioritário</span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex align-items-center text-light">
+                                    <i class="bi bi-check-circle-fill text-success me-3 fs-5"></i>
+                                    <span>Sem anúncios</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if(auth()->check() && auth()->user()->isVip())
+                        <div class="alert alert-success border-success" role="alert">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-check-circle-fill text-success me-3 fs-4"></i>
+                                <div>
+                                    <h5 class="alert-heading mb-1">Você já é um membro VIP!</h5>
+                                    <p class="mb-0">Sua assinatura expira em {{ auth()->user()->membership_expires_at->format('d/m/Y') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        <div class="text-center">
+                            <button id="checkout-button" class="btn btn-primary btn-lg px-5 py-3 fw-bold">
+                                <i class="bi bi-star-fill me-2"></i>
+                                Assinar Agora - R$ {{ config('app.membership_value') }}/mês
+                            </button>
+                            <p class="text-white mt-3 small">Pagamento seguro via Stripe • Cancele a qualquer momento</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if(!auth()->check() || !auth()->user()->isVip())
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const stripe = Stripe('{{ config("services.stripe.key") }}');
+    const checkoutButton = document.getElementById('checkout-button');
+
+    checkoutButton.addEventListener('click', function() {
+        checkoutButton.disabled = true;
+        checkoutButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Processando...';
+
+        fetch('{{ route("membership.checkout") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro na resposta do servidor: ' + response.status);
+            }
+            return response.json();
+        })
+        .then(session => {
+            if (session.error) {
+                throw new Error(session.error);
+            }
+            return stripe.redirectToCheckout({ sessionId: session.id });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Ocorreu um erro ao processar o pagamento: ' + error.message + '. Tente novamente.');
+            checkoutButton.disabled = false;
+            checkoutButton.innerHTML = '<i class="bi bi-star-fill me-2"></i>Assinar Agora - R$ {{ config("app.membership_value") }}/mês';
+        });
+    });
+});
+</script>
+@endif
+@endsection

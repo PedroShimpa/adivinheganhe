@@ -120,6 +120,24 @@
                         </div>
 
                         <div class="mb-3">
+                            <label for="vip_release_at" class="form-label">{{ __('Liberar para VIPs em') }}</label>
+                            <input type="datetime-local" class="form-control @error('vip_release_at') is-invalid @enderror" id="vip_release_at" name="vip_release_at" value="{{ old('vip_release_at') }}">
+                            @error('vip_release_at')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <small class="form-text text-muted">Deixe em branco para liberar imediatamente para todos</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="only_members" id="only_members" value="1" {{ old('only_members') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="only_members">
+                                    Apenas para membros (membros podem responder, todos podem ver)
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
                             <label for="regiao_id" class="form-label">Região</label>
                             <select name="regiao_id" class="form-select">
                                 <option value="">Selecione</option>
@@ -135,15 +153,21 @@
                         <div class="mb-3">
                             <label class="form-label">{{ __('Notificações (canal)') }}</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="notificar_whatsapp" id="notificar_whatsapp" value="1" {{ old('notificar_whatsapp') ? 'checked' : '' }}>
+                                <input class="form-check-input" type="checkbox" name="notificar_whatsapp" id="notificar_whatsapp" value="1" {{ old('notificar_whatsapp') ? 'checked' : 'checked' }}>
                                 <label class="form-check-label" for="notificar_whatsapp">
                                     WhatsApp
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="notificar_email" id="notificar_email" value="1" {{ old('notificar_email') ? 'checked' : '' }}>
+                                <input class="form-check-input" type="checkbox" name="notificar_email" id="notificar_email" value="1" {{ old('notificar_email') ? 'checked' : 'checked' }}>
                                 <label class="form-check-label" for="notificar_email">
                                     E-mail
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="notificar_push" id="notificar_push" value="1" {{ old('notificar_push') ? 'checked' : 'checked' }}>
+                                <label class="form-check-label" for="notificar_push">
+                                    Push Notification
                                 </label>
                             </div>
                         </div>

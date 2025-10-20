@@ -8,8 +8,7 @@ use App\Models\Competitivo\Fila;
 use App\Models\Competitivo\Partidas;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
-use Google\Client;
-use Illuminate\Support\Facades\Http;
+
 use App\DataTables\PremiacoesDataTable;
 use App\DataTables\ComentariosDataTable;
 use App\DataTables\AdivinhacoesAtivasDataTable;
@@ -68,8 +67,7 @@ class DashboardController extends Controller
         // Online users
         $onlineUsers = $this->getOnlineUsers();
 
-        // Google AdSense earnings
-        $adsenseEarnings = $this->getAdSenseEarnings();
+
 
         try {
             $data = [
@@ -88,7 +86,6 @@ class DashboardController extends Controller
                 'jogadoresNaFilaAgoraCompetitivo' => Fila::count(),
                 'horariosRespostas' => $horariosRespostas,
                 'diasSemanaRespostas' => $diasSemanaRespostas,
-                'adsenseEarnings' => $adsenseEarnings,
                 'premiacoesTable' => app(PremiacoesDataTable::class)->html(),
                 'comentariosTable' => app(ComentariosDataTable::class)->html(),
                 'adivinhacoesAtivasTable' => app(AdivinhacoesAtivasDataTable::class)->html(),
@@ -117,7 +114,6 @@ class DashboardController extends Controller
                     'Domingo' => 0, 'Segunda' => 0, 'Terça' => 0, 'Quarta' => 0,
                     'Quinta' => 0, 'Sexta' => 0, 'Sábado' => 0
                 ],
-                'adsenseEarnings' => $adsenseEarnings,
                 'premiacoesTable' => '',
                 'comentariosTable' => '',
                 'adivinhacoesAtivasTable' => '',
@@ -202,114 +198,5 @@ class DashboardController extends Controller
         }
     }
 
-    private function getAdSenseEarnings()
-    {
-        try {
-            $jsonPath = env('GOOGLE_ADSENSE_JSON_PATH');
 
-            if (!$jsonPath || !file_exists($jsonPath)) {
-                \Log::warning('AdSense JSON file not found at path: ' . $jsonPath);
-                return [
-                    'today' => '0.00',
-                    'thisMonth' => '0.00',
-                    'error' => 'Arquivo JSON do AdSense não encontrado.'
-                ];
-            }
-
-            $client = new Client();
-            $client->setAuthConfig($jsonPath);
-            $client->addScope('https://www.googleapis.com/auth/adsense.readonly');
-            $client->useApplicationDefaultCredentials();
-
-            $accessToken = $client->fetchAccessTokenWithAssertion()['access_token'];
-
-            // Use account ID from environment variable
-            $accountId = env('GOOGLE_ADSENSE_ACCOUNT_ID');
-
-            if (!$accountId) {
-                \Log::warning('GOOGLE_ADSENSE_ACCOUNT_ID not set in environment variables');
-                throw new \Exception('AdSense account ID not configured. Please set GOOGLE_ADSENSE_ACCOUNT_ID in your .env file.');
-            }
-
-            // Validate account ID format
-            if (!preg_match('/^accounts\/pub-\d+$/', $accountId)) {
-                \Log::warning('Invalid AdSense account ID format: ' . $accountId);
-                throw new \Exception('Invalid AdSense account ID format. Expected format: accounts/pub-XXXXXXXXXXXXXXXX');
-            }
-
-            // Today's earnings
-            $todayReportResponse = Http::withToken($accessToken)
-                ->timeout(30)
-                ->retry(3, 100)
-                ->get("https://adsense.googleapis.com/v2/{$accountId}/reports:generate", [
-                    'dateRange' => 'TODAY',
-                    'metrics' => 'ESTIMATED_EARNINGS',
-                    'dimensions' => 'DATE',
-                    'reportingTimeZone' => 'ACCOUNT_TIME_ZONE'
-                ]);
-
-            if ($todayReportResponse->failed()) {
-                \Log::error('AdSense API today earnings request failed', [
-                    'status' => $todayReportResponse->status(),
-                    'body' => $todayReportResponse->body()
-                ]);
-                throw new \Exception('Failed to fetch today\'s earnings: HTTP ' . $todayReportResponse->status());
-            }
-
-            $todayReport = $todayReportResponse->json();
-            $todayEarnings = 0;
-            if (!empty($todayReport['rows'])) {
-                $todayEarnings = $todayReport['rows'][0]['cells'][1]['value'];
-            }
-
-            // This month's earnings
-            $monthReportResponse = Http::withToken($accessToken)
-                ->timeout(30)
-                ->retry(3, 100)
-                ->get("https://adsense.googleapis.com/v2/{$accountId}/reports:generate", [
-                    'dateRange' => 'CUSTOM',
-                    'startDate.day' => (int)now()->startOfMonth()->format('d'),
-                    'startDate.month' => (int)now()->startOfMonth()->format('m'),
-                    'startDate.year' => (int)now()->startOfMonth()->format('Y'),
-                    'endDate.day' => (int)now()->endOfMonth()->format('d'),
-                    'endDate.month' => (int)now()->endOfMonth()->format('m'),
-                    'endDate.year' => (int)now()->endOfMonth()->format('Y'),
-                    'metrics' => 'ESTIMATED_EARNINGS',
-                    'dimensions' => 'DATE',
-                    'reportingTimeZone' => 'ACCOUNT_TIME_ZONE'
-                ]);
-
-            if ($monthReportResponse->failed()) {
-                \Log::error('AdSense API month earnings request failed', [
-                    'status' => $monthReportResponse->status(),
-                    'body' => $monthReportResponse->body()
-                ]);
-                throw new \Exception('Failed to fetch this month\'s earnings: HTTP ' . $monthReportResponse->status());
-            }
-
-            $monthReport = $monthReportResponse->json();
-            $thisMonthEarnings = 0;
-            if (!empty($monthReport['rows'])) {
-                foreach ($monthReport['rows'] as $row) {
-                    $thisMonthEarnings += $row['cells'][1]['value'];
-                }
-            }
-
-            return [
-                'today' => number_format($todayEarnings, 2, ',', '.'),
-                'thisMonth' => number_format($thisMonthEarnings, 2, ',', '.'),
-                'error' => null
-            ];
-        } catch (\Exception $e) {
-            \Log::error('AdSense earnings fetch failed', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            return [
-                'today' => '0.00',
-                'thisMonth' => '0.00',
-                'error' => 'Erro ao obter dados do AdSense: ' . $e->getMessage()
-            ];
-        }
-    }
 }

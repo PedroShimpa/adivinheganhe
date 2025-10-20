@@ -124,4 +124,15 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Membership Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Configuration for VIP membership features.
+    |
+    */
+
+    'membership_value' => env('MEMBERSHIP_VALUE', 10), // in reais
+
 ];

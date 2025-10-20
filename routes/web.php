@@ -7,6 +7,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CompetitivoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\PagamentosController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UsersController;
@@ -48,7 +49,12 @@ Route::get('login/google/callback', [GoogleController::class, 'handleGoogleCallb
 
 Route::get('/adivinhe-o-milhao', [AdivinheOMilhaoController::class, 'index'])->name('adivinhe_o_milhao.index');
 
+Route::get('/seja-membro', [MembershipController::class, 'index'])->name('membership.index');
+Route::post('/membership/create-checkout-session', [MembershipController::class, 'createCheckoutSession'])->name('membership.checkout');
+Route::get('/membership/success', [MembershipController::class, 'success'])->name('membership.success');
+
 Route::post('/webhook/mercadopago', [PagamentosController::class, 'webhook']);
+Route::post('/webhook/stripe', [MembershipController::class, 'webhook']);
 
 Route::get('/banned', function () {
     return view('auth.banned');

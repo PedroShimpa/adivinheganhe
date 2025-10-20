@@ -34,6 +34,8 @@ class User extends Authenticatable
         'whatsapp',
         'indicated_by',
         'is_admin',
+        'is_vip',
+        'membership_expires_at',
         'fingerprint',
         'perfil_privado',
         'bio',
@@ -83,6 +85,11 @@ class User extends Authenticatable
     public function isAdmin()
     {
         return $this->is_admin == 'S';
+    }
+
+    public function isVip()
+    {
+        return $this->is_vip && $this->membership_expires_at && $this->membership_expires_at->isFuture();
     }
 
     public function posts()

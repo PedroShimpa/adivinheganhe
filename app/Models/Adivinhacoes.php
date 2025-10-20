@@ -19,6 +19,8 @@ class Adivinhacoes extends Model
         'resposta',
         'resolvida',
         'liberado_at',
+        'vip_release_at',
+        'only_members',
         'expire_at',
         'exibir_home',
         'dica',
@@ -36,7 +38,8 @@ class Adivinhacoes extends Model
     ];
 
     protected $dates = [
-        'expire_at'
+        'expire_at',
+        'vip_release_at'
     ];
 
     public function getRouteKeyName()
@@ -65,6 +68,8 @@ class Adivinhacoes extends Model
             'created_at',
             'formato_resposta',
             'dificuldade',
+            'vip_release_at',
+            'only_members',
         )
             ->whereNull('regiao_id')
             ->where('resolvida', 'N')
@@ -107,7 +112,9 @@ class Adivinhacoes extends Model
             'dica_valor',
             'created_at',
             'formato_resposta',
-            'dificuldade'
+            'dificuldade',
+            'vip_release_at',
+            'only_members'
         )
             ->where('regiao_id', $regiaoId)
             ->where('resolvida', 'N')
@@ -151,6 +158,8 @@ class Adivinhacoes extends Model
             'created_at',
             'formato_resposta',
             'dificuldade',
+            'vip_release_at',
+            'only_members',
         )
             ->where('resolvida', 'N')
             ->whereNotNull('expire_at')

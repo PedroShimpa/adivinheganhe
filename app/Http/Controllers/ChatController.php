@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 
 class ChatController extends Controller
 {
-
     public function private_chat(User $user)
     {
         return view('user.chat_privado')->with('user', $user);

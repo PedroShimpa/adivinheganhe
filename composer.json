@@ -26,6 +26,7 @@
         "meilisearch/meilisearch-php": "^1.15",
         "mercadopago/dx-php": "3.5.1",
         "namoshek/laravel-redis-sentinel": "^1.1",
+        "stripe/stripe-php": "^10.0",
         "yajra/laravel-datatables": "^12.0"
     },
     "require-dev": {

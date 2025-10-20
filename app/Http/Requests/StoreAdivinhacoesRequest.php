@@ -28,6 +28,7 @@ class StoreAdivinhacoesRequest extends FormRequest
             'formato_resposta' => ['nullable'],
             'notificar_whatsapp' => ['nullable'],
             'notificar_email' => ['nullable'],
+            'notificar_push' => ['nullable'],
         ];
     }
 }

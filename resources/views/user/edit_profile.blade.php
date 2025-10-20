@@ -70,6 +70,16 @@
             @error('bio') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
 
+        {{-- Status VIP --}}
+        @if(auth()->user()->isVip())
+        <div class="mb-3">
+            <div class="alert alert-success">
+                <h6 class="alert-heading">⭐ Você é um membro VIP!</h6>
+                <p class="mb-0">Sua assinatura expira em {{ auth()->user()->membership_expires_at->format('d/m/Y') }}</p>
+            </div>
+        </div>
+        @endif
+
         {{-- Imagem --}}
         <div class="mb-3">
             <label for="image" class="form-label fw-semibold">Foto de Perfil</label>

@@ -26,7 +26,7 @@ class NewMessageNotification extends Notification
         return [
             'message' => auth()->user()->username . ' enviou uma mensagem: ' . $this->message,
             'sender_id' => auth()->id(),
-            'url' => route('chat.index')
+            'url' => '/conversas' // Direct URL instead of route
         ];
     }
 
@@ -36,7 +36,7 @@ class NewMessageNotification extends Notification
             'title' => 'Nova mensagem',
             'body' => auth()->user()->username . ': ' . $this->message,
             'data' => [
-                'url' => route('chat.index')
+                'url' => '/conversas' // Direct URL instead of route
             ],
         ];
     }

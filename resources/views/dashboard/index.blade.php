@@ -166,33 +166,6 @@
         </div>
     </div>
 
-    <!-- Ganhos do AdSense -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-6">
-            <div class="card text-white bg-success shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Ganhos do AdSense</h5>
-                    <p class="card-text display-6">R$ {{ $adsenseEarnings['thisMonth'] }}</p>
-                    <small>Este Mês</small>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card text-white bg-info shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Ganhos do AdSense</h5>
-                    <p class="card-text display-6">R$ {{ $adsenseEarnings['today'] }}</p>
-                    <small>Hoje</small>
-                </div>
-            </div>
-        </div>
-    </div>
-    @if($adsenseEarnings['error'])
-    <div class="alert alert-warning" role="alert">
-        {{ $adsenseEarnings['error'] }}
-    </div>
-    @endif
-
 </div>
 
 @push('scripts')

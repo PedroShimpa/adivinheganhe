@@ -227,6 +227,10 @@
             </div>
 
             {{-- ================== Links soltos ================== --}}
+            <a href="{{ route('membership.index') }}"
+                class="nav-link text-white {{ request()->routeIs('membership.index') ? 'active fw-bold text-primary' : '' }}">
+                <i class="bi bi-star"></i> Seja Membro
+            </a>
             <a href="{{ route('sobre') }}"
                 class="nav-link text-white {{ request()->routeIs('sobre') ? 'active fw-bold text-primary' : '' }}">
                 <i class="bi bi-info-circle"></i> Sobre
@@ -526,10 +530,19 @@
 
     @endauth
 
-    @isset($enable_adsense)
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{  env('GOOGLE_ADSENSE_TAG', 'ca-pub-2128338486173774')}}"
-        crossorigin="anonymous"></script>
-    @endisset
+    @auth
+        @if(!auth()->user()->isVip())
+            @isset($enable_adsense)
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{  env('GOOGLE_ADSENSE_TAG', 'ca-pub-2128338486173774')}}"
+                crossorigin="anonymous"></script>
+            @endisset
+        @endif
+    @else
+        @isset($enable_adsense)
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{  env('GOOGLE_ADSENSE_TAG', 'ca-pub-2128338486173774')}}"
+            crossorigin="anonymous"></script>
+        @endisset
+    @endauth
 
     @stack('scripts')
 </body>

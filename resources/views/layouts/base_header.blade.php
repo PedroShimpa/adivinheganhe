@@ -30,8 +30,16 @@
 
     <p class="mb-2">
         <a href="{{ route('tentativas.comprar') }}" class="btn btn-sm btn-primary text-white ms-2">Comprar Palpites</a>
+        @if(!auth()->user()->isVip())
+            <a href="{{ route('membership.index') }}" class="btn btn-sm btn-warning text-white ms-2">⭐ Seja VIP</a>
+        @endif
     </p>
-    <p class="small text-dark">🕓 Você recebe {{ env('MAX_ADIVINHATIONS')}} palpites gratuitos por adivinhação todos os dias (não acumulativos).</p>
+    <p class="small text-dark">
+        🕓 Você recebe {{ env('MAX_ADIVINHATIONS')}} palpites gratuitos por adivinhação todos os dias (não acumulativos).
+        @if(auth()->user()->isVip())
+            <br><span class="text-warning fw-bold">⭐ Como membro VIP, você tem 7 tentativas por adivinhação!</span>
+        @endif
+    </p>
 </div>
 @endif
 

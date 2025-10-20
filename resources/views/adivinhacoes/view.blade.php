@@ -113,7 +113,7 @@
                             @enderror
                         </div>
 
-                        <div class="mb-3" id="dica_valor_container " style="display: none;">
+                        <div class="mb-3" id="dica_valor_container" style="display: none;">
                             <label for="dica_valor" class="form-label">{{ __('Valor da Dica (R$)') }}</label>
                             <input type="number"
                                 step="0.01"
@@ -164,6 +164,28 @@
                         </div>
 
                         <div class="mb-3">
+                            <label for="vip_release_at" class="form-label">{{ __('Liberar para VIPs em') }}</label>
+                            <input type="datetime-local"
+                                class="form-control @error('vip_release_at') is-invalid @enderror"
+                                id="vip_release_at"
+                                name="vip_release_at"
+                                value="{{ old('vip_release_at', optional($adivinhacao->vip_release_at)->format('Y-m-d\TH:i')) }}">
+                            @error('vip_release_at')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <small class="form-text text-muted">Deixe em branco para liberar imediatamente para todos</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="only_members" id="only_members" value="1" {{ old('only_members', $adivinhacao->only_members) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="only_members">
+                                    Apenas para membros (membros podem responder, todos podem ver)
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
                             <label for="regiao_id" class="form-label">Região</label>
                             <select name="regiao_id" class="form-select">
                                 <option value="">Selecione</option>
@@ -174,6 +196,16 @@
                                 @endforeach
                             </select>
                             @error('regiao_id') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">{{ __('Notificações (canal)') }}</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="notificar_push" id="notificar_push" value="1" {{ old('notificar_push', $adivinhacao->notificar_push) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="notificar_push">
+                                    Push Notification
+                                </label>
+                            </div>
                         </div>
 
                         <button type="submit" class="btn btn-primary">{{ __('Salvar Adivinhação') }}</button>
@@ -201,13 +233,13 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         const dicaPagaSelect = document.getElementById('dica_paga');
-        const dicaValorcontainer mb-5 mt-2= document.getElementById('dica_valor_container ');
+        const dicaValorContainer = document.getElementById('dica_valor_container');
 
         function toggleDicaValor() {
             if (dicaPagaSelect.value === 'S') {
-                dicaValorcontainer .style.display = 'block';
+                dicaValorContainer.style.display = 'block';
             } else {
-                dicaValorcontainer .style.display = 'none';
+                dicaValorContainer.style.display = 'none';
             }
         }
 
