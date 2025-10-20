@@ -76,7 +76,8 @@ class AdivinhacoesAtivasDataTable extends DataTable
                 $q->orWhereNull('liberado_at');
             })
             ->withCount('likes')
-            ->with('user:id,name,username');
+            ->with('user:id,name,username')
+            ->with('respostas');
     }
 
     /**
