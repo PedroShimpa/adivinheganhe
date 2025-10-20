@@ -26,7 +26,7 @@ class PremiacoesDataTable extends DataTable
             ->editColumn('created_at', function ($row) {
                 return $row->created_at->format('d/m/Y H:i');
             })
-            ->addColumn('action', function($row) {
+            ->addColumn('action', function ($row) {
                 $modal = '<div class="modal fade" id="removePremiacao-' . $row->id . '" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
@@ -64,16 +64,7 @@ class PremiacoesDataTable extends DataTable
             ->select('adivinhacoes_premiacoes.id', 'adivinhacoes_premiacoes.created_at', 'users.name', 'users.username', 'adivinhacoes.titulo')
             ->join('adivinhacoes', 'adivinhacoes.id', '=', 'adivinhacoes_premiacoes.adivinhacao_id')
             ->join('users', 'users.id', '=', 'adivinhacoes_premiacoes.user_id')
-            ->where('adivinhacoes.resolvida', 'N')
-            ->where('adivinhacoes.exibir_home', 'S')
-            ->where(function ($q) {
-                $q->where('adivinhacoes.expire_at', '>', now());
-                $q->orWhereNull('adivinhacoes.expire_at');
-            })
-            ->where(function ($q) {
-                $q->where('adivinhacoes.liberado_at', '<=', now());
-                $q->orWhereNull('adivinhacoes.liberado_at');
-            })
+            ->where('premio_enviado', 'N')
             ->orderBy('adivinhacoes_premiacoes.id', 'desc');
     }
 
@@ -83,17 +74,17 @@ class PremiacoesDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('premiacoesTable')
-                    ->columns($this->getColumns())
-                    ->ajax(route('dashboard.premiacoes.data'))
-                    ->orderBy(0, 'desc')
-                    ->selectStyleSingle()
-                    ->buttons([
-                        Button::make('excel')->text('<i class="fas fa-file-excel"></i> Excel'),
-                        Button::make('csv'),
-                        Button::make('pdf'),
-                        Button::make('print')
-                    ]);
+            ->setTableId('premiacoesTable')
+            ->columns($this->getColumns())
+            ->ajax(route('dashboard.premiacoes.data'))
+            ->orderBy(0, 'desc')
+            ->selectStyleSingle()
+            ->buttons([
+                Button::make('excel')->text('<i class="fas fa-file-excel"></i> Excel'),
+                Button::make('csv'),
+                Button::make('pdf'),
+                Button::make('print')
+            ]);
     }
 
     /**
@@ -108,10 +99,10 @@ class PremiacoesDataTable extends DataTable
             Column::make('username')->title('Usuário'),
             Column::make('titulo')->title('Título'),
             Column::computed('action')
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(60)
-                  ->addClass('text-center'),
+                ->exportable(false)
+                ->printable(false)
+                ->width(60)
+                ->addClass('text-center'),
         ];
     }
 

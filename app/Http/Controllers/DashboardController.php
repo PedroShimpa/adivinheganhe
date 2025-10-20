@@ -194,6 +194,8 @@ class DashboardController extends Controller
         return Excel::download(new RespostasExport, 'respostas.xlsx');
     }
 
+
+
     private function getOnlineUsers()
     {
         try {
