@@ -13,6 +13,12 @@ class MembershipController extends Controller
 {
     public function index()
     {
+        Log::info('Membership page accessed', [
+            'user_id' => Auth::id(),
+            'ip' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+        ]);
+
         return view('seja_membro');
     }
 

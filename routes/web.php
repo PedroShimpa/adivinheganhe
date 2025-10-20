@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Broadcast::routes(['middleware' => ['web', 'auth']]);
 
-Route::get('/politica-de-privacidade', function() {
+Route::get('/politica-de-privacidade', function () {
     return view('politica_de_privacidade');
 });
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -52,9 +52,6 @@ Route::get('login/google/callback', [GoogleController::class, 'handleGoogleCallb
 
 Route::get('/adivinhe-o-milhao', [AdivinheOMilhaoController::class, 'index'])->name('adivinhe_o_milhao.index');
 
-Route::get('/seja-membro', [MembershipController::class, 'index'])->name('membership.index');
-Route::post('/membership/create-checkout-session', [MembershipController::class, 'createCheckoutSession'])->name('membership.checkout');
-Route::get('/membership/success', [MembershipController::class, 'success'])->name('membership.success');
 
 Route::post('/webhook/mercadopago', [PagamentosController::class, 'webhook']);
 Route::post('/webhook/stripe', [MembershipController::class, 'webhook']);
@@ -120,6 +117,10 @@ Route::middleware(['auth', 'banned', 'trackOnline'])->group(function () {
     Route::post('/competitivo/iniciar-busca', [CompetitivoController::class, 'iniciarBusca'])->name('competitivo.iniciar_busca');
     Route::post('/competitivo/cancelar-busca', [CompetitivoController::class, 'sairFila'])->name('competitivo.cancelar_busca');
     Route::get('/competitivo/partida/finalizada/{partida}', [CompetitivoController::class, 'partida'])->name('competitivo.partida.finalizada');
+
+    Route::get('/seja-membro', [MembershipController::class, 'index'])->name('membership.index');
+    Route::post('/membership/create-checkout-session', [MembershipController::class, 'createCheckoutSession'])->name('membership.checkout');
+    Route::get('/membership/success', [MembershipController::class, 'success'])->name('membership.success');
 
 
     #rotas apenas para administreadores
