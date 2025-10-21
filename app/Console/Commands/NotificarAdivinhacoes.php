@@ -55,7 +55,7 @@ class NotificarAdivinhacoes extends Command
                 if ($adiv->notificar_email == 1 && empty($adiv->notificado_email_em)) {
                     $titulo = $adiv->titulo;
                     $url = route('adivinhacoes.index', $adiv->uuid);
-                    dispatch(new EnviarNotificacaoNovaAdivinhacao($titulo, $url));
+                    dispatch(new EnviarNotificacaoNovaAdivinhacao($titulo, $url,$adiv->id));
                     DB::table('adivinhacoes')->where('id', $adiv->id)->update(['notificado_email_em' => now()]);
                 }
             } catch (\Exception $e) {
