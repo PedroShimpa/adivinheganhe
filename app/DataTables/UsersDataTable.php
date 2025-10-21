@@ -25,6 +25,13 @@ class UsersDataTable extends DataTable
             ->addColumn('created_at_formatted', function($row) {
                 return $row->created_at->format('d/m/Y H:i:s');
             })
+            ->addColumn('indicado_por', function($row) {
+                if ($row->indicated_by) {
+                    $indicatedUser = User::where('uuid', $row->indicated_by)->first();
+                    return $indicatedUser ? $indicatedUser->name . ' (' . $indicatedUser->username . ')' : 'N/A';
+                }
+                return 'N/A';
+            })
             ->addColumn('action', function($row) {
                 $modal = '<div class="modal fade" id="banModal-' . $row->id . '" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
@@ -98,6 +105,7 @@ class UsersDataTable extends DataTable
             Column::make('username')->title('Username'),
             Column::make('email')->title('Email'),
             Column::make('whatsapp')->title('Whatsapp'),
+            Column::computed('indicado_por')->title('Indicado por'),
             Column::make('created_at_formatted')->title('Criado em'),
             Column::computed('action')
                   ->exportable(false)
