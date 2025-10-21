@@ -38,7 +38,7 @@ class AdivinhacoesAtivasExport implements FromQuery, WithHeadings, WithMapping
     {
         return [
             $row->uuid,
-            $row->created_at ? $row->created_at->format('d/m/Y H:i') : '',
+            $row->created_at ? \Carbon\Carbon::parse($row->created_at)->format('d/m/Y H:i') : '',
             $row->titulo,
             $row->expire_at_formatted,
         ];
