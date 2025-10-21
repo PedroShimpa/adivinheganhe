@@ -11,7 +11,7 @@
     <!-- Date Filter -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-            <form method="GET" action="{{ route('dashboard.index') }}" class="row g-3">
+            <form method="GET" action="{{ route('dashboard') }}" class="row g-3">
                 <div class="col-md-4">
                     <label for="start_date" class="form-label">Data Inicial</label>
                     <input type="date" class="form-control" id="start_date" name="start_date" value="{{ request('start_date') }}">
@@ -22,7 +22,7 @@
                 </div>
                 <div class="col-md-4 d-flex align-items-end">
                     <button type="submit" class="btn btn-primary me-2">Filtrar</button>
-                    <a href="{{ route('dashboard.index') }}" class="btn btn-secondary">Limpar</a>
+                    <a href="{{ route('dashboard') }}" class="btn btn-secondary">Limpar</a>
                 </div>
             </form>
         </div>

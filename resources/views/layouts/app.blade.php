@@ -262,6 +262,15 @@
                 <i class="bi bi-ticket"></i> Meus Chamados
             </a>
 
+            @php
+            $indicatedCount = \App\Models\User::where('indicated_by', auth()->user()->uuid)->count();
+            @endphp
+            @if($indicatedCount > 0)
+            <p class="text-white small mt-2 mb-0">
+                <i class="bi bi-people-fill"></i> Você indicou {{ $indicatedCount }} jogadores
+            </p>
+            @endif
+
             {{-- ================== Admin ================== --}}
             @if(auth()->user()->isAdmin())
             <a href="#collapseAdmin"
