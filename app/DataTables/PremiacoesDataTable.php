@@ -26,7 +26,19 @@ class PremiacoesDataTable extends DataTable
             ->editColumn('created_at', function ($row) {
                 return $row->created_at->format('d/m/Y H:i');
             })
+            ->addColumn('pago', function ($row) {
+                return $row->premio_enviado == 'S' ? 'Sim' : 'Não';
+            })
             ->addColumn('action', function ($row) {
+                $buttons = '';
+
+                if ($row->premio_enviado == 'N') {
+                    $buttons .= '<form action="' . route('premiacoes.marcar_pago', ['premiacao' => $row->id]) . '" method="POST" style="display:inline;">
+                        @csrf
+                        <button type="submit" class="btn btn-success btn-sm">Marcar como Pago</button>
+                    </form> ';
+                }
+
                 $modal = '<div class="modal fade" id="removePremiacao-' . $row->id . '" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
@@ -50,7 +62,9 @@ class PremiacoesDataTable extends DataTable
                         </div>
                     </div>
                 </div>';
-                return '<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#removePremiacao-' . $row->id . '">Remover</button>' . $modal;
+                $buttons .= '<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#removePremiacao-' . $row->id . '">Remover</button>' . $modal;
+
+                return $buttons;
             })
             ->setRowId('id');
     }
@@ -61,10 +75,9 @@ class PremiacoesDataTable extends DataTable
     public function query(AdivinhacoesPremiacoes $model): QueryBuilder
     {
         return $model->newQuery()
-            ->select('adivinhacoes_premiacoes.id', 'adivinhacoes_premiacoes.created_at', 'users.name', 'users.username', 'adivinhacoes.titulo')
+            ->select('adivinhacoes_premiacoes.id', 'adivinhacoes_premiacoes.created_at', 'users.name', 'users.username', 'adivinhacoes.titulo', 'premio_enviado')
             ->join('adivinhacoes', 'adivinhacoes.id', '=', 'adivinhacoes_premiacoes.adivinhacao_id')
             ->join('users', 'users.id', '=', 'adivinhacoes_premiacoes.user_id')
-            ->where('premio_enviado', 'N')
             ->orderBy('adivinhacoes_premiacoes.id', 'desc');
     }
 
@@ -98,6 +111,7 @@ class PremiacoesDataTable extends DataTable
             Column::make('name')->title('Nome'),
             Column::make('username')->title('Usuário'),
             Column::make('titulo')->title('Título'),
+            Column::computed('pago')->title('Pago'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

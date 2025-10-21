@@ -157,6 +157,7 @@ Route::middleware(['auth', 'banned', 'trackOnline'])->group(function () {
 
         #deleções
         Route::delete('/premiacoes/deletar/{premiacao}', [AdivinhacoesController::class, 'deletarPremiacao'])->name('premiacoes.delete');
+        Route::post('/premiacoes/marcar-pago/{premiacao}', [AdivinhacoesController::class, 'marcarComoPago'])->name('premiacoes.marcar_pago');
     });
 });
 

@@ -209,4 +209,10 @@ class AdivinhacoesController extends Controller
         $premiacao->delete();
         return redirect()->back();
     }
+
+    public function marcarComoPago(AdivinhacoesPremiacoes $premiacao)
+    {
+        $premiacao->update(['premio_enviado' => 'S']);
+        return redirect()->back();
+    }
 }

@@ -16,6 +16,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -58,7 +59,7 @@ class RespostaController extends Controller
         $acertou = mb_strtolower(trim($adivinhacao->resposta)) === $respostaCliente;
 
         if ($acertou) {
-            $this->processarAcerto($adivinhacao, $user, $respostaUuid);
+            $this->processarAcerto($adivinhacao, $user, $respostaUuid, $respostaCliente);
         }
 
         if ($this->respostaJaEnviada($data['adivinhacao_id'], $userId, $respostaCliente)) {
@@ -126,7 +127,7 @@ class RespostaController extends Controller
         return $adivinhacao->resolvida == 'S' || (!empty($adivinhacao->expire_at) && $adivinhacao->expire_at < now());
     }
 
-    private function processarAcerto($adivinhacao, $user, $respostaUuid)
+    private function processarAcerto($adivinhacao, $user, $respostaUuid, $respostaCliente)
     {
         $cacheKey = 'adivinhacao_' . $adivinhacao->id;
 
@@ -158,7 +159,7 @@ class RespostaController extends Controller
                 $headers = ["Authorization" => "Bearer $token"];
 
                 $username = $user->isVip() ? "VIP {$user->username}" : $user->username;
-                $mensagem = "O jogador {$username} acertou a adivinhacao {$adivinhacao->titulo} parabens! em breve nossa equipe entrará em contato para pagamento do prêmio\Veja todas as respostas enviadas em https://adivinheganhe.com.br/adivinhacoes/{$adivinhacao->uuid}";
+                $mensagem = "O jogador {$username} acertou a adivinhacao {$adivinhacao->titulo}, a resposta correta era: {$respostaCliente}, parabens! em breve nossa equipe entrará em contato para pagamento do prêmio\Veja todas as respostas enviadas em https://adivinheganhe.com.br/adivinhacoes/{$adivinhacao->uuid}";
 
                 $payload = [
                     "phone" => $PHONE_ID,
