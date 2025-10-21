@@ -60,7 +60,7 @@ Route::middleware(['auth:sanctum', 'banned', 'trackOnline'])->group(function () 
     #suporte
     Route::get('/suporte/meus-chamados', [SuporteController::class, 'apiUserIndex']);
     Route::get('/suporte/{suporte}/chat/messages', [SuporteController::class, 'apiGetChatMessages']);
-    Route::post('/suporte/{suporte}/chat/store', [SuporteController::class, 'apiStoreChatMessage']);
+    Route::post('/suporte/{suporte}/chat', [SuporteController::class, 'apiStoreChatMessage']);
 
     #rotas faltantes api
 
