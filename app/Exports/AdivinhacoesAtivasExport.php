@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Adivinhacoes;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
@@ -11,7 +12,7 @@ class AdivinhacoesAtivasExport implements FromQuery, WithHeadings
     public function query()
     {
         $query = Adivinhacoes::query()
-            ->select('adivinhacoes.uuid', 'adivinhacoes.created_at', 'adivinhacoes.titulo')
+            ->select('adivinhacoes.uuid', 'adivinhacoes.created_at', 'adivinhacoes.titulo', DB::raw("IFNULL(DATE_FORMAT(expire_at, '%d/%m %H:%i'), 'Não expira') as expire_at_formatted"))
             ->whereNull('regiao_id')
             ->where('resolvida', 'N')
             ->where('exibir_home', 'S')
@@ -38,6 +39,7 @@ class AdivinhacoesAtivasExport implements FromQuery, WithHeadings
             'Código',
             'Data de criação',
             'Título',
+            'Expire em',
         ];
     }
 }
