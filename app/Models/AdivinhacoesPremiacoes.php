@@ -18,7 +18,8 @@ class AdivinhacoesPremiacoes extends Model
         'adivinhacao_id',
         'premio_enviado',
         'previsao_envio_premio',
-        'vencedor_notificado'
+        'vencedor_notificado',
+        'comprovante_pagamento'
     ];
 
     public function getMeusPremios()

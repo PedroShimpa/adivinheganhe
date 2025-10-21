@@ -90,6 +90,7 @@ class DashboardController extends Controller
                 'countPartidasCompetitivo' => Partidas::count(),
                 'countPartidasCompetitivoToday' => Partidas::whereDate('created_at', today())->count(),
                 'jogadoresNaFilaAgoraCompetitivo' => Fila::count(),
+                'countChamadosAguardando' => \App\Models\Suporte::where('status', 'A')->count(),
                 'countVipUsers' => User::where('banned', false)->whereNotNull('membership_expires_at')->where('membership_expires_at', '>', now())->count(),
                 'horariosRespostas' => $horariosRespostas,
                 'diasSemanaRespostas' => $diasSemanaRespostas,

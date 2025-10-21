@@ -71,14 +71,16 @@
                     <h5 class="card-title">Partidas Competitivo</h5>
                     <p class="card-text display-6 mb-0">{{ $countPartidasCompetitivo }}</p>
                     <small>Hoje: {{ $countPartidasCompetitivoToday }}</small>
+                    <small>Na fila: {{ $jogadoresNaFilaAgoraCompetitivo }}</small>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-dark shadow-sm" style="height: 180px;">
+            <div class="card text-white bg-info shadow-sm" style="height: 180px;">
                 <div class="card-body d-flex flex-column justify-content-center">
-                    <h5 class="card-title">Jogadores na Fila Competitivo</h5>
-                    <p class="card-text display-6 mb-0">{{ $jogadoresNaFilaAgoraCompetitivo }}</p>
+                    <h5 class="card-title">Chamados em Aberto</h5>
+                    <p class="card-text display-6 mb-0">{{ $countChamadosAguardando }}</p>
+                    <small>Aguardando atendimento</small>
                 </div>
             </div>
         </div>
@@ -330,6 +332,56 @@
 {!! $adivinhacoesAtivasTable->scripts() !!}
 {!! $respostasTable->scripts() !!}
 {!! $usersTable->scripts() !!}
+
+<script>
+$(document).on('click', '.marcar-pago-btn', function(e) {
+    e.preventDefault();
+    var id = $(this).data('id');
+    $('#marcarPago-' + id).modal('show');
+});
+
+$(document).on('click', '.deletar-btn', function(e) {
+    e.preventDefault();
+    var id = $(this).data('id');
+    $('#removePremiacao-' + id).modal('show');
+});
+
+$(document).on('submit', 'form[action*="/premiacoes/marcar-pago/"]', function(e) {
+    e.preventDefault();
+    var form = $(this);
+    var formData = new FormData(form[0]);
+    $.ajax({
+        url: form.attr('action'),
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            $('#premiacoesTable').DataTable().ajax.reload();
+            form.closest('.modal').modal('hide');
+        },
+        error: function(xhr) {
+            alert('Erro ao marcar como pago: ' + xhr.responseText);
+        }
+    });
+});
+
+$(document).on('submit', 'form[action*="/premiacoes/deletar/"]', function(e) {
+    e.preventDefault();
+    var form = $(this);
+    $.ajax({
+        url: form.attr('action'),
+        type: 'POST',
+        data: form.serialize(),
+        success: function(response) {
+            $('#premiacoesTable').DataTable().ajax.reload();
+        },
+        error: function(xhr) {
+            alert('Erro ao excluir: ' + xhr.responseText);
+        }
+    });
+});
+</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

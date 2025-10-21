@@ -404,6 +404,7 @@
 
     {{-- Modais --}}
     @include('partials.modals')
+    @stack('extra_modais')
 
     <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('vendor/bootstrap/bootstrap.bundle.min.js')}}"></script>

@@ -55,6 +55,42 @@
 </div>
 @endsection
 
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const createTicketForm = document.getElementById('createTicketForm');
+
+    createTicketForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+
+        fetch('/admin/suporte/create-ticket', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Chamado criado com sucesso!');
+                location.reload();
+            } else {
+                alert('Erro ao criar chamado: ' + (data.message || 'Erro desconhecido'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Erro ao criar chamado');
+        });
+    });
+});
+</script>
+@endpush
+
+@push('extra_modais')
 <!-- Modal for creating ticket -->
 <div class="modal fade" id="createTicketModal" tabindex="-1" aria-labelledby="createTicketModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -109,37 +145,4 @@
     </div>
 </div>
 
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const createTicketForm = document.getElementById('createTicketForm');
-
-    createTicketForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const formData = new FormData(this);
-
-        fetch('/admin/suporte/create-ticket', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Chamado criado com sucesso!');
-                location.reload();
-            } else {
-                alert('Erro ao criar chamado: ' + (data.message || 'Erro desconhecido'));
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Erro ao criar chamado');
-        });
-    });
-});
-</script>
 @endpush

@@ -33,11 +33,10 @@ class PremiacoesDataTable extends DataTable
                 $buttons = '';
 
                 if ($row->premio_enviado == 'N') {
-                    $buttons .= '<form action="' . route('premiacoes.marcar_pago', ['premiacao' => $row->id]) . '" method="POST" style="display:inline;">
-                        @csrf
-                        <button type="submit" class="btn btn-success btn-sm">Marcar como Pago</button>
-                    </form> ';
+                    $buttons .= '<button class="btn btn-success btn-sm me-1 marcar-pago-btn" data-id="' . $row->id . '">Marcar Pago</button>';
                 }
+
+                $buttons .= '<button class="btn btn-danger btn-sm deletar-btn" data-id="' . $row->id . '">Remover</button>';
 
                 $modal = '<div class="modal fade" id="removePremiacao-' . $row->id . '" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
@@ -62,9 +61,34 @@ class PremiacoesDataTable extends DataTable
                         </div>
                     </div>
                 </div>';
-                $buttons .= '<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#removePremiacao-' . $row->id . '">Remover</button>' . $modal;
 
-                return $buttons;
+                $pagoModal = '<div class="modal fade" id="marcarPago-' . $row->id . '" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <form action="' . route('premiacoes.marcar_pago', ['premiacao' => $row->id]) . '" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                @method(\'POST\')
+                                <div class="modal-header bg-success text-white">
+                                    <h5 class="modal-title">Marcar como Pago</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="comprovante" class="form-label">Comprovante de Pagamento (opcional)</label>
+                                        <input type="file" class="form-control" id="comprovante" name="comprovante" accept="image/*">
+                                        <small class="form-text text-muted">Aceita imagens: JPEG, PNG, JPG, GIF, SVG (máx. 2MB)</small>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-success">Marcar como Pago</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>';
+
+                return $buttons . $modal . $pagoModal;
             })
             ->setRowId('id');
     }

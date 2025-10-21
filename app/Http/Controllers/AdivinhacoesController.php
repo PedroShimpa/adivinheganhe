@@ -210,9 +210,22 @@ class AdivinhacoesController extends Controller
         return redirect()->back();
     }
 
-    public function marcarComoPago(AdivinhacoesPremiacoes $premiacao)
+    public function marcarComoPago(Request $request, AdivinhacoesPremiacoes $premiacao)
     {
-        $premiacao->update(['premio_enviado' => 'S']);
+        $request->validate([
+            'comprovante' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $data = ['premio_enviado' => 'S'];
+
+        if ($request->hasFile('comprovante')) {
+            $file = $request->file('comprovante');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('comprovantes_pagamento', $filename, 's3');
+            $data['comprovante_pagamento'] = $path;
+        }
+
+        $premiacao->update($data);
         return redirect()->back();
     }
 }
