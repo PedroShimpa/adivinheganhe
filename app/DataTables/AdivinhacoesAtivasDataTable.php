@@ -27,7 +27,7 @@ class AdivinhacoesAtivasDataTable extends DataTable
                 return $row->created_at ? \Carbon\Carbon::parse($row->created_at)->format('d/m/Y H:i') : '';
             })
             ->editColumn('expire_at', function ($row) {
-                return $row->expire_at ? $row->expire_at->format('d/m H:i') : 'Não expira';
+                return $row->expire_at ? Carbon::parse($row->expire_at)->format('d/m H:i') : 'Não expira';
             })
             ->addColumn('respostas_count', function ($row) {
                 return $row->respostas->count();
