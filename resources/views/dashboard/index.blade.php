@@ -107,6 +107,16 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-12" id="indicadores-chart">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Usuários que mais indicaram</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="indicadoresChart" width="800" height="300"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Usuários Online -->
@@ -199,6 +209,7 @@
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="floatingNavButton">
                 <li><a class="dropdown-item" href="#cards">Cards</a></li>
                 <li><a class="dropdown-item" href="#charts">Gráficos</a></li>
+                <li><a class="dropdown-item" href="#indicadores-chart">Indicadores</a></li>
                 <li><a class="dropdown-item" href="#online-users">Usuários Online</a></li>
                 <li><a class="dropdown-item" href="#premiacoes">Premiações</a></li>
                 <li><a class="dropdown-item" href="#comentarios">Comentários</a></li>
@@ -430,6 +441,37 @@ $(document).on('submit', 'form[action*="/premiacoes/deletar/"]', function(e) {
                 scales: {
                     y: {
                         beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Indicadores Chart
+        const ctxIndicadores = document.getElementById('indicadoresChart').getContext('2d');
+        const indicadoresData = @json($topIndicadores);
+        new Chart(ctxIndicadores, {
+            type: 'bar',
+            data: {
+                labels: indicadoresData.map(item => item.name + ' (' + item.username + ')'),
+                datasets: [{
+                    label: 'Total Indicados',
+                    data: indicadoresData.map(item => item.total_indicados),
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
                     }
                 }
             }

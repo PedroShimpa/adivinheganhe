@@ -73,7 +73,19 @@ class DashboardController extends Controller
         // Online users
         $onlineUsers = $this->getOnlineUsers();
 
-
+        // Top 10 users who indicated others
+        try {
+            $topIndicadores = User::select('users.name', 'users.username', \DB::raw('COUNT(adicionais_indicacao.id) as total_indicados'))
+                ->join('adicionais_indicacao', 'users.uuid', '=', 'adicionais_indicacao.user_uuid')
+                ->groupBy('users.id', 'users.name', 'users.username')
+                ->orderBy('total_indicados', 'desc')
+                ->limit(10)
+                ->get()
+                ->toArray();
+        } catch (\Exception $e) {
+            \Log::error('Error getting top indicadores: ' . $e->getMessage());
+            $topIndicadores = [];
+        }
 
         try {
             $data = [
@@ -94,6 +106,7 @@ class DashboardController extends Controller
                 'countVipUsers' => User::where('banned', false)->whereNotNull('membership_expires_at')->where('membership_expires_at', '>', now())->count(),
                 'horariosRespostas' => $horariosRespostas,
                 'diasSemanaRespostas' => $diasSemanaRespostas,
+                'topIndicadores' => $topIndicadores,
                 'premiacoesTable' => app(PremiacoesDataTable::class)->html(),
                 'comentariosTable' => app(ComentariosDataTable::class)->html(),
                 'adivinhacoesAtivasTable' => app(AdivinhacoesAtivasDataTable::class)->html(),
