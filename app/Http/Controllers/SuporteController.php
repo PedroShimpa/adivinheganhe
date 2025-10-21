@@ -123,6 +123,8 @@ class SuporteController extends Controller
 
         $request->validate([
             'message' => 'required|string|max:1000',
+            'send_push' => 'boolean',
+            'send_email' => 'boolean',
         ]);
 
         $message = SuporteChatMessages::create([
@@ -130,6 +132,11 @@ class SuporteController extends Controller
             'user_id' => auth()->id(),
             'message' => $request->message,
         ]);
+
+        // Send notifications if requested
+        if ($request->send_push || $request->send_email) {
+            $this->sendMessageNotification($suporte, $request->message, $request->send_push, $request->send_email);
+        }
 
         return response()->json(['success' => true, 'message' => $message]);
     }
@@ -144,6 +151,20 @@ class SuporteController extends Controller
 
         if ($suporte->user) {
             $suporte->user->notify(new SupportResponseNotification($suporte));
+        }
+    }
+
+    private function sendMessageNotification(Suporte $suporte, string $message, bool $sendPush, bool $sendEmail)
+    {
+        if ($sendEmail) {
+            $email = $suporte->user ? $suporte->user->email : $suporte->email;
+            if ($email) {
+                Mail::to($email)->queue(new \App\Mail\SupportMessageMail($suporte, $message));
+            }
+        }
+
+        if ($sendPush && $suporte->user) {
+            $suporte->user->notify(new \App\Notifications\SupportMessageNotification($suporte, $message));
         }
     }
 }
