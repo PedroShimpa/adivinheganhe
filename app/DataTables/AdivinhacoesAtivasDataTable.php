@@ -24,7 +24,7 @@ class AdivinhacoesAtivasDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             ->editColumn('created_at', function ($row) {
-                return $row->created_at->format('d/m/Y H:i');
+                return $row->created_at ? $row->created_at->format('d/m/Y H:i') : '';
             })
             ->editColumn('expire_at', function ($row) {
                 return $row->expire_at ? $row->expire_at->format('d/m H:i') : 'Não expira';

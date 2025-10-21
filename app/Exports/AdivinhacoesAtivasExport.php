@@ -6,8 +6,9 @@ use App\Models\Adivinhacoes;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
-class AdivinhacoesAtivasExport implements FromQuery, WithHeadings
+class AdivinhacoesAtivasExport implements FromQuery, WithHeadings, WithMapping
 {
     public function query()
     {
@@ -31,6 +32,16 @@ class AdivinhacoesAtivasExport implements FromQuery, WithHeadings
         }
 
         return $query;
+    }
+
+    public function map($row): array
+    {
+        return [
+            $row->uuid,
+            $row->created_at ? $row->created_at->format('d/m/Y H:i') : '',
+            $row->titulo,
+            $row->expire_at_formatted,
+        ];
     }
 
     public function headings(): array

@@ -24,7 +24,7 @@ class PremiacoesDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             ->editColumn('created_at', function ($row) {
-                return $row->created_at->format('d/m/Y H:i');
+                return $row->created_at ? $row->created_at->format('d/m/Y H:i') : '';
             })
             ->addColumn('pago', function ($row) {
                 return $row->premio_enviado == 'S' ? 'Sim' : 'Não';
