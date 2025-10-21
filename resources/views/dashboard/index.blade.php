@@ -8,91 +8,83 @@
         <p class="text-white">Visão geral do sistema</p>
     </div>
 
-    <div class="row g-3 mb-4">
+    <div id="cards" class="row g-3 mb-4">
         <div class="col-md-3">
-            <div class="card text-white bg-success shadow-sm">
-                <div class="card-body">
+            <div class="card text-white bg-success shadow-sm" style="height: 120px;">
+                <div class="card-body d-flex flex-column justify-content-center">
                     <h5 class="card-title">Usuários Online</h5>
-                    <p class="card-text display-6" id="online-users-count">{{ $countUsersOnline }}</p>
+                    <p class="card-text display-6 mb-0" id="online-users-count">{{ $countUsersOnline }}</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card text-white bg-primary shadow-sm">
-                <div class="card-body">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary shadow-sm" style="height: 120px;">
+                <div class="card-body d-flex flex-column justify-content-center">
                     <h5 class="card-title">Usuários</h5>
-                    <p class="card-text display-6" id="total-users-count">{{ $countUsers }}</p>
+                    <p class="card-text display-6 mb-0" id="total-users-count">{{ $countUsers }}</p>
                     <small>Hoje: {{ $countUsersToday }}</small>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card text-white bg-danger shadow-sm">
-                <div class="card-body">
+        <div class="col-md-3">
+            <div class="card text-white bg-danger shadow-sm" style="height: 120px;">
+                <div class="card-body d-flex flex-column justify-content-center">
                     <h5 class="card-title">Respostas Clássico</h5>
-                    <p class="card-text display-6" id="total-responses-count">{{ $countRespostasClassico }}</p>
+                    <p class="card-text display-6 mb-0" id="total-responses-count">{{ $countRespostasClassico }}</p>
                     <small>Hoje: {{ $countRespostasClassicoToday }}</small>
                 </div>
             </div>
         </div>
-
-        <div class="col-md-4">
-            <div class="card text-white bg-success shadow-sm">
-                <div class="card-body">
+        <div class="col-md-3">
+            <div class="card text-white bg-success shadow-sm" style="height: 120px;">
+                <div class="card-body d-flex flex-column justify-content-center">
                     <h5 class="card-title">Adivinhações</h5>
-                    <p class="card-text display-6">{{ $countAdivinhacoes }}</p>
+                    <p class="card-text display-6 mb-0">{{ $countAdivinhacoes }}</p>
                     <small>Ativas: {{ is_numeric($countAdivinhacoesAtivas) ? $countAdivinhacoesAtivas : (is_array($countAdivinhacoesAtivas) ? count($countAdivinhacoesAtivas) : 0) }}</small>
                 </div>
             </div>
         </div>
-
-
-        <div class="col-md-4">
-            <div class="card text-white bg-info shadow-sm">
-                <div class="card-body">
+        <div class="col-md-3">
+            <div class="card text-white bg-info shadow-sm" style="height: 120px;">
+                <div class="card-body d-flex flex-column justify-content-center">
                     <h5 class="card-title">Jogos Adivinhe o Milhão</h5>
-                    <p class="card-text display-6">{{ $countJogosAdivinheOmilhao }}</p>
+                    <p class="card-text display-6 mb-0">{{ $countJogosAdivinheOmilhao }}</p>
                     <small>Hoje: {{ $countJogosAdivinheOmilhaoToday }}</small>
                 </div>
             </div>
         </div>
-
-        <div class="col-md-4">
-            <div class="card text-white bg-warning shadow-sm">
-                <div class="card-body">
+        <div class="col-md-3">
+            <div class="card text-white bg-warning shadow-sm" style="height: 120px;">
+                <div class="card-body d-flex flex-column justify-content-center">
                     <h5 class="card-title">Usuários VIP</h5>
-                    <p class="card-text display-6">{{ $countVipUsers }}</p>
+                    <p class="card-text display-6 mb-0">{{ $countVipUsers }}</p>
                     <small>Ativos</small>
-                </div>
-                <div class="card-footer">
-                    <a href="{{ route('dashboard.vip_users') }}" class="btn btn-sm btn-outline-light w-100">
+                    <a href="{{ route('dashboard.vip_users') }}" class="btn btn-sm btn-outline-light mt-2">
                         <i class="bi bi-list"></i> Ver Lista
                     </a>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card text-white bg-secondary shadow-sm">
-                <div class="card-body">
+        <div class="col-md-3">
+            <div class="card text-white bg-secondary shadow-sm" style="height: 120px;">
+                <div class="card-body d-flex flex-column justify-content-center">
                     <h5 class="card-title">Partidas Competitivo</h5>
-                    <p class="card-text display-6">{{ $countPartidasCompetitivo }}</p>
+                    <p class="card-text display-6 mb-0">{{ $countPartidasCompetitivo }}</p>
                     <small>Hoje: {{ $countPartidasCompetitivoToday }}</small>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card text-white bg-dark shadow-sm">
-                <div class="card-body">
+        <div class="col-md-3">
+            <div class="card text-white bg-dark shadow-sm" style="height: 120px;">
+                <div class="card-body d-flex flex-column justify-content-center">
                     <h5 class="card-title">Jogadores na Fila Competitivo</h5>
-                    <p class="card-text display-6">{{ $jogadoresNaFilaAgoraCompetitivo }}</p>
+                    <p class="card-text display-6 mb-0">{{ $jogadoresNaFilaAgoraCompetitivo }}</p>
                 </div>
             </div>
         </div>
-
-
     </div>
 
-    <div class="row g-3 mb-4">
+    <div id="charts" class="row g-3 mb-4">
         <div class="col-md-6">
             <div class="card shadow-sm">
                 <div class="card-header bg-light">
@@ -116,7 +108,7 @@
     </div>
 
     <!-- Usuários Online -->
-    <div class="card shadow-sm mb-4">
+    <div id="online-users" class="card shadow-sm mb-4">
         <div class="card-header bg-light">
             <h5 class="mb-0">Usuários Online</h5>
         </div>
@@ -136,7 +128,7 @@
         </div>
     </div>
 
-    <div class="card shadow-sm mb-4">
+    <div id="premiacoes" class="card shadow-sm mb-4">
         <div class="card-header bg-light d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Premiações</h5>
             <a href="{{ route('dashboard.export_premiacoes') }}" class="btn btn-success btn-sm">
@@ -147,7 +139,7 @@
             {!! $premiacoesTable->table(['class' => 'table table-striped table-hover'], true) !!}
         </div>
     </div>
-    <div class="card shadow-sm mb-4">
+    <div id="comentarios" class="card shadow-sm mb-4">
         <div class="card-header bg-light d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Comentarios em Adivinhações</h5>
             <a href="{{ route('dashboard.export_comentarios') }}" class="btn btn-success btn-sm">
@@ -159,7 +151,7 @@
         </div>
     </div>
 
-    <div class="card shadow-sm mb-4">
+    <div id="adivinhacoes-ativas" class="card shadow-sm mb-4">
         <div class="card-header bg-light d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Adivinhações Ativas</h5>
             <a href="{{ route('dashboard.export_adivinhacoes_ativas') }}" class="btn btn-success btn-sm">
@@ -171,7 +163,7 @@
         </div>
     </div>
 
-    <div class="card shadow-sm mb-4">
+    <div id="respostas" class="card shadow-sm mb-4">
         <div class="card-header bg-light d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Respostas Adivinhações Ativas</h5>
             <a href="{{ route('dashboard.export_respostas') }}" class="btn btn-success btn-sm">
@@ -184,7 +176,7 @@
     </div>
 
     <!-- Tabela de usuários -->
-    <div class="card shadow-sm mb-4">
+    <div id="usuarios" class="card shadow-sm mb-4">
         <div class="card-header bg-light d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Usuários</h5>
             <a href="{{ route('dashboard.export_users') }}" class="btn btn-success btn-sm">
@@ -193,6 +185,25 @@
         </div>
         <div class="card-body">
             {!! $usersTable->table(['class' => 'table table-striped table-hover'], true) !!}
+        </div>
+    </div>
+
+    <!-- Floating Navigation Button -->
+    <div class="position-fixed" style="bottom: 20px; right: 20px; z-index: 1050;">
+        <div class="dropdown">
+            <button class="btn btn-primary btn-lg rounded-circle shadow" type="button" id="floatingNavButton" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-chevron-up"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="floatingNavButton">
+                <li><a class="dropdown-item" href="#cards">Cards</a></li>
+                <li><a class="dropdown-item" href="#charts">Gráficos</a></li>
+                <li><a class="dropdown-item" href="#online-users">Usuários Online</a></li>
+                <li><a class="dropdown-item" href="#premiacoes">Premiações</a></li>
+                <li><a class="dropdown-item" href="#comentarios">Comentários</a></li>
+                <li><a class="dropdown-item" href="#adivinhacoes-ativas">Adivinhações Ativas</a></li>
+                <li><a class="dropdown-item" href="#respostas">Respostas</a></li>
+                <li><a class="dropdown-item" href="#usuarios">Usuários</a></li>
+            </ul>
         </div>
     </div>
 
