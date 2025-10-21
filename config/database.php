@@ -140,44 +140,46 @@ return [
     | such as Memcached. You may define your connection settings here.
     |
     */
+'redis' => [
 
-    'redis' => [
+    'client' => env('REDIS_CLIENT', 'phpredis'),
 
-        'client' => env('REDIS_CLIENT', 'phpredis'),
-
-        'options' => [
-            'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')) . '-database-'),
-            'persistent' => env('REDIS_PERSISTENT', false),
-            'username' => env('REDIS_USERNAME'),
-            'password' => env('REDIS_PASSWORD'),
-        ],
-
-        'default' => [
-            'scheme' => env('REDIS_TLS', false) ? 'tls' : 'tcp',
-            'host' => env('REDIS_HOST', '127.0.0.1'),
-            'port' => env('REDIS_PORT', 6379),
-            'database' => env('REDIS_DB', 0),
-            'ssl' => env('REDIS_TLS', false) ? [
-                'cafile' => env('REDIS_SSL_CA'),
-                'verify_peer' => true,
-                'verify_peer_name' => true,
-            ] : null,
-        ],
-
-        'cache' => [
-            'scheme' => env('REDIS_TLS', false) ? 'tls' : 'tcp',
-            'host' => env('REDIS_HOST', '127.0.0.1'),
-            'port' => env('REDIS_PORT', 6379),
-            'database' => env('REDIS_CACHE_DB', 1),
-            'ssl' => env('REDIS_TLS', false) ? [
-                'cafile' => env('REDIS_SSL_CA'),
-                'verify_peer' => true,
-                'verify_peer_name' => true,
-            ] : null,
-        ],
-
+    'options' => [
+        'cluster' => env('REDIS_CLUSTER', 'redis'),
+        'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
     ],
 
+    'default' => [
+        'scheme' => env('REDIS_SCHEME', 'tcp'),
+        'host' => env('REDIS_HOST', '127.0.0.1'),
+        'username' => env('REDIS_USERNAME', null),
+        'password' => env('REDIS_PASSWORD', null),
+        'port' => env('REDIS_PORT', 6379),
+        'database' => env('REDIS_DB', 0),
+
+        // 👇 parte importante: configuração de SSL/TLS
+        'ssl' => [
+            'cafile' => env('REDIS_SSL_CA', null),
+            'verify_peer' => false, // desativa verificação rígida — útil para CA própria
+            'verify_peer_name' => false,
+        ],
+    ],
+
+    'cache' => [
+        'scheme' => env('REDIS_SCHEME', 'tcp'),
+        'host' => env('REDIS_HOST', '127.0.0.1'),
+        'username' => env('REDIS_USERNAME', null),
+        'password' => env('REDIS_PASSWORD', null),
+        'port' => env('REDIS_PORT', 6379),
+        'database' => env('REDIS_CACHE_DB', 1),
+
+        'ssl' => [
+            'cafile' => env('REDIS_SSL_CA', null),
+            'verify_peer' => false,
+            'verify_peer_name' => false,
+        ],
+    ],
+
+],
 
 ];
