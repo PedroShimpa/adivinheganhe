@@ -152,6 +152,7 @@ Route::middleware(['auth', 'banned', 'trackOnline'])->group(function () {
         Route::get('/adivinhacoes-expiradas', [HomeController::class, 'expiradas'])->name('adivinhacoes.expiradas');
 
         Route::get('/suporte/admin', [SuporteController::class, 'adminIndex'])->name('suporte.admin.index');
+        Route::post('/suporte/admin/create-ticket', [SuporteController::class, 'adminCreateTicket'])->name('suporte.admin.create-ticket');
         Route::get('/suporte/admin/{suporte}', [SuporteController::class, 'adminShow'])->name('suporte.admin.show');
         Route::put('/suporte/admin/{suporte}', [SuporteController::class, 'adminUpdate'])->name('suporte.admin.update');
 

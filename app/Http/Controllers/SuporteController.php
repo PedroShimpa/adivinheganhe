@@ -50,6 +50,32 @@ class SuporteController extends Controller
         return view('admin.suporte.index', compact('suportes'));
     }
 
+    public function adminCreateTicket(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'categoria_id' => 'required|exists:suporte_categorias,id',
+            'assunto' => 'required|string|max:255',
+            'descricao' => 'required|string',
+            'status' => 'required|in:A,EA,F',
+        ]);
+
+        $user = \App\Models\User::find($request->user_id);
+
+        $suporte = Suporte::create([
+            'user_id' => $request->user_id,
+            'categoria_id' => $request->categoria_id,
+            'nome' => $user->name,
+            'email' => $user->email,
+            'assunto' => $request->assunto,
+            'descricao' => $request->descricao,
+            'status' => $request->status,
+            'created_at' => now(),
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Chamado criado com sucesso!', 'suporte_id' => $suporte->id]);
+    }
+
     public function adminShow(Suporte $suporte)
     {
         $suporte->load('categoria', 'user');

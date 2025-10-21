@@ -10,7 +10,7 @@
 
     <div id="cards" class="row g-3 mb-4">
         <div class="col-md-3">
-            <div class="card text-white bg-success shadow-sm" style="height: 120px;">
+            <div class="card text-white bg-success shadow-sm" style="height: 180px;">
                 <div class="card-body d-flex flex-column justify-content-center">
                     <h5 class="card-title">Usuários Online</h5>
                     <p class="card-text display-6 mb-0" id="online-users-count">{{ $countUsersOnline }}</p>
@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-primary shadow-sm" style="height: 120px;">
+            <div class="card text-white bg-primary shadow-sm" style="height: 180px;">
                 <div class="card-body d-flex flex-column justify-content-center">
                     <h5 class="card-title">Usuários</h5>
                     <p class="card-text display-6 mb-0" id="total-users-count">{{ $countUsers }}</p>
@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-danger shadow-sm" style="height: 120px;">
+            <div class="card text-white bg-danger shadow-sm" style="height: 180px;">
                 <div class="card-body d-flex flex-column justify-content-center">
                     <h5 class="card-title">Respostas Clássico</h5>
                     <p class="card-text display-6 mb-0" id="total-responses-count">{{ $countRespostasClassico }}</p>
@@ -36,7 +36,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-success shadow-sm" style="height: 120px;">
+            <div class="card text-white bg-success shadow-sm" style="height: 180px;">
                 <div class="card-body d-flex flex-column justify-content-center">
                     <h5 class="card-title">Adivinhações</h5>
                     <p class="card-text display-6 mb-0">{{ $countAdivinhacoes }}</p>
@@ -45,7 +45,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-info shadow-sm" style="height: 120px;">
+            <div class="card text-white bg-info shadow-sm" style="height: 180px;">
                 <div class="card-body d-flex flex-column justify-content-center">
                     <h5 class="card-title">Jogos Adivinhe o Milhão</h5>
                     <p class="card-text display-6 mb-0">{{ $countJogosAdivinheOmilhao }}</p>
@@ -54,7 +54,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-warning shadow-sm" style="height: 120px;">
+            <div class="card text-white bg-warning shadow-sm" style="height: 180px;">
                 <div class="card-body d-flex flex-column justify-content-center">
                     <h5 class="card-title">Usuários VIP</h5>
                     <p class="card-text display-6 mb-0">{{ $countVipUsers }}</p>
@@ -66,7 +66,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-secondary shadow-sm" style="height: 120px;">
+            <div class="card text-white bg-secondary shadow-sm" style="height: 180px;">
                 <div class="card-body d-flex flex-column justify-content-center">
                     <h5 class="card-title">Partidas Competitivo</h5>
                     <p class="card-text display-6 mb-0">{{ $countPartidasCompetitivo }}</p>
@@ -75,7 +75,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-dark shadow-sm" style="height: 120px;">
+            <div class="card text-white bg-dark shadow-sm" style="height: 180px;">
                 <div class="card-body d-flex flex-column justify-content-center">
                     <h5 class="card-title">Jogadores na Fila Competitivo</h5>
                     <p class="card-text display-6 mb-0">{{ $jogadoresNaFilaAgoraCompetitivo }}</p>
