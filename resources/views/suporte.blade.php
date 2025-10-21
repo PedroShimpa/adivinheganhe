@@ -43,6 +43,13 @@
             @error('descricao') <small class="text-danger">{{ $message }}</small> @enderror
         </div>
 
+        <div class="mb-3">
+            <label for="attachments" class="form-label text-white">Anexos (opcional, até 2 imagens, max 2MB cada)</label>
+            <input type="file" name="attachments[]" class="form-control" multiple accept="image/*" max="2">
+            @error('attachments') <small class="text-danger">{{ $message }}</small> @enderror
+            @error('attachments.*') <small class="text-danger">{{ $message }}</small> @enderror
+        </div>
+
         <button type="submit" class="btn btn-primary">Enviar chamado</button>
     </form>
 </div>

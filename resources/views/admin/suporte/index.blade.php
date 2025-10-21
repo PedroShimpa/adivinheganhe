@@ -101,41 +101,45 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h5 class="modal-title" id="createTicketModalLabel">Criar Chamado para Cliente</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="user_id" class="form-label">Cliente (ID ou Nome)</label>
-                        <select class="form-control" id="user_id" name="user_id" required>
-                            <option value="">Selecione um cliente...</option>
-                            @foreach(\App\Models\User::all() as $user)
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="user_id" class="form-label">Cliente (ID ou Nome)</label>
+                            <select class="form-control" id="user_id" name="user_id" required>
+                                <option value="">Selecione um cliente...</option>
+                                @foreach(\App\Models\User::all() as $user)
                                 <option value="{{ $user->id }}">{{ $user->id }} - {{ $user->name }} ({{ $user->email }})</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="categoria_id" class="form-label">Categoria</label>
-                        <select class="form-control" id="categoria_id" name="categoria_id" required>
-                            <option value="">Selecione uma categoria...</option>
-                            @foreach(\App\Models\SuporteCategorias::all() as $categoria)
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="categoria_id" class="form-label">Categoria</label>
+                            <select class="form-control" id="categoria_id" name="categoria_id" required>
+                                <option value="">Selecione uma categoria...</option>
+                                @foreach(\App\Models\SuporteCategorias::all() as $categoria)
                                 <option value="{{ $categoria->id }}">{{ $categoria->descricao }}</option>
-                            @endforeach
-                        </select>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="assunto" class="form-label">Assunto</label>
+                            <input type="text" class="form-control" id="assunto" name="assunto" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="descricao" class="form-label">Descrição</label>
+                            <textarea class="form-control" id="descricao" name="descricao" rows="5" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="attachments" class="form-label">Anexos (opcional, até 2 imagens, max 2MB cada)</label>
+                            <input type="file" name="attachments[]" class="form-control" multiple accept="image/*" max="2">
+                        </div>
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Status Inicial</label>
+                            <select class="form-control" id="status" name="status">
+                                <option value="A">Aguardando</option>
+                                <option value="EA">Em Atendimento</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="assunto" class="form-label">Assunto</label>
-                        <input type="text" class="form-control" id="assunto" name="assunto" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="descricao" class="form-label">Descrição</label>
-                        <textarea class="form-control" id="descricao" name="descricao" rows="5" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="status" class="form-label">Status Inicial</label>
-                        <select class="form-control" id="status" name="status">
-                            <option value="A">Aguardando</option>
-                            <option value="EA">Em Atendimento</option>
-                        </select>
-                    </div>
-                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Criar Chamado</button>

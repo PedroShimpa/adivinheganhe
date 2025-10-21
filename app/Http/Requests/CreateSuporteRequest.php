@@ -29,6 +29,8 @@ class CreateSuporteRequest extends FormRequest
         $rules = [
             'categoria_id' => 'required|exists:suporte_categorias,id',
             'descricao' => 'required|string',
+            'attachments' => 'nullable|array|max:2',
+            'attachments.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ];
 
         if (!Auth::check()) {

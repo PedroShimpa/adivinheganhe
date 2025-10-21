@@ -27,6 +27,24 @@ class SuporteController extends Controller
 
         $data = $request->validated();
         $data['created_at'] = now();
+
+        // Handle attachments
+        if ($request->hasFile('attachments')) {
+            $attachments = [];
+            foreach ($request->file('attachments') as $file) {
+                $hash = Str::random(10);
+                $fileName = $hash . '_' . time() . '.webp';
+
+                $image = Image::read($file)->encodeByExtension('webp', 85);
+                $filePath = 'suporte_attachments/' . $fileName;
+                Storage::disk('s3')->put($filePath, (string) $image);
+                $urlImagem = Storage::disk('s3')->url($filePath);
+
+                $attachments[] = $urlImagem;
+            }
+            $data['attachments'] = json_encode($attachments);
+        }
+
         dispatch(new AdicionarSuporte($data));
 
         $nome = auth()->check() ? auth()->user()->name : $request->input('nome');
@@ -58,11 +76,13 @@ class SuporteController extends Controller
             'assunto' => 'required|string|max:255',
             'descricao' => 'required|string',
             'status' => 'required|in:A,EA,F',
+            'attachments' => 'nullable|array|max:2',
+            'attachments.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $user = \App\Models\User::find($request->user_id);
 
-        $suporte = Suporte::create([
+        $data = [
             'user_id' => $request->user_id,
             'categoria_id' => $request->categoria_id,
             'nome' => $user->name,
@@ -71,7 +91,26 @@ class SuporteController extends Controller
             'descricao' => $request->descricao,
             'status' => $request->status,
             'created_at' => now(),
-        ]);
+        ];
+
+        // Handle attachments
+        if ($request->hasFile('attachments')) {
+            $attachments = [];
+            foreach ($request->file('attachments') as $file) {
+                $hash = Str::random(10);
+                $fileName = $hash . '_' . time() . '.webp';
+
+                $image = Image::read($file)->encodeByExtension('webp', 85);
+                $filePath = 'suporte_attachments/' . $fileName;
+                Storage::disk('s3')->put($filePath, (string) $image);
+                $urlImagem = Storage::disk('s3')->url($filePath);
+
+                $attachments[] = $urlImagem;
+            }
+            $data['attachments'] = json_encode($attachments);
+        }
+
+        $suporte = Suporte::create($data);
 
         return response()->json(['success' => true, 'message' => 'Chamado criado com sucesso!', 'suporte_id' => $suporte->id]);
     }

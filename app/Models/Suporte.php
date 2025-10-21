@@ -15,7 +15,8 @@ class Suporte extends Model
         'categoria_id',
         'descricao',
         'status',
-        'admin_response'
+        'admin_response',
+        'attachments'
     ];
 
     public function categoria()

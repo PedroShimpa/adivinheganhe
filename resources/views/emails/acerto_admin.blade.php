@@ -3,3 +3,5 @@
 <p><strong>"{{ $adivinhacao->titulo }}"</strong></p>
 
 <p>A adivinhação foi marcada como resolvida.</p>
+
+{!! $buildTrackingPixel() !!}

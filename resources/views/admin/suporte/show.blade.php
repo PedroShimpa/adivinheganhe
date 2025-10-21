@@ -41,6 +41,18 @@
                 <strong>Descrição:</strong>
                 <p>{{ $suporte->descricao }}</p>
             </div>
+            @if(!empty($suporte->attachments))
+            <div class="mt-3">
+                <strong>Anexos:</strong>
+                <div class="row">
+                    @foreach(json_decode($suporte->attachments) as $attachment)
+                    <div class="col-md-3 mb-2">
+                        <img src="{{ $attachment }}" class="img-fluid rounded" alt="Anexo" style="max-height: 150px;">
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
             @if(!empty($suporte->admin_response))
             <div class="mt-3">
                 <strong>Resposta do Suporte:</strong>

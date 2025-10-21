@@ -310,6 +310,10 @@
                             class="nav-link text-white {{ request()->routeIs('suporte.admin.index') ? 'active fw-bold text-primary' : '' }}">
                            Atender Chamados
                         </a>
+                        <a href="{{ route('email_tracking.index') }}"
+                            class="nav-link text-white {{ request()->routeIs('email_tracking.index') ? 'active fw-bold text-primary' : '' }}">
+                           Rastreamento de Emails
+                        </a>
                     </div>
                 </div>
             </div>

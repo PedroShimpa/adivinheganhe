@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Mail\Traits\Trackable;
 use App\Models\Adivinhacoes;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
@@ -13,7 +14,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class AcertoAdminMail extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use Queueable, SerializesModels, Trackable;
 
     public User $usuario;
     public Adivinhacoes $adivinhacao;
