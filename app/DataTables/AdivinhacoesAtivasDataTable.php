@@ -26,6 +26,9 @@ class AdivinhacoesAtivasDataTable extends DataTable
             ->editColumn('created_at', function ($row) {
                 return $row->created_at->format('d/m/Y H:i');
             })
+            ->editColumn('expire_at', function ($row) {
+                return $row->expire_at ? $row->expire_at->format('d/m H:i') : 'Não expira';
+            })
             ->addColumn('respostas_count', function ($row) {
                 return $row->respostas->count();
             })
@@ -113,6 +116,7 @@ class AdivinhacoesAtivasDataTable extends DataTable
             Column::make('uuid')->title('Código'),
             Column::make('created_at')->title('Data de criação'),
             Column::make('titulo')->title('Título'),
+            Column::make('expire_at')->title('Expire em'),
             Column::computed('respostas_count')->title('Qtd Respostas'),
             Column::computed('action')
                 ->exportable(false)
