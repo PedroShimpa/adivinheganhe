@@ -11,7 +11,13 @@ class UsersExport implements FromQuery, WithHeadings, WithMapping
 {
     public function query()
     {
-        return User::query()->where('banned', false);
+        $query = User::query()->where('banned', false);
+
+        if (request('start_date') && request('end_date')) {
+            $query->whereBetween('created_at', [request('start_date') . ' 00:00:00', request('end_date') . ' 23:59:59']);
+        }
+
+        return $query;
     }
 
     public function headings(): array

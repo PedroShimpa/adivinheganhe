@@ -8,6 +8,26 @@
         <p class="text-white">Visão geral do sistema</p>
     </div>
 
+    <!-- Date Filter -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="GET" action="{{ route('dashboard.index') }}" class="row g-3">
+                <div class="col-md-4">
+                    <label for="start_date" class="form-label">Data Inicial</label>
+                    <input type="date" class="form-control" id="start_date" name="start_date" value="{{ request('start_date') }}">
+                </div>
+                <div class="col-md-4">
+                    <label for="end_date" class="form-label">Data Final</label>
+                    <input type="date" class="form-control" id="end_date" name="end_date" value="{{ request('end_date') }}">
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2">Filtrar</button>
+                    <a href="{{ route('dashboard.index') }}" class="btn btn-secondary">Limpar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div id="cards" class="row g-3 mb-4">
         <div class="col-md-3">
             <div class="card text-white bg-success shadow-sm" style="height: 180px;">

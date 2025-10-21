@@ -98,11 +98,17 @@ class PremiacoesDataTable extends DataTable
      */
     public function query(AdivinhacoesPremiacoes $model): QueryBuilder
     {
-        return $model->newQuery()
+        $query = $model->newQuery()
             ->select('adivinhacoes_premiacoes.id', 'adivinhacoes_premiacoes.created_at', 'users.name', 'users.username', 'adivinhacoes.titulo', 'premio_enviado')
             ->join('adivinhacoes', 'adivinhacoes.id', '=', 'adivinhacoes_premiacoes.adivinhacao_id')
             ->join('users', 'users.id', '=', 'adivinhacoes_premiacoes.user_id')
             ->orderBy('adivinhacoes_premiacoes.id', 'desc');
+
+        if (request('start_date') && request('end_date')) {
+            $query->whereBetween('adivinhacoes_premiacoes.created_at', [request('start_date') . ' 00:00:00', request('end_date') . ' 23:59:59']);
+        }
+
+        return $query;
     }
 
     /**

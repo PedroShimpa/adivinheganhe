@@ -34,7 +34,7 @@ class RespostasDataTable extends DataTable
      */
     public function query(AdivinhacoesRespostas $model): QueryBuilder
     {
-        return $model->newQuery()
+        $query = $model->newQuery()
             ->select('adivinhacoes_respostas.id as id', 'adivinhacoes_respostas.created_at as created_at', 'adivinhacoes_respostas.resposta as resposta', 'adivinhacoes.titulo as titulo', 'users.username as username')
             ->join('adivinhacoes', 'adivinhacoes.id', '=', 'adivinhacoes_respostas.adivinhacao_id')
             ->join('users', 'users.id', '=', 'adivinhacoes_respostas.user_id')
@@ -49,6 +49,12 @@ class RespostasDataTable extends DataTable
                 $q->orWhereNull('adivinhacoes.liberado_at');
             })
             ->orderBy('adivinhacoes_respostas.id', 'desc');
+
+        if (request('start_date') && request('end_date')) {
+            $query->whereBetween('adivinhacoes_respostas.created_at', [request('start_date') . ' 00:00:00', request('end_date') . ' 23:59:59']);
+        }
+
+        return $query;
     }
 
     /**

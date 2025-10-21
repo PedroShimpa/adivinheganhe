@@ -34,7 +34,7 @@ class ComentariosDataTable extends DataTable
      */
     public function query(Comment $model): QueryBuilder
     {
-        return $model->newQuery()
+        $query = $model->newQuery()
             ->select('comments.id', 'comments.created_at', 'comments.body', 'users.name', 'users.username', 'adivinhacoes.titulo')
             ->join('adivinhacoes', 'adivinhacoes.id', '=', 'comments.commentable_id')
             ->join('users', 'users.id', '=', 'comments.user_id')
@@ -50,6 +50,12 @@ class ComentariosDataTable extends DataTable
                 $q->orWhereNull('adivinhacoes.liberado_at');
             })
             ->orderBy('comments.id', 'desc');
+
+        if (request('start_date') && request('end_date')) {
+            $query->whereBetween('comments.created_at', [request('start_date') . ' 00:00:00', request('end_date') . ' 23:59:59']);
+        }
+
+        return $query;
     }
 
     /**

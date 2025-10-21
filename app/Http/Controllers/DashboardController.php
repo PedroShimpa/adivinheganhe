@@ -25,6 +25,17 @@ class DashboardController extends Controller
 {
     public function dashboard()
     {
+        $startDate = request('start_date');
+        $endDate = request('end_date');
+
+        $dateFilter = [];
+        if ($startDate && $endDate) {
+            $dateFilter = [
+                'start' => $startDate . ' 00:00:00',
+                'end' => $endDate . ' 23:59:59'
+            ];
+        }
+
         try {
             $adivinhacoesAtivas = (new Adivinhacoes())->getAtivas(true);
             $countAdivinhacoesAtivas = is_array($adivinhacoesAtivas) ? count($adivinhacoesAtivas) : $adivinhacoesAtivas->count();
@@ -35,9 +46,12 @@ class DashboardController extends Controller
 
         // Horarios com mais respostas
         try {
-            $horariosRaw = AdivinhacoesRespostas::selectRaw('HOUR(created_at) as hour, COUNT(*) as count')
-                ->groupBy('hour')
-                ->pluck('count', 'hour');
+            $query = AdivinhacoesRespostas::selectRaw('HOUR(created_at) as hour, COUNT(*) as count')
+                ->groupBy('hour');
+            if (!empty($dateFilter)) {
+                $query->whereBetween('created_at', [$dateFilter['start'], $dateFilter['end']]);
+            }
+            $horariosRaw = $query->pluck('count', 'hour');
             $horariosRespostas = array_fill(0, 24, 0);
             foreach ($horariosRaw as $hour => $count) {
                 $horariosRespostas[$hour] = $count;
@@ -49,9 +63,12 @@ class DashboardController extends Controller
 
         // Dias da semana com mais respostas
         try {
-            $diasRaw = AdivinhacoesRespostas::selectRaw('DAYOFWEEK(created_at) as dia, COUNT(*) as count')
-                ->groupBy('dia')
-                ->pluck('count', 'dia');
+            $query = AdivinhacoesRespostas::selectRaw('DAYOFWEEK(created_at) as dia, COUNT(*) as count')
+                ->groupBy('dia');
+            if (!empty($dateFilter)) {
+                $query->whereBetween('created_at', [$dateFilter['start'], $dateFilter['end']]);
+            }
+            $diasRaw = $query->pluck('count', 'dia');
             $diasSemanaRespostas = [
                 'Domingo' => 0, 'Segunda' => 0, 'Terça' => 0, 'Quarta' => 0,
                 'Quinta' => 0, 'Sexta' => 0, 'Sábado' => 0
@@ -75,34 +92,50 @@ class DashboardController extends Controller
 
         // Top 10 users who indicated others
         try {
-            $topIndicadores = User::select('users.name', 'users.username', \DB::raw('COUNT(adicionais_indicacao.id) as total_indicados'))
+            $query = User::select('users.name', 'users.username', \DB::raw('COUNT(adicionais_indicacao.id) as total_indicados'))
                 ->join('adicionais_indicacao', 'users.uuid', '=', 'adicionais_indicacao.user_uuid')
                 ->groupBy('users.id', 'users.name', 'users.username')
                 ->orderBy('total_indicados', 'desc')
-                ->limit(10)
-                ->get()
-                ->toArray();
+                ->limit(10);
+            if (!empty($dateFilter)) {
+                $query->whereBetween('adicionais_indicacao.created_at', [$dateFilter['start'], $dateFilter['end']]);
+            }
+            $topIndicadores = $query->get()->toArray();
         } catch (\Exception $e) {
             \Log::error('Error getting top indicadores: ' . $e->getMessage());
             $topIndicadores = [];
         }
 
         try {
+            $userQuery = User::where('banned', false);
+            $respostasQuery = AdivinhacoesRespostas::query();
+            $inicioJogoQuery = InicioJogo::query();
+            $partidasQuery = Partidas::query();
+            $suporteQuery = \App\Models\Suporte::where('status', 'A');
+
+            if (!empty($dateFilter)) {
+                $userQuery->whereBetween('created_at', [$dateFilter['start'], $dateFilter['end']]);
+                $respostasQuery->whereBetween('created_at', [$dateFilter['start'], $dateFilter['end']]);
+                $inicioJogoQuery->whereBetween('created_at', [$dateFilter['start'], $dateFilter['end']]);
+                $partidasQuery->whereBetween('created_at', [$dateFilter['start'], $dateFilter['end']]);
+                $suporteQuery->whereBetween('created_at', [$dateFilter['start'], $dateFilter['end']]);
+            }
+
             $data = [
-                'countUsers' => User::where('banned', false)->count(),
+                'countUsers' => $userQuery->count(),
                 'countUsersToday' => User::where('banned', false)->whereDate('created_at', today())->count(),
                 'countUsersOnline' => $onlineUsers['count'],
                 'onlineUsers' => $onlineUsers,
                 'countAdivinhacoes' => Adivinhacoes::count(),
                 'countAdivinhacoesAtivas' => $countAdivinhacoesAtivas,
-                'countRespostasClassico' => AdivinhacoesRespostas::count(),
+                'countRespostasClassico' => $respostasQuery->count(),
                 'countRespostasClassicoToday' => AdivinhacoesRespostas::whereDate('created_at', today())->count(),
-                'countJogosAdivinheOmilhao' => InicioJogo::count(),
+                'countJogosAdivinheOmilhao' => $inicioJogoQuery->count(),
                 'countJogosAdivinheOmilhaoToday' => InicioJogo::whereDate('created_at', today())->count(),
-                'countPartidasCompetitivo' => Partidas::count(),
+                'countPartidasCompetitivo' => $partidasQuery->count(),
                 'countPartidasCompetitivoToday' => Partidas::whereDate('created_at', today())->count(),
                 'jogadoresNaFilaAgoraCompetitivo' => Fila::count(),
-                'countChamadosAguardando' => \App\Models\Suporte::where('status', 'A')->count(),
+                'countChamadosAguardando' => $suporteQuery->count(),
                 'countVipUsers' => User::where('banned', false)->whereNotNull('membership_expires_at')->where('membership_expires_at', '>', now())->count(),
                 'horariosRespostas' => $horariosRespostas,
                 'diasSemanaRespostas' => $diasSemanaRespostas,

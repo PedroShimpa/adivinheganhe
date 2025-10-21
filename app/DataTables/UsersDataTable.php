@@ -70,9 +70,15 @@ class UsersDataTable extends DataTable
      */
     public function query(User $model): QueryBuilder
     {
-        return $model->newQuery()
+        $query = $model->newQuery()
             ->where('banned', false)
             ->orderBy('id', 'desc');
+
+        if (request('start_date') && request('end_date')) {
+            $query->whereBetween('created_at', [request('start_date') . ' 00:00:00', request('end_date') . ' 23:59:59']);
+        }
+
+        return $query;
     }
 
     /**

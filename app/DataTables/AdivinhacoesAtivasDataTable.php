@@ -64,7 +64,7 @@ class AdivinhacoesAtivasDataTable extends DataTable
      */
     public function query(Adivinhacoes $model): QueryBuilder
     {
-        return $model->newQuery()->whereNull('regiao_id')
+        $query = $model->newQuery()->whereNull('regiao_id')
             ->where('resolvida', 'N')
             ->where('exibir_home', 'S')
             ->where(function ($q) {
@@ -77,6 +77,12 @@ class AdivinhacoesAtivasDataTable extends DataTable
             })
             ->withCount('likes')
             ->with('respostas');
+
+        if (request('start_date') && request('end_date')) {
+            $query->whereBetween('created_at', [request('start_date') . ' 00:00:00', request('end_date') . ' 23:59:59']);
+        }
+
+        return $query;
     }
 
     /**
