@@ -35,7 +35,7 @@ class RespostasDataTable extends DataTable
     public function query(AdivinhacoesRespostas $model): QueryBuilder
     {
         return $model->newQuery()
-            ->select('adivinhacoes_respostas.id', 'adivinhacoes_respostas.created_at', 'adivinhacoes_respostas.resposta', 'adivinhacoes.titulo', 'users.name', 'users.username')
+            ->select('adivinhacoes_respostas.id', 'adivinhacoes_respostas.created_at', 'adivinhacoes_respostas.resposta', 'adivinhacoes.titulo', 'users.username')
             ->join('adivinhacoes', 'adivinhacoes.id', '=', 'adivinhacoes_respostas.adivinhacao_id')
             ->join('users', 'users.id', '=', 'adivinhacoes_respostas.user_id')
             ->where('adivinhacoes.resolvida', 'N')
@@ -76,12 +76,11 @@ class RespostasDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('id')->title('ID'),
-            Column::make('created_at')->title('Data'),
-            Column::make('name')->title('Nome'),
-            Column::make('username')->title('Usuário'),
-            Column::make('titulo')->title('Título'),
-            Column::make('resposta')->title('Resposta'),
+            Column::make('adivinhacoes_respostas.id')->title('ID'),
+            Column::make('adivinhacoes_respostas.created_at')->title('Data'),
+            Column::make('users.username')->title('Usuário'),
+            Column::make('adivinhacoes.titulo')->title('Título'),
+            Column::make('adivinhacoes_respostas.resposta')->title('Resposta'),
         ];
     }
 
