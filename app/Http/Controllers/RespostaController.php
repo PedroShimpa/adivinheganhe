@@ -143,6 +143,42 @@ class RespostaController extends Controller
             $user->id,
             "Acertou"
         ));
+
+        // Send WhatsApp message for correct guess
+        try {
+            $API_BASE = env('NOTIFICACAO_API_BASE');
+            $TOKEN_ENDPOINT = $API_BASE . env('NOTIFICACAO_API_TOKEN_PATH');
+            $SEND_MESSAGE_ENDPOINT = $API_BASE . env('NOTIFICACAO_API_SEND_PATH');
+            $PHONE_ID = env('NOTIFICACAO_PHONE_ID');
+
+            $tokenRes = Http::post($TOKEN_ENDPOINT);
+
+            if ($tokenRes->successful() && $tokenRes->json('status') === 'success') {
+                $token = $tokenRes->json('token');
+                $headers = ["Authorization" => "Bearer $token"];
+
+                $username = $user->isVip() ? "VIP {$user->username}" : $user->username;
+                $mensagem = "O jogador {$username} acertou a adivinhacao {$adivinhacao->titulo} parabens! em breve nossa equipe entrará em contato para pagamento do prêmio\nJogue em: https://adivinheganhe.com.br/adivinhacoes/{$adivinhacao->uuid}";
+
+                $payload = [
+                    "phone" => $PHONE_ID,
+                    "isGroup" => false,
+                    "isNewsletter" => true,
+                    "isLid" => false,
+                    "message" => $mensagem,
+                ];
+
+                $resp = Http::withHeaders($headers)->post($SEND_MESSAGE_ENDPOINT, $payload);
+
+                if (!$resp->successful()) {
+                    Log::error("Erro ao enviar mensagem WhatsApp para acerto: " . $resp->body());
+                }
+            } else {
+                Log::error("Erro ao gerar token para WhatsApp acerto: " . $tokenRes->body());
+            }
+        } catch (\Exception $e) {
+            Log::error("Erro ao enviar notificação WhatsApp para acerto: " . $e->getMessage());
+        }
     }
 
     private function respostaJaEnviada($adivinhacaoId, $userId, $resposta)

@@ -8,7 +8,7 @@
     <h5 class="fw-bold mb-0">
         {{ $adivinhacao->titulo. (!empty($adivinhacao->expired_at_br) && $adivinhacao->expired ? ' - EXPIRADA' : '') }}
     </h5>
-    @if($adivinhacao->only_members == 1 || !is_null($adivinhacao->vip_release_at))
+    @if($adivinhacao->only_members == 1)
         <span class="badge bg-warning text-dark">
             <i class="bi bi-star-fill"></i> VIP
         </span>
