@@ -74,7 +74,7 @@
 
                         @auth
                         <div class="input-group">
-                            <input type="text" id="comentario-input-{{ $post->id }}" class="form-control rounded-start-pill" placeholder="💬 Escreva um comentário...">
+                            <input type="text" id="comentario-input-{{ $post->id }}" class="form-control rounded-start-pill" placeholder="💬 Escreva um comentário..." maxlength="250">
                             <button class="btn btn-primary rounded-end-pill sendComment"
                                 data-id="{{ $post->id }}"
                                 data-route="{{ route('posts.comment', $post->id) }}">

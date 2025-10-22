@@ -14,6 +14,21 @@ class Comment extends Model
         'body'
     ];
 
+    protected $casts = [
+        'body' => 'string'
+    ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($comment) {
+            if (strlen($comment->body) > 250) {
+                $comment->body = substr($comment->body, 0, 250);
+            }
+        });
+    }
+
     public function commentable()
     {
         return $this->morphTo();

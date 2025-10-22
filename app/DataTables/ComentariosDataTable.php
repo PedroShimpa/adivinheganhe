@@ -26,6 +26,10 @@ class ComentariosDataTable extends DataTable
             ->editColumn('created_at', function ($row) {
                 return $row->created_at->format('d/m/Y H:i');
             })
+            ->addColumn('action', function ($row) {
+                return '<button class="btn btn-sm btn-danger delete-comment" data-id="' . $row->id . '"><i class="fas fa-trash"></i> Excluir</button>';
+            })
+            ->rawColumns(['action'])
             ->setRowId('id');
     }
 
@@ -79,6 +83,11 @@ class ComentariosDataTable extends DataTable
             Column::make('username')->title('Usuario'),
             Column::make('titulo')->title('Adivinhação'),
             Column::make('body')->title('Comentario'),
+            Column::computed('action')
+                ->exportable(false)
+                ->printable(false)
+                ->width(60)
+                ->addClass('text-center'),
         ];
     }
 

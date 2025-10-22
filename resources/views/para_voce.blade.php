@@ -103,6 +103,12 @@
 
         if (!body) return;
 
+        // Check comment length (250 characters max)
+        if (body.length > 250) {
+            alert('Comentário muito longo. Máximo de 250 caracteres.');
+            return;
+        }
+
         $(this).attr('disabled', true)
 
         try {

@@ -136,6 +136,7 @@ Route::middleware(['auth', 'banned', 'trackOnline'])->group(function () {
         Route::get('/dashboard/premiacao-modal/{id}', [DashboardController::class, 'premiacaoModal'])->name('dashboard.premiacao.modal');
         Route::get('/dashboard/ban-modal/{id}', [DashboardController::class, 'banModal'])->name('dashboard.ban.modal');
         Route::get('/dashboard/comentarios-data', [DashboardController::class, 'comentariosData'])->name('dashboard.comentarios.data');
+        Route::delete('/dashboard/delete-comment', [DashboardController::class, 'deleteComment'])->name('dashboard.delete_comment');
         Route::get('/dashboard/adivinhacoes-ativas-data', [DashboardController::class, 'adivinhacoesAtivasData'])->name('dashboard.adivinhacoes_ativas.data');
         Route::get('/dashboard/respostas-data', [DashboardController::class, 'respostasData'])->name('dashboard.respostas.data');
         Route::get('/dashboard/users-data', [DashboardController::class, 'usersData'])->name('dashboard.users.data');

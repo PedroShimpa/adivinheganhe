@@ -204,6 +204,14 @@ class DashboardController extends Controller
         return $dataTable->ajax();
     }
 
+    public function deleteComment(Request $request)
+    {
+        $comment = \App\Models\Comment::findOrFail($request->id);
+        $comment->delete();
+
+        return response()->json(['success' => true, 'message' => 'Comentário excluído com sucesso.']);
+    }
+
     public function adivinhacoesAtivasData(AdivinhacoesAtivasDataTable $dataTable)
     {
         return $dataTable->ajax();

@@ -463,6 +463,28 @@ $(document).on('submit', 'form[action*="/premiacoes/deletar/"]', function(e) {
         }
     });
 });
+
+$(document).on('click', '.delete-comment', function(e) {
+    e.preventDefault();
+    var commentId = $(this).data('id');
+    if (confirm('Tem certeza que deseja excluir este comentário?')) {
+        $.ajax({
+            url: '{{ route("dashboard.delete_comment") }}',
+            type: 'DELETE',
+            data: {
+                id: commentId,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                $('#comentariosTable').DataTable().ajax.reload();
+                alert('Comentário excluído com sucesso!');
+            },
+            error: function(xhr) {
+                alert('Erro ao excluir comentário: ' + xhr.responseText);
+            }
+        });
+    }
+});
 </script>
 
 <script>

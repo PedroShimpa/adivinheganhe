@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules;
+// use Anhskohbo\NoCaptcha\Rules\Captcha;
 
 class RegisterUserRequest extends FormRequest
 {
@@ -29,7 +30,8 @@ class RegisterUserRequest extends FormRequest
             'username' => ['required', 'string', 'max:255', 'unique:users,username', 'regex:/^[a-z0-9_]+$/i', 'lowercase'],
             'password' => ['required', Rules\Password::defaults()],
             'indicated_by' => ['nullable', 'string', 'exists:users,uuid'],
-            'fingerprint' => ['nullable', 'string']
+            'fingerprint' => ['nullable', 'string'],
+            // 'g-recaptcha-response' => ['required', new Captcha()],
         ];
     }
 

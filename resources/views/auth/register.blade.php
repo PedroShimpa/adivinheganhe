@@ -61,6 +61,7 @@
                             @enderror
                         </div>
 
+                  
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary w-100 py-2 mb-2">
                                 Registrar

@@ -40,7 +40,7 @@
 
         @auth
             <div class="input-group">
-                <input type="text" id="comentario-input-{{ $adivinhacao->id }}" class="form-control rounded-start-pill" placeholder="💬 Escreva um comentário...">
+                <input type="text" id="comentario-input-{{ $adivinhacao->id }}" class="form-control rounded-start-pill" placeholder="💬 Escreva um comentário..." maxlength="250">
                 <button class="btn btn-primary rounded-end-pill sendComment" data-id="{{ $adivinhacao->id }}" data-route="{{ route('adivinhacoes.comment', $adivinhacao->uuid) }}">
                     Enviar
                 </button>
