@@ -62,27 +62,21 @@ class PremiacoesDataTable extends DataTable
                     </div>
                 </div>';
 
-                $pagoModal = '<div class="modal fade" id="marcarPago-' . $row->id . '" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
+                $pagoModal = '<div class="modal fade" id="marcarPago-' . $row->id . '" tabindex="-1" aria-labelledby="marcarPagoLabel-' . $row->id . '" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
-                            <form action="' . route('premiacoes.marcar_pago', ['premiacao' => $row->id]) . '" method="POST" enctype="multipart/form-data">
-                                @csrf
-                                <div class="modal-header bg-success text-white">
-                                    <h5 class="modal-title">Marcar como Pago</h5>
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="mb-3">
-                                        <label for="comprovante" class="form-label">Comprovante de Pagamento (opcional)</label>
-                                        <input type="file" class="form-control" id="comprovante" name="comprovante" accept="image/*">
-                                        <small class="form-text text-muted">Aceita imagens: JPEG, PNG, JPG, GIF, SVG (máx. 2MB)</small>
+                            <div class="modal-header bg-success text-white">
+                                <h5 class="modal-title" id="marcarPagoLabel-' . $row->id . '">Marcar como Pago</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="modal-content-' . $row->id . '" class="text-center">
+                                    <div class="spinner-border text-success" role="status">
+                                        <span class="visually-hidden">Carregando...</span>
                                     </div>
+                                    <p>Carregando formulário...</p>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                    <button type="submit" class="btn btn-success">Marcar como Pago</button>
-                                </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>';

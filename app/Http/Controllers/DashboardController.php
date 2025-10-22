@@ -185,6 +185,13 @@ class DashboardController extends Controller
         return $dataTable->ajax();
     }
 
+    public function premiacaoModal($id)
+    {
+        $premiacao = \App\Models\AdivinhacoesPremiacoes::findOrFail($id);
+
+        return view('dashboard.partials.premiacao-modal', compact('premiacao'));
+    }
+
     public function comentariosData(ComentariosDataTable $dataTable)
     {
         return $dataTable->ajax();

@@ -370,7 +370,20 @@
 $(document).on('click', '.marcar-pago-btn', function(e) {
     e.preventDefault();
     var id = $(this).data('id');
-    $('#marcarPago-' + id).modal('show');
+    var modal = $('#marcarPago-' + id);
+    modal.modal('show');
+
+    // Load modal content via AJAX
+    $.ajax({
+        url: '{{ route("dashboard.premiacao.modal", ":id") }}'.replace(':id', id),
+        type: 'GET',
+        success: function(response) {
+            $('#modal-content-' + id).html(response);
+        },
+        error: function(xhr) {
+            $('#modal-content-' + id).html('<div class="alert alert-danger">Erro ao carregar formulário: ' + xhr.responseText + '</div>');
+        }
+    });
 });
 
 $(document).on('click', '.deletar-btn', function(e) {
