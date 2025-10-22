@@ -13,6 +13,9 @@ use App\Models\User;
 use App\Notifications\SupportResponseNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Intervention\Image\Laravel\Facades\Image;
 
 class SuporteController extends Controller
 {
