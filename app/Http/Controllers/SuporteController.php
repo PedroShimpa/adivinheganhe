@@ -48,7 +48,7 @@ class SuporteController extends Controller
         }
         $data['attachments'] = json_encode($attachments);
 
-        dispatch(new AdicionarSuporte($data));
+        $suporte = Suporte::create($data);
 
         $nome = auth()->check() ? auth()->user()->name : $request->input('nome');
         $email = auth()->check() ? null : $request->input('email');
@@ -80,7 +80,7 @@ class SuporteController extends Controller
             'descricao' => 'required|string',
             'status' => 'required|in:A,EA,F',
             'attachments' => 'nullable|array|max:2',
-            'attachments.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'attachments.*' => 'file|max:2048',
         ]);
 
         $user = \App\Models\User::find($request->user_id);
@@ -185,6 +185,7 @@ class SuporteController extends Controller
 
     public function apiStoreChatMessage(Request $request, Suporte $suporte)
     {
+
         if ($suporte->user_id !== auth()->id() && !auth()->user()->isAdmin()) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }

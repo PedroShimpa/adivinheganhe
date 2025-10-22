@@ -6,14 +6,14 @@
 <div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-md-10">
-            <div class="card glass">
-                <div class="card-header bg-primary text-white">
+            <div class="card bg-dark text-white border-secondary">
+                <div class="card-header bg-secondary text-white">
                     <h1 class="h3 mb-0">Meus Chamados</h1>
                 </div>
                 <div class="card-body">
                     @if($suportes->count() > 0)
                         <div class="table-responsive">
-                            <table class="table table-striped">
+                            <table class="table table-striped table-dark">
                                 <thead>
                                     <tr>
                                         <th>ID</th>

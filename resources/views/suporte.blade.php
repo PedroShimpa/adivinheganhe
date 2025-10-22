@@ -8,7 +8,7 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <form action="{{ route('suporte.store') }}" method="POST">
+    <form action="{{ route('suporte.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         @guest
@@ -45,7 +45,7 @@
 
         <div class="mb-3">
             <label for="attachments" class="form-label text-white">Anexos (opcional, até 2 imagens, max 2MB cada)</label>
-            <input type="file" name="attachments[]" class="form-control" multiple accept="image/*" max="2">
+            <input type="file" name="attachments[]" class="form-control" multiple>
             @error('attachments') <small class="text-danger">{{ $message }}</small> @enderror
             @error('attachments.*') <small class="text-danger">{{ $message }}</small> @enderror
         </div>
