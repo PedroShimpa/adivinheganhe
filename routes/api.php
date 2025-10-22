@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\CompetitivoController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UsersController;
 use App\Http\Controllers\RespostaController;
+use App\Http\Controllers\SuporteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Pusher\Pusher;
@@ -59,8 +60,8 @@ Route::middleware(['auth:sanctum', 'banned', 'trackOnline'])->group(function () 
 
     #suporte
     Route::get('/suporte/meus-chamados', [SuporteController::class, 'apiUserIndex']);
-    Route::get('/suporte/{suporte}/chat/messages', [SuporteController::class, 'apiGetChatMessages']);
-    Route::post('/suporte/{suporte}/chat', [SuporteController::class, 'apiStoreChatMessage']);
+    Route::get('/suporte/{suporte}/chat/messages', [SuporteController::class, 'apiGetChatMessages'])->name('api.suporte.chat.messages');
+    Route::post('/suporte/{suporte}/chat', [SuporteController::class, 'apiStoreChatMessage'])->name('api.suporte.chat.store');
 
     #rotas faltantes api
 
