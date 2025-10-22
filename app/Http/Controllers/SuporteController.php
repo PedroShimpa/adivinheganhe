@@ -32,8 +32,8 @@ class SuporteController extends Controller
         $data['created_at'] = now();
 
         // Handle attachments
+        $attachments = [];
         if ($request->hasFile('attachments')) {
-            $attachments = [];
             foreach ($request->file('attachments') as $file) {
                 $hash = Str::random(10);
                 $fileName = $hash . '_' . time() . '.webp';
@@ -45,8 +45,8 @@ class SuporteController extends Controller
 
                 $attachments[] = $urlImagem;
             }
-            $data['attachments'] = json_encode($attachments);
         }
+        $data['attachments'] = json_encode($attachments);
 
         dispatch(new AdicionarSuporte($data));
 
@@ -97,8 +97,8 @@ class SuporteController extends Controller
         ];
 
         // Handle attachments
+        $attachments = [];
         if ($request->hasFile('attachments')) {
-            $attachments = [];
             foreach ($request->file('attachments') as $file) {
                 $hash = Str::random(10);
                 $fileName = $hash . '_' . time() . '.webp';
@@ -110,8 +110,8 @@ class SuporteController extends Controller
 
                 $attachments[] = $urlImagem;
             }
-            $data['attachments'] = json_encode($attachments);
         }
+        $data['attachments'] = json_encode($attachments);
 
         $suporte = Suporte::create($data);
 
