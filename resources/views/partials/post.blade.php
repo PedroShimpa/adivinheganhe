@@ -9,6 +9,9 @@
                             @if($post->user->isVip())
                             <span class="badge bg-warning text-dark ms-1"><i class="bi bi-star-fill"></i> VIP</span>
                             @endif
+                            @if($post->user->isAdmin())
+                            <span class="badge bg-danger ms-1">ADMIN</span>
+                            @endif
                             <br>
                             <small class="text-muted">{{ $post->created_at->diffForHumans() }}</small>
                         </div>
