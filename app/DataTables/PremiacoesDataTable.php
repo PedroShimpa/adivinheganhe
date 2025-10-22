@@ -67,7 +67,6 @@ class PremiacoesDataTable extends DataTable
                         <div class="modal-content">
                             <form action="' . route('premiacoes.marcar_pago', ['premiacao' => $row->id]) . '" method="POST" enctype="multipart/form-data">
                                 @csrf
-                                @method(\'POST\')
                                 <div class="modal-header bg-success text-white">
                                     <h5 class="modal-title">Marcar como Pago</h5>
                                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
