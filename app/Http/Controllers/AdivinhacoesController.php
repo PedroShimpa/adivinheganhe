@@ -168,12 +168,13 @@ class AdivinhacoesController extends Controller
 
     public function comment(Request $request, Adivinhacoes $adivinhacao)
     {
-        $adivinhacao->comments()->create(['user_id' => auth()->user()->id, 'body' => $request->input('body')]);
+        $body = strip_tags($request->input('body'));
+        $adivinhacao->comments()->create(['user_id' => auth()->user()->id, 'body' => $body]);
         broadcast(new NewCommentEvent(
             auth()->user()->image,
             auth()->user()->username,
             $adivinhacao->id,
-            $request->input('body')
+            $body
         ));
     }
 

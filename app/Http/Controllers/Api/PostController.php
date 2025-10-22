@@ -71,17 +71,18 @@ class PostController extends Controller
 
     public function comment(Request $request, Post $post)
     {
-        $comment = $post->comments()->create(['user_id' => auth()->user()->id, 'body' => $request->input('body')]);
+        $body = strip_tags($request->input('body'));
+        $comment = $post->comments()->create(['user_id' => auth()->user()->id, 'body' => $body]);
         broadcast(new NewCommentEvent(
             auth()->user()->image,
             auth()->user()->username,
             $post->id,
-            $request->input('body'),
+            $body,
             true
         ));
         if (auth()->user()->id !=  $post->user_id) {
-            $post->user->notify(new NewCommnetNotification($request->input('body'), $post->id));
-            broadcast(new NotificacaoEvent($post->user->id, auth()->user()->name . ' comentou: ' . $request->input('body')));
+            $post->user->notify(new NewCommnetNotification($body, $post->id));
+            broadcast(new NotificacaoEvent($post->user->id, auth()->user()->name . ' comentou: ' . $body));
         }
         return response()->json(['comment' => $comment]);
     }
