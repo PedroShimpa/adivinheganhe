@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Mail\Traits\Trackable;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailables\Envelope;
@@ -12,7 +13,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class MembershipPurchaseAdminMail extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use Queueable, SerializesModels, Trackable;
 
     public User $usuario;
 

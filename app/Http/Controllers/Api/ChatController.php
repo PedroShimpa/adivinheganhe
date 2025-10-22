@@ -54,14 +54,15 @@ class ChatController extends Controller
     public function get_messages(User $user)
     {
         ChatMessages::where('user_id', $user->id)->where('receiver_id', auth()->user()->id)->update(['read_at' => now()]);
-        $messages = ChatMessages::select('user_id', 'receiver_id', 'message as mensagem', 'created_at')
+        $messages = ChatMessages::select('chat_messages.user_id', 'chat_messages.receiver_id', 'chat_messages.message as mensagem', 'chat_messages.created_at', 'users.is_admin')
+            ->join('users', 'users.id', '=', 'chat_messages.user_id')
             ->where(function ($q) use ($user) {
-                $q->where('user_id', auth()->user()->id);
-                $q->where('receiver_id', $user->id);
+                $q->where('chat_messages.user_id', auth()->user()->id);
+                $q->where('chat_messages.receiver_id', $user->id);
             })
             ->orWhere(function ($q) use ($user) {
-                $q->where('user_id', $user->id);
-                $q->where('receiver_id', auth()->user()->id);
+                $q->where('chat_messages.user_id', $user->id);
+                $q->where('chat_messages.receiver_id', auth()->user()->id);
             })
             ->orderBy('chat_messages.id', 'asc')
             ->get()
@@ -83,7 +84,7 @@ class ChatController extends Controller
             'created_at' => now(),
         ]);
 
-        event(new \App\Events\ChatMessageSent($message->message, auth()->user()->id,  auth()->user()->username, $message->receiver_id, $message->created_at));
+        event(new \App\Events\ChatMessageSent($message->message, auth()->user()->id,  auth()->user()->username, $message->receiver_id, $message->created_at, auth()->user()->is_admin));
         User::find($request->receiver_id)->notify(new NewMessageNotification($message->message));
         ChatMessages::where('user_id', $request->receiver_id)->where('receiver_id', auth()->user()->id)->update(['read_at' => now()]);
         return response()->json(['status' => 'success', 'message' => $message]);

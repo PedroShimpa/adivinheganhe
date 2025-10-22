@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Mail\Traits\Trackable;
 use App\Models\Suporte;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -11,7 +12,7 @@ use Illuminate\Queue\SerializesModels;
 
 class SupportMessageMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable, SerializesModels, Trackable;
 
     public $suporte;
     public $message;

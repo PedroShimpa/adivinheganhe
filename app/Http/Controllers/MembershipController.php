@@ -94,11 +94,11 @@ class MembershipController extends Controller
                     'stripe_payment_id' => $session->payment_intent
                 ]);
 
-                // Notify admins
-                $admins = User::where('is_admin', 'S')->get();
-                foreach ($admins as $admin) {
-                    Mail::to($admin->email)->queue(new MembershipPurchaseAdminMail($user));
-                }
+                    // Notify admins
+                    $admins = User::where('is_admin', 'S')->get();
+                    foreach ($admins as $admin) {
+                        Mail::to($admin->email)->queue((new MembershipPurchaseAdminMail($user))->track($admin->email, 'Novo usuário adquiriu membership VIP!'));
+                    }
 
                 return redirect()->route('home')->with('success', 'Bem-vindo ao clube VIP!');
             }
@@ -183,7 +183,7 @@ class MembershipController extends Controller
                     // Notify admins
                     $admins = User::where('is_admin', 'S')->get();
                     foreach ($admins as $admin) {
-                        Mail::to($admin->email)->queue(new MembershipPurchaseAdminMail($user));
+                        Mail::to($admin->email)->queue((new MembershipPurchaseAdminMail($user))->track($admin->email, 'Novo usuário adquiriu membership VIP!'));
                     }
                 } else {
                     Log::error('User not found for VIP upgrade', [

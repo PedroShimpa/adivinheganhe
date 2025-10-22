@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Mail\Traits\Trackable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -10,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 
 class ProfileVisitMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable, SerializesModels, Trackable;
 
     public function __construct(protected string $username)
     {

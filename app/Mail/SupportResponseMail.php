@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Mail\Traits\Trackable;
 use App\Models\Suporte;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,7 +13,7 @@ use Illuminate\Queue\SerializesModels;
 
 class SupportResponseMail extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use Queueable, SerializesModels, Trackable;
 
     public Suporte $suporte;
 

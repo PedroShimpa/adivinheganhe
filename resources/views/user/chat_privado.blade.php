@@ -30,16 +30,17 @@
     const userId = {{ $user->id }};
     const chatMessages = $('#chatMessages');
 
-    // Função para adicionar mensagem ao chat
-function appendMessage(sender, text, created_at = null) {
+// Função para adicionar mensagem ao chat
+function appendMessage(sender, text, created_at = null, isAdmin = false) {
     const isMe = sender == {{ auth()->user()->id }};
     const alignment = isMe ? 'justify-content-end' : 'justify-content-start';
     const bg = isMe ? 'bg-primary text-white' : 'bg-white text-dark';
     const timestamp = created_at ? `<div class="text-white small mt-1 text-end">${created_at}</div>` : '';
+    const adminBadge = isAdmin ? '<span class="badge bg-danger ms-1">ADMIN</span>' : '';
     const messageHtml = `
         <div class="d-flex ${alignment} mb-2">
             <div class="p-2 ${bg} rounded-3" style="max-width: 70%; word-wrap: break-word;">
-                ${text}
+                ${text}${adminBadge}
                 ${timestamp}
             </div>
         </div>
@@ -53,7 +54,8 @@ $.get("{{ route('chat.buscar', $user->id) }}", function(data){
     data.forEach(msg => {
         // Formata created_at
         const created_at = new Date(msg.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        appendMessage(msg.user_id, msg.mensagem, created_at);
+        const isAdmin = msg.is_admin == 'S';
+        appendMessage(msg.user_id, msg.mensagem, created_at, isAdmin);
     });
 });
 
@@ -80,7 +82,8 @@ Echo.private('chat.' + {{ auth()->user()->id }})
     .listen('.mensagem.recebida_enviada', (e) => {
         if(e.senderId == userId){
             const created_at = new Date(e.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            appendMessage(e.senderId, e.message, created_at);
+            const isAdmin = e.is_admin == 'S';
+            appendMessage(e.senderId, e.message, created_at, isAdmin);
         }
     });
 </script>

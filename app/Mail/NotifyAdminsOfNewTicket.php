@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Mail\Traits\Trackable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -11,7 +12,7 @@ use Illuminate\Queue\SerializesModels;
 
 class NotifyAdminsOfNewTicket extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use Queueable, SerializesModels, Trackable;
 
     public string $nome;
     public ?string $email;

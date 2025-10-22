@@ -16,14 +16,16 @@ class ChatMessageSent implements ShouldBroadcastNow
     public $receiverId;
     public $senderName;
     public $created_at;
+    public $is_admin;
 
-    public function __construct($message, $senderId, $senderName, $receiverId, $created_at)
+    public function __construct($message, $senderId, $senderName, $receiverId, $created_at, $is_admin = null)
     {
         $this->message = $message;
         $this->senderName = $senderName;
         $this->senderId = $senderId;
         $this->receiverId = $receiverId;
         $this->created_at = $created_at;
+        $this->is_admin = $is_admin;
     }
 
     public function broadcastOn()

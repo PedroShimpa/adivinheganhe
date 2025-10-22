@@ -27,7 +27,7 @@ class AddProfileVisitJob implements ShouldQueue
             'visited_id' => $this->visitedId
         ]);
         if (!$alreadyMailSendedtoday) {
-            Mail::to($this->visitedMail)->queue(new ProfileVisitMail($this->userName));
+            Mail::to($this->visitedMail)->queue((new ProfileVisitMail($this->userName))->track($this->visitedMail, $this->userName . ' visitou seu perfil!'));
             $profileVisit->update(['mail_send_at' => now()]);
         }
 

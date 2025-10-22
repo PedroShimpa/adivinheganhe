@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Mail\Traits\Trackable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailables\Content;
@@ -12,7 +13,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class FriendrequestMail extends Mailable implements ShouldQueue
 {
 
-    use Queueable, SerializesModels;
+    use Queueable, SerializesModels, Trackable;
     
     public  string $fromUser;
     public  string $toUser;
