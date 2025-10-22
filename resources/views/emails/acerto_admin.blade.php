@@ -4,4 +4,4 @@
 
 <p>A adivinhação foi marcada como resolvida.</p>
 
-{!! $buildTrackingPixel() !!}
+{!! $this->buildTrackingPixel() !!}

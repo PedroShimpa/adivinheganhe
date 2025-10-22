@@ -29,7 +29,7 @@ class RespostaController extends Controller
 
         $adivinhacaoId = $request->input('adivinhacao_id');
 
-        if ($this->adivinhacaoJaResolvida($adivinhacaoId)) {
+        if ($this->adivinhacaoJaResolvida($adivinhacaoId) || $this->adivinhacaoBloqueada($adivinhacaoId)) {
             return response()->json(['info' => "Esta adivinhação já foi adivinhada, obrigado por tentar!"]);
         }
 
@@ -58,10 +58,6 @@ class RespostaController extends Controller
         $respostaUuid = (string) Str::uuid();
         $acertou = mb_strtolower(trim($adivinhacao->resposta)) === $respostaCliente;
 
-        if ($acertou) {
-            $this->processarAcerto($adivinhacao, $user, $respostaUuid, $respostaCliente);
-        }
-
         if ($this->respostaJaEnviada($data['adivinhacao_id'], $userId, $respostaCliente)) {
             return response()->json(['info' => 'Você já tentou isso!'], 409);
         }
@@ -73,6 +69,10 @@ class RespostaController extends Controller
             'resposta' => $respostaCliente,
             'created_at' => now()
         ]);
+
+        if ($acertou) {
+            $this->processarAcerto($adivinhacao, $user, $respostaUuid, $respostaCliente);
+        }
 
         // Dispatch event for real-time dashboard update
         try {
@@ -94,6 +94,11 @@ class RespostaController extends Controller
     private function adivinhacaoJaResolvida($id)
     {
         return Cache::get('adivinhacao_resolvida' . $id);
+    }
+
+    private function adivinhacaoBloqueada($id)
+    {
+        return Cache::get('adivinhacao_bloqueada_' . $id);
     }
 
     private function validarRequisicao(Request $request)
@@ -135,6 +140,9 @@ class RespostaController extends Controller
         $adivinhacao->update(['resolvida' => 'S']);
         $adivinhacao->resolvida = 'S';
         Cache::put($cacheKey, $adivinhacao, now()->addMinutes(10));
+
+        // Block all input fields for this adivinhacao
+        Cache::set('adivinhacao_bloqueada_' . $adivinhacao->id, true, now()->addMinutes(10));
 
         broadcast(new RespostaAprovada($user->username, $adivinhacao))->toOthers();
 
