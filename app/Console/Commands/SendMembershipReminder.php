@@ -54,7 +54,7 @@ class SendMembershipReminder extends Command
         foreach ($uniqueUserIds as $userId) {
             $user = User::find($userId);
 
-            if (!$user || $user->is_vip == 1 || !$user->email_verified_at) {
+            if ($user->is_vip == 1) {
                 // Skip if user not found, is VIP, or email not verified
                 // Delete all logs for this user
                 DB::table('logs')
