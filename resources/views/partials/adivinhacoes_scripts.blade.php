@@ -167,7 +167,7 @@
           }
         }
 
-        $msg.insertAfter($input);
+        $input.after($msg);
 
       } catch (error) {
         Swal.fire('Erro', 'Erro ao enviar o palpite. Tente novamente!', 'error');
