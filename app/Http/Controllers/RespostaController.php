@@ -167,7 +167,7 @@ class RespostaController extends Controller
                 $headers = ["Authorization" => "Bearer $token"];
 
                 $username = $user->isVip() ? "VIP {$user->username}" : $user->username;
-                $mensagem = "O jogador {$username} acertou a adivinhacao {$adivinhacao->titulo}, a resposta correta era: {$respostaCliente}, parabens! Em breve nossa equipe entrará em contato para pagamento do prêmio\Veja todas as respostas enviadas em https://adivinheganhe.com.br/adivinhacoes/{$adivinhacao->uuid}";
+                $mensagem = "O jogador {$username} acertou a adivinhacao {$adivinhacao->titulo}, a resposta correta era: {$respostaCliente}, parabens! Em breve nossa equipe entrará em contato para pagamento do prêmio\nVejam todas as respostas enviadas em https://adivinheganhe.com.br/adivinhacoes/{$adivinhacao->uuid}";
 
                 $payload = [
                     "phone" => $PHONE_ID,
