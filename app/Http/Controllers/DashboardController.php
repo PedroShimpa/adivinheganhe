@@ -8,7 +8,7 @@ use App\Models\Competitivo\Fila;
 use App\Models\Competitivo\Partidas;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
-
+use Illuminate\Http\Request;
 use App\DataTables\PremiacoesDataTable;
 use App\DataTables\ComentariosDataTable;
 use App\DataTables\AdivinhacoesAtivasDataTable;
