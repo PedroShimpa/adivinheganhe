@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Stripe\Stripe;
@@ -94,6 +95,41 @@ class MembershipController extends Controller
                     'stripe_payment_id' => $session->payment_intent
                 ]);
 
+                // Send WhatsApp message to community
+                try {
+                    $API_BASE = env('NOTIFICACAO_API_BASE');
+                    $TOKEN_ENDPOINT = $API_BASE . env('NOTIFICACAO_API_TOKEN_PATH');
+                    $SEND_MESSAGE_ENDPOINT = $API_BASE . env('NOTIFICACAO_API_SEND_PATH');
+                    $PHONE_ID = env('NOTIFICACAO_PHONE_ID');
+
+                    $tokenRes = Http::post($TOKEN_ENDPOINT);
+
+                    if ($tokenRes->successful() && $tokenRes->json('status') === 'success') {
+                        $token = $tokenRes->json('token');
+                        $headers = ["Authorization" => "Bearer $token"];
+
+                        $mensagem = "O usuario {$user->username} se tornou vip, bem vindo!";
+
+                        $payload = [
+                            "phone" => $PHONE_ID,
+                            "isGroup" => false,
+                            "isNewsletter" => true,
+                            "isLid" => false,
+                            "message" => $mensagem,
+                        ];
+
+                        $resp = Http::withHeaders($headers)->post($SEND_MESSAGE_ENDPOINT, $payload);
+
+                        if (!$resp->successful()) {
+                            Log::error("Erro ao enviar mensagem WhatsApp para VIP: " . $resp->body());
+                        }
+                    } else {
+                        Log::error("Erro ao gerar token para WhatsApp VIP: " . $tokenRes->body());
+                    }
+                } catch (\Exception $e) {
+                    Log::error("Erro ao enviar notificação WhatsApp para VIP: " . $e->getMessage());
+                }
+
                     // Notify admins
                     $admins = User::where('is_admin', 'S')->get();
                     foreach ($admins as $admin) {
@@ -179,6 +215,41 @@ class MembershipController extends Controller
                         'session_id' => $session['id'] ?? 'unknown',
                         'stripe_payment_id' => $session['payment_intent'] ?? 'unknown'
                     ]);
+
+                    // Send WhatsApp message to community
+                    try {
+                        $API_BASE = env('NOTIFICACAO_API_BASE');
+                        $TOKEN_ENDPOINT = $API_BASE . env('NOTIFICACAO_API_TOKEN_PATH');
+                        $SEND_MESSAGE_ENDPOINT = $API_BASE . env('NOTIFICACAO_API_SEND_PATH');
+                        $PHONE_ID = env('NOTIFICACAO_PHONE_ID');
+
+                        $tokenRes = Http::post($TOKEN_ENDPOINT);
+
+                        if ($tokenRes->successful() && $tokenRes->json('status') === 'success') {
+                            $token = $tokenRes->json('token');
+                            $headers = ["Authorization" => "Bearer $token"];
+
+                            $mensagem = "O usuario {$user->username} se tornou vip, bem vindo!";
+
+                            $payload = [
+                                "phone" => $PHONE_ID,
+                                "isGroup" => false,
+                                "isNewsletter" => true,
+                                "isLid" => false,
+                                "message" => $mensagem,
+                            ];
+
+                            $resp = Http::withHeaders($headers)->post($SEND_MESSAGE_ENDPOINT, $payload);
+
+                            if (!$resp->successful()) {
+                                Log::error("Erro ao enviar mensagem WhatsApp para VIP: " . $resp->body());
+                            }
+                        } else {
+                            Log::error("Erro ao gerar token para WhatsApp VIP: " . $tokenRes->body());
+                        }
+                    } catch (\Exception $e) {
+                        Log::error("Erro ao enviar notificação WhatsApp para VIP: " . $e->getMessage());
+                    }
 
                     // Notify admins
                     $admins = User::where('is_admin', 'S')->get();
