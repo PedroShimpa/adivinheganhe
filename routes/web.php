@@ -122,6 +122,7 @@ Route::middleware(['auth', 'banned', 'trackOnline'])->group(function () {
     Route::get('/seja-membro', [MembershipController::class, 'index'])->name('membership.index');
     Route::post('/membership/create-checkout-session', [MembershipController::class, 'createCheckoutSession'])->name('membership.checkout');
     Route::get('/membership/success', [MembershipController::class, 'success'])->name('membership.success');
+    Route::get('/membership/result', [MembershipController::class, 'result'])->name('membership.result');
 
 
     #rotas apenas para administreadores

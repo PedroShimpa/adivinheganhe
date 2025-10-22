@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Mail;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use App\Mail\MembershipPurchaseAdminMail;
+use App\Mail\MembershipWelcomeMail;
 use App\Models\User;
 
 
@@ -130,13 +131,16 @@ class MembershipController extends Controller
                     Log::error("Erro ao enviar notificação WhatsApp para VIP: " . $e->getMessage());
                 }
 
+                // Send welcome email to user
+                Mail::to($user->email)->queue((new MembershipWelcomeMail($user))->track($user->email, 'Bem-vindo aos VIPs!'));
+
                     // Notify admins
                     $admins = User::where('is_admin', 'S')->get();
                     foreach ($admins as $admin) {
                         Mail::to($admin->email)->queue((new MembershipPurchaseAdminMail($user))->track($admin->email, 'Novo usuário adquiriu membership VIP!'));
                     }
 
-                return redirect()->route('home')->with('success', 'Bem-vindo ao clube VIP!');
+                return redirect()->route('membership.result')->with('success', 'Bem-vindo ao clube VIP!');
             }
 
             Log::warning('Payment not completed', [
@@ -145,7 +149,7 @@ class MembershipController extends Controller
                 'payment_status' => $session->payment_status
             ]);
 
-            return redirect()->route('membership.index')->with('error', 'Pagamento não foi processado.');
+            return redirect()->route('membership.result')->with('error', 'Pagamento não foi processado.');
         } catch (\Exception $e) {
             Log::error('Error processing membership success', [
                 'user_id' => Auth::id(),
@@ -154,7 +158,7 @@ class MembershipController extends Controller
                 'trace' => $e->getTraceAsString()
             ]);
 
-            return redirect()->route('membership.index')->with('error', 'Erro ao processar pagamento. Entre em contato com o suporte.');
+            return redirect()->route('membership.result')->with('error', 'Erro ao processar pagamento. Entre em contato com o suporte.');
         }
     }
 
@@ -251,6 +255,9 @@ class MembershipController extends Controller
                         Log::error("Erro ao enviar notificação WhatsApp para VIP: " . $e->getMessage());
                     }
 
+                    // Send welcome email to user
+                    Mail::to($user->email)->queue((new MembershipWelcomeMail($user))->track($user->email, 'Bem-vindo aos VIPs!'));
+
                     // Notify admins
                     $admins = User::where('is_admin', 'S')->get();
                     foreach ($admins as $admin) {
@@ -271,5 +278,10 @@ class MembershipController extends Controller
         }
 
         return response()->json(['status' => 'success']);
+    }
+
+    public function result()
+    {
+        return view('membership_result');
     }
 }
