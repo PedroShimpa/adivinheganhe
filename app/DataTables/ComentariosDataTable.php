@@ -39,16 +39,6 @@ class ComentariosDataTable extends DataTable
             ->join('adivinhacoes', 'adivinhacoes.id', '=', 'comments.commentable_id')
             ->join('users', 'users.id', '=', 'comments.user_id')
             ->where('commentable_type', 'App\Models\Adivinhacoes')
-            ->where('adivinhacoes.resolvida', 'N')
-            ->where('adivinhacoes.exibir_home', 'S')
-            ->where(function ($q) {
-                $q->where('adivinhacoes.expire_at', '>', now());
-                $q->orWhereNull('adivinhacoes.expire_at');
-            })
-            ->where(function ($q) {
-                $q->where('adivinhacoes.liberado_at', '<=', now());
-                $q->orWhereNull('adivinhacoes.liberado_at');
-            })
             ->orderBy('comments.id', 'desc');
 
         if (request('start_date') && request('end_date')) {

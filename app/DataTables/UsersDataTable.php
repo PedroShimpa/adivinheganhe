@@ -33,34 +33,25 @@ class UsersDataTable extends DataTable
                 return 'N/A';
             })
             ->addColumn('action', function($row) {
-                $modal = '<div class="modal fade" id="banModal-' . $row->id . '" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
+                $modal = '<div class="modal fade" id="banModal-' . $row->id . '" tabindex="-1" aria-labelledby="banModalLabel-' . $row->id . '" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
-                            <form action="' . route('user.ban', ['user' => $row->username]) . '" method="POST">
-                                @csrf
-                                <div class="modal-header bg-danger text-white">
-                                    <h5 class="modal-title">Banir Usuário</h5>
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>
-                                        Tem certeza que deseja banir o usuário
-                                        <strong>' . $row->name . ' (' . $row->username . ')</strong>?
-                                    </p>
-                                    <div class="mb-3">
-                                        <label for="motivo-' . $row->id . '" class="form-label">Motivo (opcional)</label>
-                                        <textarea name="motivo" id="motivo-' . $row->id . '" class="form-control" rows="3" placeholder="Escreva o motivo do banimento..."></textarea>
+                            <div class="modal-header bg-danger text-white">
+                                <h5 class="modal-title" id="banModalLabel-' . $row->id . '">Banir Usuário</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="modal-content-' . $row->id . '" class="text-center">
+                                    <div class="spinner-border text-danger" role="status">
+                                        <span class="visually-hidden">Carregando...</span>
                                     </div>
+                                    <p>Carregando formulário...</p>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                    <button type="submit" class="btn btn-danger">Confirmar Banimento</button>
-                                </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>';
-                return '<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#banModal-' . $row->id . '">Banir</button>' . $modal;
+                return '<button class="btn btn-danger btn-sm ban-btn" data-id="' . $row->id . '">Banir</button>' . $modal;
             })
             ->setRowId('id');
     }

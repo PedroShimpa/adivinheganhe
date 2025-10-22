@@ -192,6 +192,13 @@ class DashboardController extends Controller
         return view('dashboard.partials.premiacao-modal', compact('premiacao'));
     }
 
+    public function banModal($id)
+    {
+        $user = User::findOrFail($id);
+
+        return view('dashboard.partials.ban-modal', compact('user'));
+    }
+
     public function comentariosData(ComentariosDataTable $dataTable)
     {
         return $dataTable->ajax();
