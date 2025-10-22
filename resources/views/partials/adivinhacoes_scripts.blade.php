@@ -132,7 +132,6 @@
         });
 
         const json = await res.json();
-        $input.val('');
 
         const $msg = $('<div class="mt-2 fw-semibold resposta-enviada"></div>');
 
@@ -167,7 +166,7 @@
           }
         }
 
-        $input.after($msg);
+        $input.closest('.input-group').after($msg);
 
       } catch (error) {
         Swal.fire('Erro', 'Erro ao enviar o palpite. Tente novamente!', 'error');
