@@ -71,6 +71,9 @@ class PostController extends Controller
 
     public function comment(Request $request, Post $post)
     {
+        if (auth()->user()->banned) {
+            return response()->json(['error' => 'Você foi banido e não pode realizar esta ação.'], 403);
+        }
         $body = strip_tags($request->input('body'));
         $comment = $post->comments()->create(['user_id' => auth()->user()->id, 'body' => $body]);
         broadcast(new NewCommentEvent(
@@ -89,6 +92,9 @@ class PostController extends Controller
 
     public function toggleLike(Request $request, Post $post)
     {
+        if (auth()->user()->banned) {
+            return response()->json(['error' => 'Você foi banido e não pode realizar esta ação.'], 403);
+        }
         $user = auth()->user();
 
         $like = $post->likes()->where('user_id', $user->id)->first();

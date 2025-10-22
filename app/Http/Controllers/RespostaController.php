@@ -25,6 +25,9 @@ class RespostaController extends Controller
 {
     public function enviar(Request $request)
     {
+        if (auth()->user()->banned) {
+            return response()->json(['error' => 'Você foi banido e não pode realizar esta ação.'], 403);
+        }
         if (!$this->respostasHabilitadas()) return;
 
         $adivinhacaoId = $request->input('adivinhacao_id');
