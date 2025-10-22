@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\NewCommentEvent;
 use App\Events\NotificacaoEvent;
+use App\Helpers\SecurityHelper;
 use App\Http\Requests\CreatePostRequest;
 use App\Http\Resources\GetCommentsResource;
 use App\Models\Post;
@@ -26,6 +27,11 @@ class PostController extends Controller
     {
         $data = $request->validated();
         $data['user_id'] = auth()->id();
+
+        // Check for JavaScript content in post content
+        if (!empty($data['content']) && SecurityHelper::containsJavaScript($data['content'])) {
+            return redirect()->back()->withErrors('Conteúdo inválido detectado. Não é permitido incluir elementos JavaScript.');
+        }
 
         try {
             if ($request->hasFile('file')) {
@@ -61,6 +67,12 @@ class PostController extends Controller
             return response()->json(['error' => 'Você foi banido e não pode realizar esta ação.'], 403);
         }
         $body = strip_tags($request->input('body'));
+
+        // Check for JavaScript content in comment body
+        if (SecurityHelper::containsJavaScript($body)) {
+            return response()->json(['error' => 'Conteúdo inválido detectado. Não é permitido incluir elementos JavaScript.'], 400);
+        }
+
         $post->comments()->create(['user_id' => auth()->user()->id, 'body' => $body]);
         broadcast(new NewCommentEvent(
             auth()->user()->image,

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\AlertaGlobal;
 use App\Events\NewCommentEvent;
+use App\Helpers\SecurityHelper;
 use App\Models\Adivinhacoes;
 use App\Http\Requests\StoreAdivinhacoesRequest;
 use App\Models\AdivinhacoesRespostas;
@@ -172,6 +173,12 @@ class AdivinhacoesController extends Controller
             return response()->json(['error' => 'Você foi banido e não pode realizar esta ação.'], 403);
         }
         $body = strip_tags($request->input('body'));
+
+        // Check for JavaScript content in comment body
+        if (SecurityHelper::containsJavaScript($body)) {
+            return response()->json(['error' => 'Conteúdo inválido detectado. Não é permitido incluir elementos JavaScript.'], 400);
+        }
+
         $adivinhacao->comments()->create(['user_id' => auth()->user()->id, 'body' => $body]);
         broadcast(new NewCommentEvent(
             auth()->user()->image,
