@@ -47,7 +47,7 @@
                 <div class="row">
                     @foreach(json_decode($suporte->attachments) as $attachment)
                     <div class="col-md-3 mb-2">
-                        <img src="{{ $attachment }}" class="img-fluid rounded" alt="Anexo" style="max-height: 150px;">
+                        <img src="{{ $attachment }}" class="img-fluid rounded attachment-preview" alt="Anexo" style="max-height: 150px; cursor: pointer;" data-src="{{ $attachment }}">
                     </div>
                     @endforeach
                 </div>
@@ -125,6 +125,25 @@
         </div>
     </div>
 </div>
+
+<!-- Attachment Modal -->
+<div class="modal fade" id="attachmentModal" tabindex="-1" aria-labelledby="attachmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="attachmentModalLabel">Visualizar Anexo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="attachmentModalImage" src="" class="img-fluid" alt="Anexo">
+            </div>
+            <div class="modal-footer">
+                <a id="attachmentDownloadLink" href="" download class="btn btn-primary">Download</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
@@ -133,6 +152,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatForm = document.getElementById('admin-chat-form');
     const chatMessages = document.getElementById('chat-messages');
     const messageInput = document.getElementById('admin-chat-message');
+
+    // Attachment modal functionality
+    const attachmentPreviews = document.querySelectorAll('.attachment-preview');
+    const attachmentModal = new bootstrap.Modal(document.getElementById('attachmentModal'));
+    const attachmentModalImage = document.getElementById('attachmentModalImage');
+    const attachmentDownloadLink = document.getElementById('attachmentDownloadLink');
+
+    attachmentPreviews.forEach(preview => {
+        preview.addEventListener('click', function() {
+            const src = this.getAttribute('data-src');
+            attachmentModalImage.src = src;
+            attachmentDownloadLink.href = src;
+            attachmentModal.show();
+        });
+    });
 
     chatForm.addEventListener('submit', function(e) {
         e.preventDefault();
