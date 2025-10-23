@@ -257,6 +257,18 @@ class PagamentosController extends Controller
         return response()->json(['status' => 'success']);
     }
 
+    private function getPaymentType($description)
+    {
+        if (str_contains($description, 'VIP mensal')) {
+            return 'vip';
+        } elseif (str_contains($description, 'palpites')) {
+            return 'attempts';
+        } elseif (str_contains($description, 'dica')) {
+            return 'dica';
+        }
+        return 'unknown';
+    }
+
     public function checkPaymentStatus(Request $request)
     {
         $paymentId = $request->input('payment_id');
