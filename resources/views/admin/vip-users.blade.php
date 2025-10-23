@@ -40,14 +40,14 @@
                                         $daysLeft = now()->diffInDays($user->membership_expires_at, false);
                                     @endphp
                                     @if($daysLeft > 0)
-                                        <span class="badge bg-success">{{ $daysLeft }} dias</span>
+                                        <span class="badge bg-success rounded-pill">{{ $daysLeft }} dias</span>
                                     @elseif($daysLeft == 0)
-                                        <span class="badge bg-warning">Expira hoje</span>
+                                        <span class="badge bg-warning rounded-pill">Expira hoje</span>
                                     @else
-                                        <span class="badge bg-danger">Expirado</span>
+                                        <span class="badge bg-danger rounded-pill">Expirado</span>
                                     @endif
                                 @else
-                                    <span class="badge bg-secondary">N/A</span>
+                                    <span class="badge bg-secondary rounded-pill">N/A</span>
                                 @endif
                             </td>
                             <td>
