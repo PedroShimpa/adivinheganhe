@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
 Broadcast::routes(['middleware' => ['web', 'auth']]);
-
+Route::post('/webhook/mercadopago', [PagamentosController::class, 'webhook']);
 Route::get('/politica-de-privacidade', function () {
     return view('politica_de_privacidade');
 });
@@ -54,7 +54,7 @@ Route::get('login/google/callback', [GoogleController::class, 'handleGoogleCallb
 Route::get('/adivinhe-o-milhao', [AdivinheOMilhaoController::class, 'index'])->name('adivinhe_o_milhao.index');
 
 
-Route::post('/webhook/mercadopago', [PagamentosController::class, 'webhook']);
+
 Route::post('/pagamentos/check-payment-status', [PagamentosController::class, 'checkPaymentStatus'])->name('pagamentos.check_payment_status');
 Route::post('/webhook/stripe', [MembershipController::class, 'webhook']);
 

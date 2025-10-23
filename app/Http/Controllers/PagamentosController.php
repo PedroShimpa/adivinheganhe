@@ -8,11 +8,16 @@ use App\Models\DicasCompras;
 use App\Models\Pagamentos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use MercadoPago\Client\Payment\PaymentClient;
 use MercadoPago\Client\Common\RequestOptions;
 use MercadoPago\MercadoPagoConfig;
 use Illuminate\Support\Facades\Log;
 use MercadoPago\Exceptions\MPApiException;
+use App\Mail\MembershipWelcomeMail;
+use App\Mail\MembershipPurchaseAdminMail;
+use App\Models\User;
 
 class PagamentosController extends Controller
 {
@@ -79,13 +84,141 @@ class PagamentosController extends Controller
 
     public function webhook(Request $request)
     {
-        Log::info('Webhook mercado pago', $request->all());
-        return response()->json(['message' => 'OK'], 200);
+        $payload = $request->getContent();
+
+        try {
+            $event = json_decode($payload, true);
+
+            if (!$event) {
+                Log::error('MercadoPago webhook invalid JSON payload', [
+                    'payload_length' => strlen($payload)
+                ]);
+                return response()->json(['error' => 'Invalid payload'], 400);
+            }
+        } catch (\Exception $e) {
+            Log::error('MercadoPago webhook JSON decode failed', [
+                'payload_length' => strlen($payload),
+                'error' => $e->getMessage()
+            ]);
+            return response()->json(['error' => 'Invalid payload'], 400);
+        }
+
+        Log::info('MercadoPago webhook received', [
+            'event_type' => $event['type'] ?? 'unknown',
+            'event_id' => $event['id'] ?? 'unknown'
+        ]);
+
+        if (($event['type'] ?? null) === 'payment') {
+            $paymentData = $event['data'] ?? null;
+
+            if (!$paymentData) {
+                Log::error('MercadoPago webhook missing payment data');
+                return response()->json(['error' => 'Missing payment data'], 400);
+            }
+
+            $paymentId = $paymentData['id'] ?? null;
+
+            if (!$paymentId) {
+                Log::error('MercadoPago webhook missing payment ID', [
+                    'event_id' => $event['id'] ?? 'unknown'
+                ]);
+                return response()->json(['error' => 'Missing payment ID'], 400);
+            }
+
+            // Get payment details from MercadoPago
+            try {
+                MercadoPagoConfig::setAccessToken(env("MERCADO_PAGO_ACCESS_TOKEN"));
+                $client = new PaymentClient();
+                $payment = $client->get($paymentId);
+
+                if ($payment->status === 'approved') {
+                    // Process VIP membership payment
+                    $pagamento = Pagamentos::where('payment_id', $paymentId)->first();
+                    if ($pagamento && !$pagamento->processed && str_contains($pagamento->desc, 'VIP mensal')) {
+                        $user = $pagamento->user;
+                        $user->is_vip = true;
+                        $user->membership_expires_at = now()->addMonth();
+                        $user->save();
+
+                        $pagamento->processed = true;
+                        $pagamento->save();
+
+                        Log::info('User upgraded to VIP via MercadoPago webhook', [
+                            'user_id' => $user->id,
+                            'payment_id' => $paymentId
+                        ]);
+
+                        // Send WhatsApp message to community
+                        try {
+                            $API_BASE = env('NOTIFICACAO_API_BASE');
+                            $TOKEN_ENDPOINT = $API_BASE . env('NOTIFICACAO_API_TOKEN_PATH');
+                            $SEND_MESSAGE_ENDPOINT = $API_BASE . env('NOTIFICACAO_API_SEND_PATH');
+                            $PHONE_ID = env('NOTIFICACAO_PHONE_ID');
+
+                            $tokenRes = Http::post($TOKEN_ENDPOINT);
+
+                            if ($tokenRes->successful() && $tokenRes->json('status') === 'success') {
+                                $token = $tokenRes->json('token');
+                                $headers = ["Authorization" => "Bearer $token"];
+
+                                $mensagem = "🌟 Parabéns, {$user->username}!\nAgora você faz parte do grupo VIP — privilégio dos melhores! 👑";
+
+                                $payload = [
+                                    "phone" => $PHONE_ID,
+                                    "isGroup" => false,
+                                    "isNewsletter" => true,
+                                    "isLid" => false,
+                                    "message" => $mensagem,
+                                ];
+
+                                $resp = Http::withHeaders($headers)->post($SEND_MESSAGE_ENDPOINT, $payload);
+
+                                if (!$resp->successful()) {
+                                    Log::error("Erro ao enviar mensagem WhatsApp para VIP: " . $resp->body());
+                                }
+                            } else {
+                                Log::error("Erro ao gerar token para WhatsApp VIP: " . $tokenRes->body());
+                            }
+                        } catch (\Exception $e) {
+                            Log::error("Erro ao enviar notificação WhatsApp para VIP: " . $e->getMessage());
+                        }
+
+                        // Send welcome email to user
+                        Mail::to($user->email)->queue((new MembershipWelcomeMail($user))->track($user->email, 'Bem-vindo aos VIPs!'));
+
+                        // Notify admins
+                        $admins = User::where('is_admin', 'S')->get();
+                        foreach ($admins as $admin) {
+                            Mail::to($admin->email)->queue((new MembershipPurchaseAdminMail($user))->track($admin->email, 'Novo usuário adquiriu membership VIP!'));
+                        }
+                    }
+                } else {
+                    Log::warning('MercadoPago webhook payment not approved', [
+                        'payment_id' => $paymentId,
+                        'status' => $payment->status ?? 'unknown'
+                    ]);
+                }
+            } catch (\Exception $e) {
+                Log::error('Error processing MercadoPago webhook payment', [
+                    'payment_id' => $paymentId,
+                    'error' => $e->getMessage()
+                ]);
+                return response()->json(['error' => 'Error processing payment'], 500);
+            }
+        }
+
+        return response()->json(['status' => 'success']);
     }
 
     public function checkPaymentStatus(Request $request)
     {
         $paymentId = $request->input('payment_id');
+
+        if (!$paymentId || !is_numeric($paymentId)) {
+            return response()->json(['status' => 'error', 'message' => 'Invalid payment ID'], 400);
+        }
+
+        $paymentId = (int) $paymentId;
 
         try {
             MercadoPagoConfig::setAccessToken(env("MERCADO_PAGO_ACCESS_TOKEN"));
