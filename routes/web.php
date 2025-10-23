@@ -55,6 +55,7 @@ Route::get('/adivinhe-o-milhao', [AdivinheOMilhaoController::class, 'index'])->n
 
 
 Route::post('/webhook/mercadopago', [PagamentosController::class, 'webhook']);
+Route::post('/pagamentos/check-payment-status', [PagamentosController::class, 'checkPaymentStatus'])->name('pagamentos.check_payment_status');
 Route::post('/webhook/stripe', [MembershipController::class, 'webhook']);
 
 Route::get('/banned', function () {

@@ -43,16 +43,15 @@ class PagamentosController extends Controller
 
             $payment = $client->create([
                 "transaction_amount" => $valor,
-                "token" => $request->input('token'),
                 "description" => $desc,
-                "installments" => 1,
-                "payment_method_id" =>  $request->input('payment_method_id'),
-                "issuer_id" => $request->input('issuer_id'),
+                "payment_method_id" => "pix",
                 "payer" => [
-                    "email" => $request->input('payer')['email'],
+                    "email" => auth()->user()->email,
+                    "first_name" => auth()->user()->name,
+                    "last_name" => "",
                     "identification" => [
-                        "type" => $request->input('payer')['identification']['type'],
-                        "number" => $request->input('payer')['identification']['number'],
+                        "type" => "CPF",
+                        "number" => auth()->user()->cpf
                     ]
                 ]
             ], $request_options);
@@ -61,20 +60,15 @@ class PagamentosController extends Controller
             $pag->payment_id = $payment->id;
             $pag->save();
 
-            if ($payment->status == 'rejected') {
+            if ($payment->status == 'pending') {
+                return response()->json([
+                    'success' => true,
+                    'qr_code' => $payment->point_of_interaction->transaction_data->qr_code,
+                    'qr_code_base64' => $payment->point_of_interaction->transaction_data->qr_code_base64
+                ]);
+            } else {
                 return response()->json(['success' => false]);
             }
-            $indicated = AdicionaisIndicacao::where('user_uuid',  auth()->user()->uuid)->first();
-            if (!empty($indicated)) {
-                $indicated->value = $indicated->value + $request->input('quantidade');
-                $indicated->save();
-            } else {
-                AdicionaisIndicacao::create(['user_uuid' => auth()->user()->uuid, 'value' => $request->input('quantidade')]);
-            }
-
-            $uuid = auth()->user()->uuid;
-            Cache::delete("indicacoes_{$uuid}");
-            return response()->json(['success' => true]);
         } catch (MPApiException $e) {
             Log::error("Status code: " . $e->getApiResponse()->getStatusCode() . "\n");
             Log::error($e->getApiResponse()->getContent());
@@ -87,6 +81,68 @@ class PagamentosController extends Controller
     {
         Log::info('Webhook mercado pago', $request->all());
         return response()->json(['message' => 'OK'], 200);
+    }
+
+    public function checkPaymentStatus(Request $request)
+    {
+        $paymentId = $request->input('payment_id');
+
+        try {
+            MercadoPagoConfig::setAccessToken(env("MERCADO_PAGO_ACCESS_TOKEN"));
+            $client = new PaymentClient();
+            $payment = $client->get($paymentId);
+
+            if ($payment->status == 'approved') {
+                // Process payment based on type
+                $pagamento = Pagamentos::where('payment_id', $paymentId)->first();
+                if ($pagamento && !$pagamento->processed) {
+                    $user = $pagamento->user;
+
+                    // Check if it's attempts purchase or dica purchase
+                    if (str_contains($pagamento->desc, 'palpites')) {
+                        // Process attempts purchase
+                        $quantidade = (int) filter_var($pagamento->desc, FILTER_SANITIZE_NUMBER_INT);
+                        $indicated = AdicionaisIndicacao::where('user_uuid', $user->uuid)->first();
+                        if (!empty($indicated)) {
+                            $indicated->value = $indicated->value + $quantidade;
+                            $indicated->save();
+                        } else {
+                            AdicionaisIndicacao::create(['user_uuid' => $user->uuid, 'value' => $quantidade]);
+                        }
+                        $uuid = $user->uuid;
+                        Cache::delete("indicacoes_{$uuid}");
+                    } elseif (str_contains($pagamento->desc, 'dica')) {
+                        // Process dica purchase - extract adivinhacao_id from description
+                        preg_match('/Compra de dica - (.+)/', $pagamento->desc, $matches);
+                        if (isset($matches[1])) {
+                            $titulo = $matches[1];
+                            $adivinhacao = Adivinhacoes::where('titulo', $titulo)->first();
+                            if ($adivinhacao) {
+                                DicasCompras::create([
+                                    'user_id' => $user->id,
+                                    'adivinhacao_id' => $adivinhacao->id,
+                                    'pagamento_id' => $pagamento->id
+                                ]);
+                            }
+                        }
+                    }
+
+                    $pagamento->processed = true;
+                    $pagamento->save();
+
+                    Log::info('Payment processed successfully', [
+                        'user_id' => $user->id,
+                        'payment_id' => $paymentId,
+                        'type' => str_contains($pagamento->desc, 'palpites') ? 'attempts' : 'dica'
+                    ]);
+                }
+            }
+
+            return response()->json(['status' => $payment->status]);
+        } catch (\Exception $e) {
+            Log::error('Error checking payment status: ' . $e->getMessage());
+            return response()->json(['status' => 'error']);
+        }
     }
 
     public function index_buy_dica(Request $request, Adivinhacoes $adivinhacao)
@@ -119,16 +175,15 @@ class PagamentosController extends Controller
 
             $payment = $client->create([
                 "transaction_amount" => $adivinhacao->dica_valor,
-                "token" => $request->input('token'),
                 "description" => $desc,
-                "installments" => 1,
-                "payment_method_id" =>  $request->input('payment_method_id'),
-                "issuer_id" => $request->input('issuer_id'),
+                "payment_method_id" => "pix",
                 "payer" => [
-                    "email" => $request->input('payer')['email'],
+                    "email" => auth()->user()->email,
+                    "first_name" => auth()->user()->name,
+                    "last_name" => "",
                     "identification" => [
-                        "type" => $request->input('payer')['identification']['type'],
-                        "number" => $request->input('payer')['identification']['number'],
+                        "type" => "CPF",
+                        "number" => auth()->user()->cpf
                     ]
                 ]
             ], $request_options);
@@ -137,13 +192,15 @@ class PagamentosController extends Controller
             $pag->payment_id = $payment->id;
             $pag->save();
 
-            if ($payment->status == 'rejected') {
+            if ($payment->status == 'pending') {
+                return response()->json([
+                    'success' => true,
+                    'qr_code' => $payment->point_of_interaction->transaction_data->qr_code,
+                    'qr_code_base64' => $payment->point_of_interaction->transaction_data->qr_code_base64
+                ]);
+            } else {
                 return response()->json(['success' => false]);
             }
-
-            DicasCompras::create(['user_id' => auth()->id, 'adivinhacao_id' => $adivinhacao->id, 'pagamento_id' => $pag->id]);
-
-            return response()->json(['success' => true]);
         } catch (MPApiException $e) {
             Log::error("Status code: " . $e->getApiResponse()->getStatusCode() . "\n");
             Log::error($e->getApiResponse()->getContent());

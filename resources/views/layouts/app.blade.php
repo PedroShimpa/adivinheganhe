@@ -540,10 +540,6 @@
         });
     </script>
     <script>
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
-
         $(document).on('click', '.abrir-perfil', function() {
             let username = $(this).data('username');
             window.open(`/jogadores/${username}`, '_blank');
