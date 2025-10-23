@@ -148,25 +148,18 @@
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+$(document).ready(function() {
+    // Attachment modal functionality using jQuery
+    $('.attachment-preview').on('click', function() {
+        const src = $(this).data('src');
+        $('#attachmentModalImage').attr('src', src);
+        $('#attachmentDownloadLink').attr('href', src);
+        $('#attachmentModal').modal('show');
+    });
+
     const chatForm = document.getElementById('admin-chat-form');
     const chatMessages = document.getElementById('chat-messages');
     const messageInput = document.getElementById('admin-chat-message');
-
-    // Attachment modal functionality
-    const attachmentPreviews = document.querySelectorAll('.attachment-preview');
-    const attachmentModal = new bootstrap.Modal(document.getElementById('attachmentModal'));
-    const attachmentModalImage = document.getElementById('attachmentModalImage');
-    const attachmentDownloadLink = document.getElementById('attachmentDownloadLink');
-
-    attachmentPreviews.forEach(preview => {
-        preview.addEventListener('click', function() {
-            const src = this.getAttribute('data-src');
-            attachmentModalImage.src = src;
-            attachmentDownloadLink.href = src;
-            attachmentModal.show();
-        });
-    });
 
     chatForm.addEventListener('submit', function(e) {
         e.preventDefault();
