@@ -90,12 +90,16 @@
                             </div>
                         </div>
                     @else
-                        <div class="text-center">
-                            <button id="checkout-button" class="btn btn-primary btn-lg px-5 py-3 fw-bold">
-                                <i class="bi bi-star-fill me-2"></i>
-                                Assinar Agora - R$ {{ config('app.membership_value') }}/mês
+                        <div class="text-center mb-4">
+                            <button id="checkout-button" class="btn btn-primary btn-lg px-5 py-3 fw-bold me-3">
+                                <i class="bi bi-credit-card me-2"></i>
+                                Stripe - R$ {{ config('app.membership_value') }}/mês
                             </button>
-                            <p class="text-white mt-3 small">Pagamento seguro via Stripe • Cancele a qualquer momento</p>
+                            <button id="mercadopago-button" class="btn btn-success btn-lg px-5 py-3 fw-bold">
+                                <i class="bi bi-wallet me-2"></i>
+                                PIX - R$ {{ config('app.membership_value') }}/mês
+                            </button>
+                            <p class="text-white mt-3 small">Pagamento seguro • Cancele a qualquer momento</p>
                         </div>
                     @endif
                 </div>
@@ -106,8 +110,11 @@
 
 @if(!auth()->check() || !auth()->user()->isVip())
 <script src="https://js.stripe.com/v3/"></script>
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Stripe integration
     const stripe = Stripe('{{ config("services.stripe.key") }}');
     const checkoutButton = document.getElementById('checkout-button');
 
@@ -139,7 +146,93 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error:', error);
             alert('Ocorreu um erro ao processar o pagamento: ' + error.message + '. Tente novamente.');
             checkoutButton.disabled = false;
-            checkoutButton.innerHTML = '<i class="bi bi-star-fill me-2"></i>Assinar Agora - R$ {{ config("app.membership_value") }}/mês';
+            checkoutButton.innerHTML = '<i class="bi bi-credit-card me-2"></i>Stripe - R$ {{ config("app.membership_value") }}/mês';
+        });
+    });
+
+    // Mercado Pago PIX integration
+    const mercadopagoButton = document.getElementById('mercadopago-button');
+
+    mercadopagoButton.addEventListener('click', function() {
+        mercadopagoButton.disabled = true;
+        mercadopagoButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Processando...';
+
+        fetch("{{ route('membership.buy_vip') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({}),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show QR code modal
+                Swal.fire({
+                    title: 'Pague com PIX',
+                    html: `
+                        <div class="text-center">
+                            <p>Escaneie o QR code abaixo para pagar:</p>
+                            <img src="data:image/png;base64,${data.qr_code_base64}" alt="QR Code PIX" class="img-fluid mb-3" style="max-width: 200px;">
+                            <p class="small text-muted">Ou copie o código PIX:</p>
+                            <textarea class="form-control" readonly rows="3">${data.qr_code}</textarea>
+                        </div>
+                    `,
+                    showConfirmButton: false,
+                    showCloseButton: true,
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        // Check payment status every 5 seconds
+                        const checkInterval = setInterval(() => {
+                            fetch("{{ route('membership.check_payment_status') }}", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                                },
+                                body: JSON.stringify({ payment_id: data.payment_id }),
+                            })
+                            .then(response => response.json())
+                            .then(statusData => {
+                                if (statusData.status === 'approved') {
+                                    clearInterval(checkInterval);
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Pagamento aprovado!',
+                                        text: 'Bem-vindo ao clube VIP!',
+                                        confirmButtonText: 'OK'
+                                    }).then(() => {
+                                        window.location.reload();
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                console.error("Erro ao verificar status:", error);
+                            });
+                        }, 5000);
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro no pagamento',
+                    text: 'Não foi possível processar seu pagamento. Tente novamente mais tarde.',
+                    confirmButtonText: 'OK'
+                });
+            }
+        })
+        .catch(error => {
+            console.error("Erro ao processar pagamento:", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro inesperado',
+                text: 'Tente novamente mais tarde.',
+                confirmButtonText: 'OK'
+            });
+        }).finally(() => {
+            mercadopagoButton.disabled = false;
+            mercadopagoButton.innerHTML = '<i class="bi bi-wallet me-2"></i>PIX - R$ {{ config("app.membership_value") }}/mês';
         });
     });
 });

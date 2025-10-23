@@ -12,6 +12,11 @@ use Stripe\Checkout\Session;
 use App\Mail\MembershipPurchaseAdminMail;
 use App\Mail\MembershipWelcomeMail;
 use App\Models\User;
+use App\Models\Pagamentos;
+use MercadoPago\Client\Payment\PaymentClient;
+use MercadoPago\Client\Common\RequestOptions;
+use MercadoPago\MercadoPagoConfig;
+use MercadoPago\Exceptions\MPApiException;
 
 
 class MembershipController extends Controller
@@ -25,6 +30,60 @@ class MembershipController extends Controller
         ]);
 
         return view('seja_membro');
+    }
+
+    public function buyVip(Request $request)
+    {
+        $valor = config('app.membership_value');
+        $desc = "Compra de VIP mensal";
+
+        try {
+            $pag = Pagamentos::create([
+                'user_id' => auth()->id(),
+                'value' => $valor,
+                'desc' => $desc,
+            ]);
+            MercadoPagoConfig::setAccessToken(env("MERCADO_PAGO_ACCESS_TOKEN"));
+
+            $client = new PaymentClient();
+            $request_options = new RequestOptions();
+            $uniqueKey = now()->timestamp . $pag->id . md5(now()->timestamp);
+            $request_options->setCustomHeaders(["X-Idempotency-Key: {$uniqueKey}"]);
+
+            $payment = $client->create([
+                "transaction_amount" => $valor,
+                "description" => $desc,
+                "payment_method_id" => "pix",
+                "payer" => [
+                    "email" => auth()->user()->email,
+                    "first_name" => auth()->user()->name,
+                    "last_name" => "",
+                    "identification" => [
+                        "type" => "CPF",
+                        "number" => auth()->user()->cpf
+                    ]
+                ]
+            ], $request_options);
+
+            $pag->payment_status = $payment->status;
+            $pag->payment_id = $payment->id;
+            $pag->save();
+
+            if ($payment->status == 'pending') {
+                return response()->json([
+                    'success' => true,
+                    'qr_code' => $payment->point_of_interaction->transaction_data->qr_code,
+                    'qr_code_base64' => $payment->point_of_interaction->transaction_data->qr_code_base64
+                ]);
+            } else {
+                return response()->json(['success' => false]);
+            }
+        } catch (MPApiException $e) {
+            Log::error("Status code: " . $e->getApiResponse()->getStatusCode() . "\n");
+            Log::error($e->getApiResponse()->getContent());
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
     }
 
     public function createCheckoutSession(Request $request)
@@ -109,7 +168,7 @@ class MembershipController extends Controller
                         $token = $tokenRes->json('token');
                         $headers = ["Authorization" => "Bearer $token"];
 
-                        $mensagem = "O usuario {$user->username} se tornou vip, bem vindo!";
+                        $mensagem = "🌟 Parabéns, {$user->username}!\nAgora você faz parte do grupo VIP — privilégio dos melhores! 👑";
 
                         $payload = [
                             "phone" => $PHONE_ID,
@@ -134,11 +193,11 @@ class MembershipController extends Controller
                 // Send welcome email to user
                 Mail::to($user->email)->queue((new MembershipWelcomeMail($user))->track($user->email, 'Bem-vindo aos VIPs!'));
 
-                    // Notify admins
-                    $admins = User::where('is_admin', 'S')->get();
-                    foreach ($admins as $admin) {
-                        Mail::to($admin->email)->queue((new MembershipPurchaseAdminMail($user))->track($admin->email, 'Novo usuário adquiriu membership VIP!'));
-                    }
+                // Notify admins
+                $admins = User::where('is_admin', 'S')->get();
+                foreach ($admins as $admin) {
+                    Mail::to($admin->email)->queue((new MembershipPurchaseAdminMail($user))->track($admin->email, 'Novo usuário adquiriu membership VIP!'));
+                }
 
                 return redirect()->route('membership.result')->with('success', 'Bem-vindo ao clube VIP!');
             }
@@ -232,8 +291,7 @@ class MembershipController extends Controller
                         if ($tokenRes->successful() && $tokenRes->json('status') === 'success') {
                             $token = $tokenRes->json('token');
                             $headers = ["Authorization" => "Bearer $token"];
-
-                            $mensagem = "O usuario {$user->username} se tornou vip, bem vindo!";
+                            $mensagem = "🌟 Parabéns, {$user->username}!\nAgora você faz parte do grupo VIP — privilégio dos melhores! 👑";
 
                             $payload = [
                                 "phone" => $PHONE_ID,
@@ -278,6 +336,85 @@ class MembershipController extends Controller
         }
 
         return response()->json(['status' => 'success']);
+    }
+
+    public function checkPaymentStatus(Request $request)
+    {
+        $paymentId = $request->input('payment_id');
+
+        try {
+            MercadoPagoConfig::setAccessToken(env("MERCADO_PAGO_ACCESS_TOKEN"));
+            $client = new PaymentClient();
+            $payment = $client->get($paymentId);
+
+            if ($payment->status == 'approved') {
+                // Upgrade user to VIP
+                $pagamento = Pagamentos::where('payment_id', $paymentId)->first();
+                if ($pagamento && !$pagamento->processed) {
+                    $user = $pagamento->user;
+                    $user->is_vip = true;
+                    $user->membership_expires_at = now()->addMonth();
+                    $user->save();
+
+                    $pagamento->processed = true;
+                    $pagamento->save();
+
+                    Log::info('User upgraded to VIP via PIX', [
+                        'user_id' => $user->id,
+                        'payment_id' => $paymentId
+                    ]);
+
+                    // Send WhatsApp message to community
+                    try {
+                        $API_BASE = env('NOTIFICACAO_API_BASE');
+                        $TOKEN_ENDPOINT = $API_BASE . env('NOTIFICACAO_API_TOKEN_PATH');
+                        $SEND_MESSAGE_ENDPOINT = $API_BASE . env('NOTIFICACAO_API_SEND_PATH');
+                        $PHONE_ID = env('NOTIFICACAO_PHONE_ID');
+
+                        $tokenRes = Http::post($TOKEN_ENDPOINT);
+
+                        if ($tokenRes->successful() && $tokenRes->json('status') === 'success') {
+                            $token = $tokenRes->json('token');
+                            $headers = ["Authorization" => "Bearer $token"];
+
+                            $mensagem = "🌟 Parabéns, {$user->username}!\nAgora você faz parte do grupo VIP — privilégio dos melhores! 👑";
+
+                            $payload = [
+                                "phone" => $PHONE_ID,
+                                "isGroup" => false,
+                                "isNewsletter" => true,
+                                "isLid" => false,
+                                "message" => $mensagem,
+                            ];
+
+                            $resp = Http::withHeaders($headers)->post($SEND_MESSAGE_ENDPOINT, $payload);
+
+                            if (!$resp->successful()) {
+                                Log::error("Erro ao enviar mensagem WhatsApp para VIP: " . $resp->body());
+                            }
+                        } else {
+                            Log::error("Erro ao gerar token para WhatsApp VIP: " . $tokenRes->body());
+                        }
+                    } catch (\Exception $e) {
+                        Log::error("Erro ao enviar notificação WhatsApp para VIP: " . $e->getMessage());
+                    }
+
+                    // Send welcome email to user
+                    Mail::to($user->email)->queue((new MembershipWelcomeMail($user))->track($user->email, 'Bem-vindo aos VIPs!'));
+
+                    // Notify admins
+                    $admins = User::where('is_admin', 'S')->get();
+                    foreach ($admins as $admin) {
+                        Mail::to($admin->email)->queue((new MembershipPurchaseAdminMail($user))->track($admin->email, 'Novo usuário adquiriu membership VIP!'));
+                    }
+                }
+            }
+
+            return response()->json(['status' => $payment->status]);
+        } catch (\Exception $e) {
+            Log::error('Error checking payment status: ' . $e->getMessage());
+            return response()->json(['status' => 'error']);
+        }
     }
 
     public function result()

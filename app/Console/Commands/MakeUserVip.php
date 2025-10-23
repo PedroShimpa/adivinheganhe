@@ -70,7 +70,7 @@ class MakeUserVip extends Command
                 $token = $tokenRes->json('token');
                 $headers = ["Authorization" => "Bearer $token"];
 
-                $mensagem = "O usuario {$user->username} se tornou vip, bem vindo!";
+                $mensagem = "🌟 Parabéns, {$user->username}!\nAgora você faz parte do grupo VIP — privilégio dos melhores! 👑";
 
                 $payload = [
                     "phone" => $PHONE_ID,
