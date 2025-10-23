@@ -37,7 +37,7 @@
                             <td>
                                 @if($user->membership_expires_at)
                                     @php
-                                        $daysLeft = now()->diffInDays($user->membership_expires_at, false);
+                                        $daysLeft = round(now()->diffInDays($user->membership_expires_at, false));
                                     @endphp
                                     @if($daysLeft > 0)
                                         <span class="badge bg-success rounded-pill">{{ $daysLeft }} dias</span>
