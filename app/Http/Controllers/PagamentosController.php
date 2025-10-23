@@ -132,65 +132,112 @@ class PagamentosController extends Controller
                 $payment = $client->get($paymentId);
 
                 if ($payment->status === 'approved') {
-                    // Process VIP membership payment
+                    // Process payment based on type
                     $pagamento = Pagamentos::where('payment_id', $paymentId)->first();
-                    if ($pagamento && !$pagamento->processed && str_contains($pagamento->desc, 'VIP mensal')) {
+                    if ($pagamento && !$pagamento->processed) {
                         $user = $pagamento->user;
-                        $user->is_vip = true;
-                        $user->membership_expires_at = now()->addMonth();
-                        $user->save();
+
+                        if (!$user) {
+                            Log::error('User not found for MercadoPago webhook payment', [
+                                'payment_id' => $paymentId,
+                                'user_id' => $pagamento->user_id
+                            ]);
+                            return response()->json(['error' => 'User not found'], 400);
+                        }
+
+                        // Check payment type and process accordingly
+                        if (str_contains($pagamento->desc, 'VIP mensal')) {
+                            // Process VIP membership
+                            $user->is_vip = true;
+                            $user->membership_expires_at = now()->addMonth();
+                            $user->save();
+
+                            Log::info('User upgraded to VIP via MercadoPago webhook', [
+                                'user_id' => $user->id,
+                                'payment_id' => $paymentId
+                            ]);
+
+                            // Send WhatsApp message to community
+                            try {
+                                $API_BASE = env('NOTIFICACAO_API_BASE');
+                                $TOKEN_ENDPOINT = $API_BASE . env('NOTIFICACAO_API_TOKEN_PATH');
+                                $SEND_MESSAGE_ENDPOINT = $API_BASE . env('NOTIFICACAO_API_SEND_PATH');
+                                $PHONE_ID = env('NOTIFICACAO_PHONE_ID');
+
+                                $tokenRes = Http::post($TOKEN_ENDPOINT);
+
+                                if ($tokenRes->successful() && $tokenRes->json('status') === 'success') {
+                                    $token = $tokenRes->json('token');
+                                    $headers = ["Authorization" => "Bearer $token"];
+
+                                    $mensagem = "🌟 Parabéns, {$user->username}!\nAgora você faz parte do grupo VIP — privilégio dos melhores! 👑";
+
+                                    $payload = [
+                                        "phone" => $PHONE_ID,
+                                        "isGroup" => false,
+                                        "isNewsletter" => true,
+                                        "isLid" => false,
+                                        "message" => $mensagem,
+                                    ];
+
+                                    $resp = Http::withHeaders($headers)->post($SEND_MESSAGE_ENDPOINT, $payload);
+
+                                    if (!$resp->successful()) {
+                                        Log::error("Erro ao enviar mensagem WhatsApp para VIP: " . $resp->body());
+                                    }
+                                } else {
+                                    Log::error("Erro ao gerar token para WhatsApp VIP: " . $tokenRes->body());
+                                }
+                            } catch (\Exception $e) {
+                                Log::error("Erro ao enviar notificação WhatsApp para VIP: " . $e->getMessage());
+                            }
+
+                            // Send welcome email to user
+                            Mail::to($user->email)->queue((new MembershipWelcomeMail($user))->track($user->email, 'Bem-vindo aos VIPs!'));
+
+                            // Notify admins
+                            $admins = User::where('is_admin', 'S')->get();
+                            foreach ($admins as $admin) {
+                                Mail::to($admin->email)->queue((new MembershipPurchaseAdminMail($user))->track($admin->email, 'Novo usuário adquiriu membership VIP!'));
+                            }
+
+                        } elseif (str_contains($pagamento->desc, 'palpites')) {
+                            // Process attempts purchase
+                            $quantidade = (int) filter_var($pagamento->desc, FILTER_SANITIZE_NUMBER_INT);
+                            $indicated = AdicionaisIndicacao::where('user_uuid', $user->uuid)->first();
+                            if (!empty($indicated)) {
+                                $indicated->value = $indicated->value + $quantidade;
+                                $indicated->save();
+                            } else {
+                                AdicionaisIndicacao::create(['user_uuid' => $user->uuid, 'value' => $quantidade]);
+                            }
+                            $uuid = $user->uuid;
+                            Cache::delete("indicacoes_{$uuid}");
+
+                        } elseif (str_contains($pagamento->desc, 'dica')) {
+                            // Process dica purchase - extract adivinhacao_id from description
+                            preg_match('/Compra de dica - (.+)/', $pagamento->desc, $matches);
+                            if (isset($matches[1])) {
+                                $titulo = $matches[1];
+                                $adivinhacao = Adivinhacoes::where('titulo', $titulo)->first();
+                                if ($adivinhacao) {
+                                    DicasCompras::create([
+                                        'user_id' => $user->id,
+                                        'adivinhacao_id' => $adivinhacao->id,
+                                        'pagamento_id' => $pagamento->id
+                                    ]);
+                                }
+                            }
+                        }
 
                         $pagamento->processed = true;
                         $pagamento->save();
 
-                        Log::info('User upgraded to VIP via MercadoPago webhook', [
+                        Log::info('Payment processed successfully via MercadoPago webhook', [
                             'user_id' => $user->id,
-                            'payment_id' => $paymentId
+                            'payment_id' => $paymentId,
+                            'type' => $this->getPaymentType($pagamento->desc)
                         ]);
-
-                        // Send WhatsApp message to community
-                        try {
-                            $API_BASE = env('NOTIFICACAO_API_BASE');
-                            $TOKEN_ENDPOINT = $API_BASE . env('NOTIFICACAO_API_TOKEN_PATH');
-                            $SEND_MESSAGE_ENDPOINT = $API_BASE . env('NOTIFICACAO_API_SEND_PATH');
-                            $PHONE_ID = env('NOTIFICACAO_PHONE_ID');
-
-                            $tokenRes = Http::post($TOKEN_ENDPOINT);
-
-                            if ($tokenRes->successful() && $tokenRes->json('status') === 'success') {
-                                $token = $tokenRes->json('token');
-                                $headers = ["Authorization" => "Bearer $token"];
-
-                                $mensagem = "🌟 Parabéns, {$user->username}!\nAgora você faz parte do grupo VIP — privilégio dos melhores! 👑";
-
-                                $payload = [
-                                    "phone" => $PHONE_ID,
-                                    "isGroup" => false,
-                                    "isNewsletter" => true,
-                                    "isLid" => false,
-                                    "message" => $mensagem,
-                                ];
-
-                                $resp = Http::withHeaders($headers)->post($SEND_MESSAGE_ENDPOINT, $payload);
-
-                                if (!$resp->successful()) {
-                                    Log::error("Erro ao enviar mensagem WhatsApp para VIP: " . $resp->body());
-                                }
-                            } else {
-                                Log::error("Erro ao gerar token para WhatsApp VIP: " . $tokenRes->body());
-                            }
-                        } catch (\Exception $e) {
-                            Log::error("Erro ao enviar notificação WhatsApp para VIP: " . $e->getMessage());
-                        }
-
-                        // Send welcome email to user
-                        Mail::to($user->email)->queue((new MembershipWelcomeMail($user))->track($user->email, 'Bem-vindo aos VIPs!'));
-
-                        // Notify admins
-                        $admins = User::where('is_admin', 'S')->get();
-                        foreach ($admins as $admin) {
-                            Mail::to($admin->email)->queue((new MembershipPurchaseAdminMail($user))->track($admin->email, 'Novo usuário adquiriu membership VIP!'));
-                        }
                     }
                 } else {
                     Log::warning('MercadoPago webhook payment not approved', [
