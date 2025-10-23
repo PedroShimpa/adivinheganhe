@@ -141,22 +141,14 @@
 
     <!-- Usuários Online -->
     <div id="online-users" class="card shadow-sm mb-4">
-        <div class="card-header bg-light">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Usuários Online</h5>
+            <a href="{{ route('dashboard.export_online_users') }}" class="btn btn-success btn-sm">
+                <i class="bi bi-file-earmark-excel"></i> Exportar XLSX
+            </a>
         </div>
         <div class="card-body">
-            <ul class="list-group list-group-flush" id="online-users-list">
-                @if(isset($onlineUsers['users']) && is_array($onlineUsers['users']) && count($onlineUsers['users']) > 0)
-                @foreach($onlineUsers['users'] as $user)
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span>{{ $user['name'] ?? $user->name ?? 'Usuário Desconhecido' }} (ID: {{ $user['id'] ?? $user->id ?? 'N/A' }})</span>
-                    <span class="badge bg-success rounded-pill">Online</span>
-                </li>
-                @endforeach
-                @else
-                <li class="list-group-item text-muted">Nenhum usuário online no momento.</li>
-                @endif
-            </ul>
+            {!! $onlineUsersTable->table(['class' => 'table table-striped table-hover'], true) !!}
         </div>
     </div>
 
@@ -231,6 +223,7 @@
                 <li><a class="dropdown-item" href="#charts">Gráficos</a></li>
                 <li><a class="dropdown-item" href="#indicadores-chart">Indicadores</a></li>
                 <li><a class="dropdown-item" href="#online-users">Usuários Online</a></li>
+                <li><a class="dropdown-item" href="#online-users-table">Tabela Usuários Online</a></li>
                 <li><a class="dropdown-item" href="#premiacoes">Premiações</a></li>
                 <li><a class="dropdown-item" href="#comentarios">Comentários</a></li>
                 <li><a class="dropdown-item" href="#adivinhacoes-ativas">Adivinhações Ativas</a></li>
@@ -365,6 +358,7 @@
 {!! $adivinhacoesAtivasTable->scripts() !!}
 {!! $respostasTable->scripts() !!}
 {!! $usersTable->scripts() !!}
+{!! $onlineUsersTable->scripts() !!}
 
 <script>
 $(document).on('click', '.marcar-pago-btn', function(e) {

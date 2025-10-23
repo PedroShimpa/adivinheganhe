@@ -150,6 +150,8 @@ Route::middleware(['auth', 'banned', 'trackOnline'])->group(function () {
         Route::get('/dashboard/export-comentarios', [DashboardController::class, 'exportComentarios'])->name('dashboard.export_comentarios');
         Route::get('/dashboard/export-adivinhacoes-ativas', [DashboardController::class, 'exportAdivinhacoesAtivas'])->name('dashboard.export_adivinhacoes_ativas');
         Route::get('/dashboard/export-respostas', [DashboardController::class, 'exportRespostas'])->name('dashboard.export_respostas');
+        Route::get('/dashboard/online-users-data', [DashboardController::class, 'onlineUsersData'])->name('dashboard.online_users.data');
+        Route::get('/dashboard/export-online-users', [DashboardController::class, 'exportOnlineUsers'])->name('dashboard.export_online_users');
         Route::put('/a/{adivinhacaoId}', [AdivinhacoesController::class, 'update'])->name('adivinhacoes.update')->whereNumber('adivinhacaoId');
         Route::get('/a/view/{adivinhacao}', [AdivinhacoesController::class, 'edit'])->name('adivinhacoes.view');
         Route::delete('/a/deletar/{adivinhacao}', [AdivinhacoesController::class, 'deletar'])->name('adivinhacoes.delete');

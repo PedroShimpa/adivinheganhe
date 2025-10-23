@@ -14,11 +14,13 @@ use App\DataTables\ComentariosDataTable;
 use App\DataTables\AdivinhacoesAtivasDataTable;
 use App\DataTables\RespostasDataTable;
 use App\DataTables\UsersDataTable;
+use App\DataTables\OnlineUsersDataTable;
 use App\Exports\UsersExport;
 use App\Exports\PremiacoesExport;
 use App\Exports\ComentariosExport;
 use App\Exports\AdivinhacoesAtivasExport;
 use App\Exports\RespostasExport;
+use App\Exports\OnlineUsersExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class DashboardController extends Controller
@@ -145,6 +147,7 @@ class DashboardController extends Controller
                 'adivinhacoesAtivasTable' => app(AdivinhacoesAtivasDataTable::class)->html(),
                 'respostasTable' => app(RespostasDataTable::class)->html(),
                 'usersTable' => app(UsersDataTable::class)->html(),
+                'onlineUsersTable' => app(OnlineUsersDataTable::class)->html(),
             ];
         } catch (\Exception $e) {
             \Log::error('Error preparing dashboard data: ' . $e->getMessage());
@@ -261,6 +264,16 @@ class DashboardController extends Controller
     public function exportRespostas()
     {
         return Excel::download(new RespostasExport, 'respostas.xlsx');
+    }
+
+    public function exportOnlineUsers()
+    {
+        return Excel::download(new OnlineUsersExport, 'usuarios_online.xlsx');
+    }
+
+    public function onlineUsersData(OnlineUsersDataTable $dataTable)
+    {
+        return $dataTable->ajax();
     }
 
 
