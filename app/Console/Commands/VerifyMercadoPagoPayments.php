@@ -115,6 +115,14 @@ class VerifyMercadoPagoPayments extends Command
     {
         $user = $pagamento->user;
 
+        if (!$user) {
+            Log::error('User not found for payment processing', [
+                'payment_id' => $pagamento->payment_id,
+                'user_id' => $pagamento->user_id
+            ]);
+            return;
+        }
+
         // Check payment type and process accordingly
         if (str_contains($pagamento->desc, 'VIP mensal')) {
             // Process VIP membership
