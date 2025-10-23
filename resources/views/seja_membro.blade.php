@@ -97,13 +97,13 @@
                         </div>
                     @else
                         <div class="text-center mb-4">
-                            <button id="checkout-button" class="btn btn-primary btn-lg px-5 py-3 fw-bold me-3">
+                            <button id="checkout-button" class="btn btn-primary btn-lg px-5 py-3 fw-bold me-3 mb-2">
                                 <i class="bi bi-credit-card me-2"></i>
-                                Stripe - R$ {{ config('app.membership_value') }}/mês
+                                Cartão de Crédito - R$ {{ config('app.membership_value') }}
                             </button>
-                            <button id="mercadopago-button" class="btn btn-success btn-lg px-5 py-3 fw-bold">
+                            <button id="mercadopago-button" class="btn btn-success btn-lg px-5 py-3 fw-bold mb-2">
                                 <i class="bi bi-wallet me-2"></i>
-                                PIX - R$ {{ config('app.membership_value') }}/mês
+                                PIX - R$ {{ config('app.membership_value') }}
                             </button>
                             <p class="text-white mt-3 small">Pagamento seguro • Cancele a qualquer momento</p>
                         </div>
