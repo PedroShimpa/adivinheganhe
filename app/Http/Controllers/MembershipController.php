@@ -342,6 +342,12 @@ class MembershipController extends Controller
     {
         $paymentId = $request->input('payment_id');
 
+        if (!$paymentId || !is_numeric($paymentId)) {
+            return response()->json(['status' => 'error', 'message' => 'Invalid payment ID'], 400);
+        }
+
+        $paymentId = (int) $paymentId;
+
         try {
             MercadoPagoConfig::setAccessToken(env("MERCADO_PAGO_ACCESS_TOKEN"));
             $client = new PaymentClient();
