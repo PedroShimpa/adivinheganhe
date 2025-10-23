@@ -61,6 +61,12 @@
                             <div class="col-12">
                                 <div class="d-flex align-items-center text-light">
                                     <i class="bi bi-check-circle-fill text-success me-3 fs-5"></i>
+                                    <span>Prioridade no recebimento de prêmios (dentro do horário comercial)</span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex align-items-center text-light">
+                                    <i class="bi bi-check-circle-fill text-success me-3 fs-5"></i>
                                     <span>Sorteios mensais exclusivos para membros</span>
                                 </div>
                             </div>
