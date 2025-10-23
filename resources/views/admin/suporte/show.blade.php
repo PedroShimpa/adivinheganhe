@@ -89,41 +89,6 @@
             </form>
         </div>
     </div>
-
-    <div class="card shadow-sm">
-        <div class="card-header">
-            <h5>Enviar Mensagem para o Cliente</h5>
-        </div>
-        <div class="card-body">
-            <div id="chat-messages" class="border rounded p-3 mb-3" style="height: 300px; overflow-y: auto;">
-                @foreach($suporte->chatMessages as $message)
-                <div class="mb-2">
-                    <strong>{{ $message->user->name }}:</strong> {{ $message->message }}
-                    <small class="text-muted">{{ $message->created_at->format('d/m/Y H:i') }}</small>
-                </div>
-                @endforeach
-            </div>
-            <form id="admin-chat-form">
-                @csrf
-                <div class="input-group mb-2">
-                    <input type="text" id="admin-chat-message" class="form-control" placeholder="Digite sua mensagem..." required>
-                    <button type="submit" class="btn btn-success">Enviar</button>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="send-push" checked>
-                    <label class="form-check-label" for="send-push">
-                        Enviar notificação push
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="send-email" checked>
-                    <label class="form-check-label" for="send-email">
-                        Enviar email
-                    </label>
-                </div>
-            </form>
-        </div>
-    </div>
 </div>
 
 <!-- Attachment Modal -->
@@ -149,65 +114,33 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
+    console.log('Document ready, initializing attachment modal...');
+
     // Attachment modal functionality using jQuery
-    $('.attachment-preview').on('click', function() {
-        const src = $(this).data('src');
-        $('#attachmentModalImage').attr('src', src);
-        $('#attachmentDownloadLink').attr('href', src);
-        $('#attachmentModal').modal('show');
-    });
-
-    const chatForm = document.getElementById('admin-chat-form');
-    const chatMessages = document.getElementById('chat-messages');
-    const messageInput = document.getElementById('admin-chat-message');
-
-    chatForm.addEventListener('submit', function(e) {
+    $('.attachment-preview').on('click', function(e) {
         e.preventDefault();
+        console.log('Attachment clicked');
 
-        const message = messageInput.value.trim();
-        const sendPush = document.getElementById('send-push').checked;
-        const sendEmail = document.getElementById('send-email').checked;
+        const src = $(this).data('src');
+        console.log('Image source:', src);
 
-        if (!message) return;
-
-        fetch('/api/suporte/{{ $suporte->id }}/chat', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({
-                message: message,
-                send_push: sendPush,
-                send_email: sendEmail
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Add message to chat
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'mb-2';
-                messageDiv.innerHTML = `<strong>{{ auth()->user()->name }}:</strong> ${message} <small class="text-muted">${new Date().toLocaleString('pt-BR')}</small>`;
-                chatMessages.appendChild(messageDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-                messageInput.value = '';
-
-                // Show success message
-                const alert = document.createElement('div');
-                alert.className = 'alert alert-success mt-3';
-                alert.textContent = 'Mensagem enviada com sucesso!';
-                chatForm.appendChild(alert);
-                setTimeout(() => alert.remove(), 3000);
-            } else {
-                alert('Erro ao enviar mensagem');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Erro ao enviar mensagem');
-        });
+        if (src) {
+            $('#attachmentModalImage').attr('src', src);
+            $('#attachmentDownloadLink').attr('href', src);
+            $('#attachmentModal').modal('show');
+            console.log('Modal should be shown');
+        } else {
+            console.error('No src found for attachment');
+        }
     });
+
+    // Test if modal elements exist
+    console.log('Modal elements check:');
+    console.log('Modal exists:', $('#attachmentModal').length > 0);
+    console.log('Image exists:', $('#attachmentModalImage').length > 0);
+    console.log('Download link exists:', $('#attachmentDownloadLink').length > 0);
+    console.log('Attachment previews found:', $('.attachment-preview').length);
+  
 });
 </script>
 @endpush
