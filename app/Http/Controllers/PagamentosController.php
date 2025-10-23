@@ -347,6 +347,62 @@ class PagamentosController extends Controller
         return redirect()->route('home');
     }
 
+    public function buy_attempts_pix(Request $request)
+    {
+        $quantidade = $request->input('quantidade');
+        $valor = $quantidade * env('PRICE_PER_ATTEMPT', 0.25);
+        $desc = "Compra de {$quantidade} palpites ";
+
+        try {
+            $pag = Pagamentos::create([
+                'user_id' => auth()->id(),
+                'value' => $valor,
+                'desc' => $desc,
+            ]);
+            MercadoPagoConfig::setAccessToken(env("MERCADO_PAGO_ACCESS_TOKEN"));
+
+            $client = new PaymentClient();
+            $request_options = new RequestOptions();
+            $uniqueKey = now()->timestamp . $pag->id . md5(now()->timestamp);
+            $request_options->setCustomHeaders(["X-Idempotency-Key: {$uniqueKey}"]);
+
+            $payment = $client->create([
+                "transaction_amount" => $valor,
+                "description" => $desc,
+                "payment_method_id" => "pix",
+                "payer" => [
+                    "email" => auth()->user()->email,
+                    "first_name" => auth()->user()->name,
+                    "last_name" => "",
+                    "identification" => [
+                        "type" => "CPF",
+                        "number" => auth()->user()->cpf
+                    ]
+                ]
+            ], $request_options);
+
+            $pag->payment_status = $payment->status;
+            $pag->payment_id = $payment->id;
+            $pag->save();
+
+            if ($payment->status == 'pending') {
+                return response()->json([
+                    'success' => true,
+                    'qr_code' => $payment->point_of_interaction->transaction_data->qr_code,
+                    'qr_code_base64' => $payment->point_of_interaction->transaction_data->qr_code_base64,
+                    'payment_id' => $payment->id
+                ]);
+            } else {
+                return response()->json(['success' => false]);
+            }
+        } catch (MPApiException $e) {
+            Log::error("Status code: " . $e->getApiResponse()->getStatusCode() . "\n");
+            Log::error($e->getApiResponse()->getContent());
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
+    }
+
     public function buy_dica(Request $request, Adivinhacoes $adivinhacao)
     {
         $desc = "Compra de dica - {$adivinhacao->titulo}";
@@ -393,6 +449,9 @@ class PagamentosController extends Controller
             } else {
                 return response()->json(['success' => false]);
             }
+        } catch (MPApiException $e) {
+            Log::error("Status code: " . $e->getApiResponse()->getStatusCode() . "\n");
+            Log::error($e->getApiResponse()->getContent());
         } catch (MPApiException $e) {
             Log::error("Status code: " . $e->getApiResponse()->getStatusCode() . "\n");
             Log::error($e->getApiResponse()->getContent());

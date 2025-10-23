@@ -79,6 +79,7 @@ Route::middleware(['auth', 'banned', 'trackOnline'])->group(function () {
 
     Route::get('/palpites/comprar', [PagamentosController::class, 'index_buy_attempts'])->name('tentativas.shop');
     Route::post('/palpites/comprar', [PagamentosController::class, 'buy_attempts'])->name('tentativas.comprar');
+    Route::post('/palpites/comprar/pix', [PagamentosController::class, 'buy_attempts_pix'])->name('tentativas.comprar.pix');
     Route::get('/dicas/{adivinhacao}/comprar', [PagamentosController::class, 'index_buy_dica'])->name('dicas.index_buy');
     Route::post('/dicas/{adivinhacao}/comprar', [PagamentosController::class, 'buy_dica'])->name('dicas.comprar');
 
