@@ -233,7 +233,7 @@
             {{-- ================== Links soltos ================== --}}
             <a href="{{ route('membership.index') }}"
                 class="nav-link text-white {{ request()->routeIs('membership.index') ? 'active fw-bold text-primary' : '' }}">
-                <i class="bi bi-star"></i> Seja Membro
+                <i class="bi bi-star"></i> Seja VIP
             </a>
             <a href="{{ route('sobre') }}"
                 class="nav-link text-white {{ request()->routeIs('sobre') ? 'active fw-bold text-primary' : '' }}">
