@@ -26,7 +26,6 @@ class MembershipPurchaseAdminMail extends Mailable implements ShouldQueue
         $this->subject = 'Novo usuário adquiriu membership VIP!';
         $this->usuario = $usuario;
         $this->unsubscribeUrl = '#'; // Admin notification, no unsubscribe
-        $this->track($this->usuario->email, $this->subject);
         $this->trackingPixel = $this->buildTrackingPixel();
     }
 

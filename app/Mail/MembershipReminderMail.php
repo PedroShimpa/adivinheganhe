@@ -25,7 +25,6 @@ class MembershipReminderMail extends Mailable implements ShouldQueue
     {
         $this->subject = 'Vamos finalizar a compra do seu VIP?';
         $this->unsubscribeUrl = '#'; // No specific user
-        $this->track('noreply@example.com', $this->subject);
         $this->trackingPixel = $this->buildTrackingPixel();
     }
 

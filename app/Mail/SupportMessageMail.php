@@ -32,9 +32,6 @@ class SupportMessageMail extends Mailable
             'userId' => $this->suporte->user->id,
             'token' => hash('sha256', $this->suporte->user->email . env('APP_KEY'))
         ]) : '#';
-        if ($this->suporte->user) {
-            $this->track($this->suporte->user->email, $this->subject);
-        }
         $this->trackingPixel = $this->buildTrackingPixel();
     }
 

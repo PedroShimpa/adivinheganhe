@@ -25,9 +25,6 @@ trait Trackable
 
     protected function buildTrackingPixel()
     {
-        if (!$this->trackingId) {
-            return '';
-        }
 
         return "<img src=\"https://adivinheganhe.com.br/email-tracking/open/{$this->trackingId}\" width=\"1\" height=\"1\" style=\"display:none;\" alt=\"\" />";
     }

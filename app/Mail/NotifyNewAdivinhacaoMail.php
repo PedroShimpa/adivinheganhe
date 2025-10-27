@@ -22,7 +22,6 @@ class NotifyNewAdivinhacaoMail extends Mailable
         $this->subject = 'Nova Adivinhação Disponível!';
         $this->titulo = $titulo;
         $this->url = $url;
-        $this->track('noreply@example.com', $this->subject);
         $this->trackingPixel = $this->buildTrackingPixel();
     }
 

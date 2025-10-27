@@ -30,7 +30,6 @@ class NotifyAdminsOfNewTicket extends Mailable implements ShouldQueue
         $this->categoria = $categoria;
         $this->descricao = $descricao;
         $this->unsubscribeUrl = '#'; // Admin notification
-        $this->track('noreply@example.com', $this->subject);
         $this->trackingPixel = $this->buildTrackingPixel();
     }
 

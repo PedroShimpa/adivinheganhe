@@ -25,9 +25,6 @@ class ProfileVisitMail extends Mailable
             'userId' => $user->id,
             'token' => hash('sha256', $user->email . env('APP_KEY'))
         ]) : '#';
-        if ($user) {
-            $this->track($user->email, $this->subject);
-        }
         $this->trackingPixel = $this->buildTrackingPixel();
     }
 

@@ -28,7 +28,6 @@ class MembershipWelcomeMail extends Mailable implements ShouldQueue
             'userId' => $this->usuario->id,
             'token' => hash('sha256', $this->usuario->email . env('APP_KEY'))
         ]);
-        $this->track($this->usuario->email, $this->subject);
         $this->trackingPixel = $this->buildTrackingPixel();
     }
 
