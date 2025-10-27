@@ -8,6 +8,7 @@ use App\Models\AdicionaisIndicacao;
 use App\Models\AdivinheOMilhao\Adicionais;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 use App\Events\NewUserRegistered;
@@ -58,6 +59,19 @@ class RegisteredUserController extends Controller
         }
 
         Auth::login($user);
+
+        // Check for high registration rate
+        $recentRegistrations = User::where('created_at', '>=', now()->subMinutes(20))->count();
+        if ($recentRegistrations >= 10) {
+            $cacheKey = 'high_registration_alert_sent';
+            if (!Cache::has($cacheKey)) {
+                $admins = User::where('is_admin', true)->pluck('email')->toArray();
+                if (!empty($admins)) {
+                    \Mail::to($admins)->send(new \App\Mail\HighRegistrationAlertMail());
+                    Cache::put($cacheKey, true, now()->addHour());
+                }
+            }
+        }
 
         // Dispatch event for real-time dashboard update
         try {
