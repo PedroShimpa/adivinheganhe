@@ -40,7 +40,6 @@ class FirebaseChannel
             $this->messaging->send($firebaseMessage);
         } catch (\Exception $e) {
             // Log error or handle
-            \Log::error('Firebase notification failed: ' . $e->getMessage());
         }
     }
 }
