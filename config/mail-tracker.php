@@ -36,7 +36,6 @@ return [
         'enabled'    => true, // Should the admin routes be enabled?
         'prefix'     => 'email-manager',
         'middleware' => [
-            'auth',
             'isAdmin',
         ],
     ],
