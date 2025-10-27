@@ -109,6 +109,7 @@
         <div class="footer">
             <p>Se tiver alguma dúvida, não hesite em entrar em contato conosco.</p>
             <p>Atenciosamente,<br>Equipe Adivinhe & Ganhe</p>
+            {!! $buildTrackingPixel() !!}
         </div>
     </div>
 </body>

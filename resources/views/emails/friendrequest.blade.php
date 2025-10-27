@@ -14,6 +14,7 @@
             Ver pedidos de amizade
         </a>
     </p>
+    {!! $buildTrackingPixel() !!}
 </body>
 
 </html>

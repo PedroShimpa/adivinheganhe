@@ -72,8 +72,9 @@
             <a href="{{ route('profile.view', $username) }}" class="button">Ver Perfil</a>
         </div>
         <div class="email-footer">
-            <p>Este é um e-mail automático enviado por <strong>{{ config('app.name') }}</strong>.  
+            <p>Este é um e-mail automático enviado por <strong>{{ config('app.name') }}</strong>.
             Não responda diretamente a esta mensagem.</p>
+            {!! $buildTrackingPixel() !!}
         </div>
     </div>
 </body>

@@ -12,3 +12,4 @@
 </ul>
 
 <p>Acesse o painel administrativo para verificar e responder ao chamado.</p>
+{!! $buildTrackingPixel() !!}

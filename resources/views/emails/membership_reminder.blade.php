@@ -77,7 +77,7 @@
     <div class="footer">
         <p>Este é um email automático. Por favor, não responda diretamente a este email.</p>
         <p>© {{ date('Y') }} Adivinhe e Ganhe. Todos os direitos reservados.</p>
-        {!! $this->buildTrackingPixel() !!}
+        {!! $buildTrackingPixel() !!}
     </div>
 </body>
 </html>

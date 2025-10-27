@@ -5,5 +5,5 @@
 <p>Seu prêmio será processado em breve, fique atento em seu whatsapp por entraremos em contato por la.</p>
 
 @if(isset($this))
-{!! $this->buildTrackingPixel() !!}
+{!! $buildTrackingPixel() !!}
 @endif
