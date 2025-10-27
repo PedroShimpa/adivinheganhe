@@ -29,9 +29,9 @@ trait Trackable
             return '';
         }
 
-        $trackingUrl = route('email_tracking.open', $this->trackingId);
-        return "<img src=\"{$trackingUrl}\" width=\"1\" height=\"1\" style=\"display:none;\" alt=\"\" />";
+        return "<img src=\"https://adivinheganhe.com.br/email-tracking/open/{$this->trackingId}\" width=\"1\" height=\"1\" style=\"display:none;\" alt=\"\" />";
     }
+
 
     protected function trackableLink($url, $linkText)
     {

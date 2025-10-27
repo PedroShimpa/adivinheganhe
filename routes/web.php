@@ -169,7 +169,7 @@ Route::middleware(['auth', 'banned', 'trackOnline'])->group(function () {
         Route::post('/suporte/admin/create-ticket', [SuporteController::class, 'adminCreateTicket'])->name('suporte.admin.create-ticket');
         Route::get('/suporte/admin/{suporte}', [SuporteController::class, 'adminShow'])->name('suporte.admin.show');
         Route::put('/suporte/admin/{suporte}', [SuporteController::class, 'adminUpdate'])->name('suporte.admin.update');
-Route::get('/email-tracking', [EmailTrackingController::class, 'index'])->name('email_tracking.index');
+        Route::get('/email-tracking', [EmailTrackingController::class, 'index'])->name('email_tracking.index');
         #deleções
         Route::delete('/premiacoes/deletar/{premiacao}', [AdivinhacoesController::class, 'deletarPremiacao'])->name('premiacoes.delete');
         Route::post('/premiacoes/marcar-pago/{premiacao}', [AdivinhacoesController::class, 'marcarComoPago'])->name('premiacoes.marcar_pago');
