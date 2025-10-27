@@ -73,15 +73,6 @@ class RegisteredUserController extends Controller
             }
         }
 
-        // Dispatch event for real-time dashboard update
-        try {
-            $totalUsers = User::where('banned', false)->count();
-            broadcast(new NewUserRegistered($totalUsers));
-        } catch (\Exception $e) {
-            \Log::error('Failed to dispatch NewUserRegistered event: ' . $e->getMessage());
-            // Continue without failing the registration
-        }
-
         return redirect(route('home', absolute: false));
     }
 }

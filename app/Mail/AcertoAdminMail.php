@@ -16,26 +16,29 @@ class AcertoAdminMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels, Trackable;
 
+    public $subject;
     public User $usuario;
     public Adivinhacoes $adivinhacao;
-    public string $unsubscribeUrl;
+    public $unsubscribeUrl;
     public $trackingPixel;
 
     public function __construct(User $usuario, Adivinhacoes $adivinhacao)
     {
+        $this->subject = 'Um usuário acertou uma adivinhação!';
         $this->usuario = $usuario;
         $this->adivinhacao = $adivinhacao;
         $this->unsubscribeUrl = route('unsubscribe', [
             'userId' => $this->usuario->id,
             'token' => hash('sha256', $this->usuario->email . env('APP_KEY'))
         ]);
+        $this->track($this->usuario->email, $this->subject);
         $this->trackingPixel = $this->buildTrackingPixel();
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Um usuário acertou uma adivinhação!'
+            subject: $this->subject
         );
     }
 

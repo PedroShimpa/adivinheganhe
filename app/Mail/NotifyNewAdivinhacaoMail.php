@@ -13,20 +13,23 @@ class NotifyNewAdivinhacaoMail extends Mailable
 {
     use Queueable, SerializesModels, Trackable;
 
+    public $subject;
     public string $titulo;
     public string $url;
     public $trackingPixel;
     public function __construct(string $titulo, string $url)
     {
+        $this->subject = 'Nova Adivinhação Disponível!';
         $this->titulo = $titulo;
         $this->url = $url;
+        $this->track('noreply@example.com', $this->subject);
         $this->trackingPixel = $this->buildTrackingPixel();
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Nova Adivinhação Disponível!',
+            subject: $this->subject,
         );
     }
 

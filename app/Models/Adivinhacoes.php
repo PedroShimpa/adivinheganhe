@@ -28,7 +28,6 @@ class Adivinhacoes extends Model
         'dica_valor',
         'visualizacoes',
         'formato_resposta',
-        'enviar_emails',
         'notificar_whatsapp',
         'notificar_push',
         'notificar_email',

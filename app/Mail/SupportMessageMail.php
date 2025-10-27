@@ -14,9 +14,10 @@ class SupportMessageMail extends Mailable
 {
     use Queueable, SerializesModels, Trackable;
 
+    public $subject;
     public $suporte;
     public $message;
-    public string $unsubscribeUrl;
+    public $unsubscribeUrl;
     public $trackingPixel;
 
     /**
@@ -24,12 +25,16 @@ class SupportMessageMail extends Mailable
      */
     public function __construct(Suporte $suporte, string $message)
     {
+        $this->subject = 'Nova mensagem do suporte - Chamado #' . $suporte->id;
         $this->suporte = $suporte;
         $this->message = $message;
         $this->unsubscribeUrl = $this->suporte->user ? route('unsubscribe', [
             'userId' => $this->suporte->user->id,
             'token' => hash('sha256', $this->suporte->user->email . env('APP_KEY'))
         ]) : '#';
+        if ($this->suporte->user) {
+            $this->track($this->suporte->user->email, $this->subject);
+        }
         $this->trackingPixel = $this->buildTrackingPixel();
     }
 
@@ -39,7 +44,7 @@ class SupportMessageMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Nova mensagem do suporte - Chamado #' . $this->suporte->id,
+            subject: $this->subject,
         );
     }
 

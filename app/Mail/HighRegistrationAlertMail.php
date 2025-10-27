@@ -14,17 +14,22 @@ class HighRegistrationAlertMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels, Trackable;
 
-    public string $unsubscribeUrl;
+    public $subject;
+    public $unsubscribeUrl;
+    public $trackingPixel;
 
     public function __construct()
     {
+        $this->subject = 'Alerta: Alto número de registros de usuários';
         $this->unsubscribeUrl = '#'; // Admin alert
+        $this->track('noreply@example.com', $this->subject);
+        $this->trackingPixel = $this->buildTrackingPixel();
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Alerta: Alto número de registros de usuários',
+            subject: $this->subject,
         );
     }
 

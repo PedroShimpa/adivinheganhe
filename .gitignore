@@ -28,3 +28,4 @@ rr
 composer.lock
 
 adivinheeganheapp-c6407fd087e2.json
+.env.testing

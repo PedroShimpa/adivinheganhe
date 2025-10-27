@@ -14,27 +14,30 @@ class NotifyAdminsOfNewTicket extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels, Trackable;
 
+    public $subject;
     public string $nome;
     public ?string $email;
     public string $categoria;
     public string $descricao;
-    public string $unsubscribeUrl;
+    public $unsubscribeUrl;
     public $trackingPixel;
 
     public function __construct(string $nome, ?string $email, string $categoria, string $descricao)
     {
+        $this->subject = 'Novo chamado aberto no sistema';
         $this->nome = $nome;
         $this->email = $email;
         $this->categoria = $categoria;
         $this->descricao = $descricao;
         $this->unsubscribeUrl = '#'; // Admin notification
+        $this->track('noreply@example.com', $this->subject);
         $this->trackingPixel = $this->buildTrackingPixel();
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Novo chamado aberto no sistema',
+            subject: $this->subject,
         );
     }
 

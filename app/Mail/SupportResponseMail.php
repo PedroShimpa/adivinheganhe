@@ -15,24 +15,29 @@ class SupportResponseMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels, Trackable;
 
+    public $subject;
     public Suporte $suporte;
-    public string $unsubscribeUrl;
+    public $unsubscribeUrl;
     public $trackingPixel;
 
     public function __construct(Suporte $suporte)
     {
+        $this->subject = 'Atualização no seu chamado de suporte';
         $this->suporte = $suporte;
         $this->unsubscribeUrl = $this->suporte->user ? route('unsubscribe', [
             'userId' => $this->suporte->user->id,
             'token' => hash('sha256', $this->suporte->user->email . env('APP_KEY'))
         ]) : '#';
+        if ($this->suporte->user) {
+            $this->track($this->suporte->user->email, $this->subject);
+        }
         $this->trackingPixel = $this->buildTrackingPixel();
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Atualização no seu chamado de suporte',
+            subject: $this->subject,
         );
     }
 

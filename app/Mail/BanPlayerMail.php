@@ -14,12 +14,15 @@ class BanPlayerMail extends Mailable  implements ShouldQueue
 {
     use Queueable, SerializesModels, Trackable;
 
-    public string $unsubscribeUrl;
+    public $subject;
+    public $unsubscribeUrl;
     public $trackingPixel;
 
     public function __construct()
     {
+        $this->subject = 'Aviso de Banimento';
         $this->unsubscribeUrl = '#'; // Ban notification, no unsubscribe
+        $this->track('noreply@example.com', $this->subject);
         $this->trackingPixel = $this->buildTrackingPixel();
     }
 
@@ -29,7 +32,7 @@ class BanPlayerMail extends Mailable  implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Aviso de Banimento',
+            subject: $this->subject,
         );
     }
 

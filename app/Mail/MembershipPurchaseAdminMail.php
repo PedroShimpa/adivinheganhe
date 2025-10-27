@@ -15,22 +15,25 @@ class MembershipPurchaseAdminMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels, Trackable;
 
+    public $subject;
     public User $usuario;
 
-    public string $unsubscribeUrl;
+    public $unsubscribeUrl;
     public $trackingPixel;
 
     public function __construct(User $usuario)
     {
+        $this->subject = 'Novo usuário adquiriu membership VIP!';
         $this->usuario = $usuario;
         $this->unsubscribeUrl = '#'; // Admin notification, no unsubscribe
+        $this->track($this->usuario->email, $this->subject);
         $this->trackingPixel = $this->buildTrackingPixel();
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Novo usuário adquiriu membership VIP!'
+            subject: $this->subject
         );
     }
 

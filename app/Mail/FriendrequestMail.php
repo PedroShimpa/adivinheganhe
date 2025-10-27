@@ -15,13 +15,15 @@ class FriendrequestMail extends Mailable implements ShouldQueue
 
     use Queueable, SerializesModels, Trackable;
 
+    public $subject;
     public  string $fromUser;
     public  string $toUser;
-    public string $unsubscribeUrl;
+    public $unsubscribeUrl;
     public $trackingPixel;
 
     public function __construct(string $fromUser, string $toUser)
     {
+        $this->subject = 'Novo pedido de amizade de ' . $fromUser;
         $this->fromUser = $fromUser;
         $this->toUser = $toUser;
         $user = \App\Models\User::where('username', $this->toUser)->first();
@@ -29,6 +31,9 @@ class FriendrequestMail extends Mailable implements ShouldQueue
             'userId' => $user->id,
             'token' => hash('sha256', $user->email . env('APP_KEY'))
         ]) : '#';
+        if ($user) {
+            $this->track($user->email, $this->subject);
+        }
         $this->trackingPixel = $this->buildTrackingPixel();
     }
 
@@ -38,7 +43,7 @@ class FriendrequestMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Novo pedido de amizade de ' . $this->fromUser,
+            subject: $this->subject,
         );
     }
 

@@ -14,7 +14,8 @@ class MembershipReminderMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels, Trackable;
 
-    public string $unsubscribeUrl;
+    public $subject;
+    public $unsubscribeUrl;
     public $trackingPixel;
 
     /**
@@ -22,7 +23,9 @@ class MembershipReminderMail extends Mailable implements ShouldQueue
      */
     public function __construct()
     {
+        $this->subject = 'Vamos finalizar a compra do seu VIP?';
         $this->unsubscribeUrl = '#'; // No specific user
+        $this->track('noreply@example.com', $this->subject);
         $this->trackingPixel = $this->buildTrackingPixel();
     }
 
@@ -32,7 +35,7 @@ class MembershipReminderMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Vamos finalizar a compra do seu VIP?',
+            subject: $this->subject,
         );
     }
 
