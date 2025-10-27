@@ -14,6 +14,7 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\RespostaController;
 use App\Http\Controllers\SuporteController;
 use App\Http\Controllers\EmailTrackingController;
+use App\Http\Controllers\UnsubscribeController;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
@@ -61,6 +62,8 @@ Route::post('/webhook/stripe', [MembershipController::class, 'webhook']);
 Route::get('/banned', function () {
     return view('auth.banned');
 })->name('banned.view');
+
+Route::get('/unsubscribe/{userId}/{token}', [UnsubscribeController::class, 'unsubscribe'])->name('unsubscribe');
 
 #rotas autenticadas
 

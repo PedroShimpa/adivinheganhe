@@ -42,7 +42,8 @@ class User extends Authenticatable
         'image',
         'banned',
         'banned_info',
-        'token_push_notification'
+        'token_push_notification',
+        'email_opt_out'
     ];
 
     public function getRouteKeyName()

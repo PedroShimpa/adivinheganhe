@@ -33,10 +33,17 @@ class AcertoUsuarioMail extends Mailable implements ShouldQueue
 
     public function content(): Content
     {
+        $user = \App\Models\User::where('username', $this->username)->first();
+        $unsubscribeUrl = $user ? route('unsubscribe', [
+            'userId' => $user->id,
+            'token' => hash('sha256', $user->email . env('APP_KEY'))
+        ]) : '#';
+
         return new Content(
             view: 'emails.acerto_usuario',
             with: [
                 'trackingPixel' => $this->buildTrackingPixel(),
+                'unsubscribeUrl' => $unsubscribeUrl,
             ]
         );
     }

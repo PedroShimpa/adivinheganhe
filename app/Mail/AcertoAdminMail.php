@@ -34,10 +34,16 @@ class AcertoAdminMail extends Mailable implements ShouldQueue
 
     public function content(): Content
     {
+        $unsubscribeUrl = route('unsubscribe', [
+            'userId' => $this->usuario->id,
+            'token' => hash('sha256', $this->usuario->email . env('APP_KEY'))
+        ]);
+
         return new Content(
             view: 'emails.acerto_admin',
             with: [
                 'trackingPixel' => $this->buildTrackingPixel(),
+                'unsubscribeUrl' => $unsubscribeUrl,
             ]
         );
     }
