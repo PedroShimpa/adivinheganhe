@@ -29,10 +29,14 @@ class BanPlayerMail extends Mailable  implements ShouldQueue
      */
     public function content(): Content
     {
+        // This is a ban notification, unsubscribe may not be appropriate, but adding placeholder
+        $unsubscribeUrl = '#';
+
         return new Content(
             view: 'emails.banned_forever',
             with: [
                 'trackingPixel' => $this->buildTrackingPixel(),
+                'unsubscribeUrl' => $unsubscribeUrl,
             ]
         );
     }

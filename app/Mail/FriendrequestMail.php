@@ -39,6 +39,12 @@ class FriendrequestMail extends Mailable implements ShouldQueue
      */
     public function content(): Content
     {
+        $user = \App\Models\User::where('username', $this->toUser)->first();
+        $unsubscribeUrl = $user ? route('unsubscribe', [
+            'userId' => $user->id,
+            'token' => hash('sha256', $user->email . env('APP_KEY'))
+        ]) : '#';
+
         return new Content(
             view: 'emails.friendrequest',
             with: [
@@ -46,6 +52,7 @@ class FriendrequestMail extends Mailable implements ShouldQueue
                 'toUser' => $this->toUser,
                 'friendRequestRoute' => route('users.friend_requests'),
                 'trackingPixel' => $this->buildTrackingPixel(),
+                'unsubscribeUrl' => $unsubscribeUrl,
             ]
         );
     }

@@ -31,10 +31,14 @@ class MembershipPurchaseAdminMail extends Mailable implements ShouldQueue
 
     public function content(): Content
     {
+        // This is an admin notification, no specific user, so placeholder
+        $unsubscribeUrl = '#';
+
         return new Content(
             view: 'emails.membership_purchase_admin',
             with: [
                 'trackingPixel' => $this->buildTrackingPixel(),
+                'unsubscribeUrl' => $unsubscribeUrl,
             ]
         );
     }

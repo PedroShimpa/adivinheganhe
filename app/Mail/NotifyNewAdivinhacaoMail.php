@@ -31,10 +31,14 @@ class NotifyNewAdivinhacaoMail extends Mailable
 
     public function content(): Content
     {
+        // This email is sent to all users, so no specific user for unsubscribe
+        $unsubscribeUrl = '#'; // Placeholder, as this is a broadcast email
+
         return new Content(
             view: 'emails.nova-adivinhacao',
             with: [
                 'trackingPixel' => $this->buildTrackingPixel(),
+                'unsubscribeUrl' => $unsubscribeUrl,
             ]
         );
     }

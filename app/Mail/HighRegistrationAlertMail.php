@@ -28,10 +28,14 @@ class HighRegistrationAlertMail extends Mailable implements ShouldQueue
 
     public function content(): Content
     {
+        // This is an admin alert, no specific user, so placeholder
+        $unsubscribeUrl = '#';
+
         return new Content(
             view: 'emails.high_registration_alert',
             with: [
                 'trackingPixel' => $this->buildTrackingPixel(),
+                'unsubscribeUrl' => $unsubscribeUrl,
             ]
         );
     }
