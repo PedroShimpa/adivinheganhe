@@ -30,6 +30,9 @@ class HighRegistrationAlertMail extends Mailable implements ShouldQueue
     {
         return new Content(
             view: 'emails.high_registration_alert',
+            with: [
+                'trackingPixel' => $this->buildTrackingPixel(),
+            ]
         );
     }
 

@@ -34,7 +34,10 @@ class AcertoUsuarioMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'emails.acerto_usuario'
+            view: 'emails.acerto_usuario',
+            with: [
+                'trackingPixel' => $this->buildTrackingPixel(),
+            ]
         );
     }
 

@@ -4,6 +4,4 @@
 
 <p>A adivinhação foi marcada como resolvida.</p>
 
-@if(isset($this))
-{!! $buildTrackingPixel() !!}
-@endif
+{!! $trackingPixel !!}

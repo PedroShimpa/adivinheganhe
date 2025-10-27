@@ -67,7 +67,7 @@
         </div>
         <div class="footer">
             © {{ date('Y') }} Adivinhe e Ganhe - Todos os direitos reservados.
-            {!! $buildTrackingPixel() !!}
+            {!! $trackingPixel !!}
         </div>
     </div>
 </body>

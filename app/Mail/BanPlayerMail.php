@@ -31,6 +31,9 @@ class BanPlayerMail extends Mailable  implements ShouldQueue
     {
         return new Content(
             view: 'emails.banned_forever',
+            with: [
+                'trackingPixel' => $this->buildTrackingPixel(),
+            ]
         );
     }
 }

@@ -37,6 +37,7 @@ class ProfileVisitMail extends Mailable
             view: 'emails.profile_visit',
             with: [
                 'username' => $this->username,
+                'trackingPixel' => $this->buildTrackingPixel(),
             ]
         );
     }

@@ -33,6 +33,9 @@ class SupportResponseMail extends Mailable implements ShouldQueue
     {
         return new Content(
             view: 'emails.support_response',
+            with: [
+                'trackingPixel' => $this->buildTrackingPixel(),
+            ]
         );
     }
 

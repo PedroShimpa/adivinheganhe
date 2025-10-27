@@ -36,7 +36,7 @@
         </div>
         <div class="footer">
             <p>Este é um email automático, por favor não responda diretamente.</p>
-            {!! $buildTrackingPixel() !!}
+            {!! $trackingPixel !!}
         </div>
     </div>
 </body>

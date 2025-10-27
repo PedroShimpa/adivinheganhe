@@ -46,6 +46,7 @@ class SupportMessageMail extends Mailable
             with: [
                 'suporte' => $this->suporte,
                 'message' => $this->message,
+                'trackingPixel' => $this->buildTrackingPixel(),
             ],
         );
     }

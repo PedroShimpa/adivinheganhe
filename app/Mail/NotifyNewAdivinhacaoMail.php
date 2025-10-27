@@ -33,6 +33,9 @@ class NotifyNewAdivinhacaoMail extends Mailable
     {
         return new Content(
             view: 'emails.nova-adivinhacao',
+            with: [
+                'trackingPixel' => $this->buildTrackingPixel(),
+            ]
         );
     }
 

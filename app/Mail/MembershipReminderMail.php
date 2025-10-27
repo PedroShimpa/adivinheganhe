@@ -40,6 +40,9 @@ class MembershipReminderMail extends Mailable implements ShouldQueue
         return new Content(
             html: 'emails.membership_reminder',
             text: 'emails.membership_reminder_plain',
+            with: [
+                'trackingPixel' => $this->buildTrackingPixel(),
+            ]
         );
     }
 

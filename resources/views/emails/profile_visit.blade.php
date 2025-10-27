@@ -74,7 +74,7 @@
         <div class="email-footer">
             <p>Este é um e-mail automático enviado por <strong>{{ config('app.name') }}</strong>.
             Não responda diretamente a esta mensagem.</p>
-            {!! $buildTrackingPixel() !!}
+            {!! $trackingPixel !!}
         </div>
     </div>
 </body>

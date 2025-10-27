@@ -16,9 +16,7 @@
             </a>
         </p>
         <p style="color: #888; font-size: 12px;">Obrigado por jogar com a gente!</p>
-        @if(isset($this))
-        {!! $buildTrackingPixel() !!}
-        @endif
+        {!! $trackingPixel !!}
     </div>
 </body>
 </html>

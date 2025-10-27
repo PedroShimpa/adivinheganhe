@@ -32,7 +32,10 @@ class MembershipWelcomeMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'emails.membership_welcome'
+            view: 'emails.membership_welcome',
+            with: [
+                'trackingPixel' => $this->buildTrackingPixel(),
+            ]
         );
     }
 

@@ -44,7 +44,8 @@ class FriendrequestMail extends Mailable implements ShouldQueue
             with: [
                 'fromUser' => $this->fromUser,
                 'toUser' => $this->toUser,
-                'friendRequestRoute' => route('users.friend_requests') 
+                'friendRequestRoute' => route('users.friend_requests'),
+                'trackingPixel' => $this->buildTrackingPixel(),
             ]
         );
     }

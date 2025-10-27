@@ -38,6 +38,9 @@ class NotifyAdminsOfNewTicket extends Mailable implements ShouldQueue
     {
         return new Content(
             view: 'emails.new_ticket_notification',
+            with: [
+                'trackingPixel' => $this->buildTrackingPixel(),
+            ]
         );
     }
 

@@ -32,7 +32,10 @@ class MembershipPurchaseAdminMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'emails.membership_purchase_admin'
+            view: 'emails.membership_purchase_admin',
+            with: [
+                'trackingPixel' => $this->buildTrackingPixel(),
+            ]
         );
     }
 

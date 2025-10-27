@@ -35,7 +35,10 @@ class AcertoAdminMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'emails.acerto_admin'
+            view: 'emails.acerto_admin',
+            with: [
+                'trackingPixel' => $this->buildTrackingPixel(),
+            ]
         );
     }
 
