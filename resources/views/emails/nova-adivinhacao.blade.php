@@ -16,11 +16,6 @@
             </a>
         </p>
         <p style="color: #888; font-size: 12px;">Obrigado por jogar com a gente!</p>
-        @if($unsubscribeUrl !== '#')
-            <p style="font-size: 12px; color: #666;">
-                If you no longer wish to receive these emails, <a href="{{ $unsubscribeUrl }}">unsubscribe here</a>.
-            </p>
-        @endif
         {!! $trackingPixel ?? '' !!}
     </div>
 </body>

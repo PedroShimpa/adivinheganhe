@@ -16,10 +16,8 @@ class NotifyNewAdivinhacaoMail extends Mailable
     public string $titulo;
     public string $url;
     public $trackingPixel;
-    public string $unsubscribeUrl;
     public function __construct(string $titulo, string $url)
     {
-        $this->unsubscribeUrl = '#'; // Ban notification, no unsubscribe
         $this->titulo = $titulo;
         $this->url = $url;
         $this->trackingPixel = $this->buildTrackingPixel();
