@@ -36,8 +36,8 @@ return [
         'enabled'    => true, // Should the admin routes be enabled?
         'prefix'     => 'email-manager',
         'middleware' => [
-            'web',
-            'can:see-sent-emails',
+            'auth',
+            'isAdmin',
         ],
     ],
 
