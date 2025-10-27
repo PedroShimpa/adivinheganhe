@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-use App\Mail\Traits\Trackable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -12,11 +11,10 @@ use Illuminate\Queue\SerializesModels;
 
 class MembershipReminderMail extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels, Trackable;
+    use Queueable, SerializesModels;
 
     public $subject;
     public $unsubscribeUrl;
-    public $trackingPixel;
 
     /**
      * Create a new message instance.
@@ -25,7 +23,6 @@ class MembershipReminderMail extends Mailable implements ShouldQueue
     {
         $this->subject = 'Vamos finalizar a compra do seu VIP?';
         $this->unsubscribeUrl = '#'; // No specific user
-        $this->trackingPixel = $this->buildTrackingPixel();
     }
 
     /**

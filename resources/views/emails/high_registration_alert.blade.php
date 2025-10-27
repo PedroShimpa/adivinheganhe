@@ -11,6 +11,6 @@
             If you no longer wish to receive these emails, <a href="{{ $unsubscribeUrl }}">unsubscribe here</a>.
         </p>
     @endif
-    {!! $trackingPixel !!}
+    
 </body>
 </html>

@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-use App\Mail\Traits\Trackable;
 use App\Models\Adivinhacoes;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
@@ -14,13 +13,12 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class AcertoAdminMail extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels, Trackable;
+    use Queueable, SerializesModels;
 
     public $subject;
     public User $usuario;
     public Adivinhacoes $adivinhacao;
     public $unsubscribeUrl;
-    public $trackingPixel;
 
     public function __construct(User $usuario, Adivinhacoes $adivinhacao)
     {
@@ -31,7 +29,6 @@ class AcertoAdminMail extends Mailable implements ShouldQueue
             'userId' => $this->usuario->id,
             'token' => hash('sha256', $this->usuario->email . env('APP_KEY'))
         ]);
-        $this->trackingPixel = $this->buildTrackingPixel();
     }
 
     public function envelope(): Envelope

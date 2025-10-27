@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-use App\Mail\Traits\Trackable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailables\Content;
@@ -13,13 +12,12 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class FriendrequestMail extends Mailable implements ShouldQueue
 {
 
-    use Queueable, SerializesModels, Trackable;
+    use Queueable, SerializesModels;
 
     public $subject;
     public  string $fromUser;
     public  string $toUser;
     public $unsubscribeUrl;
-    public $trackingPixel;
 
     public function __construct(string $fromUser, string $toUser)
     {
@@ -31,8 +29,6 @@ class FriendrequestMail extends Mailable implements ShouldQueue
             'userId' => $user->id,
             'token' => hash('sha256', $user->email . env('APP_KEY'))
         ]) : '#';
-      
-        $this->trackingPixel = $this->buildTrackingPixel();
     }
 
     /**

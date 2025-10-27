@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-use App\Mail\Traits\Trackable;
 use App\Models\Suporte;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -12,13 +11,12 @@ use Illuminate\Queue\SerializesModels;
 
 class SupportMessageMail extends Mailable
 {
-    use Queueable, SerializesModels, Trackable;
+    use Queueable, SerializesModels;
 
     public $subject;
     public $suporte;
     public $message;
     public $unsubscribeUrl;
-    public $trackingPixel;
 
     /**
      * Create a new message instance.
@@ -32,7 +30,6 @@ class SupportMessageMail extends Mailable
             'userId' => $this->suporte->user->id,
             'token' => hash('sha256', $this->suporte->user->email . env('APP_KEY'))
         ]) : '#';
-        $this->trackingPixel = $this->buildTrackingPixel();
     }
 
     /**

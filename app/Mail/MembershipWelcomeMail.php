@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-use App\Mail\Traits\Trackable;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailables\Envelope;
@@ -13,12 +12,11 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class MembershipWelcomeMail extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels, Trackable;
+    use Queueable, SerializesModels;
 
     public $subject;
     public User $usuario;
     public $unsubscribeUrl;
-    public $trackingPixel;
 
     public function __construct(User $usuario)
     {
@@ -28,7 +26,6 @@ class MembershipWelcomeMail extends Mailable implements ShouldQueue
             'userId' => $this->usuario->id,
             'token' => hash('sha256', $this->usuario->email . env('APP_KEY'))
         ]);
-        $this->trackingPixel = $this->buildTrackingPixel();
     }
 
     public function envelope(): Envelope

@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-use App\Mail\Traits\Trackable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -12,17 +11,15 @@ use Illuminate\Queue\SerializesModels;
 
 class BanPlayerMail extends Mailable  implements ShouldQueue
 {
-    use Queueable, SerializesModels, Trackable;
+    use Queueable, SerializesModels;
 
     public $subject;
     public $unsubscribeUrl;
-    public $trackingPixel;
 
     public function __construct()
     {
         $this->subject = 'Aviso de Banimento';
         $this->unsubscribeUrl = '#'; // Ban notification, no unsubscribe
-        $this->trackingPixel = $this->buildTrackingPixel();
     }
 
     /**

@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-use App\Mail\Traits\Trackable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -11,11 +10,10 @@ use Illuminate\Queue\SerializesModels;
 
 class ProfileVisitMail extends Mailable
 {
-    use Queueable, SerializesModels, Trackable;
+    use Queueable, SerializesModels;
 
     public $subject;
     public $unsubscribeUrl;
-    public $trackingPixel;
 
     public function __construct(protected string $username)
     {
@@ -25,7 +23,6 @@ class ProfileVisitMail extends Mailable
             'userId' => $user->id,
             'token' => hash('sha256', $user->email . env('APP_KEY'))
         ]) : '#';
-        $this->trackingPixel = $this->buildTrackingPixel();
     }
 
     /**

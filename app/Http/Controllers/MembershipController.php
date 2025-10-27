@@ -191,12 +191,12 @@ class MembershipController extends Controller
                 }
 
                 // Send welcome email to user
-                Mail::to($user->email)->queue((new MembershipWelcomeMail($user))->track($user->email, 'Bem-vindo aos VIPs!'));
+                Mail::to($user->email)->queue((new MembershipWelcomeMail($user)));
 
                 // Notify admins
                 $admins = User::where('is_admin', 'S')->get();
                 foreach ($admins as $admin) {
-                    Mail::to($admin->email)->queue((new MembershipPurchaseAdminMail($user))->track($admin->email, 'Novo usuário adquiriu membership VIP!'));
+                    Mail::to($admin->email)->queue((new MembershipPurchaseAdminMail($user)));
                 }
 
                 return redirect()->route('membership.result')->with('success', 'Bem-vindo ao clube VIP!');
@@ -314,12 +314,12 @@ class MembershipController extends Controller
                     }
 
                     // Send welcome email to user
-                    Mail::to($user->email)->queue((new MembershipWelcomeMail($user))->track($user->email, 'Bem-vindo aos VIPs!'));
+                    Mail::to($user->email)->queue((new MembershipWelcomeMail($user)));
 
                     // Notify admins
                     $admins = User::where('is_admin', 'S')->get();
                     foreach ($admins as $admin) {
-                        Mail::to($admin->email)->queue((new MembershipPurchaseAdminMail($user))->track($admin->email, 'Novo usuário adquiriu membership VIP!'));
+                        Mail::to($admin->email)->queue((new MembershipPurchaseAdminMail($user)));
                     }
                 } else {
                     Log::error('User not found for VIP upgrade', [
@@ -406,12 +406,12 @@ class MembershipController extends Controller
                     }
 
                     // Send welcome email to user
-                    Mail::to($user->email)->queue((new MembershipWelcomeMail($user))->track($user->email, 'Bem-vindo aos VIPs!'));
+                    Mail::to($user->email)->queue((new MembershipWelcomeMail($user)));
 
                     // Notify admins
                     $admins = User::where('is_admin', 'S')->get();
                     foreach ($admins as $admin) {
-                        Mail::to($admin->email)->queue((new MembershipPurchaseAdminMail($user))->track($admin->email, 'Novo usuário adquiriu membership VIP!'));
+                        Mail::to($admin->email)->queue((new MembershipPurchaseAdminMail($user)));
                     }
                 }
             }

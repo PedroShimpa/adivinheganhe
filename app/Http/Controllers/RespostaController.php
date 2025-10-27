@@ -229,11 +229,11 @@ class RespostaController extends Controller
                     'adivinhacao_id' => $adivinhacao->id,
                 ]);
 
-                Mail::to($user->email)->queue((new AcertoUsuarioMail($user->name, $adivinhacao))->track($user->email, 'Parabéns! Você acertou a adivinhação!'));
+                Mail::to($user->email)->queue((new AcertoUsuarioMail($user->name, $adivinhacao)));
                 $admins = User::where('is_admin', 'S')->get();
 
                 foreach ($admins as $admin) {
-                    Mail::to($admin->email)->queue((new AcertoAdminMail($user, $adivinhacao))->track($admin->email, 'Um usuário acertou uma adivinhação!'));
+                    Mail::to($admin->email)->queue((new AcertoAdminMail($user, $adivinhacao)));
                 }
 
                 return response()->json([

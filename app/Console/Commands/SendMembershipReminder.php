@@ -65,7 +65,7 @@ class SendMembershipReminder extends Command
             }
 
             // Send email
-            Mail::to($user->email)->queue((new MembershipReminderMail())->track($user->email, 'Lembrete: Vamos finalizar a compra do seu VIP?'));
+            Mail::to($user->email)->queue((new MembershipReminderMail()));
             $this->info("Sent reminder to: {$user->email}");
 
             // Remove all logs for this user after sending

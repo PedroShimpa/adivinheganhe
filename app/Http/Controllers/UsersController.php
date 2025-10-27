@@ -157,7 +157,7 @@ class UsersController extends Controller
 
         $user->notify(new FriendRequestNotification());
         broadcast(new NotificacaoEvent($user->id, auth()->user()->username . ' enviou um pedido de amizade.'));
-        Mail::to($user->email)->queue((new FriendrequestMail(auth()->user()->username, $user->name))->track($user->email, 'Novo pedido de amizade de ' . auth()->user()->username));
+        Mail::to($user->email)->queue((new FriendrequestMail(auth()->user()->username, $user->name)));
         return $request;
     }
 
@@ -204,7 +204,7 @@ class UsersController extends Controller
         $user->banned_info = $request->input('motivo');
 
         $user->save();
-        Mail::to($user->email)->queue((new BanPlayerMail())->track($user->email, 'Aviso de Banimento'));
+        Mail::to($user->email)->queue((new BanPlayerMail()));
 
         return redirect()->back();
     }

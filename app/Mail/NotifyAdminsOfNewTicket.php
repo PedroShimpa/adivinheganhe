@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-use App\Mail\Traits\Trackable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -12,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 
 class NotifyAdminsOfNewTicket extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels, Trackable;
+    use Queueable, SerializesModels;
 
     public $subject;
     public string $nome;
@@ -20,7 +19,6 @@ class NotifyAdminsOfNewTicket extends Mailable implements ShouldQueue
     public string $categoria;
     public string $descricao;
     public $unsubscribeUrl;
-    public $trackingPixel;
 
     public function __construct(string $nome, ?string $email, string $categoria, string $descricao)
     {
@@ -30,7 +28,6 @@ class NotifyAdminsOfNewTicket extends Mailable implements ShouldQueue
         $this->categoria = $categoria;
         $this->descricao = $descricao;
         $this->unsubscribeUrl = '#'; // Admin notification
-        $this->trackingPixel = $this->buildTrackingPixel();
     }
 
     public function envelope(): Envelope

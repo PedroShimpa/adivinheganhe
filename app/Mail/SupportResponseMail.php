@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-use App\Mail\Traits\Trackable;
 use App\Models\Suporte;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -13,12 +12,11 @@ use Illuminate\Queue\SerializesModels;
 
 class SupportResponseMail extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels, Trackable;
+    use Queueable, SerializesModels;
 
     public $subject;
     public Suporte $suporte;
     public $unsubscribeUrl;
-    public $trackingPixel;
 
     public function __construct(Suporte $suporte)
     {
@@ -28,8 +26,6 @@ class SupportResponseMail extends Mailable implements ShouldQueue
             'userId' => $this->suporte->user->id,
             'token' => hash('sha256', $this->suporte->user->email . env('APP_KEY'))
         ]) : '#';
-     
-        $this->trackingPixel = $this->buildTrackingPixel();
     }
 
     public function envelope(): Envelope

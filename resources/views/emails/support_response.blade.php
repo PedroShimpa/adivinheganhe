@@ -22,4 +22,4 @@
 </ul>
 
 <p>Obrigado por usar nosso sistema de suporte.</p>
-{!! $trackingPixel !!}
+

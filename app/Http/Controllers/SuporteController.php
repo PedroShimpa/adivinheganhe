@@ -59,7 +59,7 @@ class SuporteController extends Controller
 
         $admins = User::where('is_admin', 'S')->get();
         foreach ($admins as $admin) {
-            Mail::to($admin->email)->queue((new NotifyAdminsOfNewTicket($nome, $email, $categoria, $descricao))->track($admin->email, 'Novo chamado aberto no sistema'));
+            Mail::to($admin->email)->queue((new NotifyAdminsOfNewTicket($nome, $email, $categoria, $descricao)));
         }
 
         return redirect()->back()->with(['success' => 'Seu chamado foi aberto, em breve retornaremos com respostas']);
@@ -215,7 +215,7 @@ class SuporteController extends Controller
         $email = $suporte->user ? $suporte->user->email : $suporte->email;
 
         if ($email) {
-            Mail::to($email)->queue((new SupportResponseMail($suporte))->track($email, 'Atualização no seu chamado de suporte'));
+            Mail::to($email)->queue((new SupportResponseMail($suporte)));
         }
 
         if ($suporte->user) {
@@ -228,7 +228,7 @@ class SuporteController extends Controller
         if ($sendEmail) {
             $email = $suporte->user ? $suporte->user->email : $suporte->email;
             if ($email) {
-                Mail::to($email)->queue((new \App\Mail\SupportMessageMail($suporte, $message))->track($email, 'Nova mensagem do suporte - Chamado #' . $suporte->id));
+                Mail::to($email)->queue((new \App\Mail\SupportMessageMail($suporte, $message)));
             }
         }
 

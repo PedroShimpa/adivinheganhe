@@ -96,7 +96,7 @@ class MakeUserVip extends Command
 
         // Send welcome email to user
         try {
-            Mail::to($user->email)->queue((new MembershipWelcomeMail($user))->track($user->email, 'Bem-vindo aos VIPs!'));
+            Mail::to($user->email)->queue((new MembershipWelcomeMail($user)));
             $this->info("Welcome email sent to {$user->email}.");
         } catch (\Exception $e) {
             Log::error("Erro ao enviar email de boas-vindas: " . $e->getMessage());
@@ -106,7 +106,7 @@ class MakeUserVip extends Command
         try {
             $admins = User::where('is_admin', 'S')->get();
             foreach ($admins as $admin) {
-                Mail::to($admin->email)->queue((new MembershipPurchaseAdminMail($user))->track($admin->email, 'Novo usuário adquiriu membership VIP!'));
+                Mail::to($admin->email)->queue((new MembershipPurchaseAdminMail($user)));
             }
             $this->info("Admin notifications sent.");
         } catch (\Exception $e) {
