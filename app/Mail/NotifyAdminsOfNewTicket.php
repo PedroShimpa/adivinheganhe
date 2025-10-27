@@ -18,6 +18,7 @@ class NotifyAdminsOfNewTicket extends Mailable implements ShouldQueue
     public ?string $email;
     public string $categoria;
     public string $descricao;
+    public string $unsubscribeUrl;
 
     public function __construct(string $nome, ?string $email, string $categoria, string $descricao)
     {
@@ -25,6 +26,7 @@ class NotifyAdminsOfNewTicket extends Mailable implements ShouldQueue
         $this->email = $email;
         $this->categoria = $categoria;
         $this->descricao = $descricao;
+        $this->unsubscribeUrl = '#'; // Admin notification
     }
 
     public function envelope(): Envelope
@@ -38,8 +40,9 @@ class NotifyAdminsOfNewTicket extends Mailable implements ShouldQueue
     {
         return new Content(
             view: 'emails.new_ticket_notification',
-            with: [
+            data: [
                 'trackingPixel' => $this->buildTrackingPixel(),
+                'unsubscribeUrl' => $this->unsubscribeUrl,
             ]
         );
     }

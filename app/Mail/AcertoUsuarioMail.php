@@ -17,11 +17,17 @@ class AcertoUsuarioMail extends Mailable implements ShouldQueue
 
     public string $username;
     public Adivinhacoes $adivinhacao;
+    public string $unsubscribeUrl;
 
     public function __construct(string $username, Adivinhacoes $adivinhacao)
     {
         $this->username = $username;
         $this->adivinhacao = $adivinhacao;
+        $user = \App\Models\User::where('username', $this->username)->first();
+        $this->unsubscribeUrl = $user ? route('unsubscribe', [
+            'userId' => $user->id,
+            'token' => hash('sha256', $user->email . env('APP_KEY'))
+        ]) : '#';
     }
 
     public function envelope(): Envelope
@@ -33,17 +39,11 @@ class AcertoUsuarioMail extends Mailable implements ShouldQueue
 
     public function content(): Content
     {
-        $user = \App\Models\User::where('username', $this->username)->first();
-        $unsubscribeUrl = $user ? route('unsubscribe', [
-            'userId' => $user->id,
-            'token' => hash('sha256', $user->email . env('APP_KEY'))
-        ]) : '#';
-
         return new Content(
             view: 'emails.acerto_usuario',
-            with: [
+            data: [
                 'trackingPixel' => $this->buildTrackingPixel(),
-                'unsubscribeUrl' => $unsubscribeUrl,
+                'unsubscribeUrl' => $this->unsubscribeUrl,
             ]
         );
     }

@@ -16,10 +16,15 @@ class MembershipWelcomeMail extends Mailable implements ShouldQueue
     use Queueable, SerializesModels, Trackable;
 
     public User $usuario;
+    public string $unsubscribeUrl;
 
     public function __construct(User $usuario)
     {
         $this->usuario = $usuario;
+        $this->unsubscribeUrl = route('unsubscribe', [
+            'userId' => $this->usuario->id,
+            'token' => hash('sha256', $this->usuario->email . env('APP_KEY'))
+        ]);
     }
 
     public function envelope(): Envelope
@@ -33,8 +38,9 @@ class MembershipWelcomeMail extends Mailable implements ShouldQueue
     {
         return new Content(
             view: 'emails.membership_welcome',
-            with: [
+            data: [
                 'trackingPixel' => $this->buildTrackingPixel(),
+                'unsubscribeUrl' => $this->unsubscribeUrl,
             ]
         );
     }

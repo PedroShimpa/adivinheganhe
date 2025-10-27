@@ -13,7 +13,14 @@ use Illuminate\Queue\SerializesModels;
 class BanPlayerMail extends Mailable  implements ShouldQueue
 {
     use Queueable, SerializesModels, Trackable;
-    
+
+    public string $unsubscribeUrl;
+
+    public function __construct()
+    {
+        $this->unsubscribeUrl = '#'; // Ban notification, no unsubscribe
+    }
+
     /**
      * Get the message envelope.
      */
@@ -29,14 +36,11 @@ class BanPlayerMail extends Mailable  implements ShouldQueue
      */
     public function content(): Content
     {
-        // This is a ban notification, unsubscribe may not be appropriate, but adding placeholder
-        $unsubscribeUrl = '#';
-
         return new Content(
             view: 'emails.banned_forever',
-            with: [
+            data: [
                 'trackingPixel' => $this->buildTrackingPixel(),
-                'unsubscribeUrl' => $unsubscribeUrl,
+                'unsubscribeUrl' => $this->unsubscribeUrl,
             ]
         );
     }

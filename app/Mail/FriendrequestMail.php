@@ -14,14 +14,20 @@ class FriendrequestMail extends Mailable implements ShouldQueue
 {
 
     use Queueable, SerializesModels, Trackable;
-    
+
     public  string $fromUser;
     public  string $toUser;
+    public string $unsubscribeUrl;
 
     public function __construct(string $fromUser, string $toUser)
     {
         $this->fromUser = $fromUser;
         $this->toUser = $toUser;
+        $user = \App\Models\User::where('username', $this->toUser)->first();
+        $this->unsubscribeUrl = $user ? route('unsubscribe', [
+            'userId' => $user->id,
+            'token' => hash('sha256', $user->email . env('APP_KEY'))
+        ]) : '#';
     }
 
     /**
@@ -39,20 +45,14 @@ class FriendrequestMail extends Mailable implements ShouldQueue
      */
     public function content(): Content
     {
-        $user = \App\Models\User::where('username', $this->toUser)->first();
-        $unsubscribeUrl = $user ? route('unsubscribe', [
-            'userId' => $user->id,
-            'token' => hash('sha256', $user->email . env('APP_KEY'))
-        ]) : '#';
-
         return new Content(
             view: 'emails.friendrequest',
-            with: [
+            data: [
                 'fromUser' => $this->fromUser,
                 'toUser' => $this->toUser,
                 'friendRequestRoute' => route('users.friend_requests'),
                 'trackingPixel' => $this->buildTrackingPixel(),
-                'unsubscribeUrl' => $unsubscribeUrl,
+                'unsubscribeUrl' => $this->unsubscribeUrl,
             ]
         );
     }

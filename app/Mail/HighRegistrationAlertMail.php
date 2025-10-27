@@ -14,9 +14,11 @@ class HighRegistrationAlertMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels, Trackable;
 
+    public string $unsubscribeUrl;
+
     public function __construct()
     {
-        //
+        $this->unsubscribeUrl = '#'; // Admin alert
     }
 
     public function envelope(): Envelope
@@ -28,14 +30,11 @@ class HighRegistrationAlertMail extends Mailable implements ShouldQueue
 
     public function content(): Content
     {
-        // This is an admin alert, no specific user, so placeholder
-        $unsubscribeUrl = '#';
-
         return new Content(
             view: 'emails.high_registration_alert',
-            with: [
+            data: [
                 'trackingPixel' => $this->buildTrackingPixel(),
-                'unsubscribeUrl' => $unsubscribeUrl,
+                'unsubscribeUrl' => $this->unsubscribeUrl,
             ]
         );
     }

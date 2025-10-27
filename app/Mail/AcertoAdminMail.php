@@ -18,11 +18,16 @@ class AcertoAdminMail extends Mailable implements ShouldQueue
 
     public User $usuario;
     public Adivinhacoes $adivinhacao;
+    public string $unsubscribeUrl;
 
     public function __construct(User $usuario, Adivinhacoes $adivinhacao)
     {
         $this->usuario = $usuario;
         $this->adivinhacao = $adivinhacao;
+        $this->unsubscribeUrl = route('unsubscribe', [
+            'userId' => $this->usuario->id,
+            'token' => hash('sha256', $this->usuario->email . env('APP_KEY'))
+        ]);
     }
 
     public function envelope(): Envelope
@@ -34,16 +39,11 @@ class AcertoAdminMail extends Mailable implements ShouldQueue
 
     public function content(): Content
     {
-        $unsubscribeUrl = route('unsubscribe', [
-            'userId' => $this->usuario->id,
-            'token' => hash('sha256', $this->usuario->email . env('APP_KEY'))
-        ]);
-
         return new Content(
             view: 'emails.acerto_admin',
-            with: [
+            data: [
                 'trackingPixel' => $this->buildTrackingPixel(),
-                'unsubscribeUrl' => $unsubscribeUrl,
+                'unsubscribeUrl' => $this->unsubscribeUrl,
             ]
         );
     }

@@ -16,6 +16,7 @@ class SupportMessageMail extends Mailable
 
     public $suporte;
     public $message;
+    public string $unsubscribeUrl;
 
     /**
      * Create a new message instance.
@@ -24,6 +25,10 @@ class SupportMessageMail extends Mailable
     {
         $this->suporte = $suporte;
         $this->message = $message;
+        $this->unsubscribeUrl = $this->suporte->user ? route('unsubscribe', [
+            'userId' => $this->suporte->user->id,
+            'token' => hash('sha256', $this->suporte->user->email . env('APP_KEY'))
+        ]) : '#';
     }
 
     /**
@@ -43,10 +48,11 @@ class SupportMessageMail extends Mailable
     {
         return new Content(
             view: 'emails.support_message',
-            with: [
+            data: [
                 'suporte' => $this->suporte,
                 'message' => $this->message,
                 'trackingPixel' => $this->buildTrackingPixel(),
+                'unsubscribeUrl' => $this->unsubscribeUrl,
             ],
         );
     }
