@@ -17,6 +17,7 @@ class SupportMessageMail extends Mailable
     public $suporte;
     public $message;
     public string $unsubscribeUrl;
+    public $trackingPixel;
 
     /**
      * Create a new message instance.
@@ -29,6 +30,7 @@ class SupportMessageMail extends Mailable
             'userId' => $this->suporte->user->id,
             'token' => hash('sha256', $this->suporte->user->email . env('APP_KEY'))
         ]) : '#';
+        $this->trackingPixel = $this->buildTrackingPixel();
     }
 
     /**
@@ -47,13 +49,7 @@ class SupportMessageMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.support_message',
-            data: [
-                'suporte' => $this->suporte,
-                'message' => $this->message,
-                'trackingPixel' => $this->buildTrackingPixel(),
-                'unsubscribeUrl' => $this->unsubscribeUrl,
-            ],
+            view: 'emails.support_message'
         );
     }
 

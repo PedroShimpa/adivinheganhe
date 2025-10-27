@@ -15,10 +15,12 @@ class BanPlayerMail extends Mailable  implements ShouldQueue
     use Queueable, SerializesModels, Trackable;
 
     public string $unsubscribeUrl;
+    public $trackingPixel;
 
     public function __construct()
     {
         $this->unsubscribeUrl = '#'; // Ban notification, no unsubscribe
+        $this->trackingPixel = $this->buildTrackingPixel();
     }
 
     /**
@@ -37,11 +39,7 @@ class BanPlayerMail extends Mailable  implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'emails.banned_forever',
-            data: [
-                'trackingPixel' => $this->buildTrackingPixel(),
-                'unsubscribeUrl' => $this->unsubscribeUrl,
-            ]
+            view: 'emails.banned_forever'
         );
     }
 }

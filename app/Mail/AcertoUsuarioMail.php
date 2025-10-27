@@ -18,6 +18,7 @@ class AcertoUsuarioMail extends Mailable implements ShouldQueue
     public string $username;
     public Adivinhacoes $adivinhacao;
     public string $unsubscribeUrl;
+    public $trackingPixel;
 
     public function __construct(string $username, Adivinhacoes $adivinhacao)
     {
@@ -28,6 +29,7 @@ class AcertoUsuarioMail extends Mailable implements ShouldQueue
             'userId' => $user->id,
             'token' => hash('sha256', $user->email . env('APP_KEY'))
         ]) : '#';
+        $this->trackingPixel = $this->buildTrackingPixel();
     }
 
     public function envelope(): Envelope
@@ -40,11 +42,7 @@ class AcertoUsuarioMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'emails.acerto_usuario',
-            data: [
-                'trackingPixel' => $this->buildTrackingPixel(),
-                'unsubscribeUrl' => $this->unsubscribeUrl,
-            ]
+            view: 'emails.acerto_usuario'
         );
     }
 

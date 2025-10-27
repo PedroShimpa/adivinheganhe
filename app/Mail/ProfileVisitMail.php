@@ -14,6 +14,7 @@ class ProfileVisitMail extends Mailable
     use Queueable, SerializesModels, Trackable;
 
     public string $unsubscribeUrl;
+    public $trackingPixel;
 
     public function __construct(protected string $username)
     {
@@ -22,6 +23,7 @@ class ProfileVisitMail extends Mailable
             'userId' => $user->id,
             'token' => hash('sha256', $user->email . env('APP_KEY'))
         ]) : '#';
+        $this->trackingPixel = $this->buildTrackingPixel();
     }
 
     /**
@@ -40,12 +42,7 @@ class ProfileVisitMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.profile_visit',
-            data: [
-                'username' => $this->username,
-                'trackingPixel' => $this->buildTrackingPixel(),
-                'unsubscribeUrl' => $this->unsubscribeUrl,
-            ]
+            view: 'emails.profile_visit'
         );
     }
 

@@ -15,6 +15,7 @@ class MembershipReminderMail extends Mailable implements ShouldQueue
     use Queueable, SerializesModels, Trackable;
 
     public string $unsubscribeUrl;
+    public $trackingPixel;
 
     /**
      * Create a new message instance.
@@ -22,6 +23,7 @@ class MembershipReminderMail extends Mailable implements ShouldQueue
     public function __construct()
     {
         $this->unsubscribeUrl = '#'; // No specific user
+        $this->trackingPixel = $this->buildTrackingPixel();
     }
 
     /**
@@ -41,11 +43,7 @@ class MembershipReminderMail extends Mailable implements ShouldQueue
     {
         return new Content(
             html: 'emails.membership_reminder',
-            text: 'emails.membership_reminder_plain',
-            data: [
-                'trackingPixel' => $this->buildTrackingPixel(),
-                'unsubscribeUrl' => $this->unsubscribeUrl,
-            ]
+            text: 'emails.membership_reminder_plain'
         );
     }
 

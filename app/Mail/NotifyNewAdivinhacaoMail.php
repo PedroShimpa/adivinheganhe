@@ -15,11 +15,13 @@ class NotifyNewAdivinhacaoMail extends Mailable
 
     public string $titulo;
     public string $url;
+    public $trackingPixel;
 
     public function __construct(string $titulo, string $url)
     {
         $this->titulo = $titulo;
         $this->url = $url;
+        $this->trackingPixel = $this->buildTrackingPixel();
     }
 
     public function envelope(): Envelope
@@ -32,11 +34,7 @@ class NotifyNewAdivinhacaoMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.nova-adivinhacao',
-            data: [
-                'trackingPixel' => $this->buildTrackingPixel(),
-                'unsubscribeUrl' => $this->unsubscribeUrl,
-            ]
+            view: 'emails.nova-adivinhacao'
         );
     }
 

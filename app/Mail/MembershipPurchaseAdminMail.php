@@ -16,12 +16,15 @@ class MembershipPurchaseAdminMail extends Mailable implements ShouldQueue
     use Queueable, SerializesModels, Trackable;
 
     public User $usuario;
+
     public string $unsubscribeUrl;
+    public $trackingPixel;
 
     public function __construct(User $usuario)
     {
         $this->usuario = $usuario;
         $this->unsubscribeUrl = '#'; // Admin notification, no unsubscribe
+        $this->trackingPixel = $this->buildTrackingPixel();
     }
 
     public function envelope(): Envelope
@@ -34,11 +37,7 @@ class MembershipPurchaseAdminMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'emails.membership_purchase_admin',
-            [
-                'trackingPixel' => $this->buildTrackingPixel(),
-                'unsubscribeUrl' => $this->unsubscribeUrl,
-            ]
+            view: 'emails.membership_purchase_admin'
         );
     }
 
