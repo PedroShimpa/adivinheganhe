@@ -17,7 +17,7 @@ class NotifyNewAdivinhacaoMail extends Mailable
     public string $url;
     public function __construct(string $titulo, string $url)
     {
-        $this->subject = 'Nova Adivinhação Disponível!';
+        $this->subject = $titulo;
         $this->titulo = $titulo;
         $this->url = $url;
     }
