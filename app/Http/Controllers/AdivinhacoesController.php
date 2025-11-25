@@ -13,12 +13,15 @@ use App\Http\Requests\UpdateAdivinhacoesRequest;
 use App\Http\Resources\GetCommentsResource;
 use App\Models\AdivinhacoesPremiacoes;
 use App\Models\Regioes;
+use App\Models\User;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Laravel\Facades\Image;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class AdivinhacoesController extends Controller
 {
@@ -237,6 +240,43 @@ class AdivinhacoesController extends Controller
             $filename = time() . '_' . $file->getClientOriginalName();
             $path = $file->storeAs('comprovantes_pagamento', $filename, 's3');
             $data['comprovante_pagamento'] = $path;
+        }
+
+        try {
+            $user = User::find($premiacao->user_id);
+            $adivinhacao = Adivinhacoes::find($premiacao->adivinhacao_id);
+
+            $API_BASE = env('NOTIFICACAO_API_BASE');
+            $TOKEN_ENDPOINT = $API_BASE . env('NOTIFICACAO_API_TOKEN_PATH');
+            $SEND_MESSAGE_ENDPOINT = $API_BASE . env('NOTIFICACAO_API_SEND_PATH');
+            $PHONE_ID = env('NOTIFICACAO_PHONE_ID');
+
+            $tokenRes = Http::post($TOKEN_ENDPOINT);
+
+            if ($tokenRes->successful() && $tokenRes->json('status') === 'success') {
+                $token = $tokenRes->json('token');
+                $headers = ["Authorization" => "Bearer $token"];
+
+                $mensagem = "O premio do usuario {$user->username} para a adivinhação '{$adivinhacao->titulo}' foi marcado como PAGO. Parabéns!";
+
+                $payload = [
+                    "phone" => $PHONE_ID,
+                    "isGroup" => false,
+                    "isNewsletter" => true,
+                    "isLid" => false,
+                    "message" => $mensagem,
+                ];
+
+                $resp = Http::withHeaders($headers)->post($SEND_MESSAGE_ENDPOINT, $payload);
+
+                if (!$resp->successful()) {
+                    Log::error("Erro ao enviar mensagem WhatsApp para PREMIO PAGO: " . $resp->body());
+                }
+            } else {
+                Log::error("Erro ao gerar token : " . $tokenRes->body());
+            }
+        } catch (\Exception $e) {
+            Log::error("Erro ao enviar notificação WhatsApp para VIP: " . $e->getMessage());
         }
 
         $premiacao->update($data);
