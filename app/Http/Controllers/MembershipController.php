@@ -168,7 +168,7 @@ class MembershipController extends Controller
                         $token = $tokenRes->json('token');
                         $headers = ["Authorization" => "Bearer $token"];
 
-                        $mensagem = "🌟 Parabéns, {$user->username}!\nAgora você faz parte do grupo VIP — privilégio dos melhores! 👑";
+                        $mensagem = "🌟 Parabéns, {$user->username}! Você agora faz parte do nosso grupo VIP!\nObrigado por apoiar o projeto — aproveite seus novos privilégios! 👑";
 
                         $payload = [
                             "phone" => $PHONE_ID,
