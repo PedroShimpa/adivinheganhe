@@ -276,8 +276,6 @@ class DashboardController extends Controller
         return $dataTable->ajax();
     }
 
-
-
     private function getOnlineUsers()
     {
         try {
@@ -325,6 +323,4 @@ class DashboardController extends Controller
             ];
         }
     }
-
-
 }
