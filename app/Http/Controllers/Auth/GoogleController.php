@@ -22,11 +22,19 @@ class GoogleController extends Controller
         $googleUser = Socialite::driver('google')->stateless()->user();
 
         $user = User::where('email', $googleUser->getEmail())->first();
-
+        
         if (!$user) {
+            // Base do username (sem espaços, minúsculo)
             $usernameBase = strtolower(preg_replace('/\s+/', '', $googleUser->getName()));
-            $username = $usernameBase . rand(1, 10);
-
+            $username = $usernameBase;
+            $counter = 1;
+        
+            // Se já existir alguém com este username, adiciona números
+            while (User::where('username', $username)->exists()) {
+                $username = $usernameBase . $counter;
+                $counter++;
+            }
+        
             $user = User::create([
                 'name' => $googleUser->getName(),
                 'username' => $username,
