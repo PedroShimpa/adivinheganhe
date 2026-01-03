@@ -9,7 +9,8 @@ return new class extends Migration {
     {
         Schema::create('suporte_replies', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('suporte_id')->constrained('suportes')->onDelete('cascade');
+            $table->unsignedBigInteger('suporte_id');
+            $table->foreign('suporte_id')->references('id')->on('suporte')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->text('mensagem');
             $table->json('attachments')->nullable();
