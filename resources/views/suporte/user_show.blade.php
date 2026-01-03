@@ -36,6 +36,55 @@
                         </div>
                     </div>
 
+                    <hr>
+                    <h5 class="mt-4">Histórico de Conversa</h5>
+                    <div class="mb-4">
+                        @foreach($suporte->replies as $reply)
+                            <div class="card mb-2 {{ $reply->user_id == auth()->id() ? 'border-primary' : 'border-info' }}">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="fw-bold">{{ $reply->user->name ?? 'Usuário' }} {{ $reply->user_id == auth()->id() ? '(Você)' : '' }}</span>
+                                        <span class="text-muted" style="font-size:0.9em">{{ $reply->created_at->format('d/m/Y H:i') }}</span>
+                                    </div>
+                                    <p class="mb-1">{{ $reply->mensagem }}</p>
+                                    @if($reply->attachments && count($reply->attachments))
+                                        <div class="mt-2">
+                                            @foreach($reply->attachments as $att)
+                                                @if(str_contains($att, '/suporte_attachments/') && (str_ends_with($att, '.webp') || str_ends_with($att, '.jpg') || str_ends_with($att, '.png') || str_ends_with($att, '.gif')))
+                                                    <img src="{{ $att }}" alt="Anexo" style="max-width:120px;max-height:120px" class="me-2 mb-2 rounded shadow">
+                                                @elseif(str_contains($att, '/suporte_attachments/') && (str_ends_with($att, '.mp4') || str_ends_with($att, '.mov') || str_ends_with($att, '.avi') || str_ends_with($att, '.webm')))
+                                                    <video src="{{ $att }}" controls style="max-width:220px;max-height:120px" class="me-2 mb-2 rounded shadow"></video>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                        @if($suporte->replies->isEmpty())
+                            <p class="text-muted">Nenhuma resposta ainda.</p>
+                        @endif
+                    </div>
+
+                    <hr>
+                    <h5 class="mt-4">Enviar uma resposta</h5>
+                    <form action="{{ route('suporte.reply', $suporte->id) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="mb-3">
+                            <textarea name="mensagem" rows="3" class="form-control" placeholder="Digite sua resposta..."></textarea>
+                            @error('mensagem') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+                        <div class="mb-3">
+                            <input type="file" name="attachments[]" class="form-control" multiple accept="image/*,video/*">
+                            <small class="text-muted">Formatos permitidos: JPG, PNG, GIF, MP4, MOV, AVI, WEBM, etc. (máx 2 arquivos)</small>
+                            @error('attachments') <small class="text-danger">{{ $message }}</small> @enderror
+                            @error('attachments.*') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+                        <button type="submit" class="btn btn-success">Enviar resposta</button>
+                    </form>
+                        </div>
+                    </div>
+
 
                 </div>
             </div>

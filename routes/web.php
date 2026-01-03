@@ -28,7 +28,10 @@ Route::post('/salvar_fingerprint', [HomeController::class, 'saveFingerprint'])->
 Route::get('/jogadores', [UsersController::class, 'jogadores'])->name('jogadores');
 Route::get('/jogadores/{user}', [UsersController::class, 'view'])->name('profile.view');
 
-Route::get('/competitivo', [CompetitivoController::class, 'index'])->name('competitivo.index');
+
+if (app('config')->get('app.competitivo_mode_enabled')) {
+    Route::get('/competitivo', [CompetitivoController::class, 'index'])->name('competitivo.index');
+}
 
 
 Route::get('/ranking-classico', [HomeController::class, 'rankingClassico'])->name('ranking_classico');
@@ -43,7 +46,9 @@ Route::get('/premiacoes', [HomeController::class, 'premiacoes'])->name('premiaco
 Route::get('/suporte', [SuporteController::class, 'new_help'])->name('suporte.index');
 Route::post('/suporte', [SuporteController::class, 'store'])->name('suporte.store');
 Route::get('/meus-chamados', [SuporteController::class, 'userIndex'])->name('suporte.user.index')->middleware('auth');
+
 Route::get('/meus-chamados/{suporte}', [SuporteController::class, 'userShow'])->name('suporte.user.show')->middleware('auth');
+Route::post('/meus-chamados/{suporte}/reply', [SuporteController::class, 'reply'])->name('suporte.reply')->middleware('auth');
 
 Route::get('/r', [HomeController::class, 'getRegioes'])->name('regioes.index');
 Route::get('/r/{regiao}', [HomeController::class, 'get_by_region'])->name('adivinhacoes.buscar_por_regiao');
@@ -91,12 +96,14 @@ Route::middleware(['auth', 'banned', 'trackOnline'])->group(function () {
     Route::get('/chat/buscar/{userId}', [ChatController::class, 'get_messages'])->name('chat.buscar');
     Route::post('/chat', [ChatController::class, 'store'])->name('chat.enviar');
 
-    Route::get('/adivinhe-o-milhao/iniciar', [AdivinheOMilhaoController::class, 'iniciar'])->name('adivinhe_o_milhao.iniciar');
-    Route::get('/adivinhe-o-milhao/pergunta', [AdivinheOMilhaoController::class, 'pergunta'])->name('adivinhe_o_milhao.pergunta');
-    Route::post('/adivinhe-o-milhao/responder', [AdivinheOMilhaoController::class, 'responder'])->name('adivinhe_o_milhao.responder');
-    Route::get('/adivinhe-o-milhao/voce-ganhou', [AdivinheOMilhaoController::class, 'voce_ganhou'])->name('adivinhe_o_milhao.voce_ganhou');
+    Route::middleware('vip')->group(function () {
+        Route::get('/adivinhe-o-milhao/iniciar', [AdivinheOMilhaoController::class, 'iniciar'])->name('adivinhe_o_milhao.iniciar');
+        Route::get('/adivinhe-o-milhao/pergunta', [AdivinheOMilhaoController::class, 'pergunta'])->name('adivinhe_o_milhao.pergunta');
+        Route::post('/adivinhe-o-milhao/responder', [AdivinheOMilhaoController::class, 'responder'])->name('adivinhe_o_milhao.responder');
+        Route::get('/adivinhe-o-milhao/voce-ganhou', [AdivinheOMilhaoController::class, 'voce_ganhou'])->name('adivinhe_o_milhao.voce_ganhou');
 
-    Route::get('/adivinhe-o-milhao/errou', [AdivinheOMilhaoController::class, 'errou'])->name('adivinhe_o_milhao.errou');
+        Route::get('/adivinhe-o-milhao/errou', [AdivinheOMilhaoController::class, 'errou'])->name('adivinhe_o_milhao.errou');
+    });
 
     Route::get('/users/follow/{user}', [UsersController::class, 'follow'])->name('users.follow');
     Route::get('/users/unfollow/{user}', [UsersController::class, 'unfollow'])->name('users.unfollow');
@@ -115,13 +122,16 @@ Route::middleware(['auth', 'banned', 'trackOnline'])->group(function () {
 
     Route::get('/notificacoes', [UsersController::class, 'getUnreadNotifications'])->name('user.notificacoes');
 
-    Route::get('/competitivo/partida/{partida}', [CompetitivoController::class, 'partida'])->name('competitivo.partida');
-    Route::get('/competitivo/partida/{partida}/pergunta', [CompetitivoController::class, 'buscar_pergunta'])->name('competitivo.pergunta');
 
-    Route::post('/competitivo/partida/{partida}/{pergunta}/responder', [CompetitivoController::class, 'responder'])->name('competitivo.responder');
-    Route::post('/competitivo/iniciar-busca', [CompetitivoController::class, 'iniciarBusca'])->name('competitivo.iniciar_busca');
-    Route::post('/competitivo/cancelar-busca', [CompetitivoController::class, 'sairFila'])->name('competitivo.cancelar_busca');
-    Route::get('/competitivo/partida/finalizada/{partida}', [CompetitivoController::class, 'partida'])->name('competitivo.partida.finalizada');
+    if (app('config')->get('app.competitivo_mode_enabled')) {
+        Route::get('/competitivo/partida/{partida}', [CompetitivoController::class, 'partida'])->name('competitivo.partida');
+        Route::get('/competitivo/partida/{partida}/pergunta', [CompetitivoController::class, 'buscar_pergunta'])->name('competitivo.pergunta');
+
+        Route::post('/competitivo/partida/{partida}/{pergunta}/responder', [CompetitivoController::class, 'responder'])->name('competitivo.responder');
+        Route::post('/competitivo/iniciar-busca', [CompetitivoController::class, 'iniciarBusca'])->name('competitivo.iniciar_busca');
+        Route::post('/competitivo/cancelar-busca', [CompetitivoController::class, 'sairFila'])->name('competitivo.cancelar_busca');
+        Route::get('/competitivo/partida/finalizada/{partida}', [CompetitivoController::class, 'partida'])->name('competitivo.partida.finalizada');
+    }
 
     Route::get('/seja-membro', [MembershipController::class, 'index'])->name('membership.index');
     Route::post('/membership/create-checkout-session', [MembershipController::class, 'createCheckoutSession'])->name('membership.checkout');

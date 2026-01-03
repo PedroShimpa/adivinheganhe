@@ -135,4 +135,15 @@ return [
 
     'membership_value' => env('MEMBERSHIP_VALUE', 10), // in reais
 
+    /*
+    |--------------------------------------------------------------------------
+    | Competitivo Mode Enable/Disable
+    |--------------------------------------------------------------------------
+    |
+    | This option allows you to enable or disable the competitivo mode feature.
+    | Set COMPETITIVO_MODE_ENABLED in your .env file to true or false.
+    |
+    */
+    'competitivo_mode_enabled' => env('COMPETITIVO_MODE_ENABLED', false),
+
 ];

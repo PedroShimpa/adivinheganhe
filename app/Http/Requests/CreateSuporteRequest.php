@@ -30,7 +30,7 @@ class CreateSuporteRequest extends FormRequest
             'categoria_id' => 'required|exists:suporte_categorias,id',
             'descricao' => 'required|string',
             'attachments' => 'nullable|array|max:2',
-            'attachments.*' => 'file|max:2048',
+            'attachments.*' => 'file|max:10240|mimetypes:image/jpeg,image/png,image/gif,image/webp,video/mp4,video/quicktime,video/x-msvideo,video/webm',
         ];
 
         if (!Auth::check()) {

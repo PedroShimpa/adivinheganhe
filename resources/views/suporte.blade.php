@@ -44,8 +44,9 @@
         </div>
 
         <div class="mb-3">
-            <label for="attachments" class="form-label text-white">Anexos (opcional, até 2 imagens, max 2MB cada)</label>
-            <input type="file" name="attachments[]" class="form-control" multiple>
+            <label for="attachments" class="form-label text-white">Anexos (apenas imagens ou vídeos, até 2 arquivos, max 10MB cada)</label>
+            <input type="file" name="attachments[]" class="form-control" multiple accept="image/*,video/*">
+            <small class="text-white">Formatos permitidos: JPG, PNG, GIF, MP4, MOV, AVI, WEBM, etc.</small>
             @error('attachments') <small class="text-danger">{{ $message }}</small> @enderror
             @error('attachments.*') <small class="text-danger">{{ $message }}</small> @enderror
         </div>

@@ -83,16 +83,24 @@
 
                     <div class="text-center mt-5">
                         @auth
-                        <a href="{{ route('adivinhe_o_milhao.iniciar') }}"
-                            class="btn btn-lg btn-success px-5 py-3 rounded-pill shadow fw-bold">
-                            🚀 Jogar Agora
-                        </a>
+                            @if(auth()->user()->isVip())
+                                <a href="{{ route('adivinhe_o_milhao.iniciar') }}"
+                                    class="btn btn-lg btn-success px-5 py-3 rounded-pill shadow fw-bold">
+                                    🚀 Jogar Agora
+                                </a>
+                            @else
+                                <p class="text-muted mb-3">Este jogo é exclusivo para membros VIP.</p>
+                                <a href="{{ route('membership.index') }}"
+                                    class="btn btn-lg btn-warning px-4 py-2 rounded-pill shadow fw-bold">
+                                    🔒 Seja VIP para jogar
+                                </a>
+                            @endif
                         @else
-                        <p class="text-muted mb-3">Você precisa estar logado para jogar.</p>
-                        <a  href="{{ route('adivinhe_o_milhao.iniciar') }}"
-                            class="btn btn-lg btn-primary px-4 py-2 rounded-pill shadow fw-bold">
-                            🔑 Clique aqui para entrar
-                        </a>
+                            <p class="text-muted mb-3">Você precisa estar logado para jogar.</p>
+                            <a  href="{{ route('adivinhe_o_milhao.iniciar') }}"
+                                class="btn btn-lg btn-primary px-4 py-2 rounded-pill shadow fw-bold">
+                                🔑 Clique aqui para entrar
+                            </a>
                         @endauth
                     </div>
                 </div>

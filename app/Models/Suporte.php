@@ -36,4 +36,9 @@ class Suporte extends Model
     {
         return $this->hasMany(SuporteChatMessages::class);
     }
+
+    public function replies()
+    {
+        return $this->hasMany(SuporteReply::class);
+    }
 }

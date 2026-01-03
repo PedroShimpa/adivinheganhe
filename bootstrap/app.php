@@ -14,12 +14,13 @@ return Application::configure(basePath: dirname(__DIR__))
         api: __DIR__ . '/../routes/api.php',
         // health: '/up',
     )
-    ->withMiddleware(function ($middleware) {
+        ->withMiddleware(function ($middleware) {
         // cria um apelido "banned" para o middleware
         $middleware->alias([
             'banned' => CheckBanned::class,
             'isAdmin' => IsAdminMiddleware::class,
-            'trackOnline' => TrackOnlineUsers::class
+            'trackOnline' => TrackOnlineUsers::class,
+            'vip' => \App\Http\Middleware\EnsureVip::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

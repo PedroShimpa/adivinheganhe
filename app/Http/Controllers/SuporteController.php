@@ -36,14 +36,23 @@ class SuporteController extends Controller
         if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
                 $hash = Str::random(10);
-                $fileName = $hash . '_' . time() . '.webp';
-
-                $image = Image::read($file)->encodeByExtension('webp', 85);
-                $filePath = 'suporte_attachments/' . $fileName;
-                Storage::disk('s3')->put($filePath, (string) $image);
-                $urlImagem = Storage::disk('s3')->url($filePath);
-
-                $attachments[] = $urlImagem;
+                $mime = $file->getMimeType();
+                if (str_starts_with($mime, 'image/')) {
+                    $fileName = $hash . '_' . time() . '.webp';
+                    $image = Image::read($file)->encodeByExtension('webp', 85);
+                    $filePath = 'suporte_attachments/' . $fileName;
+                    Storage::disk('s3')->put($filePath, (string) $image);
+                    $url = Storage::disk('s3')->url($filePath);
+                } elseif (str_starts_with($mime, 'video/')) {
+                    $ext = $file->getClientOriginalExtension();
+                    $fileName = $hash . '_' . time() . '.' . $ext;
+                    $filePath = 'suporte_attachments/' . $fileName;
+                    Storage::disk('s3')->putFileAs('suporte_attachments', $file, $fileName);
+                    $url = Storage::disk('s3')->url($filePath);
+                } else {
+                    continue;
+                }
+                $attachments[] = $url;
             }
         }
         $data['attachments'] = json_encode($attachments);
@@ -156,7 +165,7 @@ class SuporteController extends Controller
         if ($suporte->user_id !== auth()->id()) {
             abort(403);
         }
-        $suporte->load('categoria', 'chatMessages');
+        $suporte->load('categoria', 'chatMessages', 'replies.user');
         return view('suporte.user_show', compact('suporte'));
     }
 

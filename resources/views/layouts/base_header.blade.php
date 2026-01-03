@@ -5,17 +5,6 @@
 </div>
 @endif
 
-@if(Auth::check() && !auth()->user()->whatsapp)
-<div class="alert alert-warning text-center rounded-0 mb-3 ">
-    <strong>📱 Você ainda não cadastrou seu WhatsApp!</strong><br>
-    Você precisa dele cadastrado para receber os prêmios em caso de acerto.<br>
-    Cadastre agora mesmo:
-    <a href="{{ route('profile.edit') }}" class="text-decoration-underline fw-bold">
-        {{ auth()->user()->name }} → Perfil
-    </a>
-</div>
-@endif
-
 
 @if(Auth::check())
 <div class="mb-4 p-4 card text-center ">

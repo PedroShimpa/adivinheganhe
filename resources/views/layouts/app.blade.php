@@ -177,10 +177,12 @@
                             Clássico
                         </a>
                         {{-- <a href="{{ route('regioes.index') }}" class="nav-link text-white">Clássico por região</a> --}}
+                        @if(config('app.competitivo_mode_enabled'))
                         <a href="{{ route('competitivo.index') }}"
                             class="nav-link text-white {{ request()->routeIs('competitivo.index') ? 'active fw-bold text-primary' : '' }}">
                             Competitivo
                         </a>
+                        @endif
                         <a href="{{ route('adivinhe_o_milhao.index') }}"
                             class="nav-link text-white {{ request()->routeIs('adivinhe_o_milhao.index') ? 'active fw-bold text-primary' : '' }}">
                             Adivinhe o Milhão
