@@ -312,6 +312,10 @@
                             class="nav-link text-white {{ request()->routeIs('suporte.admin.index') ? 'active fw-bold text-primary' : '' }}">
                            Atender Chamados
                         </a>
+                        <a href="{{ route('conectar.whatsapp') }}"
+                            class="nav-link text-white {{ request()->routeIs('conectar.whatsapp') ? 'active fw-bold text-primary' : '' }}">
+                            Conectar WhatsApp
+                        </a>
                      
                     </div>
                 </div>

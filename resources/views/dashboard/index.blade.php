@@ -30,6 +30,16 @@
 
     <div id="cards" class="row g-3 mb-4">
         <div class="col-md-3">
+            <div class="card text-white bg-dark shadow-sm" style="height: 180px;">
+                <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                    <h5 class="card-title">WhatsApp Status</h5>
+                    <div id="whatsapp-status-dashboard" class="my-2">
+                        <span class="spinner-border spinner-border-sm text-light" role="status"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
             <div class="card text-white bg-success shadow-sm" style="height: 180px;">
                 <div class="card-body d-flex flex-column justify-content-center">
                     <h5 class="card-title">Usuários Online</h5>
@@ -82,16 +92,6 @@
                     <a href="{{ route('dashboard.vip_users') }}" class="btn btn-sm btn-outline-light mt-2">
                         <i class="bi bi-list"></i> Ver Lista
                     </a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-secondary shadow-sm" style="height: 180px;">
-                <div class="card-body d-flex flex-column justify-content-center">
-                    <h5 class="card-title">Partidas Competitivo</h5>
-                    <p class="card-text display-6 mb-0">{{ $countPartidasCompetitivo }}</p>
-                    <small>Hoje: {{ $countPartidasCompetitivoToday }}</small>
-                    <small>Na fila: {{ $jogadoresNaFilaAgoraCompetitivo }}</small>
                 </div>
             </div>
         </div>
@@ -236,6 +236,37 @@
 </div>
 
 @push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', async function() {
+    const base = '{{ env('NOTIFICACAO_API_BASE') }}';
+    const tokenPath = '{{ env('NOTIFICACAO_API_TOKEN_PATH') }}';
+    const statusDiv = document.getElementById('whatsapp-status-dashboard');
+    if (!statusDiv) return;
+    let token = '';
+    try {
+        const tokenRes = await fetch(`${base}${tokenPath}`, { method: 'POST' });
+        const tokenData = await tokenRes.json();
+        if (!tokenData.token) throw new Error('Token não recebido.');
+        token = tokenData.token;
+    } catch (err) {
+        statusDiv.innerHTML = `<span class='badge bg-danger'>Erro ao gerar token</span>`;
+        return;
+    }
+    try {
+        const checkRes = await fetch(`${base}/check-connection-session`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const checkData = await checkRes.json();
+        if (checkData.status === true || checkData.connected === true) {
+            statusDiv.innerHTML = `<span class='badge bg-success'>Ativo</span>`;
+        } else {
+            statusDiv.innerHTML = `<span class='badge bg-warning text-dark'>Desconectado</span>`;
+        }
+    } catch (err) {
+        statusDiv.innerHTML = `<span class='badge bg-danger'>Erro ao checar conexão</span>`;
+    }
+});
+</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap4.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
