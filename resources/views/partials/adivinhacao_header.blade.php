@@ -31,7 +31,7 @@
 
 {{-- Respostas até agora --}}
 <p class="text-primary small mb-2">
-    Respostas até agora: <strong>{{ $adivinhacao->respostas->count() }}</strong>
+    Palpites até agora: <strong>{{ $adivinhacao->respostas->count() }}</strong>
 </p>
 
 {{-- Data de expiração --}}
