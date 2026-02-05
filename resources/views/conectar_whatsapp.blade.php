@@ -34,17 +34,25 @@
         const qrcodeSection = document.getElementById('qrcode-section');
         let token = '';
         // 1. Gerar token
-            // If API is http and site is https, browser may block mixed content. Show warning if so.
-            if (window.location.protocol === 'https:' && base.startsWith('http://')) {
-                statusSection.innerHTML = `<div class='alert alert-warning'>Atenção: Seu navegador pode bloquear requisições para API HTTP a partir de um site HTTPS. Considere usar HTTPS na API ou habilitar CORS e HTTPS no backend.</div>`;
+        // If API is http and site is https, browser may block mixed content. Show warning if so.
+        if (window.location.protocol === 'https:' && base.startsWith('http://')) {
+            statusSection.innerHTML = `<div class='alert alert-warning'>Atenção: Seu navegador pode bloquear requisições para API HTTP a partir de um site HTTPS. Considere usar HTTPS na API ou habilitar CORS e HTTPS no backend.</div>`;
+        }
+        try {
+            const tokenRes = await fetch(`${base}${tokenPath}`, { method: 'POST', mode: 'cors', credentials: 'include' });
+            // CORS error handling: if status is 201 but body is empty, likely CORS issue
+            if (tokenRes.type === 'opaque' || (tokenRes.status === 201 && !tokenRes.headers.get('content-type'))) {
+                throw new Error('Erro de CORS: O servidor não permite requisições autenticadas deste domínio. Contate o suporte.');
             }
-            try {
-                const tokenRes = await fetch(`${base}${tokenPath}`, { method: 'POST', mode: 'cors', credentials: 'include' });
             const tokenData = await tokenRes.json();
             if (!tokenData.token) throw new Error('Token não recebido.');
             token = tokenData.token;
         } catch (err) {
-            statusSection.innerHTML = `<div class='alert alert-danger'>Erro ao gerar token: ${err.message}</div>`;
+            let msg = err.message;
+            if (msg.includes('CORS')) {
+                msg += '<br>O servidor precisa responder com <code>Access-Control-Allow-Origin: https://adivinheganhe.com.br</code> e <code>Access-Control-Allow-Credentials: true</code>.';
+            }
+            statusSection.innerHTML = `<div class='alert alert-danger'>Erro ao gerar token: ${msg}</div>`;
             return;
         }
         // 2. Checar conexão
