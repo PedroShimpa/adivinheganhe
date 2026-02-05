@@ -102,9 +102,9 @@
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ waitQrCode: true })
-                    mode: 'cors',
-                    credentials: 'include'
+                body: JSON.stringify({ waitQrCode: true }),
+                mode: 'cors',
+                credentials: 'include'
             });
             if (!startRes.ok) throw new Error('Erro HTTP ao iniciar sessão');
             // Espera resposta JSON com qrcode
