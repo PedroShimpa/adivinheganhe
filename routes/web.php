@@ -37,7 +37,6 @@ if (app('config')->get('app.competitivo_mode_enabled')) {
 Route::get('/ranking-classico', [HomeController::class, 'rankingClassico'])->name('ranking_classico');
 Route::get('/adivinhacoes-vip', [HomeController::class, 'adivinhacoesVip'])->name('adivinhacoes.vip');
 
-Route::get('/conectar-whatsapp', [\App\Http\Controllers\ConectarWhatsappController::class, 'index'])->name('conectar.whatsapp');
 Route::get('/sobre', [HomeController::class, 'sobre'])->name('sobre');
 
 Route::get('/adivinhacoes/{adivinhacao}/comments', [AdivinhacoesController::class, 'comments'])->name('adivinhacoes.comments');
@@ -146,6 +145,7 @@ Route::middleware(['auth', 'banned', 'trackOnline'])->group(function () {
     #rotas apenas para administreadores
     Route::middleware(['isAdmin'])->group(function () {
         Route::post('users/ban-player/{user}', [UsersController::class, 'banUser'])->name('user.ban');
+        Route::get('/conectar-whatsapp', [\App\Http\Controllers\ConectarWhatsappController::class, 'index'])->name('conectar.whatsapp');
 
         Route::get('/a/new', [AdivinhacoesController::class, 'create'])->name('adivinhacoes.new');
         Route::post('/a/create', [AdivinhacoesController::class, 'store'])->name('adivinhacoes.store');
