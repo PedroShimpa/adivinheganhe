@@ -29,6 +29,11 @@
     </p>
 @endif
 
+{{-- Respostas até agora --}}
+<p class="text-primary small mb-2">
+    Respostas até agora: <strong>{{ $adivinhacao->respostas->count() }}</strong>
+</p>
+
 {{-- Data de expiração --}}
 @if(!empty($adivinhacao->expired_at_br))
     <p class="text-info small mb-2">

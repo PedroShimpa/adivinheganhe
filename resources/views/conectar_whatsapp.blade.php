@@ -34,8 +34,12 @@
         const qrcodeSection = document.getElementById('qrcode-section');
         let token = '';
         // 1. Gerar token
-        try {
-            const tokenRes = await fetch(`${base}${tokenPath}`, { method: 'POST' });
+            // If API is http and site is https, browser may block mixed content. Show warning if so.
+            if (window.location.protocol === 'https:' && base.startsWith('http://')) {
+                statusSection.innerHTML = `<div class='alert alert-warning'>Atenção: Seu navegador pode bloquear requisições para API HTTP a partir de um site HTTPS. Considere usar HTTPS na API ou habilitar CORS e HTTPS no backend.</div>`;
+            }
+            try {
+                const tokenRes = await fetch(`${base}${tokenPath}`, { method: 'POST', mode: 'cors', credentials: 'include' });
             const tokenData = await tokenRes.json();
             if (!tokenData.token) throw new Error('Token não recebido.');
             token = tokenData.token;
@@ -69,12 +73,13 @@
         const statusSection = document.getElementById('status-section');
         let token = '';
         // 1. Gerar token
-        try {
-            const tokenRes = await fetch(`${base}${tokenPath}`, { method: 'POST' });
+            try {
+                const tokenRes = await fetch(`${base}${tokenPath}`, { method: 'POST', mode: 'cors', credentials: 'include' });
             const tokenData = await tokenRes.json();
             if (!tokenData.token) throw new Error('Token não recebido.');
             token = tokenData.token;
         } catch (err) {
+            
             statusSection.innerHTML = `<div class='alert alert-danger'>Erro ao gerar token: ${err.message}</div>`;
             return;
         }
@@ -98,6 +103,8 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ waitQrCode: true })
+                    mode: 'cors',
+                    credentials: 'include'
             });
             if (!startRes.ok) throw new Error('Erro HTTP ao iniciar sessão');
             // Espera resposta JSON com qrcode
